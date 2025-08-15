@@ -1,0 +1,187 @@
+/* gpoa-report.scss */
+
+$page-width: 21cm;
+$page-height: 29.7cm;
+$font-size: 12pt;
+$size: A4 landscape;
+$top-margin: 4.5cm;
+$x-margin: .5cm;
+$margin: 2cm;
+$top-padding: .5cm;
+$line-width: .035cm;
+
+@font-face {
+    font-family: "Liberation Serif";
+    src: url("fonts/LiberationSerif-Regular.ttf");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Liberation Serif";
+    src: url("fonts/LiberationSerif-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("fonts/LiberationSans-Regular.ttf");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("fonts/LiberationSans-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("fonts/LiberationSans-BoldItalic.ttf");
+    font-style: italic;
+    font-weight: bold;
+}
+
+@page {
+    size: $size;
+    margin-top: $top-margin;
+    margin-right: $x-margin;
+    margin-left: $x-margin;
+	border-top: $line-width solid #000000;
+	padding-top: $top-padding; 
+
+    @top-left {
+    	content: element(page-header);
+    }
+}
+
+@page :nth(1) {
+	padding-top: 0;
+}
+
+body {
+    font-size: $font-size;
+    font-family: "Liberation Sans";
+}
+
+sup {
+	font-size: small;
+}
+
+#page-header {
+	position: running(page-header);
+	margin-left: $margin;
+	margin-top: 1cm;
+
+	.logos {
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: .2cm;
+
+		.logo {
+			display: inline-block;
+			height: 2.2cm;	
+			width: 2.2cm;	
+			margin-right: .2cm;
+
+			svg, img {
+				vertical-align: middle;
+				width: 100%;
+				display: inline-block;
+			}
+		}	
+	}	
+	.text {
+		vertical-align: middle;
+		display: inline-block;
+
+		> * {
+			margin: calc($font-size * 1) 0;
+		}
+
+		.country, .campus {
+			font-family: "Liberation Serif";
+			font-size: 14pt;
+		}
+
+		.school {
+			font-weight: bold;
+		}
+	}
+}
+
+.main-header {
+	font-weight: bold;
+	font-size: 14pt;
+	text-align: center;
+	margin-bottom: .5cm;
+
+	> * {
+		margin: calc($font-size * .2) 0;
+	}
+}
+
+table {
+	border-collapse: collapse;
+
+	tr {
+		break-inside: avoid;
+	}
+
+	td, th {
+		border: $line-width solid #000000;
+		hyphens: auto;
+		vertical-align: top;
+		padding: calc($font-size / 2);
+		word-break: break-all;
+		//overflow-wrap: break-all;
+
+		> *:first-child {
+			margin-top: 0;	
+		}
+
+		> *:last-child {
+			margin-bottom: 0;	
+		}
+	}
+
+	th {
+		background-color: #fafafa;
+	}
+
+	td:nth-child(11) {
+		ul {
+			padding-left: $font-size;
+			hyphens: none;
+			word-break: break-all;
+		}
+	}
+}
+
+.signatures-page {
+	white-space: nowrap;
+	.column {
+		width: 48%;
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	.person-list {
+		list-style-type: none;
+		padding-left: 0;
+
+		.signature {
+			padding-top: $font-size;
+		}
+
+		.name {
+			font-weight: bold;
+			margin-bottom: 0;
+		}
+
+		.position {
+			font-weight: bold;
+			font-style: italic;
+			margin-top: 0;
+		}
+	}
+}

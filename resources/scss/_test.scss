@@ -1,0 +1,12 @@
+/* test.css */
+
+.pie-chart {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+	#4CAF50 0% 40%,     /* 40% Green */
+	#2196F3 40% 70%,    /* 30% Blue */
+	#f44336 70% 100%    /* 30% Red */
+    );
+}

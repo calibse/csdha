@@ -1,0 +1,167 @@
+/* _attendance.scss */
+
+#id-scanner {
+	max-width: 100%;
+
+	.video {
+		height: calc(100vh - 11rem);
+		background-color: #000000;
+		position: relative;
+		border-bottom-left-radius: 1rem;
+		border-bottom-right-radius: 1rem;
+		overflow: hidden;
+		width: 100%;
+		object-fit: cover;
+
+		/*
+		video, .drawingBuffer {
+			position: absolute;
+			height: 100%;
+		}
+		*/
+	}
+
+	.indicator {
+		border-top-left-radius: 1rem;
+		border-top-right-radius: 1rem;
+		overflow: hidden;
+		margin-bottom: 0;
+		max-width: 100%;
+		border: solid .05rem var(--line-color);
+		background-color: var(--bg-color);
+		position: relative;
+		height: 3rem;
+
+		@keyframes progress {
+			from {
+				width: 100%;
+			}
+			to {
+				width: 0%;
+			}
+		}
+
+		@keyframes glow {
+			from {
+				opacity: 1;
+			}	
+			to {
+				opacity: 0;
+			}
+		}
+
+		&.success {
+			.signal {
+				background-color: var(--success-color);
+				animation: glow 3s forwards;
+			}
+
+			.timeout {
+				background-color: var(--color-4);
+				animation: progress 4s linear 3s forwards;
+			}
+
+			.status .icon {
+				color: var(--success-color);
+			}
+		}
+
+		&.failure {
+			.signal {
+				background-color: var(--failure-color);
+				animation: glow 3s forwards;
+			}
+
+			.timeout {
+				background-color: var(--color-4);
+				animation: progress 4s linear 3s forwards;
+			}
+
+			.status .icon {
+				color: var(--failure-color);
+			}
+
+		}
+
+		&.processing {
+			.signal {
+				background-color: var(--color-4);
+			}
+			
+			.status {
+				animation: none;
+
+				.text {
+					color: var(--bg-color);
+				}
+
+				.icon {
+					color: var(--color-1);
+				}
+			}
+		}
+
+
+		.signal {
+			display: block;
+			position: absolute;	
+			height: 100%;
+			width: 100%;
+			opacity: 1;
+		}
+
+		.timeout {
+			position: absolute;	
+			display: block;
+			height: .2rem;
+			width: 100%;
+		}
+
+		@keyframes fade-in {
+			from {
+				opacity: 0;
+			}	
+			to {
+				opacity: 1;
+			}
+		}
+
+		.status {
+			position: absolute;	
+			display: block;
+			padding: .9rem;
+			text-align: center;
+			width: 100%;
+			animation: fade-in 2.5s;
+
+			.icon, .text {
+				vertical-align: middle;
+			}
+
+			.icon {
+				margin-right: .5rem;
+			}
+
+
+			&.success .icon {
+				color: var(--success-color);
+			}
+
+			&.failure .icon {
+				color: var(--failure-color);
+			}
+
+			&.idle .icon {
+				color: var(--color-4);
+			}
+
+			&.processing {
+				animation: none;
+				.icon {
+					color: var(--color-1);
+				}
+			}
+		}
+
+	}
+}

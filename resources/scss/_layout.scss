@@ -1,0 +1,48 @@
+/* layout.css */
+
+dialog {
+	max-width: 90vw;
+	max-height: 90vh;
+	overflow-y: auto;
+	padding: 0 1rem;
+	background-color: var(--base-color-0);
+	border: solid .05rem var(--line-color);
+	border-radius: 1rem;
+
+	&::backdrop {
+		background-color: #000000;
+		opacity: .5;
+	}
+
+	.title {
+		font-size: 1.2rem;
+	}
+
+	form {
+		p:not(.checkbox-field):not(.datetime-range):not(.form-submit) {
+			width: var(--text-width);
+			max-width: 100%;
+		}
+	}
+}
+
+.icon {
+	height: 100%;
+	display: inline-block;
+	svg {
+		vertical-align: middle;
+	}
+}
+
+.validation-errors {
+	max-width: var(--text-width);
+}
+
+
+@media (min-width: 48rem) {
+	dialog {
+		max-width: calc(var(--text-width) + 2.5rem);
+		width: max-content;
+	}
+}
+

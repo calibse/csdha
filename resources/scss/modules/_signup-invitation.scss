@@ -1,0 +1,26 @@
+/* sign-up-invitation.css */
+
+.signup-invitation {
+	margin: 0 auto;
+	padding: .01rem 1rem;
+	padding-bottom: 1rem;
+	max-width: 30rem;
+	background-color: #ffffff;
+	text-align: center;
+	border: solid .1rem #cccccc;
+
+	.title {
+		font-weight: 500;
+		font-size: 1.2rem;
+	}
+
+
+	.login-button-container {
+		display: flex;
+		justify-content: center;
+
+		> * {
+			flex: 1 1 30rem;
+		}
+	}
+}

@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Event;
+use App\Models\EventEvalForm;
+use App\Models\Course;
+use App\Models\StudentYear;
+use App\Http\Requests\UpdateEventEvalQuestionRequest;
+use App\Http\Requests\StoreEvalFormResponseRequest;
+use App\Services\EvalFormStep;
+
+class EventEvalFormController extends Controller
+{
+    public function editQuestions(Event $event)
+    {
+        return view('events.edit-eval-questions', [
+            'event' => $event,
+            'question' => $event?->evalForm,
+            'backRoute' => route('events.edit', ['event' => $event->public_id]),
+            'formAction' => route('events.eval-form.update-questions', [
+                'event' => $event->public_id
+            ])
+        ]);
+    }
+
+    public function updateQuestions(UpdateEventEvalQuestionRequest $request, 
+            Event $event)
+    {
+        $form = $event->evalForm;
+        if (!$form) {
+            $form = new EventEvalForm;
+            $form->event()->associate($event);
+        }
+        $form->introduction = $request->introduction;
+        $form->overall_satisfaction = $request->overall_satisfaction;
+        $form->content_relevance = $request->content_relevance;
+        $form->speaker_effectiveness = $request->speaker_effectiveness;
+        $form->engagement_level = $request->engagement_level;
+        $form->duration = $request->duration;
+        $form->topics_covered = $request->topics_covered;
+        $form->suggestions_for_improvement = $request->suggestions_for_improvement;
+        $form->future_topics = $request->future_topics;
+        $form->overall_experience = $request->overall_experience;
+        $form->additional_comments = $request->additional_comments;
+        $form->acknowledgement = $request->acknowledgement;
+        $form->save();
+        return redirect()->route('events.show', ['event' => $event->public_id])
+            ->with('status', 'Evaluation form updated.');
+    }
+}

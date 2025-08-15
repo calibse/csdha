@@ -1,0 +1,43 @@
+/* _alert.scss */
+
+@keyframes collapse {
+	from {
+		visibility: visible;
+		height: max-content;
+	}
+
+	to {
+		visibility: collapse;
+		height: 0;
+	}
+}
+
+.alert {
+	border-bottom: .05rem solid var(--base-color-2);
+	max-width: var(--text-width);
+	width: max-content;
+	margin: 1rem 0;
+	padding: .01rem 1rem;
+	
+	p {
+		width: max-content;
+	}
+
+	&.alert-info {
+		background-color: var(--success-color);
+		margin: .3rem 0;
+		max-width: unset;
+		width: unset;
+		animation: collapse .001s 5s forwards;
+
+		p {
+			margin: .5rem 0;
+			width: unset;
+		}
+	}
+
+	&.alert-error {
+		background-color: var(--failure-color);
+	}
+}
+

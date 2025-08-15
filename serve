@@ -1,0 +1,43 @@
+#! /bin/sh
+# serve
+
+export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+
+docker-compose() {
+	$HOME/.local/bin/docker-compose $@
+}
+
+git pull
+
+usage() {
+	echo "Usage: $0 [-r]"
+	echo
+	exit 1
+}
+
+rebuild_images() {
+	if [ "$(docker-compose ps -q)" ]; then
+		podman compose build
+		docker-compose up -d --force-recreate web-user
+		docker-compose up -d --force-recreate web-admin
+	else
+		podman compose build
+		docker-compose up -d
+	fi
+	exit 1
+}
+
+while getopts "r" opt; do
+	case $opt in
+		r) rebuild_images ;;
+		*) usage ;;
+	esac
+done
+
+if [ "$(docker-compose ps -q)" ]; then
+	docker-compose restart web-user
+	docker-compose restart web-admin
+else
+	docker-compose up -d
+fi
+

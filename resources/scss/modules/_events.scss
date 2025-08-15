@@ -1,0 +1,158 @@
+/* _events.scss */
+
+.events.index {
+	.list {	
+		margin: 1rem 0;
+
+		.item {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: 1.5rem;
+
+			.icon {
+				background-color: #eeeeee;
+				height: 6rem;
+				width: 6rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: solid .1rem #cccccc;
+				flex: 0 0 auto;
+				border-radius: 1rem;
+				overflow: hidden;
+
+				svg {
+					color: #bbbbbb;
+					width: 50%;
+					height: 50%;
+				}
+
+				img {
+					display: block;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+
+			.info {
+				min-width: 0;
+				max-width: var(--text-width);
+
+				.title {
+					margin-top: 0;
+				}
+
+				.desc {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}
+
+.events.attendance {
+	.event-name {
+	}
+}
+
+.main-content.events.event {
+	padding-left: 0;
+	padding-right: 0;
+
+	.content-block:not(
+		.content-header .content-block
+	):not(.info .content-block) {
+		padding: 0;
+		margin: 0;
+		max-width: unset;
+	}
+
+	.content-header {
+		min-height: 6rem;
+		margin: 0 auto;
+		background-size: cover;
+		background-position: center;
+
+		.cover-photo {
+			background-color: white;
+			height: calc(100% + var(--header-height));
+			width: 100%;
+			position: absolute;
+			top: 1rem;
+			left: 0;
+			overflow: hidden;
+
+			img {
+				height: 100%;
+				width: 100%;
+				object-fit: cover;
+			}
+		}
+	}
+
+	.event-title {
+		font-size: 1.4rem;
+	}
+
+	.section {
+		border-bottom: solid .1rem #dddddd;
+
+		.section-title {
+			& > * {
+				display: inline-block;
+				font-size: 1.2rem;
+			}
+		}
+
+		.title {
+			margin-bottom: .5rem;
+			font-weight: bold;
+
+			+ p, + pre {
+				margin-top: .5rem;
+			}
+		}
+	}
+}
+
+.item.deliverable {
+	display: block;
+	height: unset;
+
+	.progress-meter {
+		max-width: var(--text-width);
+		display: flex;
+		margin: .5rem 0;
+		align-items: center;
+		gap: 1rem;
+
+		.total {
+			flex: 1 1 auto;
+			height: .3rem;
+			background-color: #eeeeee;
+
+			.bar {
+				width: 0;
+				height: 100%;
+				background-color: green;
+			}
+		}
+
+		.progress {
+			height: 1rem;
+			margin: 0;
+			flex: 0 1 3rem;
+		}
+	}
+}
+
+body:has(.content-header.with-cover-photo) {
+	.content-header .text {
+		color: #ffffff;
+	}
+}
+
+.input-narrative {
+	height: 15rem;
+}

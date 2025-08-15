@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSDHA</title>
+	@vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body>
+	<header class="front-header">
+		<hgroup class="content">
+			<div class="text">
+				<h1 class="title">
+					<span class="org-name">COMPUTER SOCIETY</span>
+					DIGITAL HUB AND ARCHIVES
+				</h1>
+				<p class="subtitle">Your Centralized Gateway for Council Information,
+					Collaboration, and Progress through Innovation
+				</p>
+			</div>
+			<div class="logo">
+				<img src="{{ Vite::asset('resources/images/app-logo.png') }}">
+			</div>
+		</hgroup>
+		<div class="cover-photo">
+			<img src="{{ Vite::asset('resources/images/app-cover.png') }}">
+		</div>
+	</header>
+	<main>
+		<article class="front-content">
+			<article class="signup">
+				<h3 class="title">New to CSDHA?  </h3>
+				{{--<p><a 
+					href="{{ route('users.create', [], false) }}"
+					>Create your official sign-in credentials to get started.
+				</a></p>--}}
+				<a href="{{ route('auth.redirect', [
+						'provider' => 'google',
+						'invite-code' => $inviteCode
+					], false) }}"
+					class="login-button google"
+				>
+					<span class="icon">
+						<x-icon.google/>
+					</span>
+					Sign in with Google
+				</a>
+				<p class="note">Please note: You will be assigned a user role 
+					after approval by the Super Admin. Until then, access is 
+					limited to viewing only. For full access, kindly contact the
+					Super Admin.
+				</p>
+			</article>
+			<article class="signin">
+				<h2 class="title">Sign in with your official CSDHA account to access system features securely.</h2>
+
+				@if ($errors->any())
+				<aside class="validation-errors">
+					<p class="title"><strong>There is a problem</strong></p>
+					<ul>
+						@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+						@endforeach
+					</ul>
+				</aside>
+				@endif
+
+				<form method="POST" 
+					action="{{ route('login.auth', [], false) }}"
+				>
+					@csrf
+					<p>
+						<label for="username">Username</label>
+						<input type="text" 
+							required 
+							maxlength="50" 
+							name="username"
+						>
+					</p>
+					<p>
+						<label for="password">Password</label>
+						<input type="password" 
+							required 
+							maxlength="55" 
+							name="password"
+						>
+					</p>
+					<p><button type="submit">Sign in</button></p>
+				</form>
+			</article>
+
+		</article>
+	</main>
+	<footer class="front-footer">
+		<p class="title">Useful Links</p>
+		<ul class="links">
+			<li><a href="#">About</a></li>
+			<li><a href="#">Help</a></li>
+			<li><a href="#">Contact</a></li>
+			<li><a href="#">Privacy Policy</a></li>
+		</ul>
+		<p class="copyright">&copy; 2025 Computer Society Digital Hub and Archives (CSDHAA). All rights reserved.
+		</p>
+		<p class="note">
+			Developed by BSIT student innovators as part of their capstone research project. This platform and its contents are protected under applicable copyright laws. Unauthorized use, reproduction, or distribution without prior written consent is strictly prohibited. 
+		</p>
+	</footer>
+</body>
+</html>

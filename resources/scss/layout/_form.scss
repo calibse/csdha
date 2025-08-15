@@ -1,0 +1,94 @@
+/* _form.scss */
+
+form {
+	label {
+		display: block;
+		margin-bottom: .5rem;
+	}
+
+	input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="time"]),
+	select, 
+	textarea, 
+	fieldset {
+		width: 100%;
+		max-width: var(--text-width);
+	}
+
+	.datetime-range {
+		display: block;
+		width: 15rem;
+		max-width: 100%;
+
+		input {
+			width: unset;
+			max-width: unset;
+			min-width: unset;
+			margin-bottom: .3rem;
+		}
+	}
+
+	input[type="checkbox"], input[type="radio"] {
+		margin-right: .5rem;
+	}
+
+	input[type="checkbox"], input[type="radio"] {
+		+ label {
+			display: inline;
+			margin-bottom: unset;
+		}
+	}
+
+	textarea {
+		height: 5rem;
+	}
+
+	.checkbox-field, radio-field {
+		display: inline-block;
+		margin: .5rem 0;
+		margin-right: 1rem;
+
+		input {
+			margin-right: .5rem;
+			vertical-align: middle;
+		}
+
+		label {
+			display: unset;
+			vertical-align: middle;
+		}
+	}
+
+	fieldset {
+		margin-bottom: 1rem;
+	}
+
+	button {
+		margin-right: .5rem;
+		margin-bottom: .5rem;
+
+		&:last-of-type {
+			margin-right: 0;
+			margin-bottom: 0;
+		}
+	}
+
+	.button, .form-submit {
+		text-align: right;
+	}
+}
+
+.submit-buttons, .submit-button {
+	max-width: var(--text-width);
+	text-align: right;
+	
+	form {
+		display: inline;
+		margin-right: .5rem;
+		margin-bottom: .5rem;
+
+		&:last-child {
+			margin-right: 0;
+			margin-bottom: 0;
+		}
+	}
+}

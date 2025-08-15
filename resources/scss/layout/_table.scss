@@ -1,0 +1,37 @@
+/* _table.scss */
+
+.table-block {
+	overflow-y: auto;
+	margin: 1rem;
+	margin-top: 0;
+}
+
+table {
+	border-collapse: collapse;
+	// border-spacing: 0;
+	width: 100%;
+
+	th {
+		border-bottom: solid .05rem #000000;
+		text-align: left;
+		font-weight: normal;
+	}
+
+	td {
+		border: solid var(--base-color-1);
+		border-width: .05rem 0;
+
+		&:last-child {
+			//border-right: .05rem solid var(--line-color);
+		}
+
+		&:first-child {
+			//border-left: .05rem solid var(--base-color-0);
+		}
+	}
+
+	th, td {
+		white-space: nowrap;
+		padding: 1rem;
+	}
+}

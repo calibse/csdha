@@ -1,0 +1,15 @@
+
+
+table.positions {
+	border-collapse: collapse;
+	tbody {
+		text-align: left;
+	}
+	th, td {
+		padding: 1rem;
+		width: 20rem;
+		max-width: 20rem;
+		border: solid .1rem var(--color-1);
+	}
+
+}

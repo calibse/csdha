@@ -1,0 +1,25 @@
+/* partnerships.css */
+
+main.app.partnerships {
+    .item {
+	max-width: 30rem;
+	
+	.title {
+	    font-size: 1rem;
+	}
+	
+	.subtitle {
+	    font-size: 0.9rem;
+	}
+	
+	.time-published {
+	    margin-bottom: 0;
+	}
+    }
+}
+
+main.app.partnerships {
+    .label {
+	font-weight: 500;
+    }
+}

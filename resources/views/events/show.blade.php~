@@ -1,0 +1,149 @@
+@php
+$dates = $event->compactDates();
+@endphp
+<x-layout.user route="events.index" class="events event" title="Event">
+    <div class="content-header
+    @if ($event->cover_photo_filepath)
+        with-cover-photo
+    @endif
+        "
+    @if ($event->cover_photo_filepath)
+        style="background-image: linear-gradient(#0008, #0008), url('{{ route('events.showCoverPhoto', ['event' => $event->id, 'file' => basename($event->cover_photo_filepath) ]) }}');"
+    @endif
+    >
+        <div class="content-block article">
+            <hgroup class="text">
+                <h2 class="content-title">{{ $event->title }}</h2>
+                @if ($dates)
+                    @foreach ($dates as $date)
+                <p><time>{{ $date }}</time></p>
+                    @endforeach
+                @else
+                <p>No dates specified</p>
+                @endif
+            </hgroup>
+        </div>
+    </div>
+    <div class="info">
+        <div class="content-block article">
+            <nav class="main-actions">
+            @can('update', $event)
+                <a href="{{ route('events.edit', [
+                        'event' => $event->id
+                    ], false) }}">
+                    <span class="icon">
+                        <x-phosphor-pencil-simple/>
+                    </span>
+                    <span class="text">
+                        Edit
+                    </span>
+                </a>
+                <a href="{{ route('events.dates.index', [
+                        'event' => $event->id
+                    ], false) }}">
+                    <span class="icon">
+                        <x-phosphor-clock/>
+                    </span>
+                    <span class="text">
+                        Edit Dates
+                    </span>
+                </a>
+            @endcan
+            </nav>
+            <details class="section">
+                <summary class="section-title"><h3>General</h3></summary>
+            @can('update', $event)
+                <nav class="main-actions">
+                    <a href="{{ route('events.general.edit', ['event' => $event->id ]) }}">
+                        <span class="icon"> <x-phosphor-pencil-simple/></span>
+                        <span class="text"> Edit General Info </span>
+                    </a>
+                </nav>
+            @endcan
+                <h4 class="title">Venue</h4>
+                <p>{{ $event->venue }}</p>
+                <h4 class="title">Type of Activity</h4>
+                <p>{{ $event->type_of_activity }}</p>
+                <h4 class="title">Participants</h4>
+                <p>{{ $event->participants }}</p>
+                <h4 class="title">Objective</h4>
+                <pre>{{ $event->objective }}</pre>
+                <h4 class="title">Description</h4>
+                <pre>{{ $event->description }}</pre>
+                <h4 class="title">Narrative</h4>
+                <pre>{{ $event->narrative }}</pre>
+            </details>
+            <details open class="section">
+                <summary class="section-title"><h3>Deliverables</h3></summary>
+                <nav class="main-actions">
+                @can('update', $event)
+                    <a href="{{ route('events.deliverables.create', ['event' => $event->id], false) }}">
+                        <span class="icon">
+                            <x-phosphor-plus-circle/>
+                        </span>
+                        <span class="text">
+                            Create new
+                        </span>
+                    </a>
+                @endcan
+                </nav>
+                <ul class="item-list">
+                    @foreach($event->deliverables as $deliverable)
+                    <li class="item deliverable">
+                        <a href="{{ route('events.deliverables.show', [
+                                'event' => $event->id,
+                                'deliverable' => $deliverable->id
+                            ], false) }}"
+                        >
+                        {{ $deliverable->name }}
+                        </a>&nbsp;
+                        @if ($deliverable->assignees->contains(auth()->user()))
+                        (Assigned)&nbsp;
+                        @endif
+                        <div class="progress-meter">
+                            <div class="total">
+                                <div class="bar"
+                                    style="width: {{ $deliverable->progress }}"
+                                >
+                                </div>
+                            </div>
+                            <p class="progress">
+                                {{ $deliverable->progress }}
+                            </p>
+                        </div>
+                    </li>
+                    @endforeach
+                </ul>
+            </details>
+            <details class="section">
+                <summary class="section-title"><h3>Presenters</h3></summary>
+            </details>
+            <details class="section">
+                <summary class="section-title"><h3>Host</h3></summary>
+            </details>
+            <details class="section">
+                <summary class="section-title"><h3>Sponsors</h3></summary>
+            </details>
+            <details class="section">
+                <summary class="section-title"><h3>Partners</h3></summary>
+            </details>
+            <p>
+                <a href="{{ route('events.showAttendance', [
+                        'event' => $event->id
+                    ], false) }}"
+                >
+                    Attendance
+                </a>
+            </p>
+            @if ($event->letter_of_intent)
+            <p><a href="{{ route('events.letterOfIntent.show', [
+                    'event' => $event->id
+                ], false) }}">Letter of Intent</a></p>
+            @endif
+            <p><a href="#">Attachments</a></p>
+            <p><a href="{{ route('events.accomReport.show', [
+                    'event' => $event->id
+                ], false) }}">Accomplishment Report</a></p>
+        </div>
+    </div>
+</x-layout.user>

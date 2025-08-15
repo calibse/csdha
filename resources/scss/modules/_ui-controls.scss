@@ -1,0 +1,34 @@
+/* _ui-controls.scss */
+
+nav.app .links {
+    li {
+	display: flex;
+	align-items: center;
+
+	a {
+	    display: flex;
+	    align-items: center;
+
+	    .icon {
+		display: flex;
+		align-items: center;
+	    }
+	}
+    }
+}
+
+.anchor-action-container {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+a.action {
+    display: flex;
+    align-items: center;
+
+    .icon {
+	display: flex;
+	align-items: center;
+    }
+}

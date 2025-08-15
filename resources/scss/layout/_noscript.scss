@@ -1,0 +1,30 @@
+/* _noscript.scss */
+
+#noscript {
+	/*
+	position: relative;
+
+	.text {
+		position: relative;
+		animation: hide 0.001s 5s forwards;
+		background-color: var(--base-color-0);
+		visibility: hidden;
+		display: block;
+	}
+
+	&::before {
+		content: 'Loading, please wait..';
+		position: absolute;
+	}
+	*/
+}
+
+@keyframes hide {
+	from {
+		visibility: visible;
+	}
+
+	to {
+		visibility: visible;
+	}
+}

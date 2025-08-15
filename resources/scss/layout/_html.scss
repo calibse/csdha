@@ -1,0 +1,19 @@
+/* _html.scss */
+
+h1, h2, h3, h4, h5, h6, th {
+	&.title {
+	    font-weight: normal;
+	    font-size: 1rem;
+		max-width: var(--text-width);
+	}
+}
+
+pre {
+	font-family: inherit;
+	white-space: pre-wrap;
+	max-width: var(--text-width);
+}
+
+p {
+	max-width: var(--text-width);
+}

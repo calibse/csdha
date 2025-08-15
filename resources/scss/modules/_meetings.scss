@@ -1,0 +1,17 @@
+/* _events.scss */
+
+main.app.meetings {
+    .item {
+	max-width: 30rem;
+	
+	.time-published {
+	    margin-bottom: 0;
+	}
+    }
+}
+
+main.app.meetings {
+    .label {
+	font-weight: 500;
+    }
+}

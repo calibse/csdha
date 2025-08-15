@@ -1,0 +1,148 @@
+/*
+ * login.css
+ */
+
+.front-image {
+	background-image: url("/resources/images/app-cover.jpg");
+	background-size: cover;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	position: fixed;
+	z-index: -1;
+}
+
+.front-body-wrapper {
+	padding: 1rem 1rem;
+}
+
+.front-body {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: fixed;
+	z-index: 1;
+	border-radius: 1rem;
+	padding: 0 1rem;
+	padding-bottom: 2.5rem;
+	background-color: var(--color-4);
+	color: var(--bg-color);
+	width: 100vw;
+	max-width: 21rem;
+	height: max-content;
+	max-height: 100vh;
+	overflow: auto;
+	padding-top: 1rem;
+
+  	/*
+	background: rgba(255, 255, 255, 0.0);
+  	backdrop-filter: blur(30px) saturate(180%);
+	border-radius: 2rem;
+	border: 1px solid rgba(255, 255, 255, 0.8);
+  	box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2), 
+		inset 0 4px 20px rgba(255, 255, 255, 0.3);
+		*/
+}
+
+.front-header {
+	padding: .01rem 0;
+
+	.app-link {
+		display: flex;
+		height: 5rem;
+		text-decoration: none;
+		align-items: center;
+		color: var(--bg-color);
+		font-weight: 600;
+
+		.logo {
+			max-width: 6rem;
+			height: 100%;
+
+			img {
+				width: 100%;
+			}
+		}
+
+		.org-name {
+			display: block;
+			font-family: 'MuseoModerno';
+			font-size: 1.2rem;
+		}
+
+		.app-name {
+			font-family: 'Oxanium';
+			font-size: 1.4rem;
+		}
+	}
+}
+
+.front-content {
+	.title {
+		font-size: 1.2rem;
+	}
+
+	.sign-in-separator {
+		display: flex;
+
+		.text {
+			flex: 0 1 max-content;
+			padding: 0 .5rem;
+			margin: 0;
+		}
+
+		.line {
+			flex: 1 1 auto;
+			height: .6rem;
+			border-bottom: solid .1rem #777777;
+		}
+	}
+
+	.sign-in-with {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		margin: 1rem 0;
+
+		form {
+			width: 100%;
+		}
+	}
+
+	
+	.login-button {
+		background-color: transparent;
+		color: var(--bg-color);
+		max-width: 100%;
+		border-radius: 1rem;
+
+		&:hover, &:focus {
+			background-color: var(--color-5);
+		}
+	}
+
+	.validation-errors {
+		.title, strong {
+		}
+	}
+}
+
+@media (min-width: 40rem) {
+	.front-body-wrapper{
+		display: unset;
+		height: unset;
+		min-height: unset;
+		padding: unset;
+	}
+
+	.front-body {
+		border-radius: 0;
+		padding-top: 2.5rem;
+		margin: unset;
+		height: 100vh;
+		top: 0;
+		left: 0;
+		transform: initial;
+	}
+}

@@ -1,0 +1,23 @@
+/* _paginator.scss */
+
+.paginator { 
+	margin: 1rem 0;
+
+	.controls {
+		display: flex;
+		gap: 1rem;
+
+		.next, .previous {
+			.main-actions {
+				display: flex;
+				border: 0;
+				background-color: unset;
+				padding: unset;
+			}
+
+			&:last-child .main-actions {
+				justify-content: right;
+			}
+		}
+	}
+}

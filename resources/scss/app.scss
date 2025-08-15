@@ -1,0 +1,102 @@
+/* app.scss */
+
+@use "modern-normalize/modern-normalize";
+@use "layout/html";
+@use "layout/main";
+@use "layout/form";
+@use "layout/list";
+@use "layout/table";
+@use "layout/document";
+@use "layout/alert";
+@use "layout/paginator";
+@use "layout/noscript";
+@use "modules/account-home";
+@use "modules/login";
+@use "modules/events";
+@use "modules/funds";
+@use "modules/attendance";
+@use "modules/signup-invitation";
+@use "modules/event-registration";
+@use "layout";
+@use "theme";
+@use "test";
+
+/*
+@use "modules/ui-controls";
+@use "modules/meetings";
+@use "modules/platforms";
+@use "modules/partnerships";
+*/
+
+:root {
+	--page-width: 72rem;
+    --page-padding: 1rem;
+	--text-width: 40rem;
+    --header-height: 3.5rem;
+    --sidebar-width: 17rem;
+
+    --success-color: #5dffa2;
+    --failure-color: #ffddd8;
+    --fg-color: #000000;
+    --bg-color: #ffffff;
+    --base-color-0: #eff0f1;
+    --base-color-1: #dbdcdd;
+    --base-color-2: #dee0e2;
+    --base-color-3: #bcbebf;
+    --line-color: #c6c8c9;
+    --base-color: #f5faff;
+    --accent-color: #c6e0ff;
+    --shadow-color: #e2e2e2;
+    --disabled-color: #d5d6df;
+    --disabled-border-color: #b2b3bb; 
+    --color-0: #B3F8FF;
+    --color-1: #00d4ea;
+    --color-2: #00bbe3;
+    --color-3: #01a5d9;
+    --color-4: #1F497D;
+    /*
+    --color-4: #20355a;
+    --color-5: #1c2d4b;
+    */
+    --color-5: #20355a;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #001c30;
+        --fg-color: #c6e0ff;
+        --accent-color: #003b5e;
+        --base-color: #001321;
+        --shadow-color: #111111;
+        --disabled-color: #384350;
+        --color-0: #00223b;
+        --color-1: #00223a;
+        --color-2: #003b5e;
+        --color-3: #008fdb;
+        --color-4: #008fdb;
+        --color-5: #c6e0ff;
+    }
+}
+
+/* @import "global.css"; */
+/* @import "positions.css"; */
+
+@font-face {
+    font-family: "MuseoModerno";
+    src: url("/resources/fonts/MuseoModerno.ttf");
+}
+
+@font-face {
+    font-family: "Oxanium";
+    src: url("/resources/fonts/Oxanium.ttf");
+}
+
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+@source "../../storage/framework/views/*.php";
+@source "../**/*.blade.php";
+@source "../**/*.js";
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
