@@ -36,6 +36,7 @@ if [ "$(docker-compose ps -q)" ]; then
 	else
 		docker-compose restart web-user
 		docker-compose restart web-admin
+	fi
 else
 	rebuild=0
 	docker-compose up -d
