@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
+use App\Traits\HasPublicId;
 
 class Format
 {
@@ -31,6 +33,16 @@ class Format
             : null;
     }
 
+    public static function genAllPublicIds()
+    {
+        $models = collect(File::allFiles(app_path('Models')))
+            ->map(fn ($file) => 'App\\Models\\' . $file->getFilenameWithoutExtension())
+            ->filter(fn ($class) => in_array(HasPublicId::class, class_uses($class)));
+        foreach ($models as $model) {
+            $model::genPublicId();
+        }
+    }
+
     public static function getOpt($selected, $allModels): array
     {
         $options = [];
@@ -56,4 +68,6 @@ class Format
         }
         return $options;
     }
+
+
 }
