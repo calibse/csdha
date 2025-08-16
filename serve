@@ -2,6 +2,7 @@
 # serve
 
 export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+rebuild=0
 
 docker-compose() {
 	$HOME/.local/bin/docker-compose $@
@@ -16,15 +17,8 @@ usage() {
 }
 
 rebuild_images() {
-	if [ "$(docker-compose ps -q)" ]; then
-		podman compose build
-		docker-compose up -d --force-recreate web-user
-		docker-compose up -d --force-recreate web-admin
-	else
-		podman compose build
-		docker-compose up -d
-	fi
-	exit 1
+	rebuild=1
+	podman compose build
 }
 
 while getopts "r" opt; do
@@ -35,9 +29,15 @@ while getopts "r" opt; do
 done
 
 if [ "$(docker-compose ps -q)" ]; then
-	docker-compose restart web-user
-	docker-compose restart web-admin
+	if [ "$rebuild" = "1" ]; then
+		rebuild=0
+		docker-compose up -d --force-recreate web-user
+		docker-compose up -d --force-recreate web-admin
+	else
+		docker-compose restart web-user
+		docker-compose restart web-admin
 else
+	rebuild=0
 	docker-compose up -d
 fi
 
