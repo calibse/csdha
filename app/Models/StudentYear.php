@@ -20,14 +20,7 @@ class StudentYear extends Model
 
     public function events(): BelongsToMany
     {
-        return $this->belongsToMany(StudentYear::class, 'event_attendances')
-            ->as('attendance')
-            ->withPivot(
-                'course_id',
-                'student_year_id',
-                'student_section_id'
-            )
-            ->using(EventAttendance::class);
+        return $this->belongsToMany(Event::class, 'event_participants');
     }
 
     public function gspoaEvents(): BelongsToMany

@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\ActivityLog;
 use App\Models\EventDate;
+use App\Models\StudentYear;
 use Intervention\Image\Laravel\Facades\Image as IImage;
 use App\Http\Requests\SaveEventDateRequest;
 use App\Http\Requests\UpdateEventRequest;
@@ -58,13 +59,12 @@ class EventController extends Controller implements HasMiddleware
 
     public function create()
     {
-        return view('events.create', [
-            'users' => User::all()
-        ]);
+        
     }
 
     public function store(Request $request)
     {
+        /*
         $event = new Event();
         $event->title = $request->title;
         if ($request->cover_photo) {
@@ -74,14 +74,13 @@ class EventController extends Controller implements HasMiddleware
             $event->cover_photo_filepath = $imageFile;
         }
 
-        /*
         $event->venue = $request->venue;
         $event->type_of_activity = $request->type;
         $event->participants = $request->participants;
         $event->objective = $request->objective;
         $event->description = $request->description;
         $event->narrative = $request->narrative;
-        */
+
         $event->letter_of_intent = $request->letter
             ?->storeAs('events/letter_of_intents',
                       'letter_of_intent_' . Str::random(16) . '.pdf');
@@ -90,6 +89,7 @@ class EventController extends Controller implements HasMiddleware
         $event->editors()->sync($request->editors);
         $event->save();
         return redirect()->route("events.index");
+        */
     }
 
     public function show(Event $event)
@@ -119,7 +119,26 @@ class EventController extends Controller implements HasMiddleware
 
     public function edit(Event $event)
     {
+        $participantGroups = ['-1'];
+        $selectedParticipants = [];
+        $participants = StudentYear::all();
+        if (session('errors')?->any() && old('participant_year_levels') 
+                && count(array_intersect(old('participant_year_levels'), 
+                    $participantGroups)) === 0) {
+            $options = Format::getOpt(old('participant_year_levels'), 
+                $participants);
+            $selectedParticipants = $options['selected'];
+            $participants = $options['unselected'];
+        } elseif ($event->participant_type === 'students') {
+            $options = Format::getOpt($event->participants, 
+                $participants);
+            $selectedParticipants = $options['selected'];
+            $participants = $options['unselected'];
+        }
         return view("events.edit", [
+            'officersOnly' => $event->participant_type === 'officers',
+            'participants' => $participants,
+            'selectedParticipants' => $selectedParticipants,
             'event' => $event,
             'backRoute' => route('events.show', [
                 'event' => $event->public_id
@@ -145,6 +164,23 @@ class EventController extends Controller implements HasMiddleware
         $event->description = $request->description;
         $event->narrative = $request->narrative;
         $event->tag = $request->tag;
+        $event->save();
+        if ($request->record_attendance && 
+                !in_array('0', $request->record_attendance)) {
+            if (in_array('-1', $request->record_attendance)) {
+                $event->participant_type = 'officers';
+                $event->participants()->sync([]);
+                $event->automatic_attendance = false;
+            } else {
+                $event->participant_type = 'students';
+                $event->participants()->sync($request->record_attendance);
+                $event->automatic_attendance = $request
+                    ->boolean('automatic_attendance');
+            }
+        } else {
+            $event->participant_type = null;
+            $event->automatic_attendance = false;
+        }
         $event->save();
         return redirect()->route("events.show", ["event" => $event->public_id]);
     }
@@ -279,7 +315,6 @@ class EventController extends Controller implements HasMiddleware
         $event->description = $request->description;
         $event->narrative = $request->narrative;
         $event->save();
-
         return redirect()->route('events.show', ['event' => $event->public_id]);
     }
 

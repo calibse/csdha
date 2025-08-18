@@ -492,11 +492,13 @@ class GpoaActivityController extends Controller implements HasMiddleware
         }
         $activity->number_of_participants = 0;
         $activity->save();
+        /*
         if (in_array('0', $request->participant_year_levels)) {
             $activity->participantTypes()->sync(StudentYear::all());
         } else {
-            $activity->participantTypes()->sync($request->participant_year_levels);
+            $activity->participantTypes()->sync($request->participant_year_levels ?? []);
         }
+        */
         if (auth()->user()->can('updateEventHeads', $activity)) {
             if ($request->event_heads && in_array('0', $request->event_heads)) {
                 $activity->eventHeads()->syncWithPivotValues(

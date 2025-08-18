@@ -74,12 +74,14 @@
 						</a>
 					</li>
 					@endcan
+					@can ('viewAnyAccomReport', 'App\Models\Event')
 					<li>
 						<a href="{{ route('accom-reports.index') }}">
 							<span class="icon"><x-phosphor-files/></span>
 							<span class="text">Accom. Reports</span>
 						</a>
 					</li>
+					@endcan
 					{{-- 
 					@can ('viewAny', 'App\Models\Meeting')
 					<li>

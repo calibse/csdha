@@ -81,7 +81,7 @@ class Event extends Model
             ->using(EventAttendance::class);
     }
 
-    public function participantYears(): BelongsToMany
+    public function participants(): BelongsToMany
     {
         return $this->belongsToMany(StudentYear::class, 'event_participants');
     }

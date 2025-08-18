@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use App\Traits\HasPublicId;
+use App\Services\Format;
 
 class GpoaActivity extends Model
 {
@@ -19,6 +20,8 @@ class GpoaActivity extends Model
     protected function casts(): array
     {
         return [
+            'start_date' => 'date',
+            'end_date' => 'date',
             'president_submitted_at' => 'datetime',
             'officers_submitted_at' => 'datetime',
             'president_returned_at' => 'datetime',
@@ -131,8 +134,8 @@ class GpoaActivity extends Model
 
     public function date(): Attribute 
     {
-        $start = Carbon::parse($this->start_date);
-        $end = $this->end_date ? Carbon::parse($this->end_date) : null;
+        $start = $this->start_date;
+        $end = $this->end_date ? $this->end_date : null;
 
         if (!$end) {
             $date = $start->format('F j, Y');
@@ -228,6 +231,7 @@ class GpoaActivity extends Model
         }
         $event = new Event();
         $event->venue = $this->venue;
+        $event->attendance_method = 'manual';
         $event->gpoaActivity()->associate($this);
         $event->save();
         $date = new EventDate();

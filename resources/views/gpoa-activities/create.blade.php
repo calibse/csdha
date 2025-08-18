@@ -26,6 +26,7 @@
                 <label>Participants Description</label>
                 <input name="participants_description" value="{{ old('participants_description') ?? $activity?->participants }}">
             </p>
+            {{--
             <p>
                 <label>Participants Year Levels</label>
                 <select multiple size="6" name="participant_year_levels[]">
@@ -44,6 +45,7 @@
                     @endforeach
                 </select>
             </p>
+            --}}
             <p>
                 <label>Type of Activity</label>
                 <input name="type_of_activity" list="activity_types" autocomplete="off" value="{{ old('type_of_activity') ?? $activity?->type?->name }}">

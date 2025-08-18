@@ -10,10 +10,18 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasPublicId;
+use App\Services\Format;
 
 class EventDate extends Model
 {
     use HasPublicId;
+
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date'
+        ];
+    }
     
     public function attendees(): HasMany
     {
@@ -28,7 +36,7 @@ class EventDate extends Model
     public function startTimeShort(): Attribute 
     {
         $time = $this->start_time 
-            ? Carbon::parse($this->start_time)->tz(config('timezone'))->format('H:i')
+            ? Format::toLocal($this->start_time)->format('H:i')
             : null;
         return Attribute::make(
             get: fn () => $time,
@@ -38,7 +46,7 @@ class EventDate extends Model
     public function endTimeShort(): Attribute 
     {
         $time = $this->end_time 
-            ? Carbon::parse($this->end_time)->tz(config('timezone'))->format('H:i')
+            ? Format::toLocal($this->end_time)->format('H:i')
             : null;
         return Attribute::make(
             get: fn () => $time,
@@ -47,7 +55,7 @@ class EventDate extends Model
 
     public function dateFmt(): Attribute 
     {
-        $date = Carbon::parse($this->date)->tz(config('timezone'))->format('F j, Y');
+        $date = $this->date->format('F j, Y');
         return Attribute::make(
             get: fn () => $date
         );
@@ -56,7 +64,7 @@ class EventDate extends Model
     public function startTimeFmt(): Attribute
     {
         $time = $this->start_time 
-            ? Carbon::parse($this->start_time)->tz(config('timezone'))->format('g:i A')
+            ? Format::toLocal($this->start_time)->format('g:i A')
             : null;
         return Attribute::make(
             get: fn () => $time
@@ -66,7 +74,7 @@ class EventDate extends Model
     public function endTimeFmt(): Attribute
     {
         $time = $this->end_time 
-            ? Carbon::parse($this->end_time)->tz(config('timezone'))->format('g:i A')
+            ? Format::toLocal($this->end_time)->format('g:i A')
             : null;
         return Attribute::make(
             get: fn () => $time
