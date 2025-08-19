@@ -155,4 +155,28 @@ class EventPolicy
         return Response::deny();
     }
 
+    public function register(?User $user, Event $event): Response
+    {
+        $openRegis = $event->automatic_attendance;
+        return ($openRegis)
+            ? Response::allow()
+            : Response::deny();
+    }
+
+    public function evaluate(?User $user, Event $event): Response
+    {
+        $openEval = $event->accept_evaluation;
+        return ($openEval)
+            ? Response::allow()
+            : Response::deny();
+    }
+
+    public function recordAttendance(User $user, Event $event): Response
+    {
+        $openEval = $event->participant_type;
+        return ($openEval)
+            ? Response::allow()
+            : Response::deny();
+    }
+
 }

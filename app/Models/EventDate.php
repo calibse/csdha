@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -23,9 +24,10 @@ class EventDate extends Model
         ];
     }
     
-    public function attendees(): HasMany
+    public function attendees(): BelongsToMany
     {
-        return $this->hasMany(EventAttendance::class);
+        return $this->belongsToMany(EventStudent::class, 'event_attendees')
+            ->withPivot('created_at');
     }
 
     public function event(): BelongsTo
@@ -94,12 +96,12 @@ class EventDate extends Model
     #[Scope]
     protected function ongoing(Builder $query): void
     {
-        date_default_timezone_set(config('timezone'));
+        date_default_timezone_set(config('timezone', 'UTC'));
         $query->where(function ($query) {
-            $query->where('date', Carbon::now()->utc()->toDateString())
+            $query->where('date', Carbon::now()->toDateString())
                 ->where('start_time', null)->where('end_time', null);
         })->orWhere(function ($query) {
-            $query->where('date', Carbon::now()->utc()->toDateString())
+            $query->where('date', Carbon::now()->toDateString())
                 ->where('start_time', '<=', Carbon::now()->utc()->toTimeString())
                 ->where('end_time', '>=', Carbon::now()->utc()->toTimeString());
         });

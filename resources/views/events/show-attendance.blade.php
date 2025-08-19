@@ -2,6 +2,12 @@
 $routeParams = ['event' => $event->public_id];
 @endphp
 <x-layout.user title="Event Attendance" route="events.show" :$routeParams class="events" >
+    <x-slot:toolbar>
+        <a href="{{ $addRoute }}">
+            <span class="icon"><x-phosphor-plus-circle/></span>
+            <span class="text">Add Attendee</span>
+        </a>
+    </x-slot:toolbar>
     <article class="article">
     @foreach ($event->dates as $date)
         @if ($date->attendees->isNotEmpty())
@@ -17,12 +23,12 @@ $routeParams = ['event' => $event->public_id];
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($date->attendees as $attendee)
+                @foreach ($date->attendees()->orderBy('pivot_created_at', 'desc')->get() as $attendee)
                     <tr>
-                        <td>{{ $attendee->student->student_id }}</td>
-                        <td>{{ $attendee->student->full_name }}</td>
+                        <td>{{ $attendee->student_id }}</td>
+                        <td>{{ $attendee->full_name }}</td>
                         <td>{{ $attendee->course_section }}</td>
-                        <td>{{ $attendee->entry_time }}</td>
+                        <td>{{ $attendee->entry_time->setTimezone(config('timezone'))->format('h:i A') }}</td>
                     </tr>
                 @endforeach
                 </tbody>

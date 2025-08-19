@@ -7,9 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 
 class EventStudent extends Model
 {
+    public function eventDate(): BelongsToMany
+    {
+        return $this->belongsToMany(EventDate::class, 'event_attendees')
+            ->withPivot('created_at');
+    }
 
     public function eventAttended(): HasOne
     {
@@ -21,16 +28,13 @@ class EventStudent extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function fullName(): Attribute 
+    protected function fullName(): Attribute 
     {
-
-    /*
-        $fullName = preg_replace('!\s+!', ' ', $this->last_name . ' ' . $this->suffix_name . ', ' . $this->first_name . ' ' . $this->middle_name);
-        */
         $name = [
-            $this->last_name . ',',
+            $this->last_name . ($this->first_name || $this->middle_name || 
+                $this->suffix_name ? ',' : ''), 
             $this->first_name, 
-            $this->middle_name . ',',
+            $this->middle_name . ($this->suffix_name ? ',' : ''), 
             $this->suffix_name
         ];
         $nameFiltered = array_filter($name, function ($e) {
@@ -42,7 +46,7 @@ class EventStudent extends Model
         );
     }
 
-    public function courseSection(): Attribute 
+    protected function courseSection(): Attribute 
     {
         $courseSection = preg_replace('!\s+!', ' ', $this->course->acronym . 
         " " . $this->year . " - " . $this->section);
@@ -81,5 +85,21 @@ class EventStudent extends Model
                     ::firstWhere('year', '=', $value)->id
             ]
         );
+    }
+
+    protected function entryTime(): Attribute
+    {
+        $time = $this->pivot->created_at;
+        return Attribute::make(
+            get: fn () => $time
+        );
+    }
+
+    #[Scope]
+    protected function attended(Builder $query, Event $event): void
+    {
+        $query->whereHas('eventDate.event', function ($query) use ($event) {
+            $query->whereKey($event->id);
+        });
     }
 }

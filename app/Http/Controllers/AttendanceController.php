@@ -29,14 +29,12 @@ class AttendanceController extends Controller
             return response([], 404);
         }
         $student = $regis->student;
-        if (EventAttendee::whereBelongsTo($student, 'student')
-            ->whereBelongsTo($eventDate)->exists()) {
+        $event = $eventDate->event;
+        if ($event->dates()->whereAttachedTo($student, 'attendees')->exists()) {
             return response([], 200);
         }
-        $attendee = new EventAttendee();
-        $attendee->eventDate()->associate($eventDate);
-        $attendee->student()->associate($student);
-        $attendee->save();
+        $eventDate->attendees()->attach($student);
+        $eventDate->save();
         return response([], 200);
     }
 }

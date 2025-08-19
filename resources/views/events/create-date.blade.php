@@ -17,7 +17,7 @@ $formAction = $update
         @csrf
             <p>
                 <label>Date</label>
-                <input type="date" name="date" value="{{ old('date') ?? $date?->date }}">
+                <input type="date" name="date" value="{{ old('date') ?? $date?->date->toDateString() }}">
             </p>
             <p>
                 <label>Start time</label>

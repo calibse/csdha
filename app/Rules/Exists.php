@@ -11,6 +11,7 @@ class Exists implements ValidationRule
     private Builder $query;
     private string $column;
     private array $exceptions;
+    private string $table;
 
     public function __construct(Builder $query, string $column, 
             array $exceptions = [])
@@ -18,6 +19,7 @@ class Exists implements ValidationRule
         $this->query = $query;
         $this->column = $column;
         $this->exceptions = $exceptions;
+        $this->table = $query->getModel()->getTable();
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
@@ -25,7 +27,7 @@ class Exists implements ValidationRule
         if (!empty($this->exceptions) && in_array($value, 
                 $this->exceptions)) return;
         $query = clone $this->query;
-        if ($query->where($this->column, $value)->exists()) return;
+        if ($query->where($this->table. '.' . $this->column, $value)->exists()) return;
         $fail('The selected :attribute is invalid.');
     }
 }

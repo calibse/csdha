@@ -201,4 +201,15 @@ class Event extends Model
         );
     }
 
+    public function attendees(): Attribute
+    {
+        $attendees = EventStudent::whereHas('eventDate.event', 
+            function ($query) {
+                $query->whereKey($this->id);
+            })->get(); 
+        return Attribute::make(
+            get: fn () => $attendees
+        );
+    }
+
 }

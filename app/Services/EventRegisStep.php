@@ -7,6 +7,7 @@ use App\Models\StudentYear;
 use App\Models\Event;
 use App\Models\EventStudent;
 use App\Models\EventRegistration;
+use App\Rules\Exists;
 use Illuminate\Support\Str;
 
 class EventRegisStep extends MultiStepForm
@@ -20,9 +21,10 @@ class EventRegisStep extends MultiStepForm
 
     protected static function setViewsData(): void
     {
+        $event = request()->route('event');
         static::$viewsData = [
             'programs' => Course::all(),
-            'yearLevels' => StudentYear::all(),
+            'yearLevels' => $event->participants,
             'formTitle' => static::$formTitle 
         ];
     }
@@ -41,6 +43,7 @@ class EventRegisStep extends MultiStepForm
         $student->course()->associate(Course::find($studentInput['program']));
         $student->year = $studentInput['year_level'];
         $student->email = $studentInput['email'];
+        $student->section = $studentInput['section'];
         $student->save();
         $regis = new EventRegistration();
         $regis->token = Str::ulid();
@@ -67,11 +70,12 @@ class EventRegisStep extends MultiStepForm
 
     public static function setRoutes(): void
     {
+        $event = request()->route('event');
         self::$routes = [
             'events.registrations.consent' => [
                 'view' => 'event-registration.consent',
                 'rules' => [
-                    'consent' => ['required', 'boolean']
+                    'consent' => ['required', 'accepted']
                 ]
             ],
             'events.registrations.identity' => [
@@ -86,7 +90,9 @@ class EventRegisStep extends MultiStepForm
                         'regex:/^([A-Z0-9]+)-([A-Z0-9]+)-([A-Z0-9]+)-([A-Z0-9]+)$/'],
                     'program' => ['required', 'integer', 'exists:courses,id'],
                     'year_level' => ['required', 'integer', 
-                        'exists:student_years,id']
+                        new Exists($event->participants()
+                            ->getQuery(), 'id', [])],
+                    'section' => ['required', 'exists:student_sections,section']
                 ]
             ]
         ];

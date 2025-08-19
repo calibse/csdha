@@ -48,5 +48,9 @@
                 @endforeach
             </select>
         </p>
+        <p>
+            <label>Section</label>
+            <input name="section" value="{{ old('section') ?? ($inputs['section'] ?? null) }}">
+        </p>
     </form>
 </x-layout.multi-step-form>

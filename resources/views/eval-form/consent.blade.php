@@ -13,13 +13,15 @@
             copying, sharing, or forwarding this information are strictly 
             forbidden.
         </p>
-        <p class="radio-field">
-            <input type="radio" name="consent" id="consent-1" value="1" {{ ($inputs['consent'] ?? null) === '1' ? 'checked' : null }}>
+        <p>
+            <input type="checkbox" name="consent" id="consent-1" value="1" {{ ($inputs['consent'] ?? null) === '1' ? 'checked' : null }}>
             <label for="consent-1">I agree</label>
         </p>
+        {{-- 
         <p class="radio-field">
             <input type="radio" name="consent" id="consent-0" value="0" {{ ($inputs['consent'] ?? null) === '0' ? 'checked' : null }}>
             <label for="consent-0">I disagree</label>
         </p>
+        --}}
     </form>
 </x-layout.eval-form>

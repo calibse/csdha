@@ -13,12 +13,14 @@ use PDF;
 use App\Services\Image;
 use App\Models\User;
 use App\Models\Event;
-use App\Models\ActivityLog;
 use App\Models\EventDate;
+use App\Models\EventStudent;
 use App\Models\StudentYear;
+use App\Models\Course;
 use Intervention\Image\Laravel\Facades\Image as IImage;
 use App\Http\Requests\SaveEventDateRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Http\Requests\SaveAttendeeRequest;
 use App\Services\Format;
 
 class EventController extends Controller implements HasMiddleware
@@ -48,6 +50,10 @@ class EventController extends Controller implements HasMiddleware
                 'updateGeneralInfo',
             ]),
             new Middleware('can:delete,event', only: ['destroy']),
+            new Middleware('can:update,date', only: [
+                'editDate',
+                'updateDate'
+            ]),
         ];
     }
 
@@ -171,15 +177,19 @@ class EventController extends Controller implements HasMiddleware
                 $event->participant_type = 'officers';
                 $event->participants()->sync([]);
                 $event->automatic_attendance = false;
+                $event->accept_evaluation = false;
             } else {
                 $event->participant_type = 'students';
                 $event->participants()->sync($request->record_attendance);
                 $event->automatic_attendance = $request
                     ->boolean('automatic_attendance');
+                $event->accept_evaluation = $request
+                    ->boolean('accept_evaluation');
             }
         } else {
             $event->participant_type = null;
             $event->automatic_attendance = false;
+            $event->accept_evaluation = false;
         }
         $event->save();
         return redirect()->route("events.show", ["event" => $event->public_id]);
@@ -224,7 +234,52 @@ class EventController extends Controller implements HasMiddleware
     public function showAttendance(Event $event)
     {
         return view('events.show-attendance', [
-            'event' => $event
+            'event' => $event,
+            'addRoute' => route('events.attendance.create', [
+                'event' => $event->public_id
+            ])
+        ]);
+    }
+
+    public function createAttendee(Event $event)
+    {
+        return view('events.add-attendee', [
+            'dates' => $event->dates,
+            'backRoute' => route('events.attendance.show', [
+                'event' => $event->public_id
+            ]),
+            'submitRoute' => route('events.attendance.store', [
+                'event' => $event->public_id
+            ]),
+            'programs' => Course::all(),
+            'yearLevels' => $event->participants
+        ]);
+    }
+
+    public function storeAttendee(SaveAttendeeRequest $request, Event $event)
+    {
+        $student = EventStudent::attended($event)
+            ->where('student_id', $request->student_id)->first();
+        if (!$student) {
+            $student = new EventStudent();
+        }
+        $student->student_id = $request->student_id;
+        $student->first_name = $request->first_name;
+        $student->middle_name = $request->middle_name;
+        $student->last_name = $request->last_name;
+        $student->suffix_name = $request->suffix_name;
+        $student->course()->associate(Course::find($request->program));
+        $student->year = $request->year_level;
+        $student->email = $request->email;
+        $student->section = $request->section;
+        $student->save();
+        if (!$date) {
+            $date = EventDate::findByPublic($request->date);
+            $date->attendees()->attach($student);
+            $date->save();
+        }
+        return redirect()->route('events.attendance.show', [
+            'event' => $event->public_id
         ]);
     }
 
@@ -262,7 +317,7 @@ class EventController extends Controller implements HasMiddleware
         } else {
             $date = $event->dates()->find($date->id);
         }
-        $date->date = Format::toUtc($request->date);
+        $date->date = $request->date;
         $date->start_time = Format::toUtc($request->start_time);
         $date->end_time = Format::toUtc($request->end_time);
         $date->save();
@@ -285,7 +340,7 @@ class EventController extends Controller implements HasMiddleware
 
     public function destroyDate(Event $event, EventDate $date)
     {
-        $date->attendees()->delete();
+        $date->attendees()->detach();
         $date->delete(); 
         return redirect()->route('events.dates.index', ['event' => $event->public_id])
             ->with('status', 'Date deleted.');

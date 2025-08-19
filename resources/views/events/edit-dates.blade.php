@@ -16,7 +16,11 @@ $routeParams = ['event' => $event->public_id]
                 <time class="content">{{ $date->full_date }}</time>
                 <span class="context-menu">
                     <form action="{{ route('events.dates.edit', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="edit-action">
-                        <button type="submit">Edit</button>
+                        <button type="submit"
+                            @cannot ('update', $date)
+                            disabled
+                            @endcannot
+                        >Edit</button>
                         <script type="application/json" class="field-values">
 {
     "date": "{{ $date->date }}",

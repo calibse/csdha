@@ -31,6 +31,10 @@
             	<input value="1" type="checkbox" id="auto-attendance" name="automatic_attendance" {{ $event->automatic_attendance ? 'checked' : null }}>
             	<label for="auto-attendance">Automatic Attendance <small>(for students only)</small></label>
             </p>
+            <p>
+            	<input value="1" type="checkbox" id="accept-eval" name="accept_evaluation" {{ $event->accept_evaluation ? 'checked' : null }}>
+            	<label for="accept-eval">Accept Evaluation <small>(for students only)</small></label>
+            </p>
 			<p>
 				<label>Tag <small>(for QR code label)</small></label>
 				<input name="tag" value="{{ $event->tag }}">

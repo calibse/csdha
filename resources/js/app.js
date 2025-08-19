@@ -31,7 +31,7 @@ function setCookie(name, value) {
     const now = new Date();
     now.setFullYear(now.getFullYear() + 1);
     const expires = now.toUTCString(); 
-    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+    document.cookie = `${name}=${value}; expires=${expires}; sameSite=Lax; path=/`;
 }
 
 function activateToggler(togglerSelector, selector) {

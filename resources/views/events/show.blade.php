@@ -52,21 +52,27 @@
         </ul>
         @endif
 
+        @can ('register', $event)
         <h3>Registration Form</h3>
         <p>
             <a href="{{ $regisRoute }}">
                 {{ $regisRoute }}
             </a>
         </p>
+        @endcan
         
+        @can ('recordAttendance', $event)
         <h3>Attendance</h3>
         <p><a href="{{ $attendanceRoute }}">Attendance</a></p>
+        @endcan
 
+        @can ('evaluate', $event)
         <h3>Evaluation Form</h3>
         <p>
             <a href="{{ $evalRoute }}">
                 {{ $evalRoute }}
             </a>
         </p>
+        @endcan
     </article>
 </x-layout.user>

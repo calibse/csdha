@@ -3,7 +3,7 @@ $routeParams = ['event' => $event->public_id];
 @endphp
 <x-layout.user route="events.dates.index" :$routeParams class="events form" title="Delete Date">
     <article class="article">
-        <p>Are you sure you want to delete this date 
+        <p>Attendance records in this date will be destroyed. Are you sure you want to delete this date 
             <strong><time>{{ $date->full_date }}</time></strong>?
         </p> 
         <div class="submit-buttons">

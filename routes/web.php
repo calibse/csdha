@@ -102,8 +102,8 @@ Route::domain(config('custom.admin_domain'))->group(function () {
 
 
 /* Main routes */
-Route::prefix('event-register-{event}')->name('events.registrations.')
-        ->group(function () {
+Route::middleware(['can:register,event'])->prefix('event-register-{event}')
+        ->name('events.registrations.')->group(function () {
     Route::controller(MultiStepFormController::class)->group(function () {
         Route::middleware([CheckFormStep::class])->group(function () {
 
@@ -131,7 +131,8 @@ Route::get('/event-register-{event}{slash?}', function ($id) {
     ]);
 })->where('slash', '\/');
 
-Route::controller(MultiStepFormController::class)->name('events.eval-form.')
+Route::middleware(['can:evaluate,event'])
+        ->controller(MultiStepFormController::class)->name('events.eval-form.')
         ->group(function () {
     Route::middleware([CheckFormStep::class])->group(function () {
 
@@ -316,6 +317,12 @@ Route::middleware('auth')->group(function () {
 
                 Route::get('/attendance.html', 'showAttendance')
                     ->name('attendance.show');
+
+                Route::get('/add-attendee.html', 'createAttendee')
+                    ->name('attendance.create');
+
+                Route::post('/add-attendee.php', 'storeAttendee')
+                    ->name('attendance.store');
 
                 /*
                 Route::get('/accom-report.html', 'showAccomReport')

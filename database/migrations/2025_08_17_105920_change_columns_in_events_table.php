@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->string('participant_type', length: 15)->nullable();
-            $table->boolean('automatic_attendance')->nullable();
+            $table->boolean('automatic_attendance');
+            $table->boolean('accept_evaluation');
         });
         DB::statement("
             alter table events
@@ -31,6 +32,7 @@ return new class extends Migration
         Schema::table('events', function (Blueprint $table) {
             $table->dropColumn('participant_type');
             $table->dropColumn('automatic_attendance');
+            $table->dropColumn('accept_evaluation');
         });
     }
 };

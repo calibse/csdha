@@ -23,6 +23,7 @@ class UpdateEventRequest extends FormRequest
             'record_attendance.*' => [new Exists(StudentYear::query(), 'id',
                 ['0', '-1'])],
             'automatic_attendance' => ['boolean'],
+            'accept_evaluation' => ['boolean'],
             'tag' => ['max:15'],
             'venue' => ['max:255'],
             'description' => [new MaxText],

@@ -36,7 +36,7 @@ class EvalFormStep extends MultiStepForm
             'events.eval-form.consent' => [
                 'view' => 'eval-form.consent',
                 'rules' => [
-                    'consent' => ['required', 'boolean']
+                    'consent' => ['required', 'accepted']
                 ]
             ], 
             'events.eval-form.identity' => [
