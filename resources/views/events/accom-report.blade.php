@@ -75,40 +75,42 @@
         <h2 class="event-name">{{ $activity->name }}</h2>
         <ol class="main-list" type="I">
             <li>
-                <h3>Date and Time</h3>
+                <h3>DATE AND TIME</h3>
                 @foreach ($event->compactDates() as $date)
                 <p>{{ $date }}</p>
                 @endforeach
             </li>
             <li>
-                <h3>Venue</h3>
+                <h3>VENUE</h3>
                 <p>{{ $event->venue }}</p>
             </li>
             <li>
-                <h3>Type of Activity</h3>
+                <h3>TYPE OF ACTIVITY</h3>
                 <p>{{ $activity->type?->name }}</p>
             </li>
             <li>
 
-                <h3>Participants</h3>
+                <h3>PARTICIPANTS</h3>
                 <p>{{ $activity->participants }}</p>
             </li>
             <li>
-                <h3>Objectives</h3>
+                <h3>OBJECTIVES</h3>
                 <pre>{{ $activity->objectives }}</pre>
             </li>
             <li>
-                <h3>Description</h3>
+                <h3>DESCRIPTION</h3>
                 <pre>{{ $event->description }}</pre>
             </li>
             <li>
-                <h3>Narrative</h3>
+                <h3>NARRATIVE</h3>
                 <pre>{{ $event->narrative }}</pre>
             </li>
-            {{-- 
+            @if ($attendance)
             <li>
-                <h3>Attendance</h3>
+                <h3>ATTENDANCE</h3>
                 <table>
+                    @switch ($event->participant_type)
+                    @case ('students')
                     <thead>
                         <tr>
                             <th>Year</th>
@@ -116,29 +118,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($event->participantYears()
-                            ->orderBy('year', 'asc')->get() as $year)
-                        @php
-                        $count = $event->attendeesByYear($year->year)->count();
-                        $totalAtt += $count;
-                        @endphp
+                        @foreach ($attendance as $year => $count)
                         <tr>
-                            <th>{{ ordinal($year->year) }} Year</th>
+                            <td>{{ $year }}</td>
                             <td>{{ $count }}</td>
                         </tr>
-                    @endforeach
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <td>{{ $totalAtt }}</td>
+                            <td>{{ $attendanceTotal }}</td>
                         </tr>
                     </tfoot>
+                        @break
+                    @case ('officers')
+                        @break
+                    @endswitch
+
                 </table>
             </li>
+            @endif
+            {{--
             <li>
-
-                <h3> EVALUATION</h3>
+                <h3>EVALUATION</h3>
                 <ul>
                     <li>
                         <h4>Scale</h4>
@@ -180,10 +183,10 @@
                     </tr>
                 </table>
             </li>
-            --}}
             <li>
                 <h3>ATTACHMENTS</h3>
             </li>
+            --}}
         <ol>
     </main>
 </body>

@@ -121,21 +121,56 @@ class Event extends Model
         return $this->hasMany(EventDate::class);
     }
 
+    public function attendanceTest()
+    {
+        return $attendance;
+    }
+
     public function accomReportFile()
     {
-        /*
-        return view('events.accom-report', [
+        switch ($this->participant_type) {
+        case 'students':
+            $attendance = [];
+            $attendanceQuery = EventStudent::whereHas(
+                'eventDate.event', function ($query) {
+                    $query->whereKey($this->id);
+            });
+            $yearLevels = $this->participants;
+            foreach ($yearLevels as $yearLevel) {
+                $attendance[$yearLevel->label] = (clone $attendanceQuery)
+                    ->whereBelongsTo($yearLevel, 'yearModel')->count();
+            }
+            $attendanceTotal = $attendanceQuery->whereHas('yearModel', 
+                function ($query) use ($yearLevels) {
+                    $query->whereIn('id', $yearLevels->pluck('id')->toArray());
+            })->count();
+            break;
+        case 'officers':
+            $attendance = User::whereHas('eventDates.event', function ($query) {
+                $query->whereKey($this->id);
+            })->get();
+            $attendanceTotal = null;
+            break;
+        default:  
+            $attendance = null;
+            $attendanceTotal = null;
+        }
+        $viewData = [
             'event' => $this,
-            'activity' => $this->gpoaActivity
-        ]);
-        */
-        return WeasyPrint::prepareSource(new PagedView('events.accom-report', [
-            'event' => $this,
+            'attendance' => $attendance,
+            'attendanceTotal' => $attendanceTotal,
             'editors' => User::withPerm('accomplishment-reports.edit')->get(),
             'activity' => $this->gpoaActivity,
             'approved' => $this->accomReport?->status === 'approved',
             'president' => User::ofPosition('president')->first()
-        ]))->stream('accom_report.pdf');
+        ];
+        $format = 'pdf';
+        return match ($format) {
+            'html' => view('events.accom-report', $viewData),
+            'pdf' => WeasyPrint::prepareSource(
+                new PagedView('events.accom-report', $viewData))
+                ->stream('accom_report.pdf')
+        };
     }
 
     public function compactDates()

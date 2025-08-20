@@ -38,6 +38,12 @@ class User extends Authenticatable
         ];
     }
 
+    public function eventDates(): BelongsToMany
+    {
+        return $this->belongsToMany(EventDate::class, 'event_officer_attendees')
+            ->withPivot('created_at')->withTimestamps();
+    }
+
 	public function hasPerm($permissions)
 	{
         if (!$this->position) return false;

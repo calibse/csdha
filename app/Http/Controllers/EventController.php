@@ -221,16 +221,6 @@ class EventController extends Controller implements HasMiddleware
         return view('events.letter_of_intent', ['event' => $event]);
     }
 
-    public function downloadAccomReport(Event $event)
-    {
-
-    }
-
-    public function inspectAccomReport(Event $event)
-    {
-        return view('pdf.test', ['event' => $event]);
-    }
-
     public function streamAccomReport(Event $event)
     {
         return $event->accomReportFile();

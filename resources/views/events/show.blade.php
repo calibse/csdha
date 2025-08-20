@@ -4,7 +4,11 @@
             <span class="icon"><x-phosphor-pencil-simple/></span>
             <span class="text">Edit</span>
         </a>
-        <a href="{{ $genArRoute }}">
+        <a 
+            @can ('viewAccomReport', $event)
+            href="{{ $genArRoute }}"
+            @endcan
+        >
             <span class="icon"><x-phosphor-file-plus/></span>
             <span class="text">Submit AR</span>
         </a>
