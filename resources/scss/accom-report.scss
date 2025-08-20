@@ -87,6 +87,12 @@ table {
         background-color: #eeeeee;
         text-align: left;
     }
+
+    &.officers-attendance {
+        th, td {
+            text-align: center;
+        }
+    }
 }
 
 #page-header {

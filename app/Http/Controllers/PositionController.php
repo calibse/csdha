@@ -31,7 +31,9 @@ class PositionController extends Controller implements HasMiddleware
 
 	public function index() 
 	{		
-		return view('positions.index', ['positions' => Position::all()]);
+		return view('positions.index', [
+			'positions' => Position::orderBy('position_order', 'asc')->get()
+		]);
 	}
 	
 	public function show(Request $request, Position $position)
@@ -58,6 +60,7 @@ class PositionController extends Controller implements HasMiddleware
 	{
 		$position = new Position();
 		$position->name = $request->position_name;
+		$position->position_order = $request->position_order;
 		$position->save();
         if ($request->officer >= "1") {
             $user = User::findByPublic($request->officer);
@@ -111,6 +114,7 @@ class PositionController extends Controller implements HasMiddleware
         $permissions = array_values(array_unique(
         	array_merge($permissions, $defaultPerm)));
     	$position->permissions()->sync($permissions);
+		$position->position_order = $request->position_order;
 		$position->save();
 		
 		return redirect()->route('positions.index');

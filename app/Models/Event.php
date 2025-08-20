@@ -136,19 +136,23 @@ class Event extends Model
                     $query->whereKey($this->id);
             });
             $yearLevels = $this->participants;
-            foreach ($yearLevels as $yearLevel) {
-                $attendance[$yearLevel->label] = (clone $attendanceQuery)
-                    ->whereBelongsTo($yearLevel, 'yearModel')->count();
-            }
-            $attendanceTotal = $attendanceQuery->whereHas('yearModel', 
+            $attendeesListQuery = (clone $attendanceQuery)->whereHas('yearModel', 
                 function ($query) use ($yearLevels) {
                     $query->whereIn('id', $yearLevels->pluck('id')->toArray());
-            })->count();
+            });
+            $attendanceTotal = (clone $attendeesListQuery)->count();
+            if ($attendanceTotal <= 15) {
+                $attendance = (clone $attendeesListQuery)
+                    ->orderBy('last_name', 'asc')->get();
+            } else {
+                foreach ($yearLevels as $yearLevel) {
+                    $attendance[$yearLevel->label] = (clone $attendanceQuery)
+                        ->whereBelongsTo($yearLevel, 'yearModel')->count();
+                }
+            }
             break;
         case 'officers':
-            $attendance = User::whereHas('eventDates.event', function ($query) {
-                $query->whereKey($this->id);
-            })->get();
+            $attendance = $this->officerAttendees();
             $attendanceTotal = null;
             break;
         default:  
@@ -236,15 +240,21 @@ class Event extends Model
         );
     }
 
-    public function attendees(): Attribute
+    public function officerAttendees()
     {
-        $attendees = EventStudent::whereHas('eventDate.event', 
-            function ($query) {
+        $attendees = User::withAggregate('position', 'position_order')
+            ->whereHas('eventDates.event', function ($query) {
                 $query->whereKey($this->id);
-            })->get(); 
-        return Attribute::make(
-            get: fn () => $attendees
-        );
+            })->orderBy('position_position_order', 'asc')->get(); 
+        return $attendees;
+    }
+
+    public function attendees()
+    {
+        $attendees = EventStudent::whereHas('eventDate.event', function ($query) {
+            $query->whereKey($this->id);
+        })->get(); 
+        return $attendees;
     }
 
 }

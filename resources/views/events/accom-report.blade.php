@@ -108,9 +108,27 @@
             @if ($attendance)
             <li>
                 <h3>ATTENDANCE</h3>
+                @switch ($event->participant_type)
+                @case ('students')
+                    @if ($attendanceTotal <= 15)
                 <table>
-                    @switch ($event->participant_type)
-                    @case ('students')
+                    <thead>
+                        <tr>
+                            <th>Course & Section</th>
+                            <th>Attendees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($attendance as $attendee)
+                        <tr>
+                            <td>{{ $attendee->course_section }}</td>
+                            <td>{{ $attendee->full_name }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                    @else
+                <table>
                     <thead>
                         <tr>
                             <th>Year</th>
@@ -118,12 +136,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($attendance as $year => $count)
+                    @foreach ($attendance as $year => $count)
                         <tr>
                             <td>{{ $year }}</td>
                             <td>{{ $count }}</td>
                         </tr>
-                        @endforeach
+                    @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
@@ -131,12 +149,28 @@
                             <td>{{ $attendanceTotal }}</td>
                         </tr>
                     </tfoot>
-                        @break
-                    @case ('officers')
-                        @break
-                    @endswitch
-
                 </table>
+                    @endif
+                    @break
+                @case ('officers')
+                <table class="officers-attendance">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($attendance as $officer)
+                        <tr>
+                            <td>{{ $officer->position->name }}</td>
+                            <td>{{ $officer->full_name }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                    @break
+                @endswitch
             </li>
             @endif
             {{--

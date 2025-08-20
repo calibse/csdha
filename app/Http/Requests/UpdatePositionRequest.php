@@ -22,6 +22,7 @@ class UpdatePositionRequest extends FormRequest
         return [
             'position_name' => ['required', 'max:100', 
                  Rule::unique('positions', 'name')->ignore($position->id)],
+            'position_order' => ['nullable', 'integer', 'min:0', 'max:255'],
             'officer' => ['nullable', 'integer', 
                 new Exists(User::query(), 'public_id', ['0'])],
             'permissions.*' => ['nullable', 'integer', 'exists:permissions,id'],

@@ -75,6 +75,16 @@ form {
 	.button, .form-submit {
 		text-align: right;
 	}
+
+	.inline {
+		max-width: var(--text-width);
+
+		p {
+			display: inline-block;
+			max-width: unset;
+			margin-right: 1rem;
+		}
+	}
 }
 
 .submit-buttons, .submit-button {

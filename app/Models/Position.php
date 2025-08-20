@@ -14,6 +14,18 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Position extends Model
 {	
+    protected static function booted(): void
+    {
+        static::saving(function (Position $position) {
+            if ($position->position_order === null) {
+                $lastOrder = Position::orderBy('position_order', 'desc')
+                    ->value('position_order');
+                $position->position_order = $lastOrder === 255 ? $lastOrder 
+                    : $lastOrder + 1;
+            }
+        });
+    }
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class);

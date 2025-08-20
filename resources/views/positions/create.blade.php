@@ -8,6 +8,10 @@
 				<input name="position_name" value="{{ old('position_name') }}">
 			</p>
 			<p>
+				<label>Position order</label>
+				<input type="number" name="position_order" value="{{ old('position_order') }}">
+			</p>
+			<p>
 				<label>Officer</label>
 				<select name="officer">
 					<option value="">Select Member</option>
