@@ -10,24 +10,22 @@
     <article class="article">
         <x-alert/>
         @foreach ($event->dates as $date)
-            @if ($date->attendees->isNotEmpty())
+            @if ($date->officerAttendees->isNotEmpty())
         <h2 class="title">{{ $date->full_date }}</h2>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Student ID</th>
                         <th>Name</th>
-                        <th>Course & Year</th>
+                        <th>Position</th>
                         <th>Entry Time</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($date->attendees()->orderBy('pivot_created_at', 'desc')->get() as $attendee)
+                    @foreach ($date->officerAttendees()->orderBy('pivot_created_at', 'desc')->get() as $attendee)
                     <tr>
-                        <td>{{ $attendee->student_id }}</td>
                         <td>{{ $attendee->full_name }}</td>
-                        <td>{{ $attendee->course_section }}</td>
+                        <td>{{ $attendee->position->name }}</td>
                         <td>{{ $attendee->entry_time->setTimezone(config('timezone'))->format('h:i A') }}</td>
                     </tr>
                     @endforeach

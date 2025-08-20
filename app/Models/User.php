@@ -246,4 +246,11 @@ class User extends Authenticatable
         });
     }
 
+    protected function entryTime(): Attribute
+    {
+        $time = $this->pivot->created_at;
+        return Attribute::make(
+            get: fn () => $time
+        );
+    }
 }

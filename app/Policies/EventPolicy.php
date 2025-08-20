@@ -179,4 +179,13 @@ class EventPolicy
             : Response::deny();
     }
 
+    public function addAttendee(User $user, Event $event): Response
+    {
+        $recordsAttendance = $event->participant_type !== null;
+        $manualAttendance = $event->automatic_attendance === 0; 
+        return ($recordsAttendance && $manualAttendance) 
+            ? Response::allow() 
+            : Response::deny();
+    }
+
 }

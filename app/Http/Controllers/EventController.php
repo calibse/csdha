@@ -45,14 +45,19 @@ class EventController extends Controller implements HasMiddleware
                 'storeDate',
                 'updateDate',
                 'confirmDestroyDate',
-                'destroyDate',
-                'editGeneralInfo',
-                'updateGeneralInfo',
+                'destroyDate'
             ]),
             new Middleware('can:delete,event', only: ['destroy']),
             new Middleware('can:update,date', only: [
                 'editDate',
                 'updateDate'
+            ]),
+            new Middleware('can:addAttendee,event', only: [
+                'createAttendee',
+                'storeAttendee'
+            ]),
+            new Middleware('can:recordAttendance,event', only: [
+                'showAttendance',
             ]),
         ];
     }
@@ -233,54 +238,92 @@ class EventController extends Controller implements HasMiddleware
 
     public function showAttendance(Event $event)
     {
-        return view('events.show-attendance', [
-            'event' => $event,
-            'addRoute' => route('events.attendance.create', [
-                'event' => $event->public_id
+        return match ($event->participant_type) {
+            'students' => view('events.show-attendance', [
+                'event' => $event,
+                'backRoute' => route('events.show', [
+                    'event' => $event->public_id
+                ]),
+                'addRoute' => route('events.attendance.create', [
+                    'event' => $event->public_id
+                ])
+            ]),
+            'officers' => view('events.show-attendance-officers', [
+                'event' => $event,
+                'backRoute' => route('events.show', [
+                    'event' => $event->public_id
+                ]),
+                'addRoute' => route('events.attendance.create', [
+                    'event' => $event->public_id
+                ])
             ])
-        ]);
+        };
     }
 
     public function createAttendee(Event $event)
     {
-        return view('events.add-attendee', [
-            'dates' => $event->dates,
-            'backRoute' => route('events.attendance.show', [
-                'event' => $event->public_id
+        return match($event->participant_type) {
+            'students' => view('events.add-attendee', [
+                'dates' => $event->dates,
+                'backRoute' => route('events.attendance.show', [
+                    'event' => $event->public_id
+                ]),
+                'submitRoute' => route('events.attendance.store', [
+                    'event' => $event->public_id
+                ]),
+                'programs' => Course::all(),
+                'yearLevels' => $event->participants
             ]),
-            'submitRoute' => route('events.attendance.store', [
-                'event' => $event->public_id
-            ]),
-            'programs' => Course::all(),
-            'yearLevels' => $event->participants
-        ]);
+            'officers' => view('events.add-attendee-officer', [
+                'dates' => $event->dates,
+                'backRoute' => route('events.attendance.show', [
+                    'event' => $event->public_id
+                ]),
+                'submitRoute' => route('events.attendance.store', [
+                    'event' => $event->public_id
+                ]),
+                'officers' => User::has('position')->notOfPosition('adviser')
+                    ->orderBy('first_name', 'asc')->get()
+            ])
+        };
     }
 
     public function storeAttendee(SaveAttendeeRequest $request, Event $event)
     {
-        $student = EventStudent::attended($event)
-            ->where('student_id', $request->student_id)->first();
-        if (!$student) {
-            $student = new EventStudent();
-        }
-        $student->student_id = $request->student_id;
-        $student->first_name = $request->first_name;
-        $student->middle_name = $request->middle_name;
-        $student->last_name = $request->last_name;
-        $student->suffix_name = $request->suffix_name;
-        $student->course()->associate(Course::find($request->program));
-        $student->year = $request->year_level;
-        $student->email = $request->email;
-        $student->section = $request->section;
-        $student->save();
-        if (!$date) {
+        switch ($event->participant_type) {
+        case 'students':
+            $student = EventStudent::attended($event)
+                ->where('student_id', $request->student_id)->first();
+            $studentExists = true;
+            if (!$student) {
+                $studentExists = false;
+                $student = new EventStudent();
+            }
+            $student->student_id = $request->student_id;
+            $student->first_name = $request->first_name;
+            $student->middle_name = $request->middle_name;
+            $student->last_name = $request->last_name;
+            $student->suffix_name = $request->suffix_name;
+            $student->course()->associate(Course::find($request->program));
+            $student->year = $request->year_level;
+            $student->email = $request->email;
+            $student->section = $request->section;
+            $student->save();
+            if (!$studentExists) {
+                $date = EventDate::findByPublic($request->date);
+                $date->attendees()->attach($student);
+                $date->save();
+            }
+            break;
+        case 'officers':
             $date = EventDate::findByPublic($request->date);
-            $date->attendees()->attach($student);
+            $date->officerAttendees()->sync(User::whereIn('public_id', 
+                $request->officers ?? [])->get());
             $date->save();
         }
         return redirect()->route('events.attendance.show', [
             'event' => $event->public_id
-        ]);
+        ])->with('status', 'Attendee added.');
     }
 
     public function dateIndex(Event $event)

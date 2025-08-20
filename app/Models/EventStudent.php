@@ -15,7 +15,7 @@ class EventStudent extends Model
     public function eventDate(): BelongsToMany
     {
         return $this->belongsToMany(EventDate::class, 'event_attendees')
-            ->withPivot('created_at');
+            ->withPivot('created_at')->withTimestamps();
     }
 
     public function eventAttended(): HasOne
