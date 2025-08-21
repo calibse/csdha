@@ -231,7 +231,6 @@ class GpoaActivity extends Model
         }
         $event = new Event();
         $event->venue = $this->venue;
-        $event->attendance_method = 'manual';
         $event->automatic_attendance = false;
         $event->accept_evaluation = false;
         $event->gpoaActivity()->associate($this);

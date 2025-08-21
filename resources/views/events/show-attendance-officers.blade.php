@@ -12,8 +12,8 @@
     <article class="article">
         <x-alert/>
         @foreach ($event->dates as $date)
-            @if ($date->officerAttendees->isNotEmpty())
         <h2 class="title">{{ $date->full_date }}</h2>
+            @if ($date->officerAttendees->isNotEmpty())
         <div class="table-container">
             <table>
                 <thead>
