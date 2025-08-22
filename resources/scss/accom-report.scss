@@ -175,12 +175,12 @@ table {
 
 
     .credit {
-        padding-bottom: 1.5cm;
+        margin-bottom: 1cm;
 
         .title {
             font-weight: bold;
             font-size: 14pt;
-            margin-bottom: 1.5cm;
+            margin-bottom: 1cm;
         }
 
         .people {
@@ -190,12 +190,17 @@ table {
             .name {
                 font-size: 14pt;
             }
+
+            li {
+                margin-bottom: 1cm;
+            }
         }
     }
 }
 
 .start-page {
     page: with-header;
+    break-before: page;
     break-after: page;
     height: calc(11.69in - (1.8in + (.25in * 2)));
     font-weight: bold;

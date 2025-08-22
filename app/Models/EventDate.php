@@ -112,4 +112,10 @@ class EventDate extends Model
                 ->where('end_time', '>=', Carbon::now()->utc()->toTimeString());
         });
     }
+
+    #[Scope]
+    protected function approved(Builder $query): void
+    {
+        $query->whereRelation('event.accomReport', 'status', 'approved');
+    }
 }

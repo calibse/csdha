@@ -362,6 +362,12 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/accom-reports.html', 'index')->name('index');
 
+        Route::get('/accom-reports/gen-pdf.html', 'generate')
+            ->name('generate');
+
+        Route::get('/accom-reports/accom-report-set.pdf', 'stream')
+            ->name('stream');
+
         Route::prefix('accom-report-{event}')->group(function () {
 
             Route::get('/index.html', 'show')->name('show');

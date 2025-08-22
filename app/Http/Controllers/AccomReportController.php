@@ -8,6 +8,10 @@ use App\Models\AccomReport;
 use App\Http\Requests\UpdateAccomReportStatusRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use App\Services\PagedView;
+use WeasyPrint\Facade as WeasyPrint;
+use App\Models\User;
+use App\Models\EventDate;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -54,7 +58,8 @@ class AccomReportController extends Controller implements HasMiddleware
             break;
         }
         return view('accom-reports.index', [
-            'accomReports' => $accomReports
+            'accomReports' => $accomReports,
+            'genRoute' => route('accom-reports.generate')
         ]);
     }
 
@@ -213,5 +218,51 @@ class AccomReportController extends Controller implements HasMiddleware
         $accomReport->save();
         return redirect()->route('accom-reports.index')
             ->with('status', 'Accomplishment report approved.');
+    }
+
+    public function generate(Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        if (($startDate && $endDate))
+        {
+            $fileRoute = route('accom-reports.stream', [
+                'start_date' => $startDate,
+                'end_date' => $endDate
+            ]);
+        } else {
+            $fileRoute = null;
+            $startDate = EventDate::approved()->orderBy('date', 'asc')
+                ->value('date')->toDateString();
+            $endDate = EventDate::approved()->orderBy('date', 'desc')
+                ->value('date')->toDateString();
+        }
+        return view('accom-reports.gen-accom-report', [
+            'backRoute' => route('accom-reports.index'),
+            'fileRoute' => $fileRoute,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ]);
+    }
+
+    public function stream(Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        // if (!($startDate && $endDate)) abort(404);
+        $allEvents = Event::withAggregate('dates', 'date')
+            ->whereHas('dates', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]); 
+            })->whereRelation('accomReport', 'status', 'approved')
+            ->orderBy('dates_date', 'asc')->get();
+        foreach ($allEvents as $event) {
+            $events[] = $event->accomReportViewData();
+        }
+        return WeasyPrint::prepareSource(new PagedView('events.accom-report', [
+            'events' => $events,
+            'editors' => User::withPerm('accomplishment-reports.edit')->get(),
+            'approved' => true,
+            'president' => User::ofPosition('president')->first()
+        ]))->stream('accom_report_set.pdf');
     }
 }

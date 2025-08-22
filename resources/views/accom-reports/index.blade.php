@@ -1,4 +1,10 @@
 <x-layout.user index title="Accomplishment Reports" class="gpoa index">
+    <x-slot:toolbar>
+        <a href="{{ $genRoute }}">
+            <span class="icon"><x-phosphor-file-plus/></span> 
+            <span class="text">Gen. PDF</span>
+        </a>
+    </x-slot:toolbar>
     <article class="article">
         <x-alert/>
         @if ($accomReports->isNotEmpty())

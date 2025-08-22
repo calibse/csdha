@@ -61,56 +61,57 @@
         </div>
     </article>
 
+    @foreach ($events as $event)
     <header class="start-page">
         <div class="start-content">
             <div class="start-title">
                 <p class="org-name">COMPUTER SOCIETY</p>
                 <p class="school-name">PUP - TAGUIG</p>
             </div>
-            <h1 class="event-name">{{ $activity->name }}</h1>
-            <p class="year">A.Y. {{ $activity->gpoa->academicPeriod?->year_label }}</p>
+            <h1 class="event-name">{{ $event['activity']->name }}</h1>
+            <p class="year">A.Y. {{ $event['activity']->gpoa->academicPeriod?->year_label }}</p>
         </div>
     </header>
     <main class="content">
-        <h2 class="event-name">{{ $activity->name }}</h2>
+        <h2 class="event-name">{{ $event['activity']->name }}</h2>
         <ol class="main-list" type="I">
             <li>
                 <h3>DATE AND TIME</h3>
-                @foreach ($event->compactDates() as $date)
+                @foreach ($event['event']->compactDates() as $date)
                 <p>{{ $date }}</p>
                 @endforeach
             </li>
             <li>
                 <h3>VENUE</h3>
-                <p>{{ $event->venue }}</p>
+                <p>{{ $event['event']->venue }}</p>
             </li>
             <li>
                 <h3>TYPE OF ACTIVITY</h3>
-                <p>{{ $activity->type?->name }}</p>
+                <p>{{ $event['activity']->type?->name }}</p>
             </li>
             <li>
 
                 <h3>PARTICIPANTS</h3>
-                <p>{{ $activity->participants }}</p>
+                <p>{{ $event['activity']->participants }}</p>
             </li>
             <li>
                 <h3>OBJECTIVES</h3>
-                <pre>{{ $activity->objectives }}</pre>
+                <pre>{{ $event['activity']->objectives }}</pre>
             </li>
             <li>
                 <h3>DESCRIPTION</h3>
-                <pre>{{ $event->description }}</pre>
+                <pre>{{ $event['event']->description }}</pre>
             </li>
             <li>
                 <h3>NARRATIVE</h3>
-                <pre>{{ $event->narrative }}</pre>
+                <pre>{{ $event['event']->narrative }}</pre>
             </li>
-            @if ($attendance)
+            @if ($event['attendance'])
             <li>
                 <h3>ATTENDANCE</h3>
-                @switch ($event->participant_type)
+                @switch ($event['event']->participant_type)
                 @case ('students')
-                    @if ($attendanceTotal <= 15)
+                    @if ($event['attendanceTotal'] <= 15)
                 <table>
                     <thead>
                         <tr>
@@ -119,7 +120,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($attendance as $attendee)
+                        @foreach ($event['attendance'] as $attendee)
                         <tr>
                             <td>{{ $attendee->course_section }}</td>
                             <td>{{ $attendee->full_name }}</td>
@@ -136,7 +137,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($attendance as $year => $count)
+                    @foreach ($event['attendance'] as $year => $count)
                         <tr>
                             <td>{{ $year }}</td>
                             <td>{{ $count }}</td>
@@ -146,7 +147,7 @@
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <td>{{ $attendanceTotal }}</td>
+                            <td>{{ $event['attendanceTotal'] }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -161,7 +162,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($attendance as $officer)
+                    @foreach ($event['attendance'] as $officer)
                         <tr>
                             <td>{{ $officer->position->name }}</td>
                             <td>{{ $officer->full_name }}</td>
@@ -223,5 +224,6 @@
             --}}
         <ol>
     </main>
+    @endforeach
 </body>
 </html>

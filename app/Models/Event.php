@@ -11,9 +11,6 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
-use App\Services\PagedView;
-use WeasyPrint\Facade as WeasyPrint;
-use WeasyPrint\Objects\Config;
 use App\Models\User;
 use App\Traits\HasPublicId;
 
@@ -126,7 +123,7 @@ class Event extends Model
         return $attendance;
     }
 
-    public function accomReportFile()
+    public function accomReportViewData()
     {
         switch ($this->participant_type) {
         case 'students':
@@ -159,22 +156,12 @@ class Event extends Model
             $attendance = null;
             $attendanceTotal = null;
         }
-        $viewData = [
+        return [
             'event' => $this,
             'attendance' => $attendance,
             'attendanceTotal' => $attendanceTotal,
-            'editors' => User::withPerm('accomplishment-reports.edit')->get(),
             'activity' => $this->gpoaActivity,
-            'approved' => $this->accomReport?->status === 'approved',
-            'president' => User::ofPosition('president')->first()
         ];
-        $format = 'pdf';
-        return match ($format) {
-            'html' => view('events.accom-report', $viewData),
-            'pdf' => WeasyPrint::prepareSource(
-                new PagedView('events.accom-report', $viewData))
-                ->stream('accom_report.pdf')
-        };
     }
 
     public function compactDates()

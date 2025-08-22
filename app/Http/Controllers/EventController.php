@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use PDF;
+use App\Services\PagedView;
+use WeasyPrint\Facade as WeasyPrint;
 use App\Services\Image;
 use App\Models\User;
 use App\Models\Event;
@@ -221,9 +222,23 @@ class EventController extends Controller implements HasMiddleware
         return view('events.letter_of_intent', ['event' => $event]);
     }
 
-    public function streamAccomReport(Event $event)
+    public function streamAccomReport(Request $request, Event $event)
     {
-        return $event->accomReportFile();
+        $events[] = $event->accomReportViewData();
+        $format = 'pdf';
+        return match ($format) {
+            'html' => view('events.accom-report', [
+                'events' => $events
+            ]),
+            'pdf' => WeasyPrint::prepareSource(new PagedView(
+                'events.accom-report', [
+                    'events' => $events,
+                    'editors' => User::withPerm('accomplishment-reports.edit')
+                        ->get(),
+                    'approved' => $event->accomReport?->status === 'approved',
+                    'president' => User::ofPosition('president')->first()
+            ]))->stream('accom_report.pdf')
+        };
     }
 
     public function showAttendance(Event $event)

@@ -18,7 +18,13 @@
 							{{ $event->gpoaActivity->name }}
 						</a>
 					</p>
-					<p>{{ $event->description }}</p>
+					<p>
+						@if ($event->description)
+						{{ $event->description }}
+						@else 
+						<i>No description yet.</i>
+						@endif
+					</p>
 				</div>
 			</li>
 		@endforeach
