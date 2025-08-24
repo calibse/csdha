@@ -14,10 +14,10 @@
     <article id="page-header" class="page-header">
         <div class="logos">
             <div class="logo">
-                <img src="images/pup-logo.svg"> 
+                <img src="assets/images/pup-logo.svg"> 
             </div>
             <div class="logo">
-                <img src="images/cs-logo.png">
+                <img src="assets/images/cs-logo.png">
             </div>
         </div>
         <div class="text">
@@ -218,10 +218,20 @@
                     </tr>
                 </table>
             </li>
+            --}}
             <li>
                 <h3>ATTACHMENTS</h3>
+                @foreach ($event['event']->attachmentSets as $set)
+                <figure>
+                    <span class="attachments">
+                        @foreach ($set->attachments as $attachment)
+                        <img src="app/private/{{ $attachment->image_filepath }}">
+                        @endforeach
+                    </span>
+                    <figcaption>{{ $set->caption }}</figcaption>
+                </figure>
+                @endforeach
             </li>
-            --}}
         <ol>
     </main>
     @endforeach

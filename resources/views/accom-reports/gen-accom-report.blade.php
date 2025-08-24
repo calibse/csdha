@@ -30,6 +30,8 @@
             </div>
             <figcaption class="caption">Accomplishment Report</figcaption>
         </figure>
+        @elseif (!$start)
+        <p>No records available to generate.</p>
         @endif
     </article>
 </x-layout.user>

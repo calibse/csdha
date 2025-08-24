@@ -42,11 +42,15 @@ class EventController extends Controller implements HasMiddleware
             new Middleware('can:update,event', only: [
                 'edit', 
                 'update',
-                'editDates',
+                'dateIndex',
+                'createDate',
                 'storeDate',
+                'editDate',
                 'updateDate',
                 'confirmDestroyDate',
-                'destroyDate'
+                'destroyDate',
+                'createAttendee',
+                'storeAttendee',
             ]),
             new Middleware('can:delete,event', only: ['destroy']),
             new Middleware('can:update,date', only: [
@@ -167,6 +171,9 @@ class EventController extends Controller implements HasMiddleware
             'regisRoute' => route('events.regis-form.edit', [
                 'event' => $event->public_id
             ]),
+            'attachmentRoute' => route('events.attachments.index', [
+                'event' => $event->public_id
+            ]),
         ]);
     }
 
@@ -228,7 +235,11 @@ class EventController extends Controller implements HasMiddleware
         $format = 'pdf';
         return match ($format) {
             'html' => view('events.accom-report', [
-                'events' => $events
+                'events' => $events,
+                'editors' => User::withPerm('accomplishment-reports.edit')
+                    ->get(),
+                'approved' => $event->accomReport?->status === 'approved',
+                'president' => User::ofPosition('president')->first()
             ]),
             'pdf' => WeasyPrint::prepareSource(new PagedView(
                 'events.accom-report', [
@@ -400,25 +411,6 @@ class EventController extends Controller implements HasMiddleware
             'event' => $event,
             'date' => $date
         ]);
-    }
-
-    public function editGeneralInfo(Event $event)
-    {
-        return view('events.edit-general-info', [
-            'event' => $event    
-        ]); 
-    }
-
-    public function updateGeneralInfo(Request $request, Event $event)
-    {
-        $event->venue = $request->venue;
-        $event->type_of_activity = $request->type;
-        $event->participants = $request->participants;
-        $event->objective = $request->objective;
-        $event->description = $request->description;
-        $event->narrative = $request->narrative;
-        $event->save();
-        return redirect()->route('events.show', ['event' => $event->public_id]);
     }
 
 }

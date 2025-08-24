@@ -18,6 +18,11 @@ class Event extends Model
 {
     use HasPublicId;
     
+    public function attachmentSets(): HasMany
+    {
+        return $this->hasMany(EventAttachmentSet::class);
+    }
+
     public function accomReport(): HasOne
     {
         return $this->hasOne(AccomReport::class);
@@ -242,6 +247,21 @@ class Event extends Model
             $query->whereKey($this->id);
         })->get(); 
         return $attendees;
+    }
+
+    #[Scope]
+    protected function approved(Builder $query, $startDate = null, 
+            $endDate = null): void
+    {
+        $query->withAggregate('dates', 'date')
+            ->whereRelation('accomReport', 'status', 'approved');
+        if ($startDate && $endDate) {
+            $query->whereHas('dates', function ($query) 
+                    use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]); 
+            });
+        }
+        $query->orderBy('dates_date', 'asc');
     }
 
 }

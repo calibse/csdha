@@ -110,6 +110,8 @@ class EventDate extends Model
             $query->where('date', Carbon::now()->toDateString())
                 ->where('start_time', '<=', Carbon::now()->utc()->toTimeString())
                 ->where('end_time', '>=', Carbon::now()->utc()->toTimeString());
+        })->whereHas('event.accomReport', function ($query) {
+            $query->whereNotIn('status', ['pending', 'approved']);
         });
     }
 

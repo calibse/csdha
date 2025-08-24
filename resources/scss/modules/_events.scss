@@ -51,6 +51,35 @@
 	}
 }
 
+.events.attachments {
+	.attachment-set {
+		margin-left: 0;
+		margin-right: 0;
+
+		.caption {
+			margin-bottom: .5rem;
+		}
+
+		.attachments {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));	
+			gap: .2rem;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			> * {
+				width: 100%;
+				height: 5rem;
+			}
+		}
+	}	
+
+}
+
 .events.attendance {
 	.event-name {
 	}

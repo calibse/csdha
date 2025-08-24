@@ -224,7 +224,14 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        if (($startDate && $endDate))
+        $events = null;
+        $start = false;
+        if ($startDate && $endDate ) {
+            $events = Event::approved($startDate, $endDate)->exists();
+        } elseif (!$startDate && !$endDate) {
+            $start = true;
+        }
+        if ($events)
         {
             $fileRoute = route('accom-reports.stream', [
                 'start_date' => $startDate,
@@ -232,16 +239,17 @@ class AccomReportController extends Controller implements HasMiddleware
             ]);
         } else {
             $fileRoute = null;
-            $startDate = EventDate::approved()->orderBy('date', 'asc')
-                ->value('date')->toDateString();
-            $endDate = EventDate::approved()->orderBy('date', 'desc')
-                ->value('date')->toDateString();
+            $startDate = $startDate ?? EventDate::approved()
+                ->orderBy('date', 'asc')->value('date')->toDateString();
+            $endDate = $endDate ?? EventDate::approved()
+                ->orderBy('date', 'desc')->value('date')->toDateString();
         }
         return view('accom-reports.gen-accom-report', [
             'backRoute' => route('accom-reports.index'),
             'fileRoute' => $fileRoute,
             'startDate' => $startDate,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'start' => $start
         ]);
     }
 
@@ -249,12 +257,9 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        // if (!($startDate && $endDate)) abort(404);
-        $allEvents = Event::withAggregate('dates', 'date')
-            ->whereHas('dates', function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('date', [$startDate, $endDate]); 
-            })->whereRelation('accomReport', 'status', 'approved')
-            ->orderBy('dates_date', 'asc')->get();
+        if (!($startDate && $endDate)) abort(404);
+        $allEvents = Event::approved($startDate, $endDate)->get();
+        if (!$allEvents) abort(404);
         foreach ($allEvents as $event) {
             $events[] = $event->accomReportViewData();
         }

@@ -9,9 +9,18 @@ use App\Models\EventRegistration;
 use App\Models\EventAttendance;
 use App\Models\EventAttendee;
 use App\Http\Requests\StoreAttendanceRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class AttendanceController extends Controller
+class AttendanceController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('can:storeAttendance,event_date', only: ['store'])
+        ];
+    }
+    
     public function create()
     {
         $dates = EventDate::ongoing()->get();

@@ -32,10 +32,12 @@ class EventPolicy
 
     public function update(User $user, Event $event): Response
     {
-        return (
-            true
-        ) ? Response::allow()
-            : Response::deny();
+        $approved = $event->accomReport->status === 'approved';
+        $pending = $event->accomReport->status === 'pending';
+        return ($approved || $pending)
+        //return (false)
+            ? Response::deny()
+            : Response::allow();
     }
 
     public function delete(User $user, Event $event): Response

@@ -29,6 +29,7 @@ use App\Http\Controllers\AuditTrailController;
 use App\Http\Controllers\MultiStepFormController;
 use App\Http\Controllers\EventRegisFormController;
 use App\Http\Controllers\AccomReportController;
+use App\Http\Controllers\EventAttachmentController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -53,8 +54,7 @@ Route::get('/test-image', function () {
 Route::domain(config('custom.admin_domain'))->group(function () {
 
     Route::name('admin.')->group(function () {
-        Route::get('/', [LoginController::class, 'adminLogin'])
-            ->name('login');
+        Route::get('/', [LoginController::class, 'adminLogin'])->name('login');
 
         Route::post('/login', [LoginController::class, 'adminAuth'])
             ->name('auth');
@@ -178,6 +178,7 @@ Route::name('user.')->group(function () {
 });
 
 Route::prefix('auth')->name('auth.')->group(function () {
+
     Route::get('/{provider}/redirect', [LoginController::class, 'signinWith'])
         ->name('redirect');
 
@@ -185,16 +186,17 @@ Route::prefix('auth')->name('auth.')->group(function () {
         ->name('callback');
 });
 
-Route::resource('users', UserController::class)->except([
-	'create', 'store'
-]);;
+Route::resource('users', UserController::class)->except(['create', 'store']);
 
 Route::prefix('register')->name('users.')->group(function () {
+
 	Route::get('/', [UserController::class, 'create'])->name('create');
+
 	Route::post('/', [UserController::class, 'store'])->name('store');
 });
 
 Route::middleware('auth')->group(function () {
+
 	Route::get('/home.html', [HomeController::class, 'index'])
         ->name('user.home');
     
@@ -204,6 +206,7 @@ Route::middleware('auth')->group(function () {
             ->name('index');
 
         Route::prefix('gpoa')->group(function () {
+
             Route::controller(GpoaController::class)->group(function () {
 
                 Route::get('/gen-pdf/gpoa_report.pdf', 'genPdf')
@@ -348,6 +351,48 @@ Route::middleware('auth')->group(function () {
 
                 Route::put('/regis-form.php', 'update')->name('update');
             });
+
+            Route::controller(EventAttachmentController::class)
+                    ->name('attachments.')->group(function () {
+
+                Route::get('/attachments.html', 'index')->name('index');
+
+                Route::get('/create-attachment.html', 'create')->name('create');
+
+                Route::post('/create-attachment.php', 'store')->name('store');
+
+                Route::prefix('attachment-set-{attachment_set}')
+                        ->group(function () {
+
+                    Route::get('/attachment-preview-{attachment}.jpg', 
+                        'showPreviewFile')->name('showPreviewFile');
+
+                    Route::get('/attachment-{attachment}.jpg', 
+                        'showFullFile')->name('showFullFile');
+
+                    Route::get('/edit.html', 'edit')->name('edit');
+
+                    Route::put('/edit.php', 'update')->name('update');
+
+                    Route::prefix('attachment-{attachment}')
+                            ->group(function () {
+
+                        Route::get('/index.html', 'show')->name('show');
+
+                        Route::get('/delete.html', 'confirmDestroy')
+                            ->name('confirmDestroy');
+
+                        Route::delete('/delete.php', 'destroy')
+                            ->name('destroy');
+                    });
+
+                    Route::get('/delete.html', 'confirmDestroySet')
+                        ->name('confirmDestroySet');
+
+                    Route::get('/delete.php', 'destroySet')
+                        ->name('destroySet');
+                });
+            });
         });
 
         Route::get('/event-{event}{slash?}', function ($id) {
@@ -396,6 +441,7 @@ Route::middleware('auth')->group(function () {
     ]);
     
     Route::prefix('meetings')->name('meetings.')->group(function () {
+
         Route::get('/{meeting}/minutes-file/{filename}',
                    [MeetingController::class, 'showMinutesFile'])
             ->name('showMinutesFile');
@@ -407,9 +453,7 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('funds', FundController::class);
     
-    Route::resource('funds', FundController::class)->only([
-        'index', 'show'
-    ]);
+    Route::resource('funds', FundController::class)->only(['index', 'show']);
     
     Route::resource('platforms', PlatformController::class);
         
@@ -434,8 +478,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('central-body-{position}')->group(function () {
 
-            Route::get('/index.html', 'show')
-                ->name('show');
+            Route::get('/index.html', 'show')->name('show');
                 
             Route::put('/update.php', 'update')->name('update');
                 
@@ -475,22 +518,28 @@ Route::middleware('auth')->group(function () {
     */
     
 	Route::prefix('profile')->name('profile.')->group(function () {
+
 		Route::get('/', [ProfileController::class, 'index'])->name('index');
+
 		Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+
 		Route::post('/update', [ProfileController::class, 'update'])
             ->name('update');
+
         Route::get('/avatar_{avatar}', [ProfileController::class, 'showAvatar'])
             ->name('showAvatar');
 	});
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])
         ->name('attendance.store');
+
     Route::get('/attendance', [AttendanceController::class, 'create'])
         ->name('attendance.create');
 
-
     Route::resource('students', StudentController::class);
+
     Route::prefix('students')->group(function () {
+
         Route::resource('courses', CourseController::class)->except('index');
     });
 

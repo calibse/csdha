@@ -56,6 +56,10 @@
 				<a href="{{ $dateRoute }}">Edit here</a>
 			</p>
 			<p>
+				<label>Attachments</label>
+				<a href="{{ $attachmentRoute }}">Edit here</a>
+			</p>
+			<p>
 				<label>Registration form</label>
 				<a href="{{ $regisRoute }}">Edit here</a>
 			</p>

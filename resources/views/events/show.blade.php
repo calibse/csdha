@@ -1,6 +1,10 @@
 <x-layout.user :$backRoute class="events event" title="Event">
     <x-slot:toolbar>
-        <a href="{{ $editRoute }}">
+        <a 
+            @can ('update', $event)
+            href="{{ $editRoute }}"
+            @endcan
+        >
             <span class="icon"><x-phosphor-pencil-simple/></span>
             <span class="text">Edit</span>
         </a>

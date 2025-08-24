@@ -31,6 +31,15 @@ class EventDatePolicy
             : Response::allow();
     }
 
+    public function storeAttendance(User $user, EventDate $eventDate): Response
+    {
+        $approved = $event->accomReport->status === 'approved';
+        $pending = $event->accomReport->status === 'pending';
+        return ($approved || $pending)
+            ? Response::deny()
+            : Response::allow();
+    }
+
     public function delete(User $user, EventDate $eventDate): bool
     {
         return false;
