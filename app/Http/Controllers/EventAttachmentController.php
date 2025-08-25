@@ -74,6 +74,11 @@ class EventAttachmentController extends Controller
                 'attachment_set' => $attachmentSet->id, 
                 'attachment' => $attachment->id
             ]),
+            'deleteRoute' => route('events.attachments.confirmDestroy', [
+                'event' => $event,
+                'attachment_set' => $attachmentSet->id,
+                'attachment' => $attachment->id
+            ])
         ]);
     }
 
@@ -120,19 +125,40 @@ class EventAttachmentController extends Controller
         ]);
     }
 
-    public function destroySet(string $id)
+    public function destroySet(Event $event, EventAttachmentSet $attachmentSet)
     {
-        //
+        $attachmentSet->attachments()->delete();
+        $attachmentSet->delete();
+        return redirect()->route('events.attachments.index', [
+            'event' => $event
+        ]);
     }
 
-    public function confirmDestroy(string $id)
+    public function confirmDestroy(Event $event, EventAttachmentSet $attachmentSet, 
+            EventAttachment $attachment)
     {
-        //
+        return view('events.attachments-delete', [
+            'attachment' => $attachment,
+            'backRoute' => route('events.attachments.show', [
+                'event' => $event,
+                'attachment_set' => $attachmentSet->id,
+                'attachment' => $attachment
+            ]),
+            'formAction' => route('events.attachments.destroy', [
+                'event' => $event,
+                'attachment_set' => $attachmentSet->id,
+                'attachment' => $attachment
+            ]),
+        ]);
     }
 
-    public function destroy(string $id)
+    public function destroy(Event $event, EventAttachmentSet $attachmentSet, 
+            EventAttachment $attachment)
     {
-        //
+        $attachment->delete();
+        return redirect()->route('events.attachments.index', [
+            'event' => $event
+        ]);
     }
 
     private static function storeOrUpdate(Request $request, Event $event,

@@ -32,6 +32,11 @@
 .image-file {
 	margin-left: 0;	
 	margin-right: 0;	
+	max-width: var(--text-width);	
+
+	img {
+		width: 100%;
+	}
 }
 
 .document-view {

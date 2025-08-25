@@ -389,7 +389,7 @@ Route::middleware('auth')->group(function () {
                     Route::get('/delete.html', 'confirmDestroySet')
                         ->name('confirmDestroySet');
 
-                    Route::get('/delete.php', 'destroySet')
+                    Route::delete('/delete.php', 'destroySet')
                         ->name('destroySet');
                 });
             });

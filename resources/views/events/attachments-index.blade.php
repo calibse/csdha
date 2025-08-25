@@ -7,6 +7,7 @@
     </x-slot:toolbar>
     <article class="article">
         @foreach ($attachmentSets as $set)
+            @if ($set->attachments->isNotEmpty())
         <figure class="attachment-set">
             <figcaption class="caption"><a href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">{{ $set->caption }}</a></figcaption>
             <span class="attachments">
@@ -15,6 +16,12 @@
                 @endforeach
             </span>
         </figure>
+            @else
+            <p>
+                <a href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">{{ $set->caption }}</a>
+                (Empty)
+            </p>
+            @endif
         @endforeach
     </article>
 </x-layout.user>

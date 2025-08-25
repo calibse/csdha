@@ -92,6 +92,14 @@ form {
 	max-width: var(--text-width);
 	text-align: right;
 	
+	button {
+		margin-right: .5rem;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+	
 	form {
 		display: inline;
 		margin-right: .5rem;
