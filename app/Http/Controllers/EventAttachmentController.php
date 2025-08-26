@@ -66,6 +66,7 @@ class EventAttachmentController extends Controller
             EventAttachment $attachment)
     {
         return view('events.attachments-show', [
+            'attachment' => $attachment,
             'backRoute' => route('events.attachments.index', [
                 'event' => $event
             ]),
@@ -75,6 +76,11 @@ class EventAttachmentController extends Controller
                 'attachment' => $attachment->id
             ]),
             'deleteRoute' => route('events.attachments.confirmDestroy', [
+                'event' => $event,
+                'attachment_set' => $attachmentSet->id,
+                'attachment' => $attachment->id
+            ]),
+            'updateRoute' => route('events.attachments.updateAttachment', [
                 'event' => $event,
                 'attachment_set' => $attachmentSet->id,
                 'attachment' => $attachment->id
@@ -104,6 +110,17 @@ class EventAttachmentController extends Controller
             EventAttachmentSet $attachmentSet)
     {
         self::storeOrUpdate($request, $event, $attachmentSet);
+        return redirect()->route('events.attachments.index', [
+            'event' => $event
+        ]);
+    }
+
+    public function updateAttachment(Request $request, Event $event, 
+            EventAttachmentSet $attachmentSet, EventAttachment $attachment)
+    {
+        $attachment->standalone = $request->boolean('standalone', false);
+        $attachment->full_width = $request->boolean('full_width', false);
+        $attachment->save();
         return redirect()->route('events.attachments.index', [
             'event' => $event
         ]);
@@ -175,11 +192,14 @@ class EventAttachmentController extends Controller
                 . Str::random(8) . '.jpg';
             $previewFilepath = "events/event_{$event->id}/attachment_preview_"
                 . Str::random(8) . '.jpg';
-            Storage::put($imageFilepath, (string) $newImage->scaleDown(340));
+            Storage::put($imageFilepath, (string) $newImage->scaleDown(800));
             Storage::put($previewFilepath, (string) $newImage->scaleDown(80));
             $attachment = new EventAttachment();
             $attachment->image_filepath = $imageFilepath;
             $attachment->preview_filepath = $previewFilepath;
+            $attachment->orientation = $newImage->orientation();
+            $attachment->standalone = false;
+            $attachment->full_width = false;
             $attachment->set()->associate($attachmentSet);
             $attachment->save();
         }

@@ -15,10 +15,44 @@ let CURRENT_REQUEST = null;
 hideNoscript();
 setTimezone();
 activateAttendanceRecorder();
+showAttachmentPreview();
 
 function hideNoscript() {
     const noscript = document.querySelector("#noscript");
     if (noscript) noscript.remove();
+}
+
+function showAttachmentPreview() {
+    const mainPage = document.querySelector(".main-content.events.attachments.form.create");
+    if (!mainPage) return;
+    const viewLinksEl = mainPage.querySelector("#attachment-view-links");
+    const viewsEl= mainPage.querySelector("#attachment-views");
+    const viewLinkTemp = mainPage.querySelector("#attachment-view-link-temp").content;
+    const viewTemp = mainPage.querySelector("#attachment-view-temp").content;
+    const fileInput = mainPage.querySelector("#images-input");
+    let blobUrls = [];
+    fileInput.addEventListener("change", () => {
+        for (let url of blobUrls) {
+            URL.revokeObjectURL(url);
+            blobUrls = [];
+        }
+        viewLinksEl.replaceChildren();
+        const files = fileInput.files;
+        for (let i = 0; i < files.length; i++) {
+            const url = URL.createObjectURL(files[i]);
+            const viewLinkEl = viewLinkTemp.cloneNode(true);
+            const imageEl = viewLinkEl.querySelector("img");
+            const viewEl = viewTemp.cloneNode(true);
+            const fullImageEl = viewEl.querySelector("img");
+            const linkEl = viewLinkEl.querySelector("a");
+            imageEl.src = url;
+            fullImageEl.src = url;
+            viewEl.firstElementChild.id = `attachment-item-${i}`;
+            linkEl.href = `#attachment-item-${i}`;
+            viewLinksEl.appendChild(viewLinkEl);
+            viewsEl.appendChild(viewEl);
+        } 
+    });
 }
 
 function setTimezone() {

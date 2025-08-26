@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('event_attachment_set_id')->constrained();
             $table->string('image_filepath');
             $table->string('preview_filepath');
+            $table->string('orientation', length: 15);
+            $table->boolean('standalone');
+            $table->boolean('full_width');
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@
         <figure class="attachment-set">
             <figcaption class="caption"><a href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">{{ $set->caption }}</a></figcaption>
             <span class="attachments">
-                @foreach ($set->attachments as $attachment)
+                @foreach ($set->attachments()->orderBy('created_at', 'asc')->get() as $attachment)
                 <a href="{{ route('events.attachments.show', ['event' => $event->public_id, 'attachment_set' => $set->id, 'attachment' => $attachment->id]) }}"><img src="{{ route('events.attachments.showPreviewFile', ['event' => $event->public_id, 'attachment_set' => $set->id, 'attachment' => $attachment->id]) }}"></a>
                 @endforeach
             </span>

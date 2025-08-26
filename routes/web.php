@@ -379,6 +379,9 @@ Route::middleware('auth')->group(function () {
 
                         Route::get('/index.html', 'show')->name('show');
 
+                        Route::put('/update.php', 'updateAttachment')
+                            ->name('updateAttachment');
+
                         Route::get('/delete.html', 'confirmDestroy')
                             ->name('confirmDestroy');
 

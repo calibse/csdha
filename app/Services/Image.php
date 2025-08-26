@@ -25,4 +25,19 @@ class Image
 
         return $image->toJpeg();
     }
+
+    public function orientation()
+    {
+        $image = IImage::read($this->image);
+        $width = $image->width();
+        $height = $image->height();
+        if ($width > $height) {
+            $orientation = 'landscape';
+        } elseif ($width < $height) {
+            $orientation = 'portrait';
+        } else {
+            $orientation = 'square';
+        }
+        return $orientation;
+    }
 }
