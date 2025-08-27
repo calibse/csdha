@@ -265,7 +265,8 @@ class AccomReportController extends Controller implements HasMiddleware
         }
         return WeasyPrint::prepareSource(new PagedView('events.accom-report', [
             'events' => $events,
-            'editors' => User::withPerm('accomplishment-reports.edit')->get(),
+            'editors' => User::withPerm('accomplishment-reports.edit')
+                ->notOfPosition('adviser')->get(),
             'approved' => true,
             'president' => User::ofPosition('president')->first()
         ]))->stream('accom_report_set.pdf');

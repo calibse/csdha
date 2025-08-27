@@ -38,6 +38,12 @@ class PermissionSeeder extends Seeder
         $resource = new ResourceType();
         $resource->name = 'accomplishment-reports';
         $resource->save();
+        $resource = new ResourceType();
+        $resource->name = 'general-plan-of-activities';
+        $resource->save();
+        $resource = new ResourceType();
+        $resource->name = 'attendance';
+        $resource->save();
 
     	$action = new ResourceActionType();
     	$action->name = 'view';

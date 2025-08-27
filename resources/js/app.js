@@ -11,6 +11,7 @@ import.meta.glob([
 ]);
 
 let CURRENT_REQUEST = null;
+let BLOB_URLS = [];
 
 hideNoscript();
 setTimezone();
@@ -23,36 +24,64 @@ function hideNoscript() {
 }
 
 function showAttachmentPreview() {
-    const mainPage = document.querySelector(".main-content.events.attachments.form.create");
+    const mainPage = document.querySelector(
+        ".main-content.events.attachments.form.create");
     if (!mainPage) return;
+    const fileInput = mainPage.querySelector("#images-input");
+    createAttachmentPreview(fileInput);
+    fileInput.addEventListener("change", () => 
+        createAttachmentPreview(fileInput));
+}
+
+function createAttachmentPreview(fileInput) {
+    const files = fileInput.files;
+    if (!files.length) return;
+    const mainPage = document.querySelector(
+        ".main-content.events.attachments.form.create");
     const viewLinksEl = mainPage.querySelector("#attachment-view-links");
     const viewsEl= mainPage.querySelector("#attachment-views");
-    const viewLinkTemp = mainPage.querySelector("#attachment-view-link-temp").content;
+    const viewLinkTemp = mainPage.querySelector("#attachment-view-link-temp")
+        .content;
     const viewTemp = mainPage.querySelector("#attachment-view-temp").content;
-    const fileInput = mainPage.querySelector("#images-input");
-    let blobUrls = [];
-    fileInput.addEventListener("change", () => {
-        for (let url of blobUrls) {
-            URL.revokeObjectURL(url);
-            blobUrls = [];
+    for (let url of BLOB_URLS) {
+        URL.revokeObjectURL(url);
+        BLOB_URLS = [];
+    }
+    viewLinksEl.replaceChildren();
+    viewsEl.replaceChildren();
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const url = URL.createObjectURL(file);
+        const viewLinkEl = viewLinkTemp.cloneNode(true).firstElementChild;
+        const imageEl = viewLinkEl.querySelector("img");
+        const viewEl = viewTemp.cloneNode(true).firstElementChild;
+        const fullImageEl = viewEl.querySelector("img");
+        const removeBtnEl = viewEl.querySelector("#remove-button");
+        BLOB_URLS.push(url);
+        imageEl.src = fullImageEl.src = url;
+        viewLinkEl.href = `#attachment-item-${i}`;
+        viewEl.id = `attachment-item-${i}`;
+        viewLinksEl.appendChild(viewLinkEl);
+        viewsEl.appendChild(viewEl);
+        removeBtnEl.id = `remove-button-${i}`;
+        removeBtnEl.addEventListener("click", () => {
+            window.location.href = "#";
+            viewLinkEl.remove();
+            viewEl.remove();
+            removeFileFromInput(file, fileInput);
+        });
+    } 
+}
+
+function removeFileFromInput(fileToRemove, fileInput) {
+    const files = fileInput.files;
+    const newFileInput = new DataTransfer();
+    for (let file of files) {
+        if (file !== fileToRemove) {
+            newFileInput.items.add(file);
         }
-        viewLinksEl.replaceChildren();
-        const files = fileInput.files;
-        for (let i = 0; i < files.length; i++) {
-            const url = URL.createObjectURL(files[i]);
-            const viewLinkEl = viewLinkTemp.cloneNode(true);
-            const imageEl = viewLinkEl.querySelector("img");
-            const viewEl = viewTemp.cloneNode(true);
-            const fullImageEl = viewEl.querySelector("img");
-            const linkEl = viewLinkEl.querySelector("a");
-            imageEl.src = url;
-            fullImageEl.src = url;
-            viewEl.firstElementChild.id = `attachment-item-${i}`;
-            linkEl.href = `#attachment-item-${i}`;
-            viewLinksEl.appendChild(viewLinkEl);
-            viewsEl.appendChild(viewEl);
-        } 
-    });
+    }
+    fileInput.files = newFileInput.files;
 }
 
 function setTimezone() {

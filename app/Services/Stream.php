@@ -19,7 +19,7 @@ class Stream
                 }
             }
         }, function (string $type, string $output, string $key) {
-            if ($key === 'final') {
+            if ($type === 'out' && $key === 'final') {
                 echo $output;
                 ob_flush();
                 flush();

@@ -286,7 +286,7 @@ table {
 
     img {
         display: inline-block;
-        height: calc(($page-height - ($margin * 2 + 4cm)) / 2);
+        max-height: calc(($page-height - ($margin * 2 + 4cm)) / 2);
         object-fit: contain;
         vertical-align: middle;
         /* 
@@ -311,7 +311,7 @@ table {
         width: calc(($page-width - ($margin * 2 + 3.5cm)) / 2);
 
         &.full-width {
-            height: calc($page-height - ($margin * 2 + 4cm));
+            max-height: calc($page-height - ($margin * 2 + 4cm));
             width: calc($page-width - ($margin * 2 + 3.5cm));
         }
     }

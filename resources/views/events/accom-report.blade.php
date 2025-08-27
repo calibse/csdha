@@ -104,20 +104,7 @@
             </li>
             <li>
                 <h3>NARRATIVE</h3>
-                <pre>{{ $event['event']->narrative }}
-                    Google’s grip on Android keeps tightening. In what will certainly be another step that we will look back upon as just another nail in the coffin, Google is going to require every Android developer to register with Google, even if they don’t publish anything in the Play Store. In other words, even if you develop Android applications ad only make them available through F-Droid or GitHub, you’ll still have to register with Google and hand over a bunch of personal information and a small fee of $25. Google is effectively recreating Apple’s Gatekeeper for macOS, but on Android.
-
-It won’t come as a surprise to you that Google is doing this in the name of security and protecting users. The company claims that its own analysis found “over 50 times more malware from internet-sideloaded sources than on apps available through Google Play”, and the main reason is that malware developers can hide behind anonymity. As such, Google’s solution is to simply deanonymise every single Android developer.
-
-    Starting next year, Android will require all apps to be registered by verified developers in order to be installed by users on certified Android devices. This creates crucial accountability, making it much harder for malicious actors to quickly distribute another harmful app after we take the first one down. Think of it like an ID check at the airport, which confirms a traveler’s identity but is separate from the security screening of their bags; we will be confirming who the developer is, not reviewing the content of their app or where it came from. This change will start in a few select countries specifically impacted by these forms of fraudulent app scams, often from repeat perpetrators.
-    ↫ Suzanne Frey at the Android Developer Blog
-
-This new policy will only apply to “certified Android devices”, which means Android devices that ship with Google Play Services and all related Google stuff preinstalled. How this policy will affect devices running de-Googled Android ROMs like GrapheneOS where the user has opted to install the Play Store and Google Play Services is unclear. Google does claim the personal information you hand over as part of your registration will remain entirely private and not be shown to anyone, but that’s not going to reassure anyone.
-
-To its small credit, Google intends to create an Android Developer Console explicitly for developers who only operate outside of the Play Store, and a special workflow for students and hobbyists that waives the $25 fee. First tests will start in October of this year, with an official rollout in a number of countries later in 2026, which will then expand to cover the whole world. The first countries seeing the official rollout will be countries hit especially hard by scams (according to Google’s research, at least): Brazil, Indonesia, Singapore, and Thailand.
-
-Google has been trying to claw back control over Android for years now, and it seems the pace is accelerating lately. None of these steps should surprise you, but they should highlight just how crucially important it is that we somehow managed to come to a viable third way, something not controlled by either Apple or Google.
-                </pre>
+                <pre>{{ $event['event']->narrative }}</pre>
             </li>
             @if ($event['attendance'])
             <li>

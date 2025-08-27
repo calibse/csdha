@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Process;
+use Illuminate\Process\Pipe;
 use App\Services\Stream;
 
 class QrCode
@@ -30,7 +31,7 @@ class QrCode
         $formatLo = strtolower($this->imageType);
         $topCaption = escapeshellarg($this->topCaption);
         $bottomCaption = escapeshellarg($this->bottomCaption);
-        $magick = "magick {$formatLo}:- -gravity south -splice 0x128 " .
+        $magick = "convert {$formatLo}:- -gravity south -splice 0x128 " .
             "-background white -fill black -font Cantarell -pointsize 48 " .
             "-gravity south -annotate +0+80 {$bottomCaption} " .
             "-gravity north -splice 0x128 -gravity north -annotate +0+80 " .
@@ -42,6 +43,7 @@ class QrCode
         else {
             $stream = fn () => Stream::process([$qrencode]);
         }
+
         return response()->stream($stream, 200, [
             'Content-Type' => $this->contentType,
             'X-Accel-Buffering' => 'no'

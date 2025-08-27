@@ -19,6 +19,10 @@ class GpoaActivityPolicy
 
     public function view(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        if (!$canView) {
+            return Response::deny();
+        }
         $currentStep = $activity->current_step;
         $status = $activity->status;
         $position = $user->position_name;
@@ -43,6 +47,11 @@ class GpoaActivityPolicy
 
     public function create(User $user): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return Gpoa::active()->first()
             && !in_array($user->position_name, ['adviser', null])
             ? Response::allow()
@@ -51,6 +60,11 @@ class GpoaActivityPolicy
 
     public function update(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return $activity->gpoa->active
             && !in_array($user->position_name, ['adviser', null])
             && $activity->eventHeads()->whereKey($user->id)->exists()
@@ -62,6 +76,11 @@ class GpoaActivityPolicy
     
     public function updateEventHeads(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return $activity->coheads()?->whereKey($user->id)->exists()
             ? Response::deny()
             : Response::allow();
@@ -69,6 +88,11 @@ class GpoaActivityPolicy
 
     public function delete(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return $activity->gpoa->active
             && !in_array($user->position_name, ['adviser', null])
             && $activity->eventHeads()->whereKey($user->id)->exists()
@@ -90,6 +114,11 @@ class GpoaActivityPolicy
 
     public function submit(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         if (!$activity->gpoa->active) Response::deny();
         $status = $activity->status;
         if ($status === 'approved') {
@@ -124,6 +153,11 @@ class GpoaActivityPolicy
 
     public function return(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         if (!$activity->gpoa->active) Response::deny();
         $eventHeads = $activity->eventHeads;
         if ($activity->eventHeads()->whereRelation('position',
@@ -146,6 +180,11 @@ class GpoaActivityPolicy
 
     public function reject(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         if (!$activity->gpoa->active) Response::deny();
         $eventHeads = $activity->eventHeads;
         if ($activity->eventHeads()->whereRelation('position',
@@ -168,6 +207,11 @@ class GpoaActivityPolicy
 
     public function approve(User $user, GpoaActivity $activity): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         if (!$activity->gpoa->active) Response::deny();
         return $user->position_name === 'adviser' 
             && $activity->current_step === 'adviser'

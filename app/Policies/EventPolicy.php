@@ -190,4 +190,14 @@ class EventPolicy
             : Response::deny();
     }
 
+    public function viewAttendance(User $user): Response
+    {
+        $canView = $user->hasPerm('attendance.view');
+        $canEdit = $user->hasPerm('attendance.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
+        return Response::allow();
+    }
+
 }

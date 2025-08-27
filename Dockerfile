@@ -29,17 +29,19 @@ RUN pipx install weasyprint && pip cache purge
 
 COPY container/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
-
-WORKDIR /var/www/app
-COPY . .
-RUN composer install --no-dev --no-progress -n && composer clear-cache
-
 RUN a2enmod remoteip
 COPY container/apache/server-name.conf /etc/apache2/conf-available/server-name.conf
 COPY container/apache/remote-ip.conf /etc/apache2/conf-available/remote-ip.conf
 RUN a2enconf server-name
 RUN a2enconf remote-ip 
 RUN a2enmod headers
+
+RUN apt-get install -y --no-install-recommends qrencode && apt-get clean
+RUN apt-get install -y --no-install-recommends imagemagick && apt-get clean
+
+WORKDIR /var/www/app
+COPY . .
+RUN composer install --no-dev --no-progress -n && composer clear-cache
 
 CMD ["/var/www/app/container/deploy.sh"]
 

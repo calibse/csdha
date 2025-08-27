@@ -33,6 +33,11 @@ class EventDatePolicy
 
     public function storeAttendance(User $user, EventDate $eventDate): Response
     {
+        $canView = $user->hasPerm('attendance.view');
+        $canEdit = $user->hasPerm('attendance.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         $approved = $event->accomReport->status === 'approved';
         $pending = $event->accomReport->status === 'pending';
         return ($approved || $pending)

@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\EventAttachment;
 use App\Models\EventAttachmentSet;
 use App\Services\Image;
+use App\Http\Requests\SaveAttachmentSetRequest;
 
 class EventAttachmentController extends Controller
 {
@@ -41,7 +42,7 @@ class EventAttachmentController extends Controller
         ]);
     }
 
-    public function store(Request $request, Event $event)
+    public function store(SaveAttachmentSetRequest $request, Event $event)
     {
         self::storeOrUpdate($request, $event);
         return redirect()->route('events.attachments.index', [
@@ -106,7 +107,7 @@ class EventAttachmentController extends Controller
         ]);
     }
 
-    public function update(Request $request, Event $event, 
+    public function update(SaveAttachmentSetRequest $request, Event $event, 
             EventAttachmentSet $attachmentSet)
     {
         self::storeOrUpdate($request, $event, $attachmentSet);

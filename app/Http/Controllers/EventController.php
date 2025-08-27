@@ -237,7 +237,7 @@ class EventController extends Controller implements HasMiddleware
             'html' => view('events.accom-report', [
                 'events' => $events,
                 'editors' => User::withPerm('accomplishment-reports.edit')
-                    ->get(),
+                    ->notOfPosition('adviser')->get(),
                 'approved' => $event->accomReport?->status === 'approved',
                 'president' => User::ofPosition('president')->first()
             ]),
@@ -245,7 +245,7 @@ class EventController extends Controller implements HasMiddleware
                 'events.accom-report', [
                     'events' => $events,
                     'editors' => User::withPerm('accomplishment-reports.edit')
-                        ->get(),
+                        ->notOfPosition('adviser')->get(),
                     'approved' => $event->accomReport?->status === 'approved',
                     'president' => User::ofPosition('president')->first()
             ]))->stream('accom_report.pdf')

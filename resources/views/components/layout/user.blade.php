@@ -60,13 +60,15 @@
 							<span class="text">Home</span>
 						</a>
 					</li>
+					@can ('viewAny', 'App\Models\Gpoa')
 					<li>
 						<a href="{{ route('gpoa.index') }}">
 							<span class="icon"><x-phosphor-blueprint/></span>
 							<span class="text">GPOA</span>
 						</a>
 					</li>
-						@can ('viewAny', 'App\Models\Event')
+					@endcan
+					@can ('viewAny', 'App\Models\Event')
 					<li>
 						<a href="{{ route('events.index') }}">
 							<span class="icon"><x-phosphor-calendar/></span>
@@ -117,28 +119,30 @@
 					</li>
 					@endcan
 					--}}
-						@can ('viewAny', 'App\Models\Student')
+					@can ('viewAny', 'App\Models\Student')
 					<li>
 						<a href="{{ route('students.index') }}">
 							<span class="icon"><x-phosphor-student/></span>
 							<span class="text">Students</span>
 						</a>
 					</li>
-						@endcan
-						@can ('viewAny', 'App\Models\Position')
+					@endcan
+					@can ('viewAny', 'App\Models\Position')
 					<li>
 						<a href="{{ route('positions.index') }}">
 							<span class="icon"><x-phosphor-users-three/></span>
 							<span class="text">Central Body</span>
 						</a>
 					</li>
-						@endcan
+					@endcan
+					@can ('viewAttendance', 'App\Models\Event')
 					<li>
 						<a href="{{ route('attendance.create') }}">
 							<span class="icon"><x-phosphor-user-check/></span>
 							<span class="text">Attendance</span>
 						</a>
 					</li>
+					@endcan
 
 					{{-- Start of temp routes from admin --}}
 					{{--

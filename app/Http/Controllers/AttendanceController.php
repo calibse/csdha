@@ -17,7 +17,9 @@ class AttendanceController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:storeAttendance,event_date', only: ['store'])
+            new Middleware('can:storeAttendance,event_date', only: ['store']),
+            new Middleware('can:viewAttendance,' . Event::class, 
+                only: ['create'])
         ];
     }
     

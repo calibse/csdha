@@ -1,5 +1,6 @@
 <x-layout.user class="events attachments form create" :$backRoute title="{{ $set ? 'Update' : 'Create' }} Attachment Set">
     <article class="article">
+        <x-alert/>
         <form method="post" action="{{ $formAction }}" enctype="multipart/form-data">
             @if ($set)
                 @method('PUT')
@@ -37,7 +38,7 @@
                         </a>
                     </li>
                     <li>
-                        <button class="remove-button">
+                        <button id="remove-button" class="remove-button">
                             <span class="icon"><x-phosphor-minus-circle/></span>
                             <span class="text">Remove file</span>
                         </button>

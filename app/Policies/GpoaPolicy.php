@@ -10,14 +10,25 @@ class GpoaPolicy
 {
     public function viewAny(User $user): Response
     {
+        return $user->hasPerm('general-plan-of-activities.view')
+            ? Response::allow()
+            : Response::deny();
     }
 
     public function view(User $user, Gpoa $gpoa): Response
     {
+        return $user->hasPerm('general-plan-of-activities.view')
+            ? Response::allow()
+            : Response::deny();
     }
 
     public function create(User $user): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return !Gpoa::active()->exists()
             && $user->position_name === 'adviser'
             ? Response::allow()
@@ -26,6 +37,11 @@ class GpoaPolicy
 
     public function update(User $user): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return Gpoa::active()->exists() 
             && $user->position_name === 'adviser'
             ? Response::allow()
@@ -34,6 +50,11 @@ class GpoaPolicy
 
     public function close(User $user): Response
     {
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        $canEdit = $user->hasPerm('general-plan-of-activities.edit');
+        if (!($canView && $canEdit)) {
+            return Response::deny();
+        }
         return Gpoa::active()->exists() 
             && $user->position_name === 'adviser'
             ? Response::allow()
