@@ -24,6 +24,4 @@ Homestead.yaml
 Thumbs.db
 
 /container/apache/000-default.conf
-/resources/images
-/resources/fonts
-/storage/assets
+

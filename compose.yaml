@@ -35,10 +35,6 @@ services:
 
   web-admin:
     image: php-laravel
-    build:
-      context: .
-      tags:
-        - localhost/php-laravel
     volumes:
       - ./public/build:/var/www/app/public/build
       - ./storage/app:/var/www/app/storage/app

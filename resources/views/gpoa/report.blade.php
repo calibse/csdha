@@ -12,10 +12,10 @@
     <article id="page-header">
         <div class="logos">
             <div class="logo">
-                <img src="assets/images/pup-logo.svg"> 
+                <img src="images/pup-logo.svg"> 
             </div>
             <div class="logo">
-                <img src="assets/images/cs-logo.png">
+                <img src="images/cs-logo.png">
             </div>
         </div>
         <div class="text">

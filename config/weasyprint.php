@@ -7,7 +7,7 @@ return (array) new \WeasyPrint\Objects\Config(
   inputEncoding: env('WEASYPRINT_INPUT_ENCODING', 'utf-8'),
   presentationalHints: env('WEASYPRINT_PRESENTATIONAL_HINTS', true),
   mediaType: env('WEASYPRINT_MEDIA_TYPE'),
-  baseUrl: env('WEASYPRINT_BASE_URL', 'file://' . storage_path() . '/'),
+  baseUrl: env('WEASYPRINT_BASE_URL', 'file://' . resource_path() . '/pdf/'),
   stylesheets: [],
   processEnvironment: [
     'LC_ALL' => env('WEASYPRINT_LOCALE', 'en_US.UTF-8'),
