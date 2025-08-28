@@ -14,10 +14,10 @@
     <article id="page-header" class="page-header">
         <div class="logos">
             <div class="logo">
-                <img src="images/pup-logo.svg"> 
+                <img src="resources/pdf/images/pup-logo.svg"> 
             </div>
             <div class="logo">
-                <img src="images/cs-logo.png">
+                <img src="resources/pdf/images/cs-logo.png">
             </div>
         </div>
         <div class="text">
@@ -230,9 +230,9 @@
                         @endif
                         @php $next = $set->attachments[$i + 1] ?? null; @endphp
                 <div class="attachment">
-                    <img class="{{ $attachment->orientation }} {{ $attachment->full_width ? 'full-width' : null }}" src="app/private/{{ $attachment->image_filepath }}">
+                    <img class="{{ $attachment->orientation }} {{ $attachment->full_width ? 'full-width' : null }}" src="storage/app/private/{{ $attachment->image_filepath }}">
                         @if (!($attachment->standalone || $attachment->full_width) && in_array($attachment->orientation, ['portrait', 'square']) && $next && in_array($next->orientation, ['portrait', 'square']) && !($next->standalone || $next->full_width))
-                    <img class="{{ $next->orientation }}" src="app/private/{{ $next->image_filepath }}">
+                    <img class="{{ $next->orientation }}" src="storage/app/private/{{ $next->image_filepath }}">
                             @php $skip = true; @endphp
                         @endif
                 </div>
