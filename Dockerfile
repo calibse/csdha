@@ -48,3 +48,5 @@ RUN php artisan optimize:clear
 RUN php artisan optimize
 RUN chown -R www-data bootstrap/cache storage
 
+CMD ["/var/www/app/container/deploy.sh"]
+
