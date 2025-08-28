@@ -2,10 +2,16 @@
 # serve
 
 export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+export PODMAN_COMPOSE_WARNING_LOGS=false
+export PODMAN_COMPOSE_PROVIDER=podman-compose
 
-docker-compose() {
-	$HOME/.local/bin/docker-compose $@
-}
+if [ -d "$HOME/bin" ] ; then
+	PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ] ; then
+	PATH="$HOME/.local/bin:$PATH"
+fi
 
 usage() {
 	echo "Usage: $0 []"
@@ -19,14 +25,14 @@ while getopts "" opt; do
 	esac
 done
 
-git pull
-
 if [ "$(docker-compose ps -q)" ]; then
 	podman compose build && \
 	docker-compose rm -sf web-user web-admin && \
 	podman image prune -f && \
-	docker-compose up -d web-user web-admin
+	docker-compose up -d web-user web-admin && \
 else
 	docker-compose up -d
 fi
+
+docker-compose cp .env.admin web-admin:/var/www/app/.env
 
