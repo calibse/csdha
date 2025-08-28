@@ -29,7 +29,7 @@ if [ "$(docker-compose ps -q)" ]; then
 	podman compose build && \
 	docker-compose rm -sf web-user web-admin && \
 	podman image prune -f && \
-	docker-compose up -d web-user web-admin && \
+	docker-compose up -d web-user web-admin
 else
 	docker-compose up -d
 fi
