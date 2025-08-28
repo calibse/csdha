@@ -32,10 +32,9 @@ class EventPolicy
 
     public function update(User $user, Event $event): Response
     {
-        $approved = $event->accomReport->status === 'approved';
-        $pending = $event->accomReport->status === 'pending';
+        $approved = $event->accomReport?->status === 'approved';
+        $pending = $event->accomReport?->status === 'pending';
         return ($approved || $pending)
-        //return (false)
             ? Response::deny()
             : Response::allow();
     }
