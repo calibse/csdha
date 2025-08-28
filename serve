@@ -7,8 +7,6 @@ docker-compose() {
 	$HOME/.local/bin/docker-compose $@
 }
 
-git pull
-
 usage() {
 	echo "Usage: $0 []"
 	echo
@@ -21,10 +19,13 @@ while getopts "" opt; do
 	esac
 done
 
+git pull
+
 if [ "$(docker-compose ps -q)" ]; then
-	podman compose build
-	docker-compose up -d --force-recreate web-user
-	docker-compose up -d --force-recreate web-admin
+	podman compose build && \
+	docker-compose rm -sf web-user web-admin && \
+	podman image prune -f && \
+	docker-compose up -d web-user web-admin
 else
 	docker-compose up -d
 fi
