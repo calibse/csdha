@@ -38,6 +38,7 @@ RUN a2enmod headers
 
 RUN apt-get install -y --no-install-recommends qrencode && apt-get clean
 RUN apt-get install -y --no-install-recommends imagemagick && apt-get clean
+RUN apt-get install -y --no-install-recommends fonts-cantarell && apt-get clean
 
 WORKDIR /var/www/app
 COPY . .
