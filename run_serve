@@ -14,14 +14,9 @@ push_assets() {
 	rsync -avz -I --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
 }
 
-rebuild_images() {
-	ssh $SSH_SERVER 'cd csdha && bash ./serve -r'
-}
-
-while getopts "br" opt; do
+while getopts "b" opt; do
 	case $opt in
 		b) push_assets ;;
-		r) rebuild_images ;;
 		*) usage ;;
 	esac
 done

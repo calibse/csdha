@@ -3,3 +3,11 @@ compose.yaml
 .dockerignore
 run_serve
 serve
+/resources/pdf
+/resources/scss
+/resources/js
+/resources/images
+/resources/fonts
+/storage/app/private
+/storage/app/public/build
+

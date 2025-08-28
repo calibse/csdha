@@ -25,7 +25,6 @@ services:
       tags:
         - localhost/php-laravel
     volumes:
-      - ./public/build:/var/www/app/public/build
       - ./storage/app:/var/www/app/storage/app
     ports:
       - 8001:80
@@ -36,7 +35,6 @@ services:
   web-admin:
     image: php-laravel
     volumes:
-      - ./public/build:/var/www/app/public/build
       - ./storage/app:/var/www/app/storage/app
     ports:
       - 8002:80

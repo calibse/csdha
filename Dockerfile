@@ -42,6 +42,9 @@ RUN apt-get install -y --no-install-recommends imagemagick && apt-get clean
 WORKDIR /var/www/app
 COPY . .
 RUN composer install --no-dev --no-progress -n && composer clear-cache
-
-CMD ["/var/www/app/container/deploy.sh"]
+RUN php artisan migrate --force
+RUN php artisan db:audit-triggers
+RUN php artisan optimize:clear
+RUN php artisan optimize
+RUN chown -R www-data bootstrap/cache storage
 
