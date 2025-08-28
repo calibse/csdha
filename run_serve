@@ -10,8 +10,8 @@ usage() {
 push_assets() {
 	npm run build
 	rsync -avz -I --delete public/build/ $SSH_SERVER:csdha/public/build/
-	rsync -avz -I --delete storage/assets/images/ $SSH_SERVER:csdha/storage/assets/images/
-	rsync -avz -I --delete storage/assets/fonts/ $SSH_SERVER:csdha/storage/assets/fonts/
+	rsync -avz -I --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
+	rsync -avz -I --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
 }
 
 rebuild_images() {
