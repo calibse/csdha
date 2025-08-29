@@ -16,6 +16,8 @@ RUN apk add --no-cache libqrencode-tools
 RUN apk add --no-cache imagemagick 
 RUN apk add --no-cache font-cantarell 
 
+COPY container/php-fpm/www-overrides.conf /etc/php83/php-fpm.d/z-www-overrides.conf
+
 WORKDIR /var/www/app
 COPY . .
 RUN composer install --no-dev --no-progress -n && composer clear-cache
