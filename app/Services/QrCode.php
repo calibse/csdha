@@ -45,7 +45,7 @@ class QrCode
         }
 
         return response()->stream($stream, 200, [
-            //'Content-Type' => $this->contentType,
+            'Content-Type' => $this->contentType,
             'X-Accel-Buffering' => 'no'
         ]);
     }
