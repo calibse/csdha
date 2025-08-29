@@ -16,6 +16,7 @@ class MultiStepFormController extends Controller
         $step = new $stepClass($currentRoute);
         $inputs = session($step::sessionInputName(), []);
         return view($step->view(), [
+            'eventName' => $event->gpoaActivity->name,
             'event' => $event,
             'previousStepRoute' => $step->previousStepRouteName() 
                 ? route($step->previousStepRouteName() . '.create', [
@@ -55,6 +56,7 @@ class MultiStepFormController extends Controller
         $stepClass::store($event);
         session()->forget($stepClass::sessionInputName());
         return view($stepClass::endView(), [
+            'eventName' => $event->gpoaActivity->name,
             'event' => $event,
             'end' => true
         ] + $stepClass::endViewData());
