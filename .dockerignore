@@ -1,10 +1,6 @@
-Dockerfile
-compose.yaml
-.dockerignore
-run_serve
-serve
 /resources/scss
 /resources/js
 /resources/images
 /resources/fonts
 /storage/app
+
