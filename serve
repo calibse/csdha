@@ -34,5 +34,3 @@ else
 	docker-compose up -d
 fi
 
-docker-compose logs -f
-

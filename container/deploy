@@ -15,7 +15,7 @@ then
 fi
 
 php artisan optimize && \
-chown -R apache bootstrap/cache storage
+chown -R apache:apache bootstrap/cache storage
 php-fpm83 && \
 httpd -DFOREGROUND 
 
