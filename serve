@@ -34,5 +34,5 @@ else
 	docker-compose up -d
 fi
 
-docker-compose cp .env.admin web-admin:/var/www/app/.env
+docker-compose logs -f
 
