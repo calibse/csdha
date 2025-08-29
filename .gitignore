@@ -26,4 +26,5 @@ Thumbs.db
 /container/apache/000-default.conf
 /container/apache/main-site.conf
 .env.admin
+.env.production.admin
 

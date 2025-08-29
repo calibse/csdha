@@ -1,9 +1,12 @@
 #! /bin/sh
 
 cd /var/www/app
-php artisan migrate --force && \
-php artisan db:audit-triggers && \
-php artisan optimize:clear && \
+if [ "$WEB_TYPE" = "user" ]
+then
+	php artisan migrate --force && \
+	php artisan db:audit-triggers && \
+	php artisan optimize:clear
+fi
 php artisan optimize && \
 chown -R apache bootstrap/cache storage
 php-fpm83 && \
