@@ -339,9 +339,17 @@ Route::middleware('auth')->group(function () {
             Route::controller(EventEvalFormController::class)
                     ->name('eval-form.')->group(function () {
 
-                Route::get('/eval-form.html', 'editQuestions')->name('edit-questions');
+                Route::get('/eval-form.html', 'editQuestions')
+                    ->name('edit-questions');
 
-                Route::put('/eval-form.php', 'updateQuestions')->name('update-questions');
+                Route::put('/eval-form.php', 'updateQuestions')
+                    ->name('update-questions');
+
+                Route::get('/evaluation.html', 'editResponses')
+                    ->name('edit-responses');
+
+                Route::put('/evaluation.php', 'updateResponses')
+                    ->name('update-responses');
             });
 
             Route::controller(EventRegisFormController::class)

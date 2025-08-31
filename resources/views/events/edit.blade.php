@@ -67,6 +67,10 @@
 				<label>Evaluation form</label>
 				<a href="{{ $evalRoute }}">Edit here</a>
 			</p>
+			<p>
+				<label>Attendees Evaluation</label>
+				<a href="{{ $responsesRoute }}">Edit here</a>
+			</p>
 			<p class="form-submit">
 			    <button type="submit">Update</button>
 			</p>

@@ -174,6 +174,9 @@ class EventController extends Controller implements HasMiddleware
             'attachmentRoute' => route('events.attachments.index', [
                 'event' => $event->public_id
             ]),
+            'responsesRoute' => route('events.eval-form.edit-responses', [
+                'event' => $event->public_id
+            ]),
         ]);
     }
 

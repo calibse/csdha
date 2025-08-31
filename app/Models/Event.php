@@ -132,7 +132,7 @@ class Event extends Model
     {
         switch ($this->participant_type) {
         case 'students':
-            $attendance = [];
+            $attendance = collect([]);
             $attendanceQuery = EventStudent::whereHas(
                 'eventDate.event', function ($query) {
                     $query->whereKey($this->id);
@@ -158,7 +158,7 @@ class Event extends Model
             $attendanceTotal = null;
             break;
         default:  
-            $attendance = null;
+            $attendance = collect([]);
             $attendanceTotal = null;
         }
         return [

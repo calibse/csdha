@@ -11,22 +11,32 @@ table {
 	// border-spacing: 0;
 	width: 100%;
 
-	th {
-		border-bottom: solid .05rem #000000;
-		text-align: left;
-		font-weight: normal;
+	&.document {
+		width: unset;
+		border: solid .05rem var(--base-color-1);
+		margin: 1rem 0;
 	}
 
-	td {
-		border: solid var(--base-color-1);
-		border-width: .05rem 0;
-
-		&:last-child {
-			//border-right: .05rem solid var(--line-color);
+	thead {
+		th {
+			border-bottom: solid .05rem #000000;
+			text-align: left;
+			font-weight: normal;
 		}
+	}
 
-		&:first-child {
-			//border-left: .05rem solid var(--base-color-0);
+	tbody {
+		td, th {
+			font-weight: normal;
+			text-align: left;
+			border: solid var(--base-color-1);
+			border-width: .05rem 0;
+
+			&:last-child {
+			}
+
+			&:first-child {
+			}
 		}
 	}
 

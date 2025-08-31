@@ -106,7 +106,7 @@
                 <h3>NARRATIVE</h3>
                 <pre>{{ $event['event']->narrative }}</pre>
             </li>
-            @if ($event['attendance'])
+            @if ($event['attendance']?->isNotEmpty())
             <li>
                 <h3>ATTENDANCE</h3>
                 @switch ($event['event']->participant_type)

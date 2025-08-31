@@ -49,4 +49,20 @@ class EventEvalFormController extends Controller
         return redirect()->route('events.show', ['event' => $event->public_id])
             ->with('status', 'Evaluation form updated.');
     }
+
+    public function editResponses(Event $event)
+    {
+        return view('events/edit-eval-response', [
+            'formAction' => route('events.eval-form.update-responses', [
+                'event' => $event->public_id
+            ]),
+            'backRoute' => route('events.edit', ['event' => $event->public_id]),
+        ]);
+    }
+
+    public function updateResponses(Request $request, Event $event)
+    {
+        return redirect()->route('events.show', ['event' => $event->public_id])
+            ->with('status', 'Evaluation updated.');
+    }
 }
