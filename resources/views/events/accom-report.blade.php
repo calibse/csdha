@@ -111,7 +111,8 @@
                 <h3>ATTENDANCE</h3>
                 @switch ($event['event']->participant_type)
                 @case ('students')
-                    @if ($event['attendanceTotal'] <= 15)
+                    @switch ($event['attendanceView'])
+                    @case ('student')
                 <table>
                     <thead>
                         <tr>
@@ -128,7 +129,8 @@
                         @endforeach
                     </tbody>
                 </table>
-                    @else
+                        @break
+                    @case ('year')
                 <table>
                     <thead>
                         <tr>
@@ -151,7 +153,32 @@
                         </tr>
                     </tfoot>
                 </table>
-                    @endif
+                        @break
+                    @case ('program')
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course & Year</th>
+                            <th>Attendees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($event['attendance'] as $program => $count)
+                        <tr>
+                            <td>{{ $program }}</td>
+                            <td>{{ $count }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <td>{{ $event['attendanceTotal'] }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                        @break
+                    @endswitch
                     @break
                 @case ('officers')
                 <table class="officers-attendance">

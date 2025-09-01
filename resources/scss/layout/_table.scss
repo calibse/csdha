@@ -17,6 +17,12 @@ table {
 		margin: 1rem 0;
 	}
 
+	&.alt {
+		tbody th {
+			text-align: right;
+		}	
+	}
+
 	thead {
 		th {
 			border-bottom: solid .05rem #000000;
@@ -41,7 +47,13 @@ table {
 	}
 
 	th, td {
-		white-space: nowrap;
 		padding: 1rem;
+	}
+
+	td {
+		ul, ol {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
 	}
 }

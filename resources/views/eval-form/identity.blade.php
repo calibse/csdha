@@ -2,6 +2,7 @@
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
+        {{-- 
         <p>
             <label>First name</label>
             <input name="first_name" value="{{ old('first_name') ?? ($inputs['first_name'] ?? null) }}">
@@ -18,10 +19,12 @@
             <label>Suffix name (optional)</label>
             <input name="suffix_name" value="{{ old('suffix_name') ?? ($inputs['suffix_name'] ?? null) }}">
         </p>
+        --}}
         <p>
             <label>Student ID</label>
             <input name="student_id" value="{{ old('student_id') ?? ($inputs['student_id'] ?? null) }}">
         </p>
+        {{--
         <p>
             <label>Program</label>
             <select name="program">
@@ -44,5 +47,6 @@
                 @endforeach
             </select>
         </p>
+        --}}
     </form>
 </x-layout.eval-form>

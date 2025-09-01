@@ -57,6 +57,7 @@ class EventEvalFormController extends Controller
                 'event' => $event->public_id
             ]),
             'backRoute' => route('events.edit', ['event' => $event->public_id]),
+            'evaluations' => $event->evaluations
         ]);
     }
 

@@ -11,7 +11,7 @@
     </x-slot:toolbar>
     <article class="article">
         <x-alert/>
-        @foreach ($event->dates as $date)
+        @foreach ($eventDates as $date)
         <h2 class="title">{{ $date->full_date }}</h2>
             @if ($date->attendees->isNotEmpty())
         <div class="table-container">

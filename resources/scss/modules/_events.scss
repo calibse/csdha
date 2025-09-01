@@ -51,6 +51,20 @@
 	}
 }
 
+.events.evaluations {
+	form {
+		.checkbox-field {
+			display: block;
+			margin: 1rem 0;
+		}
+
+		ul {
+			padding-left: 0;
+			list-style-type: none;
+		}
+	}
+}
+
 .events.attachments {
 	.attachment-set {
 		margin-left: 0;

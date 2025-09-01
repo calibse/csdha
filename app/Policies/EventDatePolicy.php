@@ -38,8 +38,9 @@ class EventDatePolicy
         if (!($canView && $canEdit)) {
             return Response::deny();
         }
-        $approved = $event->accomReport->status === 'approved';
-        $pending = $event->accomReport->status === 'pending';
+        $event = $eventDate->event;
+        $approved = $event->accomReport?->status === 'approved';
+        $pending = $event->accomReport?->status === 'pending';
         return ($approved || $pending)
             ? Response::deny()
             : Response::allow();

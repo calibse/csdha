@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Rules\MaxText;
 use App\Models\Course;
+use App\Models\Event;
 use App\Models\StudentYear;
+use App\Models\EventStudent;
+use App\Models\EventEvaluation;
 
 class EvalFormStep extends MultiStepForm
 {
@@ -13,6 +16,7 @@ class EvalFormStep extends MultiStepForm
     protected static string $endView = 'eval-form.end';
     protected static string $sessionInputName = 'evalFormInputs';
     protected static string $formTitle = 'Feedback Form';
+    protected static Event $event;
 
     protected static function setViewsData(): void
     {
@@ -21,6 +25,40 @@ class EvalFormStep extends MultiStepForm
             'yearLevels' => StudentYear::all(),
             'formTitle' => static::$formTitle
         ];
+    }
+
+    public static function store(Event $event): void
+    {
+        static::$event = $event;
+        $inputs = session(static::$sessionInputName, []);
+        $studentInput = $inputs['events.eval-form.identity'];
+        $studentId = $studentInput['student_id'];
+        $student = EventStudent::whereHas('eventDate.event', 
+            function ($query) use ($event) {
+                $query->whereKey($event->id);
+            })->where('student_id', $studentId)->first();
+        if (!$student) {
+            static::setEndViewData();
+            return;
+        }
+        $attendee = $student->eventAttended;
+        $evalInput = $inputs['events.eval-form.evaluation'];
+        $eval = new EventEvaluation;
+        $eval->event()->associate($event);
+        $eval->attendee()->associate($attendee);
+        $eval->overall_satisfaction = $evalInput['overall_satisfaction'];
+        $eval->content_relevance = $evalInput['content_relevance'];
+        $eval->speaker_effectiveness = $evalInput['speaker_effectiveness'];
+        $eval->engagement_level = $evalInput['engagement_level'];
+        $eval->duration = $evalInput['duration'];
+        $eval->topics_covered = $evalInput['topics_covered'];
+        $eval->suggestions_for_improvement = $evalInput['suggestions_for_improvement'];
+        $eval->future_topics = $evalInput['future_topics'];
+        $eval->overall_experience = $evalInput['overall_experience'];
+        $eval->additional_comments = $evalInput['additional_comments'];
+        $eval->selected = false;
+        $eval->save();
+        static::setEndViewData();
     }
     
     protected static function setEndViewData(): void
@@ -42,14 +80,18 @@ class EvalFormStep extends MultiStepForm
             'events.eval-form.identity' => [
                 'view' => 'eval-form.identity',
                 'rules' => [
+                    /*
                     'first_name' => ['required', 'max:50'],
                     'middle_name' => ['max:50'],
                     'last_name' => ['required', 'max:50'],
                     'suffix_name' => ['max:10'],
+                    */
                     'student_id' => ['required', 'max:20'],
+                    /*
                     'program' => ['required', 'integer', 'exists:courses,id'],
                     'year_level' => ['required', 'integer', 
                         'exists:student_years,id']
+                    */
                 ]
             ], 
             'events.eval-form.evaluation' => [

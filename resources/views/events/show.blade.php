@@ -19,8 +19,98 @@
     </x-slot:toolbar>
     <article class="article document">
         <x-alert/>
-        <h2>{{ $activity->name }}</h2>
 
+        <h2>{{ $activity->name }}</h2>
+        <table class="document alt">
+            <colgroup>
+                <col style="width: 11rem">
+            </colgroup>
+            <tr>
+                <th>Date</th>
+                <td>
+                    <ul>
+                    @foreach ($event->compactDates() as $date)
+                        <li>{{ $date }}</li>
+                    @endforeach
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Venue</th>
+                <td>{{ $event->venue }}</td>
+            </tr>
+            <tr>
+                <th>Participants/Beneficiaries</th>
+                <td>{{ $activity->participants }}</td>
+            </tr>
+            <tr>
+                <th>Type of Activity</th>
+                <td>{{ $activity->type?->name }}</td>
+            </tr>
+            <tr>
+                <th>Objectives</th>
+                <td><pre>{{ $activity->objectives }}</pre></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td><pre>{{ $event->description }}</pre></td>
+            </tr>
+            <tr>
+                <th>Narrative</th>
+                <td><pre>{{ $event->narrative }}</pre></td>
+            </tr>
+            <tr>
+                <th>Event Head</th>
+                <td>
+                    <ul>
+                        @foreach ($eventHeads as $eventHead)
+                        <li>{{ $eventHead->full_name }}</li>
+                        @endforeach
+                    </ul>
+                </td>
+            </tr>
+            @if ($coheads->isNotEmpty())
+            <tr>
+                <th>Co-head</th>
+                <td>
+                    <ul>
+                        @foreach ($coheads as $cohead)
+                        <li>{{ $cohead->full_name }}</li>
+                        @endforeach
+                    </ul>
+                </td>
+            </tr>
+            @endif
+            @can ('register', $event)
+            <tr>
+                <th>Registration Form</th>
+                <td>
+                    <a href="{{ $regisRoute }}">
+                        {{ $regisRoute }}
+                    </a>
+                </td>
+            </tr>
+            @endcan
+            @can ('recordAttendance', $event)
+            <tr>
+                <th>Attendance</th>
+                <td><a href="{{ $attendanceRoute }}">Attendance</a></td>
+            </tr>
+            @endcan
+            @can ('evaluate', $event)
+            <tr>
+                <th>Evaluation Form</th>
+                <td>
+                    <a href="{{ $evalRoute }}">
+                        {{ $evalRoute }}
+                    </a>
+                </td>
+            </tr>
+            @endcan
+        </table>
+
+
+        {{--
         <h3>Date</h3>
         @foreach ($event->compactDates() as $date)
         <p>{{ $date }}</p>
@@ -82,5 +172,6 @@
             </a>
         </p>
         @endcan
+        --}}
     </article>
 </x-layout.user>

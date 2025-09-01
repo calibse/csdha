@@ -18,6 +18,11 @@ class Event extends Model
 {
     use HasPublicId;
     
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(EventEvaluation::class);
+    }
+
     public function attachmentSets(): HasMany
     {
         return $this->hasMany(EventAttachmentSet::class);
@@ -128,8 +133,33 @@ class Event extends Model
         return $attendance;
     }
 
+    public function allMembersAttend() {
+        $members = [
+            'BSIT' => ['1', '2', '3', '4'],
+            'DIT' => ['1', '2']
+        ];
+        foreach ($members as $program => $years) {
+            foreach ($years as $year) {
+                $exists = EventStudent::whereHas(
+                    'eventDate.event', function ($query) {
+                        $query->whereKey($this->id);
+                    })->whereRelation('yearModel', 'year', $year)
+                    ->whereRelation('course', 'acronym', $program)->exists();
+                if (!$exists) return false;
+            }
+        }
+        return true;
+    }
+
     public function accomReportViewData()
     {
+        $members = [
+            'BSIT' => ['1', '2', '3', '4'],
+            'DIT' => ['1', '2']
+        ];
+        $attendance = collect([]);
+        $attendanceTotal = null;
+        $attendanceView = null;
         switch ($this->participant_type) {
         case 'students':
             $attendance = collect([]);
@@ -138,61 +168,67 @@ class Event extends Model
                     $query->whereKey($this->id);
             });
             $yearLevels = $this->participants;
-            $attendeesListQuery = (clone $attendanceQuery)->whereHas('yearModel', 
-                function ($query) use ($yearLevels) {
+            $attendeesListQuery = (clone $attendanceQuery)
+                ->whereHas('yearModel', function ($query) use ($yearLevels) {
                     $query->whereIn('id', $yearLevels->pluck('id')->toArray());
             });
             $attendanceTotal = (clone $attendeesListQuery)->count();
             if ($attendanceTotal <= 15) {
+                $attendanceView = 'student';
                 $attendance = (clone $attendeesListQuery)
                     ->orderBy('last_name', 'asc')->get();
-            } else {
+            } elseif ($this->allMembersAttend()) {
+                $attendanceView = 'year';
                 foreach ($yearLevels as $yearLevel) {
                     $attendance[$yearLevel->label] = (clone $attendanceQuery)
                         ->whereBelongsTo($yearLevel, 'yearModel')->count();
+                }
+            } else {
+                $attendanceView = 'program';
+                foreach ($members as $program => $years) {
+                    foreach ($years as $year) {
+                        $count = EventStudent::whereHas(
+                            'eventDate.event', function ($query) {
+                                $query->whereKey($this->id);
+                            })->whereRelation('yearModel', 'year', $year)
+                            ->whereRelation('course', 'acronym', $program)
+                            ->count();
+                        if (!$count) continue;
+                        $progYear = "{$program} {$year}";
+                        $attendance[$progYear] = $count;
+                    }
                 }
             }
             break;
         case 'officers':
             $attendance = $this->officerAttendees();
-            $attendanceTotal = null;
             break;
-        default:  
-            $attendance = collect([]);
-            $attendanceTotal = null;
         }
         return [
             'event' => $this,
             'attendance' => $attendance,
             'attendanceTotal' => $attendanceTotal,
+            'attendanceView' => $attendanceView,
             'activity' => $this->gpoaActivity,
         ];
     }
 
     public function compactDates()
     {
-        $dates = $this->dates()
-            ->orderBy('date', 'asc')
-            ->orderBy('start_time', 'asc')
-            ->get();
+        $dates = $this->dates()->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')->get();
         $newDates = [];
-        for ($i = 0; $i < count($dates); ++$i) {
-            if ($dates[$i]->start_time) { 
-                $fullDate = $dates[$i]->date_fmt . ' | ' . 
-                    $dates[$i]->start_time_fmt . ' - ' . $dates[$i]->end_time_fmt;
-            }
-            else {
-                $fullDate = $dates[$i]->date_fmt; 
-            }
-            while ($i + 1 < count($dates) && $dates[$i]->start_time 
-                && $dates[$i]->date === $dates[$i + 1]->date) {
+        $dateCount = count($dates);
+        for ($i = 0; $i < $dateCount; ++$i) {
+            $fullDate = $dates[$i]->date_fmt . ' | ' . 
+                $dates[$i]->start_time_fmt . ' - ' . $dates[$i]->end_time_fmt;
+            while ($i + 1 < $dateCount && $dates[$i]->date->toDateString()
+                    === $dates[$i + 1]->date->toDateString()) {
                 ++$i;
-                if ($i + 1 < count($dates) && $dates[$i]->date === 
-                        $dates[$i + 1]->date) {
+                if ($i + 1 < $dateCount) {
                     $fullDate .= ', ' . $dates[$i]->start_time_fmt . ' - ' . 
                         $dates[$i]->end_time_fmt;
-                }
-                else {
+                } else {
                     $fullDate .= ' and ' . $dates[$i]->start_time_fmt . ' - ' . 
                         $dates[$i]->end_time_fmt;
                     break;
@@ -200,7 +236,6 @@ class Event extends Model
             }
             $newDates[] = $fullDate;
         }
-
         return $newDates;
     }
 

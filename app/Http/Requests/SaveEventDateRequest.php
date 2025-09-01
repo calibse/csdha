@@ -10,8 +10,8 @@ class SaveEventDateRequest extends FormRequest
     {
         return [
             'date' => ['required', 'date'],
-            'start_time' => ['nullable', 'date_format:H:i'],
-            'end_time' => ['nullable', 'date_format:H:i']
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i']
         ];
     }
 

@@ -257,9 +257,12 @@ class EventController extends Controller implements HasMiddleware
 
     public function showAttendance(Event $event)
     {
+        $eventDates = $event->dates()->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')->get();
         return match ($event->participant_type) {
             'students' => view('events.show-attendance', [
                 'event' => $event,
+                'eventDates' => $eventDates,
                 'backRoute' => route('events.show', [
                     'event' => $event->public_id
                 ]),
@@ -269,6 +272,7 @@ class EventController extends Controller implements HasMiddleware
             ]),
             'officers' => view('events.show-attendance-officers', [
                 'event' => $event,
+                'eventDates' => $eventDates,
                 'backRoute' => route('events.show', [
                     'event' => $event->public_id
                 ]),
