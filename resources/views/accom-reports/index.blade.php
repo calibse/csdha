@@ -16,9 +16,11 @@
                 </div>
                 <div class="content">
                     <p class="title">
-                        <a href="{{ route('accom-reports.show', ['event' => $accomReport->event->public_id]) }}">{{ $accomReport->event->gpoaActivity->name }}</a>
+                        <a href="{{ route('accom-reports.show', ['event' => $accomReport->event->public_id]) }}">
+                            {{ mb_strimwidth($accomReport->event->gpoaActivity->name, 0, 70, '...') }}
+                        </a>
                     </p>
-                    <p>Status: {{ ucwords($accomReport->status) }}</p>
+                    <p class="subtitle">Status: {{ mb_strimwidth(ucwords($accomReport->status), 0, 70, '...') }} </p>
                 </div>
             </li>
         @endforeach

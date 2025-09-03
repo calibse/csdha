@@ -17,12 +17,6 @@ table {
 		margin: 1rem 0;
 	}
 
-	&.alt {
-		tbody th {
-			text-align: right;
-		}	
-	}
-
 	thead {
 		th {
 			border-bottom: solid .05rem #000000;
@@ -51,9 +45,16 @@ table {
 	}
 
 	td {
+		word-break: break-all;
+
 		ul, ol {
 			margin-top: 0;
 			margin-bottom: 0;
+			padding-left: 1rem;
 		}
+	}
+
+	th {
+		overflow-wrap: break-word;
 	}
 }

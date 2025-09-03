@@ -81,9 +81,9 @@ class GpoaActivityPolicy
         if (!($canView && $canEdit)) {
             return Response::deny();
         }
-        return $activity->coheads()?->whereKey($user->id)->exists()
-            ? Response::deny()
-            : Response::allow();
+        return $activity->eventHeadsOnly()?->whereKey($user->id)->exists()
+            ? Response::allow()
+            : Response::deny();
     }
 
     public function delete(User $user, GpoaActivity $activity): Response
@@ -161,7 +161,7 @@ class GpoaActivityPolicy
         if (!$activity->gpoa->active) Response::deny();
         $eventHeads = $activity->eventHeads;
         if ($activity->eventHeads()->whereRelation('position',
-                DB::raw('lower(name)'), 'president')
+                DB::raw('lower(name)'), 'president')->exists()
             && $user->position_name === 'president') {
             return Response::deny();
         }
@@ -188,7 +188,7 @@ class GpoaActivityPolicy
         if (!$activity->gpoa->active) Response::deny();
         $eventHeads = $activity->eventHeads;
         if ($activity->eventHeads()->whereRelation('position',
-                DB::raw('lower(name)'), 'president')
+                DB::raw('lower(name)'), 'president')->exists()
             && $user->position_name === 'president') {
             return Response::deny();
         }

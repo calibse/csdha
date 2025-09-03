@@ -102,11 +102,27 @@ class EventDate extends Model
     #[Scope]
     protected function ongoing(Builder $query): void
     {
-        //date_default_timezone_set(config('timezone', 'UTC'));
         $query->where(function ($query) {
             $query->where('date', Carbon::now()->toDateString())
-                ->where('start_time', '<=', Carbon::now()->toTimeString())
-                ->where('end_time', '>=', Carbon::now()->toTimeString());
+                ->where(function ($query) {
+                    $query->where(function ($query) {
+                        $query->whereColumn('start_time', '<=', 'end_time')
+                            ->where(function ($query) {
+                                $query->where('start_time', '<=', 
+                                    Carbon::now()->toTimeString())
+                                    ->where('end_time', '>', 
+                                        Carbon::now()->toTimeString());
+                            });
+                    })->orWhere(function ($query) {
+                        $query->whereColumn('start_time', '>', 'end_time')
+                            ->where(function ($query) {
+                                $query->where('start_time', '<=', 
+                                    Carbon::now()->toTimeString())
+                                    ->orWhere('end_time', '>', 
+                                        Carbon::now()->toTimeString());
+                            });
+                    });
+                });
         })->where(function ($query) {
             $query->whereHas('event.accomReport', function ($query) {
                 $query->whereNotIn('status', ['pending', 'approved']);

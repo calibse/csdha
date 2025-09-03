@@ -7,6 +7,6 @@ trait HasUniqueName
     public static function findByName($name)
     {
         $name = strtolower($name);
-        static::whereRaw('lower(name) = ?', [$name])->first();
+        return static::whereRaw('lower(name) = ?', [$name])->first();
     } 
 }

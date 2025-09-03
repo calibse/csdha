@@ -133,7 +133,7 @@ class EventController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function edit(Event $event)
+    public function edit(Request $request, Event $event)
     {
         $participantGroups = ['-1'];
         $selectedParticipants = [];
@@ -151,14 +151,20 @@ class EventController extends Controller implements HasMiddleware
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
         }
+        $backRoute = $request->from === 'accom-reports' 
+            ? route('accom-reports.show', [
+                'event' => $event->public_id,
+                'from' => $request->accom_reports_from, 
+            ])
+            : route('events.show', [
+                'event' => $event->public_id
+            ]);
         return view("events.edit", [
             'officersOnly' => $event->participant_type === 'officers',
             'participants' => $participants,
             'selectedParticipants' => $selectedParticipants,
             'event' => $event,
-            'backRoute' => route('events.show', [
-                'event' => $event->public_id
-            ]),
+            'backRoute' => $backRoute,
             'formAction' => route('events.update', [
                 'event' => $event->public_id
             ]),

@@ -237,8 +237,8 @@ class GpoaActivity extends Model
         $event->save();
         $date = new EventDate();
         $date->date = $this->start_date;
-        $date->start_time = '00:00';
-        $date->end_time = '23:59';
+        $date->start_time = Format::toUtc('00:00');
+        $date->end_time = Format::toUtc('23:59');
         $date->event()->associate($this->event);
         $date->save();
     }

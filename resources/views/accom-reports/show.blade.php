@@ -1,5 +1,13 @@
 <x-layout.user :$backRoute title="Accomplishment Report" class="event">
     <x-slot:toolbar>
+        <a 
+            @can ('update', $event)
+            href="{{ $editRoute }}"
+            @endcan
+        >
+            <span class="icon"><x-phosphor-pencil-simple/></span>
+            <span class="text">Edit</span>
+        </a>
         @if ($actions['submit'])
         <a 
         @can('submitAccomReport', $event)

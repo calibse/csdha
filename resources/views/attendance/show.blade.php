@@ -15,7 +15,7 @@
             @else
                 <p>
                     <select id="event">
-                        <option value="">Select Event</option>
+                        <option value="">-- Select Event --</option>
                     @foreach ($dates as $date)
                         <option value="{{ $date->public_id }}">{{ $date->event->gpoaActivity->name }}</option>
                     @endforeach

@@ -446,17 +446,17 @@ class GpoaActivityController extends Controller implements HasMiddleware
         if (!$activity) {
             $activity = new GpoaActivity();
         }
-        $fundSource = GpoaActivityFundSource::findByName($request->fund_source);
-        if (!$fundSource && $request->fund_source) {
-            $fundSource = new GpoaActivityFundSource();
-            $fundSource->name = $request->fund_source;
-            $fundSource->save();
-        }
         $type = GpoaActivityType::findByName($request->type_of_activity);
         if (!$type && $request->type_of_activity) {
             $type = new GpoaActivityType();
             $type->name = $request->type_of_activity;
             $type->save();
+        }
+        $fundSource = GpoaActivityFundSource::findByName($request->fund_source);
+        if (!$fundSource && $request->fund_source) {
+            $fundSource = new GpoaActivityFundSource();
+            $fundSource->name = $request->fund_source;
+            $fundSource->save();
         }
         $mode = GpoaActivityMode::findByName($request->mode);
         if (!$mode && $request->mode) {
@@ -515,19 +515,19 @@ class GpoaActivityController extends Controller implements HasMiddleware
                 $activity->eventheads()->syncWithPivotValues([auth()->user()], 
                     ['role' => 'event head']);
             }
-        }
-        if ($request->coheads) {
-            if ($request->event_heads && in_array('0', $request->event_heads)) {
-                $activity->eventHeads()->syncWithPivotValues(
-                    User::has('position')->notOfPosition(['adviser'])
-                    ->get(), ['role' => 'event head']);
-                $activity->eventHeads()->syncWithPivotValues([], 
-                    ['role' => 'co-head'], false);
-            } else {
-                $coheads = User::whereIn('public_id', array_diff($request
-                    ->coheads, $request->event_heads ?? []))->pluck('id')->toArray();
-                $activity->eventHeads()->syncWithPivotValues($coheads, 
-                    ['role' => 'co-head'], false);
+            if ($request->coheads) {
+                if ($request->event_heads && in_array('0', $request->event_heads)) {
+                    $activity->eventHeads()->syncWithPivotValues(
+                        User::has('position')->notOfPosition(['adviser'])
+                        ->get(), ['role' => 'event head']);
+                    $activity->eventHeads()->syncWithPivotValues([], 
+                        ['role' => 'co-head'], false);
+                } else {
+                    $coheads = User::whereIn('public_id', array_diff($request
+                        ->coheads, $request->event_heads ?? []))->pluck('id')->toArray();
+                    $activity->eventHeads()->syncWithPivotValues($coheads, 
+                        ['role' => 'co-head'], false);
+                }
             }
         }
         $activity->save();

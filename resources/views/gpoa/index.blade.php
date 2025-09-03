@@ -53,9 +53,11 @@
 				</div>
 				<div class="content">
 					<p class="title">
-						<a href="{{ route('gpoa.activities.show', ['activity' => $activity->public_id]) }}">{{ $activity->name }}</a>
+						<a href="{{ route('gpoa.activities.show', ['activity' => $activity->public_id]) }}">
+							{{ mb_strimwidth($activity->name, 0, 70, '...') }}
+						</a>
 					</p>
-					<p>Status: {{ $activity->current_status }}</p>
+					<p class="subtitle">Status: {{ mb_strimwidth($activity->current_status, 0, 70, '...') }} </p>
 				</div>
 			</li>
 		@endforeach

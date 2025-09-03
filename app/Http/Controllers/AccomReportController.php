@@ -120,6 +120,11 @@ class AccomReportController extends Controller implements HasMiddleware
             'approveRoute' => route('accom-reports.prepareForApprove', [
                 'event' => $event->public_id
             ]),
+            'editRoute' => route('events.edit', [
+                'event' => $event->public_id,
+                'from' => 'accom-reports',
+                'accom_reports_from' => $request->from
+            ]),
         ]);
     }
 

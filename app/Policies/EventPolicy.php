@@ -34,9 +34,11 @@ class EventPolicy
     {
         $approved = $event->accomReport?->status === 'approved';
         $pending = $event->accomReport?->status === 'pending';
-        return ($approved || $pending)
-            ? Response::deny()
-            : Response::allow();
+        $eventHead = $event->gpoaActivity->eventHeads()->whereKey($user->id)
+            ->exists();
+        return (!($approved || $pending) && $eventHead)
+            ? Response::allow()
+            : Response::deny();
     }
 
     public function delete(User $user, Event $event): Response

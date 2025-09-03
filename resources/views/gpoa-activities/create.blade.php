@@ -12,11 +12,11 @@
             </p>
             <p>
                 <label>Start Date</label>
-                <input type="date" name="start_date" value="{{ old('start_date') ?? $activity?->start_date }}">
+                <input type="date" name="start_date" value="{{ old('start_date') ?? $activity?->start_date?->toDateString() }}">
             </p>
             <p>
                 <label>End Date (optional)</label>
-                <input type="date" name="end_date" value="{{ old('end_date') ?? $activity?->end_date }}">
+                <input type="date" name="end_date" value="{{ old('end_date') ?? $activity?->end_date?->toDateString() }}">
             </p>
             <p>
                 <label>Objectives</label>
@@ -86,6 +86,7 @@
                 @endforeach
                 </datalist>
             </p>
+            @if (!$activity || ($activity && auth()->user()->can('updateEventHeads', $activity)))
             <p>
                 <label>Event Head</label>
                 <select multiple name="event_heads[]">
@@ -114,6 +115,7 @@
                     @endforeach
                 </select>
             </p>
+            @endif
             <p class="form-submit">
                 <button>{{ $activity ? 'Update' : 'Add' }} Activity</button>
             </p>

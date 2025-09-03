@@ -15,12 +15,12 @@
 				<div class="content">
 					<p class="title">
 						<a href="{{ route('events.show', ['event' => $event->public_id]) }}">
-							{{ $event->gpoaActivity->name }}
+							{{ mb_strimwidth($event->gpoaActivity->name, 0, 70, '...') }}
 						</a>
 					</p>
-					<p>
+					<p class="subtitle">
 						@if ($event->description)
-						{{ $event->description }}
+						{{ mb_strimwidth($event->description, 0, 70, '...') }}
 						@else 
 						<i>No description yet.</i>
 						@endif
@@ -44,9 +44,9 @@
 		@endforeach
 		--}}
 		</ul>
+		{{ $events->links('paginator.simple') }}
 	@else
 		<p>No one has added anything yet</p>
 	@endif
 	</article>
-	{{ $events->links('paginator.simple') }}
 </x-layout.user>

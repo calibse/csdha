@@ -12,6 +12,7 @@ import.meta.glob([
 
 let CURRENT_REQUEST = null;
 let BLOB_URLS = [];
+let QR_SCANNER = null;
 
 hideNoscript();
 setTimezone();
@@ -455,26 +456,34 @@ function startQrScanner() {
     showQrScannerStatus("idle");
     const videoEl = document.querySelector('#id-scanner .video');
     if (!videoEl) return;
-    const qrScanner = new QrScanner(videoEl, async (result) => {
-            showQrScannerStatus("processing");
-            const statusCode = await storeAttendance(result.data);
-            switch (statusCode) {
-            case 200:
-                showQrScannerStatus("success");
-                break;
-            case 404:
-                showQrScannerStatus("failure");
-                break;
-            }
-        }, {
-            returnDetailedScanResult: true
+    const idScanner = document.getElementById("id-scanner");
+    idScanner.hidden = false;
+    QR_SCANNER = QR_SCANNER ?? new QrScanner(videoEl, async (result) => {
+        showQrScannerStatus("processing");
+        const statusCode = await storeAttendance(result.data);
+        switch (statusCode) {
+        case 200:
+            showQrScannerStatus("success");
+            break;
+        case 404:
+            showQrScannerStatus("failure");
+            break;
         }
-    );
-    qrScanner.start();
+    }, {
+        returnDetailedScanResult: true
+    });
+    QR_SCANNER.start();
+}
+
+function stopQrScanner() {
+    const idScanner = document.getElementById("id-scanner");
+    if (!idScanner) return;
+    idScanner.hidden = true;
+    QR_SCANNER?.stop();
 }
 
 function activateAttendanceRecorder() {
-    const mainPage = document.querySelector('.main-content.attendance .article');
+    const mainPage = document.querySelector(".main-content.attendance .article");
     if (!mainPage) return;
     if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
         const el = document.createElement("p");
@@ -483,11 +492,24 @@ function activateAttendanceRecorder() {
         return;
     }
     const mainElTemp = document.querySelector('.attendance #scanner-feature');
-    const mainEl = mainElTemp?.content.cloneNode(1);
-    if (mainElTemp) { 
-        mainElTemp.before(mainEl);
-        startQrScanner();
+    if (!mainElTemp) { 
+        return;
     }
+    const mainEl = mainElTemp?.content.cloneNode(1);
+    const idScanner = mainEl.getElementById("id-scanner");
+    idScanner.hidden = true;
+    mainElTemp.before(mainEl);
+    const selectEventEl = mainPage.querySelector("select#event");
+    if (selectEventEl) {
+        selectEventEl.addEventListener("change", (event) => {
+            if (event.target.value) {
+                startQrScanner();
+            }
+            else stopQrScanner();
+        });
+        return;
+    }
+    startQrScanner();
 }
 
 

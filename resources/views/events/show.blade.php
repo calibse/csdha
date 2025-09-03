@@ -23,7 +23,7 @@
         <h2>{{ $activity->name }}</h2>
         <table class="document alt">
             <colgroup>
-                <col style="width: 11rem">
+                <col style="width: 9rem;">
             </colgroup>
             <tr>
                 <th>Date</th>
