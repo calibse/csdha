@@ -14,13 +14,12 @@
 
 .alert {
 	border-bottom: .05rem solid var(--line-color);
-	max-width: var(--text-width);
-	width: max-content;
+	max-width: max-content;
 	margin: 1rem 0;
 	padding: .01rem 1rem;
-	
-	p {
-		width: max-content;
+
+	li {
+		max-width: var(--text-width);
 	}
 
 	&.alert-info {

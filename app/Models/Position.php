@@ -48,4 +48,14 @@ class Position extends Model
         $name = strtolower($name);
         $query->whereRaw('lower(name) = ?', $name);
     }
+
+    #[Scope]
+    protected function open(Builder $query): void
+    {
+        $query->doesntHave('user')->where(function ($query) {
+            $query->whereRelation('signupInvitations', 'is_accepted', 0)
+                ->orDoesntHave('signupInvitations');
+        });
+
+    }
 }

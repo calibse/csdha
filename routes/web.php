@@ -68,19 +68,40 @@ Route::domain(config('custom.admin_domain'))->group(function () {
             ->name('admin.home');
 
         Route::prefix('accounts')->name('accounts.')->group(function () {
-            Route::get('/create-signup-invite/send', 
+            Route::get('/create-signup-invite/send.php', 
                 [AccountController::class, 'sendSignupInvite'])
-                ->name('sendSignupInvite');
+                ->name('send-signup-invite');
 
-            Route::get('/create-signup-invite', 
+            Route::get('/create-signup-invite.html', 
                 [AccountController::class, 'createSignupInvite'])
-                ->name('createSignupInvite');
+                ->name('create-signup-invite');
 
-            Route::delete('/signup-invite/{invite}/revoke', 
+            Route::delete('/signup-invite/{invite}/revoke.php', 
                 [AccountController::class, 'revokeSignupInvite'])
-                ->name('revokeSignupInvite');
+                ->name('revoke-signup-invite');
+
+            Route::get('/signup-invite/{invite}/revoke.html', 
+                [AccountController::class, 'confirmRevokeSignupInvite'])
+                ->name('confirm-revoke-signup-invite');
         });
-        Route::resource('accounts', AccountController::class);
+        Route::name('accounts.')->controller(AccountController::class)
+            ->group(function () {
+
+            Route::get('/accounts.html', 'index')->name('index');
+
+            Route::prefix('account-{account}')->group(function () {
+
+                Route::get('/index.html', 'show')->name('show');
+
+                Route::put('/update.php', 'update')->name('update');
+
+                Route::get('/delete.html', 'confirmDestroy')
+                    ->name('confirm-destroy');
+
+                Route::delete('/delete.php', 'destroy')->name('destroy');
+
+            });
+        });
 
         
         Route::prefix('roles')->name('roles.')->group(function () {
@@ -102,100 +123,103 @@ Route::domain(config('custom.admin_domain'))->group(function () {
 
 
 /* Main routes */
-Route::middleware(['can:register,event'])->prefix('event-register-{event}')
-        ->name('events.registrations.')->group(function () {
-    Route::controller(MultiStepFormController::class)->group(function () {
-        Route::middleware([CheckFormStep::class])->group(function () {
+Route::domain(config('custom.user_domain'))->group(function () {
+    Route::middleware(['can:register,event'])
+            ->prefix('event-register-{event}')->name('events.registrations.')
+            ->group(function () {
+        Route::controller(MultiStepFormController::class)->group(function () {
+            Route::middleware([CheckFormStep::class])->group(function () {
 
-            Route::get('/index.html', 'createResponse')
-                ->name('consent.create');
+                Route::get('/index.html', 'createResponse')
+                    ->name('consent.create');
 
-            Route::post('/start.php', 'storeResponse')->name('consent');
+                Route::post('/start.php', 'storeResponse')->name('consent');
 
-            Route::get('/identity.html', 'createResponse')
-                ->name('identity.create');
+                Route::get('/identity.html', 'createResponse')
+                    ->name('identity.create');
 
-            Route::post('/identity.php', 'storeResponse')->name('identity');
+                Route::post('/identity.php', 'storeResponse')->name('identity');
 
-            Route::get('/result.html', 'end')->name('end');
+                Route::get('/result.html', 'end')->name('end');
+            });
         });
+
+        Route::get('/qr-code.png', [EventRegistrationController::class, 
+            'showQrCode'])->name('qr-code.show');
     });
 
-    Route::get('/qr-code.png', [EventRegistrationController::class, 
-        'showQrCode'])->name('qr-code.show');
-});
-
-Route::get('/event-register-{event}{slash?}', function ($id) {
-    return redirect()->route('events.registrations.consent.create', [
-        'event' => $id
-    ]);
-})->where('slash', '\/');
-
-Route::middleware(['can:evaluate,event'])
-        ->controller(MultiStepFormController::class)->name('events.eval-form.')
-        ->group(function () {
-    Route::middleware([CheckFormStep::class])->group(function () {
-
-        Route::prefix('event-eval-form-{event}')->group(function () {
-
-            Route::get('/index.html', 'createResponse')
-                ->name('consent.create');
-
-            Route::post('/start.php', 'storeResponse')->name('consent');
-
-            Route::get('/identity.html', 'createResponse')
-                ->name('identity.create');
-
-            Route::post('/identity.php', 'storeResponse')->name('identity');
-
-            Route::get('/evaluation.html', 'createResponse')
-                ->name('evaluation.create');
-
-            Route::post('/evaluation.php', 'storeResponse')->name('evaluation');
-
-            Route::get('/finish.html', 'createResponse')
-                ->name('acknowledgement.create');
-
-            Route::post('/finish.php', 'storeResponse')->name('acknowledgement');
-                
-            Route::get('/thank-you.html', 'end')->name('end');
-        });
-    });
-
-    Route::get('/event-eval-form-{event}{slash?}', function ($id) {
-        return redirect()->route('events.eval-form.consent.create', [
+    Route::get('/event-register-{event}{slash?}', function ($id) {
+        return redirect()->route('events.registrations.consent.create', [
             'event' => $id
         ]);
     })->where('slash', '\/');
+
+    Route::middleware(['can:evaluate,event'])
+            ->controller(MultiStepFormController::class)->name('events.eval-form.')
+            ->group(function () {
+        Route::middleware([CheckFormStep::class])->group(function () {
+
+            Route::prefix('event-eval-form-{event}')->group(function () {
+
+                Route::get('/index.html', 'createResponse')
+                    ->name('consent.create');
+
+                Route::post('/start.php', 'storeResponse')->name('consent');
+
+                Route::get('/identity.html', 'createResponse')
+                    ->name('identity.create');
+
+                Route::post('/identity.php', 'storeResponse')->name('identity');
+
+                Route::get('/evaluation.html', 'createResponse')
+                    ->name('evaluation.create');
+
+                Route::post('/evaluation.php', 'storeResponse')->name('evaluation');
+
+                Route::get('/finish.html', 'createResponse')
+                    ->name('acknowledgement.create');
+
+                Route::post('/finish.php', 'storeResponse')->name('acknowledgement');
+                    
+                Route::get('/thank-you.html', 'end')->name('end');
+            });
+        });
+
+        Route::get('/event-eval-form-{event}{slash?}', function ($id) {
+            return redirect()->route('events.eval-form.consent.create', [
+                'event' => $id
+            ]);
+        })->where('slash', '\/');
+    });
+
+    Route::name('user.')->group(function () {
+    	Route::get('/', [LoginController::class, 'login'])->name('login');
+    	Route::post('/login', [LoginController::class, 'auth'])->name('auth');
+    	Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+        Route::get('/signup-invitation.html', 
+            [LoginController::class, 'showSignupInvitation'])->name('invitation');
+    });
+
+    Route::prefix('auth')->name('auth.')->group(function () {
+
+        Route::get('/{provider}/redirect', [LoginController::class, 'signinWith'])
+            ->name('redirect');
+
+        Route::get('/{provider}/callback', [LoginController::class, 'authWith'])
+            ->name('callback');
+    });
+
+    Route::resource('users', UserController::class)->except(['create', 'store']);
+
+    Route::prefix('sign-up')->name('users.')->group(function () {
+
+    	Route::get('/', [UserController::class, 'create'])->name('create');
+
+    	Route::post('/', [UserController::class, 'store'])->name('store');
+    });
 });
 
-Route::name('user.')->group(function () {
-	Route::get('/', [LoginController::class, 'login'])->name('login');
-	Route::post('/login', [LoginController::class, 'auth'])->name('auth');
-	Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::get('/signup-invitation.html', 
-        [LoginController::class, 'showSignupInvitation'])->name('invitation');
-});
-
-Route::prefix('auth')->name('auth.')->group(function () {
-
-    Route::get('/{provider}/redirect', [LoginController::class, 'signinWith'])
-        ->name('redirect');
-
-    Route::get('/{provider}/callback', [LoginController::class, 'authWith'])
-        ->name('callback');
-});
-
-Route::resource('users', UserController::class)->except(['create', 'store']);
-
-Route::prefix('register')->name('users.')->group(function () {
-
-	Route::get('/', [UserController::class, 'create'])->name('create');
-
-	Route::post('/', [UserController::class, 'store'])->name('store');
-});
-
-Route::middleware('auth')->group(function () {
+Route::domain(config('custom.user_domain'))->middleware('auth')->group(function () {
 
 	Route::get('/home.html', [HomeController::class, 'index'])
         ->name('user.home');

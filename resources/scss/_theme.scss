@@ -16,16 +16,13 @@
 	height: 2.1rem;
 	padding: 0;
 	gap: .5rem;
-	color: var(--fg-color);
+	background-color: transparent;
 	border: solid #777777 .1rem;
 	border-radius: 1rem;
 
-	img {
-		width: 1rem;		
+	img, svg {
+		height: 1rem;		
 		margin-right: .5rem;
-	}
-
-	&.google {
 	}
 
 	&:hover, &:focus {

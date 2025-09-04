@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>CSDHA</title>
+	<title>CSDHA {{ $type === 'admin' ? 'Admin' : null }}</title>
 	@vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body class="front-body-wrapper">
@@ -11,10 +11,7 @@
 		<header class="front-header">
 			<h1 class="title">
 				<a class="app-link">
-					<span class="logo">
-						<img src="{{ 
-							Vite::asset('resources/images/app-logo.png') }}">
-					</span>
+					<span class="logo"> <img src="{{ Vite::asset('resources/images/app-logo.png') }}"> </span>
 					<span class="name">
 						<span class="org-name">COMPUTER SOCIETY</span>
 						<span class="app-name">DIGITAL HUB AND ARCHIVES</span>
@@ -26,18 +23,15 @@
 			<article class="front-content">
 			@if (auth()->check())
 				<h2 class="title">Welcome back!</h2>
-				<form action="{{ route('user.home') }}">
-					<button class="login-button">
-						Proceed with My Account
-					</button>
+				<form action="{{ $homeRoute }}">
+					<button class="login-button">Proceed with My Account</button>
 				</form>
 			@else
-				<h2 class="title">Sign in to CSDHA</h2>
+				<h2 class="title">Sign in to CSDHA {{ $type === 'admin' ? '(for Admin)' : null }}</h2>
 				<article class="sign-in-with">
-					<form action="{{ route('auth.redirect', ['provider' => 'google', 'invite-code' => $inviteCode ]) }}">
+					<form action="{{ $googleSigninRoute }}">
 						<button class="login-button google">
-							<img src="{{ 
-								Vite::asset('resources/images/google.webp') }}">
+							<img src="{{Vite::asset('resources/images/google.webp') }}">
 							Sign in with Google
 						</button>
 					</form>
@@ -48,38 +42,16 @@
 					<div class="line"></div>
 				</div>
 				<article class="sign-in">
-					@if ($errors->any())
-					<aside class="validation-errors">
-						<p class="title"><strong>There is a problem</strong></p>
-						<ul>
-							@foreach ($errors->all() as $error)
-							<li>{{ $error }}</li>
-							@endforeach
-						</ul>
-					</aside>
-					@endif
-
-					<form method="POST" 
-						action="{{ route('user.auth', [], false) }}"
-					>
+					<x-alert/>
+					<form method="post" action="{{ $signinRoute }}" >
 						@csrf
 						<p>
-							<label for="username">Username</label>
-							<input type="text" 
-								id="username"
-								required 
-								maxlength="50" 
-								name="username"
-							>
+							<label for="username">Username or Email</label>
+							<input id="username" name="username">
 						</p>
 						<p>
 							<label for="password">Password</label>
-							<input type="password" 
-								id="password"
-								required 
-								maxlength="55" 
-								name="password"
-							>
+							<input type="password" id="password" name="password">
 						</p>
 						<p class="button"><button type="submit">Sign in</button></p>
 					</form>

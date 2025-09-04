@@ -315,6 +315,7 @@
 		}
 	}
 
+/*
 	.list .item {
 		border-bottom: solid .1rem #aaaaaa;
 		padding: 1rem 0;
@@ -327,6 +328,7 @@
 			border-bottom: 0;
 		}
 	}
+	*/
 }
 
 .main-actions  {
@@ -415,6 +417,12 @@
 			margin-right: .5rem;
 		}
 	}
+}
+
+.message {
+	margin: 0 auto;
+	max-width: var(--page-width);
+	padding: 0 1rem;
 }
 
 @media (min-width: 48rem) {

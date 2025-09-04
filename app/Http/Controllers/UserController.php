@@ -8,37 +8,49 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Models\Position;
+use App\Models\SignupInvitation;
+use App\Http\Requests\StoreUserRequest;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        return view('users.create');
+        $inviteCode = $request->invite_code;
+        $inviteCodeValid = false;
+        $signupInvite = SignupInvitation::firstWhere('invite_code', 
+            $inviteCode);
+        if (!$signupInvite) {
+            return view('message', [
+                'message' => 'Your sign-up invitation link is invalid.'
+            ]);
+        }
+
+        if ($signupInvite->is_accepted) {
+            return view('message', [
+                'message' => 'Your sign-up invitation has already been accepted.'
+            ]);
+        }
+
+        if (now()->greaterThan($signupInvite->expires_at)) {
+            return view('message', [
+                'message' => 'Your sign-up invitation link has expired.'
+            ]);
+        }
+        return view('users.create', [
+            'backRoute' => route('user.invitation', [
+                'invite_code' => $inviteCode 
+            ]),
+            'email' => $signupInvite->email,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-		$request->validate([
-			'email' => ['nullable', 'email', 'unique:App\Models\User,email'],
-			'username' => ['required', 'max:30', 'unique:App\Models\User,username'],
-			'password_confirmation' => ['required'],
-			'password' => ['required', 'ascii', 'max:55',  Password::min(8), 'confirmed']
-		]);
-		
         $user = new User();
         $user->first_name = $request->input('first_name');
         $user->middle_name = $request->input('middle_name');
@@ -48,7 +60,6 @@ class UserController extends Controller
         $user->username = $request->input('username');
         $user->password = Hash::make($request->input('password'));
 		$user->save();
-
         Auth::login($user);
         return redirect()->route('user.home');
     }
@@ -59,33 +70,21 @@ class UserController extends Controller
         return response->file(Storage::path($user->avatar_filepath));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //

@@ -8,23 +8,39 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Models\SignupInvitation;
+use App\Http\Requests\SigninRequest;
 
 class LoginController extends Controller
 {
     public function login(Request $request) {
+        $inviteCode = $request->invite_code;
         return view('users.login', [
-            'inviteCode' => $request->query('invite-code'),
+            'type' => 'user',
+            'inviteCode' => $inviteCode,
+            'homeRoute' => route('user.home'),
+            'googleSigninRoute' => route('auth.redirect', [
+                'provider' => 'google', 
+                'invite_code' => $inviteCode 
+            ]),
+            'signinRoute' => route('user.auth'),
         ]);
     }
 
-    public function auth(Request $request) {
+    public function auth(SigninRequest $request) {
         if (auth()->check()) {
             return redirect()->intended('home.html');
         }
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
+        if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
+            $credentials = [
+                'email' => $request->username,
+                'password' => $request->password
+            ];
+        } else {
+            $credentials = [
+                'username' => $request->username,
+                'password' => $request->password
+            ];
+        }
 
         if (Auth::attempt($credentials, $remember = true)) {
             $request->session()->regenerate();
@@ -36,15 +52,24 @@ class LoginController extends Controller
         ])->onlyInput('username');
     }
 
-    public function adminAuth(Request $request) {
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
+    public function adminAuth(SigninRequest $request) {
+        if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
+            $credentials = [
+                'email' => $request->username,
+                'password' => $request->password
+            ];
+        } else {
+            $credentials = [
+                'username' => $request->username,
+                'password' => $request->password
+            ];
+        }
 
         $user = User::firstWhere('username', $request->username);
         if (!$user || !$user->isAdmin()) {
-            return "We only allow log-in to administrator account here.";
+            return view('message', [
+                'message' => 'We only allow log-in to administrator account here.'
+            ]);
         }
 
         if (Auth::attempt($credentials)) {
@@ -60,7 +85,14 @@ class LoginController extends Controller
 
     public function adminLogin(Request $request)
     {
-        return view('admin.login');
+        return view('users.login', [
+            'type' => 'admin',
+            'homeRoute' => route('admin.home'),
+            'googleSigninRoute' => route('auth.redirect', [
+                'provider' => 'google' 
+            ]),
+            'signinRoute' => route('admin.auth'),
+        ]);
     }
 
     public function signinWith(Request $request, string $provider)
@@ -68,7 +100,7 @@ class LoginController extends Controller
         if (auth()->check()) {
             return redirect()->intended('home.html');
         }
-        $inviteCode = $request->query('invite-code');
+        $inviteCode = $request->invite_code;
         $request->session()->flash('inviteCode', $inviteCode);
         switch ($provider) {
         case 'google':
@@ -92,15 +124,21 @@ class LoginController extends Controller
             $signupInvite = SignupInvitation::firstWhere('invite_code', 
                 $inviteCode);
             if (!$signupInvite) {
-                return "Your sign-up invitation link is invalid.";
+                return view('message', [
+                    'message' => 'Your sign-up invitation link is invalid.'
+                ]);
             }
 
             if ($signupInvite->is_accepted) {
-                return "Your sign-up invitation has already been accepted.";
+                return view('message', [
+                    'message' => 'Your sign-up invitation has already been accepted.'
+                ]);
             }
 
             if (now()->greaterThan($signupInvite->expires_at)) {
-                return "Your sign-up invitation link has expired.";
+                return view('message', [
+                    'message' => 'Your sign-up invitation link has expired.'
+                ]);
             }
         }
         switch ($provider) {
@@ -112,7 +150,9 @@ class LoginController extends Controller
             break;
         }
         if (!$user && !$inviteCode) {
-            return "Sorry, we only allow sign-in for registered users or from a sign-up invitation link right now.";
+            return view('message', [
+                'message' => 'Sorry, we only allow sign-in for registered users or from a sign-up invitation link right now.'
+            ]);
         }
         switch ($provider) {
         case 'google':
@@ -165,7 +205,9 @@ class LoginController extends Controller
             break;
         }
         if (!$user || !$user->isAdmin()) {
-            return "We only allow log-in to administrator account here.";
+            return view('message', [
+                'message' => 'We only allow log-in to administrator account here.'
+            ]);
         }
 
         Auth::login($user);
@@ -174,19 +216,25 @@ class LoginController extends Controller
     }
 
     public function showSignupInvitation(Request $request) {
-        $inviteCode = $request->query('invite-code');
+        $inviteCode = $request->invite_code;
         $signupInvite = SignupInvitation::firstWhere('invite_code', 
             $inviteCode);
         if (!$signupInvite) {
-            return "Your sign-up invitation link is invalid.";
+            return view('message', [
+                'message' => 'Your sign-up invitation link is invalid.'
+            ]);
         }
 
         if ($signupInvite->is_accepted) {
-            return "Your sign-up invitation has already been accepted.";
+            return view('message', [
+                'message' => 'Your sign-up invitation has already been accepted.'
+            ]);
         }
 
         if (now()->greaterThan($signupInvite->expires_at)) {
-            return "Your sign-up invitation link has expired.";
+            return view('message', [
+                'message' => 'Your sign-up invitation link has expired.'
+            ]);
         }
         return view('users.show-signup-invitation', [
             'inviteCode' => $inviteCode

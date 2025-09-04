@@ -1,7 +1,6 @@
 /* _table.scss */
 
 .table-block {
-	overflow-y: auto;
 	margin: 1rem;
 	margin-top: 0;
 }
@@ -15,6 +14,10 @@ table {
 		width: unset;
 		border: solid .05rem var(--base-color-1);
 		margin: 1rem 0;
+
+		td {
+			white-space: nowrap;
+		}
 	}
 
 	thead {
@@ -46,6 +49,7 @@ table {
 
 	td {
 		word-break: break-all;
+		white-space: nowrap;
 
 		ul, ol {
 			margin-top: 0;

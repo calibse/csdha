@@ -12,12 +12,14 @@ pre {
 	font-family: inherit;
 	white-space: pre-wrap;
 	max-width: var(--text-width);
-	word-break: break-all;
+	//word-break: break-all;
+	hyphens: auto;
 }
 
 p {
 	max-width: var(--text-width);
-	word-break: break-all;
+	//word-break: break-all;
+	hyphens: auto;
 }
 
 a {

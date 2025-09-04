@@ -13,13 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasPublicId;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, HasPublicId;
+    use HasFactory, Notifiable, HasApiTokens, HasPublicId, SoftDeletes;
 
     protected $fillable = [
         'email',
@@ -254,7 +255,7 @@ class User extends Authenticatable
 
     protected function entryTime(): Attribute
     {
-        $time = $this->pivot->created_at;
+        $time = $this->pivot?->created_at;
         return Attribute::make(
             get: fn () => $time
         );
