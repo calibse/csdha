@@ -192,9 +192,8 @@ class EventController extends Controller implements HasMiddleware
         $event->description = $request->description;
         $event->narrative = $request->narrative;
         $event->tag = $request->tag;
-        $event->save();
-        if ($request->record_attendance && 
-                !in_array('0', $request->record_attendance)) {
+        if ($request->record_attendance && !in_array('0', 
+                $request->record_attendance)) {
             if (in_array('-1', $request->record_attendance)) {
                 $event->participant_type = 'officers';
                 $event->participants()->sync([]);
@@ -214,7 +213,9 @@ class EventController extends Controller implements HasMiddleware
             $event->accept_evaluation = false;
         }
         $event->save();
-        return redirect()->route("events.show", ["event" => $event->public_id]);
+        return redirect()->route('events.show', [
+            'event' => $event->public_id
+        ]);
     }
 
     public function showCoverPhoto(Event $event)

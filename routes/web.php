@@ -34,6 +34,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
 use App\Http\Middleware\CheckFormStep;
+use App\Http\Middleware\CheckGpoaActivity;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
@@ -224,7 +225,8 @@ Route::domain(config('custom.user_domain'))->middleware('auth')->group(function 
 	Route::get('/home.html', [HomeController::class, 'index'])
         ->name('user.home');
     
-    Route::name('gpoa.')->group(function () {
+    Route::name('gpoa.')->middleware(CheckGpoaActivity::class)
+            ->group(function () {
 
         Route::get('/gpoa.html', [GpoaController::class, 'index'])
             ->name('index');
@@ -255,9 +257,9 @@ Route::domain(config('custom.user_domain'))->middleware('auth')->group(function 
             Route::controller(GpoaActivityController::class)
                     ->name('activities.')->group(function () {
 
-                Route::get('/activity-create.html', 'create')->name('create');
+                Route::get('/create-activity.html', 'create')->name('create');
 
-                Route::post('/activity.php', 'store')->name('store');
+                Route::post('/store-activity.php', 'store')->name('store');
 
                 Route::prefix('activity-{activity}')->group(function () {
 

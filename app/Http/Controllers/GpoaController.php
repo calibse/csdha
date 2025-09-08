@@ -42,10 +42,7 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = $this->gpoa; 
         if (!$gpoa) {
-            return view('gpoa.index', [
-                'gpoa' => $gpoa,
-                'activities' => null
-            ]);
+            return view('gpoa.index', ['gpoa' => $gpoa, 'activities' => null]);
         }
         switch(auth()->user()->position_name) {
         case 'president': 

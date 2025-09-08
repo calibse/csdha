@@ -11,43 +11,44 @@ class EventPolicy
     public function viewAny(User $user): Response
     {
         return $user->hasPerm('events.view')
-            ? Response::allow()
-            : Response::deny();
+            ? Response::allow() : Response::deny();
     }
 
     public function view(User $user, Event $event): Response
     {
-        return (
-            $user->hasPerm('events.view')
-        ) ? Response::allow()
-            : Response::deny();
+        return ($user->hasPerm('events.view')) 
+            ? Response::allow() : Response::deny();
     }
 
     public function create(User $user): Response
     {
-        return $user->hasPerm('events.edit')
-            ? Response::allow()
-            : Response::deny();
+        if (!self::canEdit()) {
+            return Response::deny();
+        }
+        return Response::allow();
     }
 
     public function update(User $user, Event $event): Response
     {
+        if (!self::canEdit()) {
+            return Response::deny();
+        }
         $approved = $event->accomReport?->status === 'approved';
         $pending = $event->accomReport?->status === 'pending';
         $eventHead = $event->gpoaActivity->eventHeads()->whereKey($user->id)
             ->exists();
         return (!($approved || $pending) && $eventHead)
-            ? Response::allow()
-            : Response::deny();
+            ? Response::allow() : Response::deny();
     }
 
     public function delete(User $user, Event $event): Response
     {
-        return (
-            $event->creator->is($user)
-            || $event->editors->contains($user)
-        ) ? Response::allow()
-            : Response::deny();
+        if (!self::canEdit()) {
+            return Response::deny();
+        }
+        return ($event->creator->is($user) || 
+            $event->editors->contains($user)) 
+            ? Response::allow() : Response::deny();
     }
 
     public function restore(User $user, Event $event): bool
@@ -65,8 +66,7 @@ class EventPolicy
         $withPosition = $user->position_name;
         $hasPerm = $user->hasPerm('accomplishment-reports.view');
         return ($hasPerm && $withPosition)
-            ? Response::allow()
-            : Response::deny();
+            ? Response::allow() : Response::deny();
     }
 
     public function viewAccomReport(User $user, Event $event): Response
@@ -104,6 +104,12 @@ class EventPolicy
 
     public function submitAccomReport(User $user, Event $event): Response
     {
+        if (!self::canEdit()) {
+            return Response::deny();
+        }
+        if (!self::canChangeStatus()) {
+            return Response::deny();
+        }
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
             $position = 'officers';
@@ -124,6 +130,12 @@ class EventPolicy
 
     public function returnAccomReport(User $user, Event $event): Response
     {
+        if (!self::canEdit()) {
+            return Response::deny();
+        }
+        if (!self::canChangeStatus()) {
+            return Response::deny();
+        }
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
             $position = 'officers';
@@ -142,6 +154,12 @@ class EventPolicy
 
     public function approveAccomReport(User $user, Event $event): Response
     {
+        if (!self::canEdit()) {
+            return Response::deny();
+        }
+        if (!self::canChangeStatus()) {
+            return Response::deny();
+        }
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
             $position = 'officers';
@@ -161,25 +179,19 @@ class EventPolicy
     public function register(?User $user, Event $event): Response
     {
         $openRegis = $event->automatic_attendance;
-        return ($openRegis)
-            ? Response::allow()
-            : Response::deny();
+        return ($openRegis) ? Response::allow() : Response::deny();
     }
 
     public function evaluate(?User $user, Event $event): Response
     {
         $openEval = $event->accept_evaluation;
-        return ($openEval)
-            ? Response::allow()
-            : Response::deny();
+        return ($openEval) ? Response::allow() : Response::deny();
     }
 
     public function recordAttendance(User $user, Event $event): Response
     {
         $openEval = $event->participant_type;
-        return ($openEval)
-            ? Response::allow()
-            : Response::deny();
+        return ($openEval) ? Response::allow() : Response::deny();
     }
 
     public function addAttendee(User $user, Event $event): Response
@@ -187,8 +199,7 @@ class EventPolicy
         $recordsAttendance = $event->participant_type !== null;
         $manualAttendance = $event->automatic_attendance === 0; 
         return ($recordsAttendance && $manualAttendance) 
-            ? Response::allow() 
-            : Response::deny();
+            ? Response::allow() : Response::deny();
     }
 
     public function viewAttendance(User $user): Response
@@ -201,4 +212,19 @@ class EventPolicy
         return Response::allow();
     }
 
+    private static function canEdit(): bool
+    {
+        $canView = $user->hasPerm('events.view');
+        $canEdit = $user->hasPerm('events.edit');
+        $approved = $event->accomReport?->status === 'approved';
+        return ($canView && $canEdit && !($approved ?? false));
+    }
+
+    private static function canChangeStatus(): bool
+    {
+        $canView = $user->hasPerm('accomplishment-reports.view');
+        $canEdit = $user->hasPerm('accomplishment-reports.edit');
+        $approved = $event->accomReport?->status === 'approved';
+        return ($canView && $canEdit && !($approved ?? false));
+    }
 }

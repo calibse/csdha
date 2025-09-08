@@ -9,5 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/attendance/{event_date}', [AttendanceController::class, 'store']);
+    Route::post('/attendance/{event_date}', 
+        [AttendanceController::class, 'store']);
 });

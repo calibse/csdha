@@ -248,9 +248,9 @@ class GpoaActivity extends Model
     protected function forAdviser(Builder $query): void
     {
         $query->where(function ($query) {
-                $query->where('status', 'pending')
-                    ->where('current_step', 'adviser');
-            }) ->orWhere('status', 'approved');
+            $query->where('status', 'pending')
+                ->where('current_step', 'adviser');
+        })->orWhere('status', 'approved');
     }
 
     #[Scope]
@@ -258,17 +258,17 @@ class GpoaActivity extends Model
     {
         $user = User::ofPosition(['president'])->first();
         $query->where('status', 'approved')
-            ->orWhere(function ($query2) {
-                $query2->where('status', 'pending')
+            ->orWhere(function ($query) {
+                $query->where('status', 'pending')
                     ->where('current_step', 'adviser');
-            })->orWhere(function ($query2) {
-                $query2->where('status', 'pending')
+            })->orWhere(function ($query) {
+                $query->where('status', 'pending')
                     ->where('current_step', 'president');
-            })->orWhere(function ($query2) {
-                $query2->where('status', 'returned')
+            })->orWhere(function ($query) {
+                $query->where('status', 'returned')
                     ->where('current_step', 'president');
-            })->orWhere(function ($query2) {
-                $query2->where('status', 'rejected')
+            })->orWhere(function ($query) {
+                $query->where('status', 'rejected')
                     ->where('current_step', 'adviser');
             })->orWhereAttachedTo($user, 'eventHeads');
     }

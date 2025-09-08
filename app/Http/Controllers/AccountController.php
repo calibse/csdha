@@ -107,7 +107,8 @@ class AccountController extends Controller implements HasMiddleware
         $signupInvite = new SignupInvitation();
         $signupInvite->invite_code = Str::random(32);
         $signupInvite->email = $request->email;
-        $signupInvite->position()->associate(Position::find($request->position));
+        $signupInvite->position()->associate(Position::find($request
+            ->position));
         $signupInvite->is_accepted = false;
         $signupInvite->expires_at = now()->hour(24)->toDateTimeString();
         $signupInvite->save();

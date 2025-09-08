@@ -35,7 +35,8 @@ class Gpoa extends Model
 
     public function report()
     {
-        $activities = $this->activities()->where('status', 'approved')->orderBy('start_date', 'asc')->get();
+        $activities = $this->activities()->where('status', 'approved')
+            ->orderBy('start_date', 'asc')->get();
         $president = User::ofPosition(['president'])->first();
         $adviser = User::ofPosition(['adviser'])->first();
         /*

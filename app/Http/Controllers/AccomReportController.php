@@ -40,23 +40,17 @@ class AccomReportController extends Controller implements HasMiddleware
         }
         switch ($position) {
         case 'officers':
-            $accomReports = AccomReport::orderBy("updated_at", "desc")
-                ->paginate("7");
+            $accomReports = AccomReport::query();
             break;
         case 'president':
-            $accomReports = AccomReport::where('status', 'approved')
-                ->orWhere(function ($query) {
-                    $query->where('status', 'pending')
-                        ->where('current_step', 'president');
-                })->orderBy("updated_at", "desc")
-                ->paginate("7");
+            $accomReports = AccomReport::forPresident();
             break;
         case 'adviser':
-            $accomReports = AccomReport::where('status', 'approved')
-                ->orderBy("updated_at", "desc")
-                ->paginate("7");
+            $accomReports = AccomReport::forAdviser();
             break;
         }
+        $accomReports = $accomReports->orderBy("updated_at", "desc")
+            ->paginate("7");
         return view('accom-reports.index', [
             'accomReports' => $accomReports,
             'genRoute' => route('accom-reports.generate')
@@ -205,8 +199,8 @@ class AccomReportController extends Controller implements HasMiddleware
         $accomReport->returned_at = now();
         $accomReport->comments = $request->comments ?? null;
         $accomReport->save();
-        return redirect()->route('accom-reports.index')
-            ->with('status', 'Accomplishment report returned.');
+        return redirect()->route('accom-reports.index')->with('status', 
+            'Accomplishment report returned.');
     }
 
     public function approve(UpdateAccomReportStatusRequest $request, 
@@ -221,8 +215,8 @@ class AccomReportController extends Controller implements HasMiddleware
         $accomReport->approved_at = now();
         $accomReport->comments = $request->comments ?? null;
         $accomReport->save();
-        return redirect()->route('accom-reports.index')
-            ->with('status', 'Accomplishment report approved.');
+        return redirect()->route('accom-reports.index')->with('status', 
+            'Accomplishment report approved.');
     }
 
     public function generate(Request $request)

@@ -41,7 +41,8 @@ class AttendanceController extends Controller implements HasMiddleware
         }
         $student = $regis->student;
         $event = $eventDate->event;
-        if ($event->dates()->whereAttachedTo($student, 'attendees')->exists()) {
+        if ($event->dates()->whereAttachedTo($student, 'attendees')
+                ->exists()) {
             return response([], 200);
         }
         $eventDate->attendees()->attach($student);
