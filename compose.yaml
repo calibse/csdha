@@ -46,6 +46,19 @@ services:
       database:
         condition: service_healthy
 
+  queue:
+    image: php-queue
+    build:
+      context: .
+      dockerfile: Dockerfile.php_queue
+      tags:
+        - localhost/php-queue
+    volumes:
+      - ./storage/app:/var/www/app/storage/app
+    depends_on:
+      database:
+        condition: service_healthy
+
 volumes:
   db_data:
 

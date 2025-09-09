@@ -13,6 +13,7 @@ use App\Http\Requests\StoreSignupInvitationRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use App\Jobs\SendSignupInvite;
 
 class AccountController extends Controller implements HasMiddleware
 {
@@ -112,16 +113,7 @@ class AccountController extends Controller implements HasMiddleware
         $signupInvite->is_accepted = false;
         $signupInvite->expires_at = now()->hour(24)->toDateTimeString();
         $signupInvite->save();
-
-        $url = url('http://' . config('custom.user_domain') . 
-            (str_starts_with(config('custom.user_domain'), '127.') ? ':8000' 
-                : null) . 
-            route('user.invitation', [
-                'invite-code' => $signupInvite->invite_code
-            ], false));
-
-        Mail::to($request->email)->send(new SignupInvitationMail($url));
-
+        SendSignupInvite::dispatch($signupInvite);
         return back()->with('status', 'Sign up invitation sent.');
     }
 

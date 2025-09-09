@@ -26,11 +26,19 @@ while getopts "" opt; do
 done
 
 if [ "$(docker-compose ps -q)" ]; then
-	podman compose build && \
+	podman compose build web-user web-admin && \
 	docker-compose rm -sf web-user web-admin && \
 	podman image prune -f && \
 	docker-compose up -d web-user web-admin
 else
 	docker-compose up -d
+fi
+
+if [ "$(docker compose ps -q queue | \
+	xargs podman inspect -f '{{.State.Running}}')" = "false" ]
+then
+	podman compose build queue & \
+	podman image prune -f && \
+	docker-compose up -d queue
 fi
 
