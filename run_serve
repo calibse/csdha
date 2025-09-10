@@ -26,5 +26,5 @@ while getopts "b" opt; do
 	esac
 done
 
-ssh $SSH_SERVER 'cd csdha && git pull && sh ./serve'
+ssh $SSH_SERVER 'cd csdha && git pull && ./serve'
 
