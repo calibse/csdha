@@ -1,6 +1,8 @@
 #! /bin/sh
 # run_serve
 
+set -e
+
 usage() {
 	echo "Usage: $0 [-br]"
 	echo
@@ -9,12 +11,12 @@ usage() {
 
 push_assets() {
 	npm run build
-	rsync -avz -I --delete public/build/ $SSH_SERVER:csdha/public/build/
-	rsync -avz -I --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
-	rsync -avz -I --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
-	rsync -avz -I container/apache/main-site.conf $SSH_SERVER:csdha/container/apache/main-site.conf
-	rsync -avz -I .env.production $SSH_SERVER:csdha/.env
-	rsync -avz -I .env.production.admin $SSH_SERVER:csdha/.env.admin
+	rsync -avz --delete public/build/ $SSH_SERVER:csdha/public/build/
+	rsync -avz --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
+	rsync -avz --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
+	rsync -avz container/apache/main-site.conf $SSH_SERVER:csdha/container/apache/main-site.conf
+	rsync -avz .env.production $SSH_SERVER:csdha/.env
+	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
 }
 
 while getopts "b" opt; do
@@ -24,5 +26,5 @@ while getopts "b" opt; do
 	esac
 done
 
-ssh $SSH_SERVER 'cd csdha && git pull && bash ./serve'
+ssh $SSH_SERVER 'cd csdha && git pull && sh ./serve'
 

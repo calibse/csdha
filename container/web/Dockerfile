@@ -1,0 +1,17 @@
+FROM alpine-laravel:1.0
+
+RUN apk add --no-cache weasyprint
+RUN apk add --no-cache libqrencode-tools
+RUN apk add --no-cache imagemagick 
+RUN apk add --no-cache font-cantarell 
+
+WORKDIR /var/www/app
+COPY . .
+RUN composer install --no-dev --no-progress -n && composer clear-cache
+
+COPY container/config/apache/main-site.conf /etc/apache2/conf.d/main-site.conf
+COPY container/config/php-fpm/www-overrides.conf /etc/php83/php-fpm.d/z-www-overrides.conf
+
+ENTRYPOINT ["container/web/entrypoint"]
+CMD ["container/bin/deploy"]
+

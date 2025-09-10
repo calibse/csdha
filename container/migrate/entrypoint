@@ -1,0 +1,14 @@
+#! /bin/sh
+
+set -e
+
+cd /var/www/app
+
+if ! php artisan migrate:status > /dev/null 2>&1
+then
+	echo "Database not reachable. Exiting."
+	exit 1
+fi
+
+exec "$@" 
+

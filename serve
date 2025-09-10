@@ -1,15 +1,19 @@
 #! /bin/sh
 # serve
 
+set -e
+
 export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
 export PODMAN_COMPOSE_WARNING_LOGS=false
 export PODMAN_COMPOSE_PROVIDER=podman-compose
 
-if [ -d "$HOME/bin" ] ; then
+if [ -d "$HOME/bin" ] 
+then
 	PATH="$HOME/bin:$PATH"
 fi
 
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ] 
+then
 	PATH="$HOME/.local/bin:$PATH"
 fi
 
@@ -19,26 +23,64 @@ usage() {
 	exit 1
 }
 
-while getopts "" opt; do
+while getopts "" opt
+do
 	case $opt in
 		*) usage ;;
 	esac
 done
 
-if [ "$(docker-compose ps -q)" ]; then
-	podman compose build web-user web-admin && \
-	docker-compose rm -sf web-user web-admin && \
-	podman image prune -f && \
-	docker-compose up -d web-user web-admin
-else
-	docker-compose up -d
-fi
+check_containers() {
+	SERVICES="web-user web-admin queue migrate"
+	while true
+	do
+		NOT_RUNNING=0
+		for service in $SERVICES
+		do
+			CONTAINER_ID=$(docker-compose ps -q "$service")
+			if [ -z "$CONTAINER_ID" ]
+			then
+				NOT_RUNNING=1
+				break
+			fi
+			RUNNING=$(podman inspect -f '{{.State.Running}}' "$CONTAINER_ID")
+			if [ "$RUNNING" != "true" ]
+			then
+				NOT_RUNNING=1
+				break
+			fi
+		done
+		if [ $NOT_RUNNING -eq 0 ]
+		then
+			echo "All services are running."
+			break
+		fi
+		echo "Waiting for services to be running..."
+		sleep 2
+	done
+}
 
-if [ "$(docker compose ps -q queue | \
-	xargs podman inspect -f '{{.State.Running}}')" = "false" ]
-then
-	podman compose build queue & \
-	podman image prune -f && \
-	docker-compose up -d queue
-fi
+
+# if [ "$(docker-compose ps -q)" ]; then
+# 	podman compose build web-user web-admin && \
+# 	docker-compose rm -sf web-user web-admin && \
+# 	docker-compose up -d web-user web-admin
+# else
+# fi
+# 
+# if [ "$(docker compose ps -q queue | \
+# 	xargs podman inspect -f '{{.State.Running}}')" = "false" ]
+# then
+# 	podman compose build queue & \
+# 	podman image prune -f && \
+# 	docker-compose up -d queue
+# fi
+
+podman build -f container/base/Dockerfile -t alpine-laravel:1.0 .
+podman build -f container/web/Dockerfile -t laravel-web:1.0 .
+podman build -f container/queue/Dockerfile -t laravel-queue:1.0 .
+podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
+docker-compose up -d
+check_containers
+podman image prune -f 
 
