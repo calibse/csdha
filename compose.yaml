@@ -20,7 +20,6 @@ services:
       
   web-user:
     image: laravel-web:1.0
-    restart: on-failure:15
     environment:
       WEB_TYPE: user
     volumes:
@@ -33,7 +32,6 @@ services:
 
   web-admin:
     image: laravel-web:1.0
-    restart: on-failure:15
     environment:
       WEB_TYPE: admin
     volumes:
@@ -43,13 +41,11 @@ services:
 
   queue:
     image: laravel-queue:1.0
-    restart: on-failure:15
     volumes:
       - ./storage/app:/var/www/app/storage/app
 
   migrate:
     image: laravel-migrate:1.0
-    restart: on-failure:15
     volumes:
       - ./storage/app:/var/www/app/storage/app
 

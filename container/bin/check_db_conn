@@ -10,14 +10,12 @@ retries=0
 
 while [ $retries -lt $max_retries ] 
 do
-	if php artisan migrate:status > /dev/null 2>&1 && \
-		! php artisan migrate:status | grep -q "No" 
-
+	if php artisan migrate:status > /dev/null 2>&1 
 	then
 		break
 	else
 		retries=$((retries+1))
-		echo "Database not ready. Retry $retries/$max_retries in \
+		echo "Database unreachable. Retry $retries/$max_retries in \
 			$delay seconds..."
 		sleep $delay
 	fi
@@ -25,7 +23,7 @@ done
 
 if [ $retries -ge $max_retries ]
 then
-	echo "Database not ready after $max_retries retries. Exiting."
+	echo "Database unreachable after $max_retries retries. Exiting."
 	exit 1
 fi
 
