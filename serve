@@ -81,6 +81,6 @@ podman build -f container/web/Dockerfile -t laravel-web:1.0 .
 podman build -f container/queue/Dockerfile -t laravel-queue:1.0 .
 podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
 docker-compose up -d
-check_containers
+# check_containers
 podman image prune -f 
 
