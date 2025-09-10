@@ -3,7 +3,7 @@
 
 set -e
 
-export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+export DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock
 export PODMAN_COMPOSE_WARNING_LOGS=false
 export PODMAN_COMPOSE_PROVIDER=podman-compose
 

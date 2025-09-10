@@ -14,9 +14,9 @@ push_assets() {
 	rsync -avz --delete public/build/ $SSH_SERVER:csdha/public/build/
 	rsync -avz --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
 	rsync -avz --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
-	rsync -avz container/apache/main-site.conf $SSH_SERVER:csdha/container/apache/main-site.conf
 	rsync -avz .env.production $SSH_SERVER:csdha/.env
 	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
+	rsync -avz container/apache/main-site.conf $SSH_SERVER:csdha/container/apache/main-site.conf
 }
 
 while getopts "b" opt; do
