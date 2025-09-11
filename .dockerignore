@@ -3,4 +3,9 @@
 /resources/images
 /resources/fonts
 /storage/app
+/container/config/mariadb
+/container/*/Dockerfile
+/k8s
+run_serve
+serve
 
