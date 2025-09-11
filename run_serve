@@ -17,8 +17,10 @@ push_assets() {
 	rsync -avz --delete k8s/ $SSH_SERVER:csdha/k8s/
 	rsync -avz .env.production $SSH_SERVER:csdha/.env
 	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
-	rsync -avz container/apache/main-site.conf $SSH_SERVER:csdha/container/apache/main-site.conf
+	rsync -avz container/config/apache/main-site.conf $SSH_SERVER:csdha/container/config/apache/main-site.conf
 }
+
+ssh $SSH_SERVER 'cd csdha && git pull'
 
 while getopts "b" opt; do
 	case $opt in
@@ -27,5 +29,5 @@ while getopts "b" opt; do
 	esac
 done
 
-ssh $SSH_SERVER 'cd csdha && git pull && ./serve'
+ssh $SSH_SERVER 'cd csdha && ./serve'
 

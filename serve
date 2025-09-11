@@ -36,7 +36,7 @@ container_name=$(podman ps --filter "name=$database_container" --format "{{.Name
 if [ -z "$container_name" ]; then
 	for yaml_file in $k8s_db_files
 	do
-		podman kube play k8s/$yaml_file
+		podman kube play --replace k8s/$yaml_file
 	done
 fi
 
@@ -47,7 +47,7 @@ podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
 k8s_web_files="migrate.yaml web-user.yaml web-admin.yaml queue.yaml"
 for yaml_file in $k8s_web_files
 do
-	podman kube play k8s/$yaml_file
+	podman kube play --replace k8s/$yaml_file
 done
 # docker-compose up -d
 podman image prune -f 
