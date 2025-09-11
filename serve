@@ -30,57 +30,23 @@ do
 	esac
 done
 
-check_containers() {
-	SERVICES="web-user web-admin queue migrate"
-	while true
+database_container="csdha-database-pod-database"
+container_name=$(podman ps --filter "name=$database_container" --format "{{.Names}}")
+if [ -z "$container_name" ]; then
+	for yaml_file in "secret.yaml pvc.yaml database.yaml"
 	do
-		NOT_RUNNING=0
-		for service in $SERVICES
-		do
-			CONTAINER_ID=$(docker-compose ps -q "$service")
-			if [ -z "$CONTAINER_ID" ]
-			then
-				NOT_RUNNING=1
-				break
-			fi
-			RUNNING=$(podman inspect -f '{{.State.Running}}' "$CONTAINER_ID")
-			if [ "$RUNNING" != "true" ]
-			then
-				NOT_RUNNING=1
-				break
-			fi
-		done
-		if [ $NOT_RUNNING -eq 0 ]
-		then
-			echo "All services are running."
-			break
-		fi
-		echo "Waiting for services to be running..."
-		sleep 2
+		podman kube play k8s/$yaml_file
 	done
-}
-
-
-# if [ "$(docker-compose ps -q)" ]; then
-# 	podman compose build web-user web-admin && \
-# 	docker-compose rm -sf web-user web-admin && \
-# 	docker-compose up -d web-user web-admin
-# else
-# fi
-# 
-# if [ "$(docker compose ps -q queue | \
-# 	xargs podman inspect -f '{{.State.Running}}')" = "false" ]
-# then
-# 	podman compose build queue & \
-# 	podman image prune -f && \
-# 	docker-compose up -d queue
-# fi
+fi
 
 podman build -f container/base/Dockerfile -t alpine-laravel:1.0 .
 podman build -f container/web/Dockerfile -t laravel-web:1.0 .
 podman build -f container/queue/Dockerfile -t laravel-queue:1.0 .
 podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
-docker-compose up -d
-# check_containers
+for yaml_file in "migrate.yaml web-user.yaml web-admin.yaml queue.yaml"
+do
+	podman kube play k8s/$yaml_file
+done
+# docker-compose up -d
 podman image prune -f 
 
