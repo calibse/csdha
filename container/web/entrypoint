@@ -3,12 +3,6 @@
 set -e
 
 cd /var/www/app
-
-if ! sh container/bin/check_db
-then
-	sleep 5
-	exit 1
-fi
-
+container/bin/check_db
 exec "$@" 
 
