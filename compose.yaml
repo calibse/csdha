@@ -9,7 +9,7 @@ services:
       MARIADB_PASSWORD_FILE: /run/secrets/db_password
       MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
     volumes:
-      - db_data:/var/lib/mysql
+      - database-data:/var/lib/mysql
       - ./container/config/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql 
     secrets:
       - db_password
@@ -50,7 +50,7 @@ services:
       - ./storage/app:/var/www/app/storage/app
 
 volumes:
-  db_data:
+  database-data:
 
 secrets:
   db_password:

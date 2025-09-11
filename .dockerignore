@@ -6,6 +6,7 @@
 /container/config/mariadb
 /container/*/Dockerfile
 /k8s
+compose.yaml
 run_serve
 serve
-
+down
