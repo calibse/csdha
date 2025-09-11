@@ -17,8 +17,7 @@ do
 		break
 	else
 		retries=$((retries+1))
-		echo "Database not ready. Retry $retries/$max_retries in \
-			$delay seconds..."
+		echo "Database not ready. Retry $retries/$max_retries in $delay seconds..."
 		sleep $delay
 	fi
 done

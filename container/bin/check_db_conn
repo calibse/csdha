@@ -15,8 +15,7 @@ do
 		break
 	else
 		retries=$((retries+1))
-		echo "Database unreachable. Retry $retries/$max_retries in \
-			$delay seconds..."
+		echo "Database unreachable. Retry $retries/$max_retries in $delay seconds..."
 		sleep $delay
 	fi
 done
