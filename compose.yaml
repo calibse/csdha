@@ -2,7 +2,7 @@
 
 services:
   database: 
-    container_name: csdha-database-pod-database
+    container_name: csdha-database-pod
     image: mariadb:11-noble 
     environment:
       MARIADB_DATABASE: ${DB_DATABASE:?error}
@@ -21,7 +21,7 @@ services:
       
   web-user:
     image: laravel-web:1.0
-    container_name: csdha-web-user-pod-web-user
+    container_name: csdha-web-user-pod
     environment:
       WEB_TYPE: user
     volumes:
@@ -34,7 +34,7 @@ services:
 
   web-admin:
     image: laravel-web:1.0
-    container_name: csdha-web-admin-pod-web-admin
+    container_name: csdha-web-admin-pod
     environment:
       WEB_TYPE: admin
     volumes:
@@ -44,13 +44,13 @@ services:
 
   queue:
     image: laravel-queue:1.0
-    container_name: csdha-queue-pod-queue
+    container_name: csdha-queue-pod
     volumes:
       - ./storage/app:/var/www/app/storage/app
 
   migrate:
     image: laravel-migrate:1.0
-    container_name: csdha-migrate-pod-migrate
+    container_name: csdha-migrate-pod
     volumes:
       - ./storage/app:/var/www/app/storage/app
 
