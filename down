@@ -1,6 +1,8 @@
 #! /bin/sh
 # down
 
+set -e
+
 k8s_files="migrate.yaml web-user.yaml web-admin.yaml queue.yaml database.yaml"
 for yaml_file in $k8s_files
 do
