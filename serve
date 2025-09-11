@@ -31,9 +31,10 @@ do
 done
 
 database_container="csdha-database-pod-database"
+k8s_db_files="secret.yaml pvc.yaml database.yaml"
 container_name=$(podman ps --filter "name=$database_container" --format "{{.Names}}")
 if [ -z "$container_name" ]; then
-	for yaml_file in "secret.yaml pvc.yaml database.yaml"
+	for yaml_file in $k8s_db_files
 	do
 		podman kube play k8s/$yaml_file
 	done
@@ -43,7 +44,8 @@ podman build -f container/base/Dockerfile -t alpine-laravel:1.0 .
 podman build -f container/web/Dockerfile -t laravel-web:1.0 .
 podman build -f container/queue/Dockerfile -t laravel-queue:1.0 .
 podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
-for yaml_file in "migrate.yaml web-user.yaml web-admin.yaml queue.yaml"
+k8s_web_files="migrate.yaml web-user.yaml web-admin.yaml queue.yaml"
+for yaml_file in $k8s_web_files
 do
 	podman kube play k8s/$yaml_file
 done
