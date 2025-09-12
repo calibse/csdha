@@ -1,0 +1,35 @@
+# database.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-database
+spec:
+  template:
+    spec:
+      containers:
+      - name: database
+        image: docker.io/library/mariadb:11-noble
+        env:
+        - name: MARIADB_USER
+          value: csdha-app
+        - name: MARIADB_DATABASE
+          value: csdha
+        - name: MARIADB_PASSWORD_FILE
+          value: /run/secrets/db_password
+        - name: MARIADB_ROOT_PASSWORD_FILE
+          value: /run/secrets/db_root_password
+        volumeMounts:
+        - name: database-data
+          mountPath: /var/lib/mysql
+        - name: database-secret
+          mountPath: /run/secrets
+          readOnly: true
+      volumes:
+      - name: database-data 
+        persistentVolumeClaim:
+          claimName: csdha-database-data
+      - name: database-secret
+        secret: 
+          secretName: csdha-secret
+

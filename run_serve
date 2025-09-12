@@ -14,7 +14,7 @@ push_assets() {
 	rsync -avz --delete public/build/ $SSH_SERVER:csdha/public/build/
 	rsync -avz --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
 	rsync -avz --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
-	rsync -avz --delete k8s/ $SSH_SERVER:csdha/k8s/
+	rsync -avz k8s/secret.yaml $SSH_SERVER:csdha/k8s/secret.yaml
 	rsync -avz .env.production $SSH_SERVER:csdha/.env
 	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
 	rsync -avz container/config/apache/main-site.conf $SSH_SERVER:csdha/container/config/apache/main-site.conf

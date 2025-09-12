@@ -1,0 +1,20 @@
+# queue.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-queue
+spec:
+  template:
+    spec:
+      containers:
+      - name: queue
+        image: localhost/laravel-queue:1.0
+        volumeMounts:
+        - name: web-storage
+          mountPath: /var/www/app/storage/app
+      volumes:
+      - name: web-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-storage
+

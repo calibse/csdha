@@ -23,8 +23,7 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-/container/config/apache/*.conf
-/k8s/*.yaml
+/k8s/secret.yaml
 .env.admin
 .env.production.admin
 

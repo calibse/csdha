@@ -1,0 +1,26 @@
+# web-user.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-web-user
+spec:
+  template:
+    spec:
+      containers:
+      - name: web-user
+        image: localhost/laravel-web:1.0
+        ports:
+        - containerPort: 80
+          hostPort: 8001
+        env:
+        - name: WEB_TYPE
+          value: user
+        volumeMounts:
+        - name: web-storage 
+          mountPath: /var/www/app/storage/app
+      volumes:
+      - name: web-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-storage
+

@@ -1,0 +1,20 @@
+# migrate.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-migrate
+spec:
+  template:
+    spec:
+      containers:
+      - name: migrate
+        image: localhost/laravel-migrate:1.0
+        volumeMounts:
+        - name: web-storage
+          mountPath: /var/www/app/storage/app
+      volumes:
+      - name: web-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-storage
+
