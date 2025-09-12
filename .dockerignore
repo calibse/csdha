@@ -2,10 +2,13 @@
 /resources/js
 /resources/images
 /resources/fonts
+/storage/app
 /container/config/mariadb
 /container/*/Dockerfile
 /k8s
 compose.yaml
 run_serve
+run_down
 serve
 down
+

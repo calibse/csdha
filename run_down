@@ -1,0 +1,7 @@
+#! /bin/sh
+# run_down
+
+set -e
+
+ssh $SSH_SERVER 'cd csdha && ./down'
+

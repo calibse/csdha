@@ -17,7 +17,6 @@ push_assets() {
 	rsync -avz k8s/secret.yaml $SSH_SERVER:csdha/k8s/secret.yaml
 	rsync -avz .env.production $SSH_SERVER:csdha/.env
 	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
-	rsync -avz container/config/apache/main-site.conf $SSH_SERVER:csdha/container/config/apache/main-site.conf
 }
 
 ssh $SSH_SERVER 'cd csdha && git pull'
