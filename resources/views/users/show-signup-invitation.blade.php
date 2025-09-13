@@ -15,11 +15,10 @@
                 </button>
             </p>
         </div>
-        <form id="form-email" action="{{ route('users.create', ['invite-code' => $inviteCode]) }}">
+        <form id="form-email" action="{{ $emailRoute }}">
             <input hidden name="invite_code" value="{{ $inviteCode }}">
         </form>
-        <form id="form-google" action="{{ route('auth.redirect', ['provider' => 'google']) }}">
-            <input hidden name="provider" value="google">
+        <form id="form-google" action="{{ $googleRoute }}">
             <input hidden name="invite_code" value="{{ $inviteCode }}">
         </form>
     </article>

@@ -21,26 +21,8 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $inviteCode = $request->invite_code;
-        $inviteCodeValid = false;
-        $signupInvite = SignupInvitation::firstWhere('invite_code', 
-            $inviteCode);
-        if (!$signupInvite) {
-            return view('message', [
-                'message' => 'Your sign-up invitation link is invalid.'
-            ]);
-        }
-
-        if ($signupInvite->is_accepted) {
-            return view('message', [
-                'message' => 'Your sign-up invitation has already been accepted.'
-            ]);
-        }
-
-        if (now()->greaterThan($signupInvite->expires_at)) {
-            return view('message', [
-                'message' => 'Your sign-up invitation link has expired.'
-            ]);
-        }
+        $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
+            'invite_code', $inviteCode) : null;
         return view('users.create', [
             'backRoute' => route('user.invitation', [
                 'invite_code' => $inviteCode 

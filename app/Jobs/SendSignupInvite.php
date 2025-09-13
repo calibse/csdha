@@ -15,15 +15,15 @@ class SendSignupInvite implements ShouldQueue
 
     public function __construct(public SignupInvitation $signupInvite)
     {
-        $this->signupInvite = $signupInvite;
+
     }
 
     public function handle(): void
     {
         $signupInvite = $this->signupInvite;
-        $url = url('http://' . config('custom.user_domain') . 
-            (str_starts_with(config('custom.user_domain'), '127.') ? ':8000' 
-                : null) . 
+        $url = url('http://' . config('custom.user_domain') .
+            (str_starts_with(config('custom.user_domain'), '127.') ? ':8000'
+                : null) .
             route('user.invitation', [
                 'invite-code' => $signupInvite->invite_code
             ], false));

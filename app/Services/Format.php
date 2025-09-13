@@ -19,6 +19,14 @@ class Format
         }
         return $number . 'th';
     }
+
+    public static function toPh($dateTime)
+    { 
+        return $dateTime 
+            ? Carbon::parse($dateTime, 'UTC')->setTimezone('Asia/Manila')
+            : null;
+    }
+
     public static function toLocal($dateTime)
     { 
         return $dateTime 

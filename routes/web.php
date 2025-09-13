@@ -35,25 +35,13 @@ use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
 use App\Http\Middleware\CheckFormStep;
 use App\Http\Middleware\CheckGpoaActivity;
+use App\Http\Middleware\CheckSignupInviteCode;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
-
 use App\Services\QrCode;
 
-/*
-Route::get('/test', function () {
-    return view('test');
-});
-
-Route::get('/test-image', function () {
-    $qrCode = new QrCode('01K25196BKGYCXP2XNMKKPMJ65', '#GoogleIO2025', '2020-00395-TG-0');
-    return $qrCode->stream();
-});
-*/
-
 Route::domain(config('custom.admin_domain'))->group(function () {
-
     Route::name('admin.')->group(function () {
         Route::get('/', [LoginController::class, 'adminLogin'])->name('login');
 
@@ -61,8 +49,8 @@ Route::domain(config('custom.admin_domain'))->group(function () {
             ->name('auth');
     });
 
-    Route::get('/auth/{provider}/callback', 
-        [LoginController::class, 'adminAuthWith']);
+    Route::get('/auth/{provider}/callback', [LoginController::class, 
+        'adminAuthWith']);
 
     Route::middleware('auth', EnsureUserIsAdmin::class)->group(function () {
         Route::get('/home.html', [HomeController::class , 'adminIndex'])
@@ -103,7 +91,6 @@ Route::domain(config('custom.admin_domain'))->group(function () {
 
             });
         });
-
         
         Route::prefix('roles')->name('roles.')->group(function () {
             Route::put('/update', [RoleController::class, 'update'])
@@ -121,13 +108,11 @@ Route::domain(config('custom.admin_domain'))->group(function () {
     });
 });
 
-
-
-/* Main routes */
 Route::domain(config('custom.user_domain'))->group(function () {
-    Route::middleware(['can:register,event'])
-            ->prefix('event-register-{event}')->name('events.registrations.')
-            ->group(function () {
+    Route::middleware(['can:register,event'])->prefix(
+        'event-register-{event}')->name('events.registrations.')->group(
+            function () {
+
         Route::controller(MultiStepFormController::class)->group(function () {
             Route::middleware([CheckFormStep::class])->group(function () {
 
@@ -194,14 +179,20 @@ Route::domain(config('custom.user_domain'))->group(function () {
     });
 
     Route::name('user.')->group(function () {
-    	Route::get('/', [LoginController::class, 'login'])->name('login');
-    	Route::post('/login', [LoginController::class, 'auth'])->name('auth');
-    	Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-        Route::get('/signup-invitation.html', 
-            [LoginController::class, 'showSignupInvitation'])->name('invitation');
+        Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+        Route::get('/', [LoginController::class, 'login'])->name('login');
+
+        Route::post('/login', [LoginController::class, 'auth'])->name('auth');
+
+        Route::middleware(CheckSignupInviteCode::class)->group(function () {
+            Route::get('/signup-invitation.html', [LoginController::class, 
+                'showSignupInvitation'])->name('invitation');
+        });
     });
 
-    Route::prefix('auth')->name('auth.')->group(function () {
+    Route::prefix('auth')->name('auth.')->middleware(
+            CheckSignupInviteCode::class)->group(function () {
 
         Route::get('/{provider}/redirect', [LoginController::class, 'signinWith'])
             ->name('redirect');
@@ -212,17 +203,18 @@ Route::domain(config('custom.user_domain'))->group(function () {
 
     Route::resource('users', UserController::class)->except(['create', 'store']);
 
-    Route::prefix('sign-up')->name('users.')->group(function () {
+    Route::name('users.')->middleware(CheckSignupInviteCode::class)
+            ->controller(UserController::class)->group(function () {
 
-    	Route::get('/', [UserController::class, 'create'])->name('create');
+        Route::get('/sign-up.html', 'create')->name('create');
 
-    	Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::post('/sign-up.php', 'store')->name('store');
     });
 });
 
 Route::domain(config('custom.user_domain'))->middleware('auth')->group(function () {
 
-	Route::get('/home.html', [HomeController::class, 'index'])
+    Route::get('/home.html', [HomeController::class, 'index'])
         ->name('user.home');
     
     Route::name('gpoa.')->middleware(CheckGpoaActivity::class)
@@ -554,18 +546,18 @@ Route::domain(config('custom.user_domain'))->middleware('auth')->group(function 
     Route::resource('positions', PositionController::class);
     */
     
-	Route::prefix('profile')->name('profile.')->group(function () {
+    Route::prefix('profile')->name('profile.')->group(function () {
 
-		Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
 
-		Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
 
-		Route::post('/update', [ProfileController::class, 'update'])
+        Route::post('/update', [ProfileController::class, 'update'])
             ->name('update');
 
         Route::get('/avatar_{avatar}', [ProfileController::class, 'showAvatar'])
             ->name('showAvatar');
-	});
+    });
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])
         ->name('attendance.store');

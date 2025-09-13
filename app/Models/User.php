@@ -54,7 +54,7 @@ class User extends Authenticatable
         if (is_string($permissions)) {
             $permissions = [$permissions];
         }
-        $query = $this->position->permissions()->where(function ($query) 
+        $query = $this->position->permissions()->where(function ($query)
                 use ($permissions) {
             for ($i = 0; $i < count($permissions); $i++) {
                 [$resource, $action] = explode('.', $permissions[$i]);
@@ -93,7 +93,7 @@ class User extends Authenticatable
         return true;
         */
 	}
-    
+
     public function hasPosition($positions)
     {
         if (!$this->position) return false;
@@ -105,27 +105,27 @@ class User extends Authenticatable
 		}
 		return false;
 	}
-    
-    public function fullName(): Attribute 
+
+    public function fullName(): Attribute
     {
-		$fullName = preg_replace('!\s+!', ' ', "$this->first_name 
+		$fullName = preg_replace('!\s+!', ' ', "$this->first_name
             $this->middle_name $this->last_name $this->suffix_name");
         return Attribute::make(
 			get: fn () => $fullName,
         );
 	}
 
-    public function isOfficer(): Attribute 
+    public function isOfficer(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->position_id ? true : false
         );
     }
 
-    public function positionName(): Attribute 
+    public function positionName(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->position ? 
+            get: fn () => $this->position ?
                 strtolower($this->position->name) : null
         );
     }
@@ -134,17 +134,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Event::class);
     }
-    
+
     public function meetings(): HasMany
     {
         return $this->hasMany(Meeting::class);
     }
-    
+
     public function platform(): HasMany
     {
         return $this->hasMany(Platform::class);
     }
-    
+
     public function partnership(): HasMany
     {
         return $this->hasMany(Partnership::class);
@@ -154,7 +154,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(ActivityLog::class);
     }
-    
+
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
@@ -167,7 +167,7 @@ class User extends Authenticatable
 
     public function eventDeliverables(): BelongsToMany
     {
-        return $this->belongsToMany(EventDeliverable::class, 
+        return $this->belongsToMany(EventDeliverable::class,
             'events_deliverable_assignee');
     }
 
@@ -184,13 +184,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class, 'event_editor');
     }
-    
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
 
-    public function isAdmin() 
+    public function isAdmin()
     {
         if ($this->role?->name === 'admin') return true;
         return false;
@@ -218,13 +218,29 @@ class User extends Authenticatable
     }
 
     #[Scope]
+    protected function president(Builder $query): void
+    {
+        $query->whereHas('position', function ($query) {
+            $query->whereRaw('lower(name)', 'president');
+        });
+    }
+
+    #[Scope]
+    protected function adviser(Builder $query): void
+    {
+        $query->whereHas('position', function ($query) {
+            $query->whereRaw('lower(name)', 'adviser');
+        });
+    }
+
+    #[Scope]
     protected function ofPosition(Builder $query, $positions): void
     {
         if (is_string($positions)) {
             $positions = [$positions];
         }
-        $query->whereHas('position', function ($query2) use ($positions) {
-            $query2->whereIn(DB::raw('lower(name)'), $positions);
+        $query->whereHas('position', function ($query) use ($positions) {
+            $query->whereIn(DB::raw('lower(name)'), $positions);
         });
     }
 
@@ -238,19 +254,26 @@ class User extends Authenticatable
     protected function withPerm(Builder $query, string $permission): void
     {
         [$resource, $action] = explode('.', $permission);
-        $query->whereHas('position', function ($query) 
+        $query->whereHas('position', function ($query)
                 use ($resource, $action) {
-            $query->whereHas('permissions', function ($query) 
+            $query->whereHas('permissions', function ($query)
                     use ($resource, $action) {
-                $query->whereHas('resourceType', function ($query) 
+                $query->whereHas('resourceType', function ($query)
                         use ($resource, $action) {
                     $query->where('name', $resource);
-                })->whereHas('resourceActionType', function ($query) 
+                })->whereHas('resourceActionType', function ($query)
                         use ($resource, $action) {
                     $query->where('name', $action);
                 });
             });
         });
+    }
+
+    #[Scope]
+    protected function accomReportEditor(Builder $query): void
+    {
+        $query->withPerm('accomplishment-reports.edit')
+            ->notOfPosition('adviser');
     }
 
     protected function entryTime(): Attribute

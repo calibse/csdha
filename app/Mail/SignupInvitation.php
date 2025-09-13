@@ -13,7 +13,7 @@ class SignupInvitation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public $url)
+    public function __construct(public string $url)
     {
         //
     }
