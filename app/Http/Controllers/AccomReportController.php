@@ -12,13 +12,14 @@ use App\Services\PagedView;
 use WeasyPrint\Facade as WeasyPrint;
 use App\Models\User;
 use App\Models\EventDate;
+use App\Events\AccomReportStatusChanged;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('can:viewAnyAccomReport,' . Event::class, 
+            new Middleware('can:viewAnyAccomReport,' . Event::class,
                 only: ['index']),
             new Middleware('can:viewAccomReport,event', only: ['show']),
             new Middleware('can:submitAccomReport,event', only: [
@@ -169,7 +170,7 @@ class AccomReportController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function submit(UpdateAccomReportStatusRequest $request, 
+    public function submit(UpdateAccomReportStatusRequest $request,
             Event $event)
     {
         $accomReport = $event->accomReport;
@@ -182,12 +183,13 @@ class AccomReportController extends Controller implements HasMiddleware
         $accomReport->submitted_at = now();
         $accomReport->comments = $request->comments ?? null;
         $accomReport->save();
+        AccomReportStatusChanged::dispatch($accomReport);
         return redirect()->route('accom-reports.show', [
             'event' => $event->public_id
         ])->with('status', 'Accomplishment report submitted.');
     }
 
-    public function return(UpdateAccomReportStatusRequest $request, 
+    public function return(UpdateAccomReportStatusRequest $request,
             Event $event)
     {
         $accomReport = $event->accomReport;
@@ -199,11 +201,12 @@ class AccomReportController extends Controller implements HasMiddleware
         $accomReport->returned_at = now();
         $accomReport->comments = $request->comments ?? null;
         $accomReport->save();
-        return redirect()->route('accom-reports.index')->with('status', 
+        AccomReportStatusChanged::dispatch($accomReport);
+        return redirect()->route('accom-reports.index')->with('status',
             'Accomplishment report returned.');
     }
 
-    public function approve(UpdateAccomReportStatusRequest $request, 
+    public function approve(UpdateAccomReportStatusRequest $request,
             Event $event)
     {
         $accomReport = $event->accomReport;
@@ -215,7 +218,8 @@ class AccomReportController extends Controller implements HasMiddleware
         $accomReport->approved_at = now();
         $accomReport->comments = $request->comments ?? null;
         $accomReport->save();
-        return redirect()->route('accom-reports.index')->with('status', 
+        AccomReportStatusChanged::dispatch($accomReport);
+        return redirect()->route('accom-reports.index')->with('status',
             'Accomplishment report approved.');
     }
 

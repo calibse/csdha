@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Http\Requests\SaveGpoaActivityRequest;
 use App\Http\Requests\SaveGpoaActivityCommentsRequest;
 use App\Services\Format;
+use App\Events\GpoaActivityStatusChanged;
 
 class GpoaActivityController extends Controller implements HasMiddleware
 {
@@ -30,18 +31,18 @@ class GpoaActivityController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:create,' . GpoaActivity::class, 
+            new Middleware('can:create,' . GpoaActivity::class,
                 only: ['create', 'store']),
             new Middleware('can:view,activity', only: ['show']),
-            new Middleware('can:update,activity', 
+            new Middleware('can:update,activity',
                 only: ['edit', 'update', 'destroy', 'confirmDestroy']),
-            new Middleware('can:submit,activity', 
+            new Middleware('can:submit,activity',
                 only: ['prepareForSubmit', 'submit']),
-            new Middleware('can:return,activity', 
+            new Middleware('can:return,activity',
                 only: ['prepareForReturn', 'return']),
-            new Middleware('can:reject,activity', 
+            new Middleware('can:reject,activity',
                 only: ['prepareForReject', 'reject']),
-            new Middleware('can:approve,activity', 
+            new Middleware('can:approve,activity',
                 only: ['prepareForApprove', 'approve'])
         ];
     }
@@ -57,11 +58,11 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $selectedParticipants = [];
         $participants = StudentYear::all();
         $participantGroups = ['0'];
-        if (session('errors')?->any() && old('participant_year_levels') 
-                && count(array_intersect(old('participant_year_levels'), 
+        if (session('errors')?->any() && old('participant_year_levels')
+                && count(array_intersect(old('participant_year_levels'),
                     $participantGroups)) === 0) {
 
-            $options = Format::getOpt(old('participant_year_levels'), 
+            $options = Format::getOpt(old('participant_year_levels'),
                 $participants);
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
@@ -70,8 +71,8 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $eventHeads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
         $eventHeadGroups = ['0'];
-        if (session('errors')?->any() && old('event_heads') 
-                && count(array_intersect(old('event_heads'), 
+        if (session('errors')?->any() && old('event_heads')
+                && count(array_intersect(old('event_heads'),
                     $eventHeadGroups)) === 0) {
 
             $options = Format::getOpt(old('event_heads'), $eventHeads);
@@ -81,7 +82,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $selectedCoheads = [];
         $coheads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
-        if (session('errors')?->any() && old('coheads')) { 
+        if (session('errors')?->any() && old('coheads')) {
             $options = Format::getOpt(old('coheads'), $coheads);
             $selectedCoheads = $options['selected'];
             $coheads = $options['unselected'];
@@ -174,7 +175,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
             'gpoa' => $gpoa,
             'activity' => $gpoa->activities()->find($activity->id),
             'actions' => $actions
-        ]);        
+        ]);
     }
 
     public function edit(GpoaActivity $activity)
@@ -185,15 +186,15 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $selectedParticipants = [];
         $participants = StudentYear::all();
         $allAreParticipants = $activity->all_are_participants;
-        if (session('errors')?->any() && old('participant_year_levels') 
-                && count(array_intersect(old('participant_year_levels'), 
+        if (session('errors')?->any() && old('participant_year_levels')
+                && count(array_intersect(old('participant_year_levels'),
                     $participantGroups)) === 0) {
-            $options = Format::getOpt(old('participant_year_levels'), 
+            $options = Format::getOpt(old('participant_year_levels'),
                 $participants);
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
         } elseif (!$allAreParticipants) {
-            $options = Format::getOpt($activity->participantTypes, 
+            $options = Format::getOpt($activity->participantTypes,
                 $participants);
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
@@ -203,8 +204,8 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $eventHeads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
         $eventHeadGroups = ['0'];
-        if (session('errors')?->any() && old('event_heads') 
-                && count(array_intersect(old('event_heads'), 
+        if (session('errors')?->any() && old('event_heads')
+                && count(array_intersect(old('event_heads'),
                     $eventHeadGroups)) === 0) {
 
             $options = Format::getOpt(old('event_heads'), $eventHeads);
@@ -219,7 +220,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $selectedCoheads = [];
         $coheads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
-        if (session('errors')?->any() && old('coheads')) { 
+        if (session('errors')?->any() && old('coheads')) {
             $options = Format::getOpt(old('coheads'), $coheads);
             $selectedCoheads = $options['selected'];
             $coheads = $options['unselected'];
@@ -262,7 +263,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function update(SaveGpoaActivityRequest $request, 
+    public function update(SaveGpoaActivityRequest $request,
             GpoaActivity $activity)
     {
         $gpoa = $this->gpoa;
@@ -309,29 +310,6 @@ class GpoaActivityController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function submit(SaveGpoaActivityCommentsRequest $request, 
-            GpoaActivity $activity)
-    {
-        $gpoa = $this->gpoa;
-        $activity->comments = $request->comments;
-        switch(auth()->user()->position_name) {
-        case 'president': 
-            $activity->status = 'pending';
-            $activity->current_step = 'adviser';
-            $activity->president_submitted_at = now();
-            $activity->save();
-            break;
-        default:
-            $activity->status = 'pending';
-            $activity->current_step = 'president';
-            $activity->officers_submitted_at = now();
-            $activity->save();
-        }
-        return redirect()->route('gpoa.activities.show', [
-            'activity' => $activity->public_id
-        ]);
-    }
-
     public function prepareForReturn(GpoaActivity $activity)
     {
         $gpoa = $this->gpoa;
@@ -346,32 +324,6 @@ class GpoaActivityController extends Controller implements HasMiddleware
             'backRoute' => route('gpoa.activities.show', [
                 'activity' => $activity->public_id
             ]),
-        ]);
-    }
-
-    public function return(SaveGpoaActivityCommentsRequest $request, 
-            GpoaActivity $activity)
-    {
-        $gpoa = $this->gpoa;
-        $activity->comments = $request->comments;
-        switch(auth()->user()->position_name) {
-        case 'president': 
-            $activity->status = 'returned';
-            $activity->current_step = 'officers';
-            $activity->president_returned_at = now();
-            $activity->save();
-            return redirect()->route('gpoa.index')->with('status', 
-                'Activity returned to the officers.');
-        case 'adviser':
-            $activity->status = 'returned';
-            $activity->current_step = 'president';
-            $activity->adviser_returned_at = now();
-            $activity->save();
-            return redirect()->route('gpoa.index')->with('status', 
-                'Activity returned to the President.');
-        }
-        return redirect()->route('gpoa.activities.show', [
-            'activity' => $activity->public_id
         ]);
     }
 
@@ -392,18 +344,6 @@ class GpoaActivityController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function reject(SaveGpoaActivityCommentsRequest $request, 
-            GpoaActivity $activity)
-    {
-        $gpoa = $this->gpoa;
-        $activity->comments = $request->comments;
-        $activity->status = 'rejected';
-        $activity->rejected_at = now();
-        $activity->save();
-        return redirect()->route('gpoa.index')->with('status', 
-            'Activity rejected.');
-    }
-
     public function prepareForApprove(GpoaActivity $activity)
     {
         $gpoa = $this->gpoa;
@@ -421,7 +361,71 @@ class GpoaActivityController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function approve(SaveGpoaActivityCommentsRequest $request, 
+    public function submit(SaveGpoaActivityCommentsRequest $request,
+            GpoaActivity $activity)
+    {
+        $gpoa = $this->gpoa;
+        $activity->comments = $request->comments;
+        switch(auth()->user()->position_name) {
+        case 'president':
+            $activity->status = 'pending';
+            $activity->current_step = 'adviser';
+            $activity->president_submitted_at = now();
+            $activity->save();
+            break;
+        default:
+            $activity->status = 'pending';
+            $activity->current_step = 'president';
+            $activity->officers_submitted_at = now();
+            $activity->save();
+        }
+        GpoaActivityStatusChanged::dispatch($activity);
+        return redirect()->route('gpoa.activities.show', [
+            'activity' => $activity->public_id
+        ]);
+    }
+
+    public function return(SaveGpoaActivityCommentsRequest $request,
+            GpoaActivity $activity)
+    {
+        $gpoa = $this->gpoa;
+        $activity->comments = $request->comments;
+        switch(auth()->user()->position_name) {
+        case 'president':
+            $activity->status = 'returned';
+            $activity->current_step = 'officers';
+            $activity->president_returned_at = now();
+            $activity->save();
+            return redirect()->route('gpoa.index')->with('status',
+                'Activity returned to the officers.');
+        case 'adviser':
+            $activity->status = 'returned';
+            $activity->current_step = 'president';
+            $activity->adviser_returned_at = now();
+            $activity->save();
+            return redirect()->route('gpoa.index')->with('status',
+                'Activity returned to the President.');
+        }
+        GpoaActivityStatusChanged::dispatch($activity);
+        return redirect()->route('gpoa.activities.show', [
+            'activity' => $activity->public_id
+        ]);
+    }
+
+    public function reject(SaveGpoaActivityCommentsRequest $request,
+            GpoaActivity $activity)
+    {
+        $gpoa = $this->gpoa;
+        $activity->comments = $request->comments;
+        $activity->status = 'rejected';
+        $activity->rejected_at = now();
+        $activity->save();
+        GpoaActivityStatusChanged::dispatch($activity);
+        return redirect()->route('gpoa.index')->with('status',
+            'Activity rejected.');
+    }
+
+    public function approve(SaveGpoaActivityCommentsRequest $request,
             GpoaActivity $activity)
     {
         $gpoa = $this->gpoa;
@@ -430,11 +434,12 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $activity->status = 'approved';
         $activity->adviser_approved_at = now();
         $activity->save();
-        return redirect()->route('gpoa.index')->with('status', 
+        GpoaActivityStatusChanged::dispatch($activity);
+        return redirect()->route('gpoa.index')->with('status',
             'Activity approved.');
     }
 
-    private static function storeOrUpdate(Request $request, Gpoa $gpoa, 
+    private static function storeOrUpdate(Request $request, Gpoa $gpoa,
             GpoaActivity $activity = null)
     {
         $update = true;
@@ -490,31 +495,31 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->current_step = 'officers';
         }
         $activity->number_of_participants = 0;
-        if (($update && auth()->user()->can('updateEventHeads', $activity)) || 
+        if (($update && auth()->user()->can('updateEventHeads', $activity)) ||
                 !$update) {
             $allAreEventHeads = false;
-            if ($request->event_heads && in_array('0', 
+            if ($request->event_heads && in_array('0',
                     $request->event_heads)) {
                 $activity->eventHeads()->syncWithPivotValues(
-                    User::has('position')->notOfPosition(['adviser'])->get(), 
+                    User::has('position')->notOfPosition(['adviser'])->get(),
                     ['role' => 'event head']);
                 $allAreEventHeads = true;
             } elseif ($request->event_heads) {
                 $eventHeads = User::whereIn('public_id', $request->event_heads)
                     ->pluck('id')->toArray();
-                $activity->eventHeads()->syncWithPivotValues($eventHeads, 
+                $activity->eventHeads()->syncWithPivotValues($eventHeads,
                     ['role' => 'event head']);
-                $activity->eventheads()->attach(auth()->user(), 
+                $activity->eventheads()->attach(auth()->user(),
                     ['role' => 'event head']);
             } else {
-                $activity->eventheads()->syncWithPivotValues([auth()->user()], 
+                $activity->eventheads()->syncWithPivotValues([auth()->user()],
                     ['role' => 'event head']);
             }
             if (!$allAreEventHeads && $request->coheads) {
                 $coheads = User::whereIn('public_id', array_diff($request
                     ->coheads, $request->event_heads ?? []))->pluck('id')
                     ->toArray();
-                $activity->eventHeads()->syncWithPivotValues($coheads, 
+                $activity->eventHeads()->syncWithPivotValues($coheads,
                     ['role' => 'co-head'], false);
             }
         }

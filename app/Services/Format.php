@@ -8,7 +8,7 @@ use App\Traits\HasPublicId;
 
 class Format
 {
-    public static function ordinal($number) 
+    public static function ordinal($number)
     {
         if (!in_array(($number % 100), [11, 12, 13])) {
             switch ($number % 10) {
@@ -21,22 +21,22 @@ class Format
     }
 
     public static function toPh($dateTime)
-    { 
-        return $dateTime 
+    {
+        return $dateTime
             ? Carbon::parse($dateTime, 'UTC')->setTimezone('Asia/Manila')
             : null;
     }
 
     public static function toLocal($dateTime)
-    { 
-        return $dateTime 
+    {
+        return $dateTime
             ? Carbon::parse($dateTime, 'UTC')->setTimezone(config('timezone'))
             : null;
     }
 
     public static function toUtc($dateTime)
-    { 
-        return $dateTime 
+    {
+        return $dateTime
             ? Carbon::parse($dateTime, config('timezone'))->utc()
             : null;
     }
@@ -77,5 +77,10 @@ class Format
         return $options;
     }
 
-
+    public static function getResourceRoute($request): string
+    {
+        $str = $request->route()->getName();
+        $routeName = substr($str, 0, strrpos($str, '.'));
+        return $routeName;
+    }
 }

@@ -18,7 +18,7 @@ class GpoaActivityStatusChanged
     /**
      * Create a new event instance.
      */
-    public function __construct(GpoaActivity $activity)
+    public function __construct(public GpoaActivity $activity)
     {
         //
     }

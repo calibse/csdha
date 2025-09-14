@@ -14,8 +14,8 @@ class MultiStepForm extends Component
     public function __construct(
         public string $eventName,
         public string $formTitle,
-        public $title = null,
-        public $previousStepRoute = null,
+        public ?string $title = null,
+        public ?string $previousStepRoute = null,
         public bool $lastStep = false,
         public bool $end = false
     )

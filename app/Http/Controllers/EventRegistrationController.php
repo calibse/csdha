@@ -10,89 +10,130 @@ use App\Models\Student;
 use App\Models\EventStudent;
 use App\Models\EventRegistration;
 use App\Http\Requests\StoreEventRegistrationRequest;
+use App\Http\Requests\StoreConsentRequest;
+use App\Http\Requests\StoreEventRegisIdentityRequest;
+use App\Services\Format;
 
 class EventRegistrationController extends Controller
 {
-    public function index()
+    private string $sessionDataName;
+
+    public function __construct()
     {
-        //
+        $this->sessionDataName = 'event_registration';
     }
 
-    public function create(Event $event)
+    public function editConsentStep(Request $request, Event $event)
     {
-        return view('event-registration.create', [
-            'event' => $event,
-            'activity' => $event->gpoaActivity,
-            'formAction' => route('events.registrations.store', [
+        $inputs = session($this->sessionDataName, []);
+        return view('event-registration.consent', [
+            'submitRoute' => route('events.registrations.consent.store', [
                 'event' => $event->public_id
             ]),
+            'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
+        ] + self::multiFormData($event));
+    }
+
+    public function storeConsentStep(StoreConsentRequest $request,
+            Event $event)
+    {
+        self::storeFormStep(Format::getResourceRoute($request), $request);
+        return redirect()->route('events.registrations.identity.edit, [
+            'event' => $event->public_id
         ]);
     }
 
-    public function store(StoreEventRegistrationRequest $request, Event $event)
+    public function editIdentityStep(Request $request, Event $event)
     {
+        $inputs = session($this->sessionDataName, []);
+        return view('event-registration.identity', [
+            'previousStepRoute' => route('events.registrations.start', [
+                'event' => $event->public_id
+            ]),
+            'submitRoute' => route('events.registrations.identity.store', [
+                'event' => $event->public_id
+            ]),
+            'lastStep' = true,
+            'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
+        ] + self::multiFormData($event));
+    }
+
+    public function storeIdentityStep(StoreEventRegisIdentityRequest $request,
+            Event $event)
+    {
+        self::storeFormStep(Format::getResourceRoute($request), $request);
+        return redirect()->route('events.registrations.end', [
+            'event' => $event->public_id
+        ]);
+    }
+
+    public function showEndStep(Request $request, Event $event)
+    {
+        self::store();
+        session()->forget($this->sessionDataName);
+        return view('event-registration.end', [
+            'qrCodeRoute' => route('events.registrations.qr-code.show', [
+                'event' => $event->public_id
+            ]),
+            'end' => true
+        ] + self::multiFormData($event));
+    }
+
+    public function showQrCode(Request $request, Event $event)
+    {
+        $currentRoute = $request->route()->getName();
+        $data = session('event_registration_qr_code', null);
+        session()->forget('event_registration_qr_code');
+        if (!$data) abort(404);
+        $qrCode = new QrCode($data['token'], $data['tag'], $data['studentId']);
+        return $qrCode->stream();
+    }
+
+    private static function store(): void
+    {
+        $inputs = session($this->sessionDataName, []);
+        $studentInput = $inputs['identity'];
         $student = new EventStudent();
-        $student->first_name = $request->first_name;
-        $student->middle_name = $request->middle_name;
-        $student->last_name = $request->last_name;
-        $student->suffix_name = $request->suffix_name;
-        $student->course()->associate(Course::find($request->course));
-        $student->year = $request->year;
-        $student->section = $request->section;
-        $student->email = $request->email;
+        $student->student_id = $studentInput['student_id'];
+        $student->first_name = $studentInput['first_name'];
+        $student->middle_name = $studentInput['middle_name'];
+        $student->last_name = $studentInput['last_name'];
+        $student->suffix_name = $studentInput['suffix_name'];
+        $student->course()->associate(Course::find($studentInput['program']));
+        $student->year = $studentInput['year_level'];
+        $student->email = $studentInput['email'];
+        $student->section = $studentInput['section'];
         $student->save();
         $regis = new EventRegistration();
         $regis->token = Str::ulid();
         $regis->event()->associate($event);
         $regis->student()->associate($student);
         $regis->save();
-        $qrCode = new QrCode($regis->token, $event->tag, $student->student_id);
-        return view('event-registration.result', [
+        session(['event_registration_qr_code' => [
+            'studentId' => $student->student_id,
+            'tag' => $event->tag,
+            'token' => $regis->token
+        ]]);
+    }
+
+    private static function multiFormData(Event $event): array
+    {
+        return [
+            'formTitle' => 'Registration',
+            'eventName' => $event->gpoaActivity->name,
             'event' => $event,
-            'activity' => $event->gpoaActivity,
-            'qrCode' => $qrCode->toSvg()
-        ]);
+        ];
     }
 
-    public function showQrCode(Request $request, Event $event)
+    private static function storeFormStep(string $stepName,
+            Request $request): void
     {
-        $currentRoute = $request->route()->getName();
-        $data = session($currentRoute, null); 
-        if (!$data) abort(404);
-        $qrCode = new QrCode($data['token'], $data['tag'], $data['studentId']);
-        return $qrCode->stream();
+        $inputs = session($this->sessionDataName, []);
+        $inputs[$stepName] = $request->all();
+        session([$this->sessionDataName => $inputs]);
     }
 
-    public function result(Event $event)
+    private static function getRouteName(Request $request): string
     {
-    }
-
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
