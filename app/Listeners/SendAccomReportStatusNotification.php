@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\GpoaActivityStatusChanged;
+use App\Events\AccomReportStatusChanged;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Jobs\SendAccomReportStatusChangedMail;
@@ -15,8 +15,9 @@ class SendAccomReportStatusNotification
         //
     }
 
-    public function handle(GpoaActivityStatusChanged $event): void
+    public function handle(AccomReportStatusChanged $event): void
     {
+        return;
         $accomReport = $event->accomReport;
         $status = $accomReport->status;
         $step = $accomReport->current_step;

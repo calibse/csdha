@@ -7,17 +7,19 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Services\Format;
 
-class CheckEventRegisStep
+class CheckEventEvalStep
 {
     public function handle(Request $request, Closure $next): Response
     {
         $event = $request->route('event');
-        $sessionDataName = 'event_registration';
+        $sessionDataName = 'event_evaluation';
         $inputs = session($sessionDataName, []);
-        $routePrefix = 'events.registrations.';
+        $routePrefix = 'events.evaluations.';
         $steps = [
             $routePrefix . 'consent',
             $routePrefix . 'identity',
+            $routePrefix . 'evaluation',
+            $routePrefix . 'acknowledgement',
             $routePrefix . 'end'
         ];
         $resourceRoute = Format::getResourceRoute($request);

@@ -1,8 +1,8 @@
-<x-layout.eval-form :$formTitle :$eventName title="Identity" :$previousStepRoute> 
+<x-layout.multi-step-form :$formTitle :$eventName title="Identity" :$previousStepRoute>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
-        {{-- 
+        {{--
         <p>
             <label>First name</label>
             <input name="first_name" value="{{ old('first_name') ?? ($inputs['first_name'] ?? null) }}">
@@ -49,4 +49,4 @@
         </p>
         --}}
     </form>
-</x-layout.eval-form>
+</x-layout>

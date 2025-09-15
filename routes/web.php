@@ -30,6 +30,7 @@ use App\Http\Controllers\MultiStepFormController;
 use App\Http\Controllers\EventRegisFormController;
 use App\Http\Controllers\AccomReportController;
 use App\Http\Controllers\EventAttachmentController;
+use App\Http\Controllers\EventEvaluationController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -37,6 +38,7 @@ use App\Http\Middleware\CheckFormStep;
 use App\Http\Middleware\CheckGpoaActivity;
 use App\Http\Middleware\CheckSignupInviteCode;
 use App\Http\Middleware\CheckEventRegisStep;
+use App\Http\Middleware\CheckEventEvalStep;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
@@ -115,11 +117,11 @@ Route::domain(config('custom.admin_domain'))->group(function () {
 
 Route::domain(config('custom.user_domain'))->group(function () {
 
-    Route::middleware(['can:register,event'])
-        ->prefix('event-register-{event}')->name('events.registrations.')
+    Route::prefix('event-register-{event}')->name('events.registrations.')
+        ->middleware(['can:register,event'])
         ->controller(EventRegistrationController::class)->group(function () {
 
-        Route::get('/index.html', 'editConsentStep')->name('start');
+        Route::get('/index.html', 'editConsentStep')->name('consent.edit');
 
         Route::post('/consent.php', 'storeConsentStep')->name('consent.store');
 
@@ -141,54 +143,49 @@ Route::domain(config('custom.user_domain'))->group(function () {
     });
 
     Route::get('/event-register-{event}{slash?}', function ($id) {
-        return redirect()->route('events.registrations.start', [
+        return redirect()->route('events.registrations.consent.edit', [
             'event' => $id
         ]);
     })->where('slash', '\/');
 
-    Route::middleware(['can:evaluate,event'])
-        ->controller(MultiStepFormController::class)
-        ->name('events.eval-form.')->group(function () {
+    Route::prefix('event-eval-form-{event}')->name('events.evaluations.')
+        ->middleware(['can:evaluate,event'])
+        ->controller(EventEvaluationController::class)->group(function () {
 
-        Route::middleware([CheckFormStep::class])->group(function () {
+        Route::get('/index.html', 'editConsentStep')->name('consent.edit');
 
-            Route::prefix('event-eval-form-{event}')->group(function () {
+        Route::post('/consent.php', 'storeConsentStep')->name('consent.store');
 
-                Route::get('/index.html', 'createResponse')
-                    ->name('consent.create');
+        Route::middleware([CheckEventEvalStep::class])->group(function () {
 
-                Route::post('/start.php', 'storeResponse')->name('consent');
+            Route::get('/identity.html', 'editIdentityStep')
+                ->name('identity.edit');
 
-                Route::get('/identity.html', 'createResponse')
-                    ->name('identity.create');
+            Route::post('/identity.php', 'storeIdentityStep')
+                ->name('identity.store');
 
-                Route::post('/identity.php', 'storeResponse')
-                    ->name('identity');
+            Route::get('/evaluation.html', 'editEvaluationStep')
+                ->name('evaluation.edit');
 
-                Route::get('/evaluation.html', 'createResponse')
-                    ->name('evaluation.create');
+            Route::post('/evaluation.php', 'storeEvaluationStep')
+                ->name('evaluation.store');
 
-                Route::post('/evaluation.php', 'storeResponse')
-                    ->name('evaluation');
+            Route::get('/acknowledgement.html', 'editAcknowledgementStep')
+                ->name('acknowledgement.edit');
 
-                Route::get('/finish.html', 'createResponse')
-                    ->name('acknowledgement.create');
+            Route::post('/acknowledgement.php', 'storeAcknowledgementStep')
+                ->name('acknowledgement.store');
 
-                Route::post('/finish.php', 'storeResponse')
-                    ->name('acknowledgement');
+            Route::get('/thank-you.html', 'showEndStep')->name('end.show');
 
-                Route::get('/thank-you.html', 'end')->name('end');
-
-            });
         });
-
-        Route::get('/event-eval-form-{event}{slash?}', function ($id) {
-            return redirect()->route('events.eval-form.consent.create', [
-                'event' => $id
-            ]);
-        })->where('slash', '\/');
-
     });
+
+    Route::get('/event-eval-form-{event}{slash?}', function ($id) {
+        return redirect()->route('events.evaluations.consent.edit', [
+            'event' => $id
+        ]);
+    })->where('slash', '\/');
 
     Route::name('user.')->group(function () {
 

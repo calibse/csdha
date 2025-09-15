@@ -1,4 +1,4 @@
-<x-layout.eval-form :$formTitle :$eventName title="Evaluation" :$previousStepRoute> 
+<x-layout.multi-step-form :$formTitle :$eventName title="Evaluation" :$previousStepRoute>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
@@ -21,7 +21,7 @@
         <p>
             <label>Content Relevance</label>
             <select name="content_relevance">
-                <option value="">-- Select --</option> 
+                <option value="">-- Select --</option>
                 <option value="1" {{ (old('content_relevance') ?? ($inputs['content_relevance'] ?? null)) === '1' ? 'selected' : null }}>
                     Highly Relevant</option>
                 <option value="2" {{ (old('content_relevance') ?? ($inputs['content_relevance'] ?? null)) === '2' ? 'selected' : null }}>
@@ -99,4 +99,4 @@
             <textarea name="additional_comments">{{ old('additional_comments') ?? ($inputs['additional_comments'] ?? null) }}</textarea>
         </p>
     </form>
-</x-layout.eval-form>
+</x-layout>

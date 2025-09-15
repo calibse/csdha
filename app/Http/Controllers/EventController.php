@@ -37,10 +37,10 @@ class EventController extends Controller implements HasMiddleware
                 'showLetterOfIntent',
                 'showAttendance',
             ]),
-            new Middleware('can:create,' . Event::class, 
+            new Middleware('can:create,' . Event::class,
                 only: ['create', 'store']),
             new Middleware('can:update,event', only: [
-                'edit', 
+                'edit',
                 'update',
                 'dateIndex',
                 'createDate',
@@ -75,7 +75,7 @@ class EventController extends Controller implements HasMiddleware
 
     public function create()
     {
-        
+
     }
 
     public function store(Request $request)
@@ -109,18 +109,18 @@ class EventController extends Controller implements HasMiddleware
     }
 
     public function show(Event $event)
-    {        
+    {
         return view('events.show', [
             'event' => $event,
             'activity' => $event->gpoaActivity,
             'editRoute' => route('events.edit', ['event' => $event->public_id]),
-            'regisRoute' => route('events.registrations.consent.create', [
+            'regisRoute' => route('events.registrations.consent.edit', [
                 'event' => $event->public_id
             ]),
             'attendanceRoute' => route('events.attendance.show', [
                 'event' => $event->public_id
             ]),
-            'evalRoute' => route('events.eval-form.consent.create', [
+            'evalRoute' => route('events.evaluations.consent.edit', [
                 'event' => $event->public_id
             ]),
             'eventHeads' => $event->gpoaActivity->eventHeadsOnly()->get(),
@@ -138,23 +138,23 @@ class EventController extends Controller implements HasMiddleware
         $participantGroups = ['-1'];
         $selectedParticipants = [];
         $participants = StudentYear::all();
-        if (session('errors')?->any() && old('participant_year_levels') 
-                && count(array_intersect(old('participant_year_levels'), 
+        if (session('errors')?->any() && old('participant_year_levels')
+                && count(array_intersect(old('participant_year_levels'),
                     $participantGroups)) === 0) {
-            $options = Format::getOpt(old('participant_year_levels'), 
+            $options = Format::getOpt(old('participant_year_levels'),
                 $participants);
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
         } elseif ($event->participant_type === 'students') {
-            $options = Format::getOpt($event->participants, 
+            $options = Format::getOpt($event->participants,
                 $participants);
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
         }
-        $backRoute = $request->from === 'accom-reports' 
+        $backRoute = $request->from === 'accom-reports'
             ? route('accom-reports.show', [
                 'event' => $event->public_id,
-                'from' => $request->accom_reports_from, 
+                'from' => $request->accom_reports_from,
             ])
             : route('events.show', [
                 'event' => $event->public_id
@@ -192,7 +192,7 @@ class EventController extends Controller implements HasMiddleware
         $event->description = $request->description;
         $event->narrative = $request->narrative;
         $event->tag = $request->tag;
-        if ($request->record_attendance && !in_array('0', 
+        if ($request->record_attendance && !in_array('0',
                 $request->record_attendance)) {
             if (in_array('-1', $request->record_attendance)) {
                 $event->participant_type = 'officers';
@@ -347,7 +347,7 @@ class EventController extends Controller implements HasMiddleware
             break;
         case 'officers':
             $date = EventDate::findByPublic($request->date);
-            $date->officerAttendees()->sync(User::whereIn('public_id', 
+            $date->officerAttendees()->sync(User::whereIn('public_id',
                 $request->officers ?? [])->get());
             $date->save();
         }
@@ -381,7 +381,7 @@ class EventController extends Controller implements HasMiddleware
         ]);
     }
 
-    private static function storeOrUpdateDate(Request $request, Event $event, 
+    private static function storeOrUpdateDate(Request $request, Event $event,
             EventDate $date = null)
     {
         if (!$date){
@@ -399,11 +399,11 @@ class EventController extends Controller implements HasMiddleware
     public function storeDate(SaveEventDateRequest $request, Event $event)
     {
         self::storeOrUpdateDate($request, $event);
-        return redirect()->route('events.dates.index', 
+        return redirect()->route('events.dates.index',
             ['event' => $event->public_id])->with('status', 'Date saved.');
     }
 
-    public function updateDate(SaveEventDateRequest $request, Event $event, 
+    public function updateDate(SaveEventDateRequest $request, Event $event,
             EventDate $date)
     {
         self::storeOrUpdateDate($request, $event, $date);
@@ -414,7 +414,7 @@ class EventController extends Controller implements HasMiddleware
     public function destroyDate(Event $event, EventDate $date)
     {
         $date->attendees()->detach();
-        $date->delete(); 
+        $date->delete();
         return redirect()->route('events.dates.index', ['event' => $event->public_id])
             ->with('status', 'Date deleted.');
     }

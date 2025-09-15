@@ -173,7 +173,11 @@ class GpoaActivityController extends Controller implements HasMiddleware
         return view('gpoa-activities.show', [
             'date' => $date,
             'gpoa' => $gpoa,
-            'activity' => $gpoa->activities()->find($activity->id),
+            'activity' => $activity,
+            'eventHeads' => $activity->eventHeads()->wherePivot('role',
+                'event head')->get(),
+            'coheads' => $activity->eventHeads()->wherePivot('role',
+                'co-head')->get(),
             'actions' => $actions
         ]);
     }
@@ -495,6 +499,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->current_step = 'officers';
         }
         $activity->number_of_participants = 0;
+        $activity->save();
         if (($update && auth()->user()->can('updateEventHeads', $activity)) ||
                 !$update) {
             $allAreEventHeads = false;

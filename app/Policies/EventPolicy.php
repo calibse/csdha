@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class EventPolicy
-{   
+{
     public function viewAny(User $user): Response
     {
         return $user->hasPerm('events.view')
@@ -16,13 +16,13 @@ class EventPolicy
 
     public function view(User $user, Event $event): Response
     {
-        return ($user->hasPerm('events.view')) 
+        return ($user->hasPerm('events.view'))
             ? Response::allow() : Response::deny();
     }
 
     public function create(User $user): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
         return Response::allow();
@@ -30,7 +30,7 @@ class EventPolicy
 
     public function update(User $user, Event $event): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user, $event)) {
             return Response::deny();
         }
         $approved = $event->accomReport?->status === 'approved';
@@ -43,11 +43,11 @@ class EventPolicy
 
     public function delete(User $user, Event $event): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user, $event)) {
             return Response::deny();
         }
-        return ($event->creator->is($user) || 
-            $event->editors->contains($user)) 
+        return ($event->creator->is($user) ||
+            $event->editors->contains($user))
             ? Response::allow() : Response::deny();
     }
 
@@ -104,10 +104,10 @@ class EventPolicy
 
     public function submitAccomReport(User $user, Event $event): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user, $event)) {
             return Response::deny();
         }
-        if (!self::canChangeStatus()) {
+        if (!self::canChangeStatus($user, $event)) {
             return Response::deny();
         }
         $position = $user->position_name;
@@ -130,10 +130,10 @@ class EventPolicy
 
     public function returnAccomReport(User $user, Event $event): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user, $event)) {
             return Response::deny();
         }
-        if (!self::canChangeStatus()) {
+        if (!self::canChangeStatus($user, $event)) {
             return Response::deny();
         }
         $position = $user->position_name;
@@ -154,10 +154,10 @@ class EventPolicy
 
     public function approveAccomReport(User $user, Event $event): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user, $event)) {
             return Response::deny();
         }
-        if (!self::canChangeStatus()) {
+        if (!self::canChangeStatus($user, $event)) {
             return Response::deny();
         }
         $position = $user->position_name;
@@ -197,8 +197,8 @@ class EventPolicy
     public function addAttendee(User $user, Event $event): Response
     {
         $recordsAttendance = $event->participant_type !== null;
-        $manualAttendance = $event->automatic_attendance === 0; 
-        return ($recordsAttendance && $manualAttendance) 
+        $manualAttendance = $event->automatic_attendance === 0;
+        return ($recordsAttendance && $manualAttendance)
             ? Response::allow() : Response::deny();
     }
 
@@ -212,19 +212,20 @@ class EventPolicy
         return Response::allow();
     }
 
-    private static function canEdit(): bool
+    private static function canEdit(User $user, ?Event $event = null): bool
     {
         $canView = $user->hasPerm('events.view');
         $canEdit = $user->hasPerm('events.edit');
-        $approved = $event->accomReport?->status === 'approved';
+        $approved = $event?->accomReport?->status === 'approved';
         return ($canView && $canEdit && !($approved ?? false));
     }
 
-    private static function canChangeStatus(): bool
+    private static function canChangeStatus(User $user, ?Event
+        $event = null): bool
     {
         $canView = $user->hasPerm('accomplishment-reports.view');
         $canEdit = $user->hasPerm('accomplishment-reports.edit');
-        $approved = $event->accomReport?->status === 'approved';
+        $approved = $event?->accomReport?->status === 'approved';
         return ($canView && $canEdit && !($approved ?? false));
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Student;
 use App\Models\EventStudent;
 use App\Models\EventRegistration;
+use App\Models\Course;
 use App\Http\Requests\StoreEventRegistrationRequest;
 use App\Http\Requests\StoreConsentRequest;
 use App\Http\Requests\StoreEventRegisIdentityRequest;
@@ -16,16 +17,16 @@ use App\Services\Format;
 
 class EventRegistrationController extends Controller
 {
-    private string $sessionDataName;
+    private static string $sessionDataName;
 
     public function __construct()
     {
-        $this->sessionDataName = 'event_registration';
+        self::$sessionDataName = 'event_registration';
     }
 
     public function editConsentStep(Request $request, Event $event)
     {
-        $inputs = session($this->sessionDataName, []);
+        $inputs = session(self::$sessionDataName, []);
         return view('event-registration.consent', [
             'submitRoute' => route('events.registrations.consent.store', [
                 'event' => $event->public_id
@@ -38,22 +39,24 @@ class EventRegistrationController extends Controller
             Event $event)
     {
         self::storeFormStep(Format::getResourceRoute($request), $request);
-        return redirect()->route('events.registrations.identity.edit, [
+        return redirect()->route('events.registrations.identity.edit', [
             'event' => $event->public_id
         ]);
     }
 
     public function editIdentityStep(Request $request, Event $event)
     {
-        $inputs = session($this->sessionDataName, []);
+        $inputs = session(self::$sessionDataName, []);
         return view('event-registration.identity', [
-            'previousStepRoute' => route('events.registrations.start', [
+            'programs' => Course::all(),
+            'yearLevels' => $event->participants,
+            'previousStepRoute' => route('events.registrations.consent.edit', [
                 'event' => $event->public_id
             ]),
             'submitRoute' => route('events.registrations.identity.store', [
                 'event' => $event->public_id
             ]),
-            'lastStep' = true,
+            'lastStep' => true,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
         ] + self::multiFormData($event));
     }
@@ -62,15 +65,15 @@ class EventRegistrationController extends Controller
             Event $event)
     {
         self::storeFormStep(Format::getResourceRoute($request), $request);
-        return redirect()->route('events.registrations.end', [
+        return redirect()->route('events.registrations.end.show', [
             'event' => $event->public_id
         ]);
     }
 
     public function showEndStep(Request $request, Event $event)
     {
-        self::store();
-        session()->forget($this->sessionDataName);
+        self::store($event);
+        session()->forget(self::$sessionDataName);
         return view('event-registration.end', [
             'qrCodeRoute' => route('events.registrations.qr-code.show', [
                 'event' => $event->public_id
@@ -89,10 +92,10 @@ class EventRegistrationController extends Controller
         return $qrCode->stream();
     }
 
-    private static function store(): void
+    private static function store(Event $event): void
     {
-        $inputs = session($this->sessionDataName, []);
-        $studentInput = $inputs['identity'];
+        $inputs = session(self::$sessionDataName, []);
+        $studentInput = $inputs['events.registrations.identity'];
         $student = new EventStudent();
         $student->student_id = $studentInput['student_id'];
         $student->first_name = $studentInput['first_name'];
@@ -128,12 +131,8 @@ class EventRegistrationController extends Controller
     private static function storeFormStep(string $stepName,
             Request $request): void
     {
-        $inputs = session($this->sessionDataName, []);
+        $inputs = session(self::$sessionDataName, []);
         $inputs[$stepName] = $request->all();
-        session([$this->sessionDataName => $inputs]);
-    }
-
-    private static function getRouteName(Request $request): string
-    {
+        session([self::$sessionDataName => $inputs]);
     }
 }

@@ -46,7 +46,7 @@ class GpoaActivityPolicy
 
     public function create(User $user): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
         return Gpoa::active()->first()
@@ -56,20 +56,41 @@ class GpoaActivityPolicy
 
     public function update(User $user, GpoaActivity $activity): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
-        return $activity->gpoa->active
-            && !in_array($user->position_name, ['adviser', null])
-            && $activity->eventHeads()->whereKey($user->id)->exists()
-            && in_array($activity->status, ['returned', 'draft'])
-            && in_array($activity->current_step, ['officers', 'president'])
-            ? Response::allow() : Response::deny();
+        $status = $activity->status;
+        $currentStep = $activity->current_step;
+        $position = $user->position_name;
+        if (!in_array($position, ['president', 'adviser', null]))
+            $position = 'officers';
+        $eventHead = $activity->eventHeads()->whereKey($user->id)->exists();
+        $eventHeadIsPresident = $activity->eventHeads()
+            ->ofPosition(['president'])->exists();
+        $presidentStep = $activity->current_step === 'president';
+        $goodStatus = in_array($activity->status, ['returned', 'draft']);
+        switch ($position) {
+        case 'officers':
+            $goodStep = $activity->current_step === 'officers';
+            if ($eventHead && $goodStatus && ($goodStep || ($presidentStep &&
+                $eventHeadIsPresident))) {
+                return Response::allow();
+            }
+            break;
+        case 'president':
+            $goodStep = in_array($activity->current_step, ['president',
+                'officers']);
+            if ($eventHead && $goodStatus && $goodStep) {
+                return Response::allow();
+            }
+            break;
+        }
+        return Response::deny();
     }
-    
+
     public function updateEventHeads(User $user, GpoaActivity $activity): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
         return $activity->eventHeadsOnly()?->whereKey($user->id)->exists()
@@ -78,15 +99,7 @@ class GpoaActivityPolicy
 
     public function delete(User $user, GpoaActivity $activity): Response
     {
-        if (!self::canEdit()) {
-            return Response::deny();
-        }
-        return $activity->gpoa->active
-            && !in_array($user->position_name, ['adviser', null])
-            && $activity->eventHeads()->whereKey($user->id)->exists()
-            && in_array($activity->status, ['returned', 'draft'])
-            && in_array($activity->current_step, ['officers', 'president'])
-            ? Response::allow() : Response::deny();
+        return $this->update($user, $activity);
     }
 
     public function restore(User $user, GpoaActivity $activity): Response
@@ -101,10 +114,10 @@ class GpoaActivityPolicy
 
     public function submit(User $user, GpoaActivity $activity): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
-        if (!self::canChangeStatus()) {
+        if (!self::canChangeStatus($user, $activity)) {
             return Response::deny();
         }
         $status = $activity->status;
@@ -127,20 +140,20 @@ class GpoaActivityPolicy
         switch ($position) {
         case 'officers':
             return ($eventHead && !$eventHeadIsPresident && $goodStatus)
-                : Response::allow() ? Response::deny();
-        case 'president': 
-            return ($eventHead && $goodStatus)
-                : Response::allow() ? Response::deny();
+                ? Response::allow() : Response::deny();
+        case 'president':
+            return ($goodStatus)
+                ? Response::allow() : Response::deny();
         }
         return Response::deny();
     }
 
     public function return(User $user, GpoaActivity $activity): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
-        if (!self::canChangeStatus()) {
+        if (!self::canChangeStatus($user, $activity)) {
             return Response::deny();
         }
         $status = $activity->status;
@@ -157,44 +170,47 @@ class GpoaActivityPolicy
             'returned_president_president',
         ]);
         switch ($position) {
-        case 'president': 
+        case 'president':
             return (!$eventHead && $goodStatus)
-                : Response::allow() ? Response::deny();
+                ? Response::allow() : Response::deny();
         case 'adviser':
             return ($goodStatus)
-                : Response::allow() ? Response::deny();
+                ? Response::allow() : Response::deny();
         }
         return Response::deny();
     }
 
     public function reject(User $user, GpoaActivity $activity): Response
     {
-        return $this->return();
+        return $this->return($user, $activity);
     }
 
     public function approve(User $user, GpoaActivity $activity): Response
     {
-        if (!self::canEdit()) {
+        if (!self::canEdit($user)) {
             return Response::deny();
         }
-        if (!self::canChangeStatus()) {
+        if (!self::canChangeStatus($user, $activity)) {
             return Response::deny();
         }
-        $adviser = $user->position_name === 'adviser'; 
+        $adviser = $user->position_name === 'adviser';
         $currentStep = $activity->current_step === 'adviser';
         $pending = $activity->status === 'pending';
         return ($adviser && $currentStep && $pending)
             ? Response::allow() : Response::deny();
     }
 
-    private static function canEdit(): bool
+    private static function canEdit(User $user, ?GpoaActivity
+            $activity = null): bool
     {
         $canView = $user->hasPerm('general-plan-of-activities.view');
         $canEdit = $user->hasPerm('general-plan-of-activities.edit');
-        return ($canView && $canEdit);
+        $gpoaActive = $activity?->gpoa->active;
+        return ($canView && $canEdit && ($gpoaActive ?? true));
     }
 
-    private static function canChangeStatus(): bool
+    private static function canChangeStatus(User $user, GpoaActivity
+        $activity): bool
     {
         $status = $activity->status;
         $gpoaActive = $activity->gpoa->active;

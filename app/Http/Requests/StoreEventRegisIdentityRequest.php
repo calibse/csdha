@@ -9,7 +9,7 @@ class StoreEventRegisIdentityRequest extends FormRequest
 {
     public function rules(): array
     {
-        $event = $request->route('event');
+        $event = $this->route('event');
         return [
             'email' => ['required', 'email', 'max:255'],
             'first_name' => ['required', 'max:50'],

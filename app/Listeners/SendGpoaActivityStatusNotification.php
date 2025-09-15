@@ -17,6 +17,7 @@ class SendGpoaActivityStatusNotification
 
     public function handle(GpoaActivityStatusChanged $event): void
     {
+        return;
         $activity = $event->activity;
         $status = $activity->status;
         $step = $activity->current_step;
