@@ -236,8 +236,11 @@ class LoginController extends Controller
             break;
         }
         if ($signupInvite) {
+            /*
             $signupInvite->is_accepted = true;
             $signupInvite->save();
+            */
+            $signupInvite->delete();
         }
         return $user;
     }

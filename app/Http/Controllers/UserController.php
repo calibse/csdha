@@ -44,15 +44,14 @@ class UserController extends Controller
         $user->middle_name = $request->input('middle_name');
         $user->last_name = $request->input('last_name');
 		$user->suffix_name = $request->input('suffix_name');
-        $user->email = $request->input('email');
+        $user->email = $signupInvite->email;
         $user->username = $request->input('username');
         $user->password = Hash::make($request->input('password'));
         if ($signupInvite?->position) {
             $user->position()->associate($signupInvite->position);
         }
 		$user->save();
-        $signupInvite->is_accepted = true;
-        $signupInvite->save();
+        $signupInvite->delete();
         Auth::login($user);
         return redirect()->route('user.home');
     }
