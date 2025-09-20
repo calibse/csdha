@@ -33,6 +33,19 @@
                     <div class="content">
                         <p>{{ $invite->position?->name ?? 'No position'}}</p>
                         <p>{{ $invite->email }}</p>
+                        <p>Status:
+                        @switch ($invite->email_sent)
+                        @case (1)
+                            Email sent
+                            @break
+                        @case (1)
+                            Email not sent
+                            @break
+                        @default
+                            Sending email
+                            @break
+                        @endswitch
+                        </p>
                     </div>
                     <div class="context-menu">
                         <form action="{{ route('accounts.confirm-revoke-signup-invite', ['invite' => $invite->id]) }}">

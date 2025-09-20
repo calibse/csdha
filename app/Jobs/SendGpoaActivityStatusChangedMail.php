@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\GpoaActivity;
 use App\Mail\GpoaActivityStatusChanged;
+use Illuminate\Support\Facades\Mail;
 
 class SendGpoaActivityStatusChangedMail implements ShouldQueue
 {

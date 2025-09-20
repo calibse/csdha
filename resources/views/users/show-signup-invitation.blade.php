@@ -1,6 +1,7 @@
 <x-layout.text-only>
     <article class="signup-invitation">
         <h1 class="title">You are invited to sign up for a CSDHA account</h1>
+        <x-alert/>
         <div class="login-button-container">
             <p>
                 <button form="form-email" class="login-button">

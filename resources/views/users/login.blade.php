@@ -28,6 +28,7 @@
 				</form>
 			@else
 				<h2 class="title">Sign in to CSDHA {{ $type === 'admin' ? '(for Admin)' : null }}</h2>
+                <x-alert/>
 				<article class="sign-in-with">
 					<form action="{{ $googleSigninRoute }}">
 						<button class="login-button google">
@@ -42,7 +43,6 @@
 					<div class="line"></div>
 				</div>
 				<article class="sign-in">
-					<x-alert/>
 					<form method="post" action="{{ $signinRoute }}" >
 						@csrf
 						<p>

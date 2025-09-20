@@ -6,7 +6,16 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>{{ isset($siteContext) ? 'CSDHA Admin' : 'CSDHA' }}</title>
+	<title>
+        @switch ($siteContext)
+        @case ('user')
+            CSDHA
+            @break
+        @case ('admin')
+            CSDHA Admin
+            @break
+        @endswitch
+    </title>
 	@vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body class="main-body {{ $index ? 'index' : null }}">
@@ -35,25 +44,29 @@
 						<dl class="details">
 							<dt class="name">Name</dt><dd class="value">{{ auth()->user()->full_name }}</dd>
 							<dt class="name">Role</dt>
-							@if (isset($siteContext))
+							@if ($siteContext === 'admin')
 								<dd class="value">{{ ucwords(auth()->user()->role?->name) }}</dd>
-							@else
+							@elseif ($siteContext === 'user')
 								<dd class="value">{{ auth()->user()->position?->name }}</dd>
 							@endif
 						</dl>
 					</div>
+                    @if ($siteContext === 'user')
 					<nav class="main-actions">
-						<a href="{{ route('profile.edit') }}">
+						<a href="
+                            {{ route('profile.edit') }}
+                            ">
 							<span class="icon"><x-phosphor-pencil-simple/></span>
 							<span class="text">Edit profile</span>
 						</a>
 					</nav>
+                    @endif
 				</div>
 			</div>
 			<nav class="main-menu">
 				<p class="title">Main Menu</p>
 				<ul class="list">
-					@if (!isset($siteContext))
+                    @if ($siteContext === 'user')
 					<li>
 						<a href="{{ route('user.home') }}">
 							<span class="icon"><x-phosphor-house/></span>
@@ -84,7 +97,7 @@
 						</a>
 					</li>
 					@endcan
-					{{-- 
+					{{--
 					@can ('viewAny', 'App\Models\Meeting')
 					<li>
 						<a href="{{ route('meetings.index') }}">
@@ -143,6 +156,12 @@
 						</a>
 					</li>
 					@endcan
+					<li>
+						<a href="{{ route('user.logout') }}">
+							<span class="icon"><x-phosphor-sign-out/></span>
+							<span class="text">Sign out</span>
+						</a>
+					</li>
 
 					{{-- Start of temp routes from admin --}}
 					{{--
@@ -181,7 +200,7 @@
 					--}}
 					{{-- End of temp routes from admin --}}
 
-					@else
+                    @elseif ($siteContext === 'admin')
 					<li>
 						<a href="{{ route('admin.home') }}">
 							<span class="icon"><x-phosphor-house/></span>
@@ -214,13 +233,13 @@
 							<span class="text">Roles</span>
 						</a>
 					</li>
-					@endif
 					<li>
-						<a href="{{ route('user.logout') }}">
+						<a href="{{ route('admin.logout') }}">
 							<span class="icon"><x-phosphor-sign-out/></span>
 							<span class="text">Sign out</span>
 						</a>
 					</li>
+					@endif
 				</ul>
 			</nav>
 		</div>

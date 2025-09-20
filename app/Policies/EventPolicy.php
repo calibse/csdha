@@ -110,6 +110,11 @@ class EventPolicy
         if (!self::canChangeStatus($user, $event)) {
             return Response::deny();
         }
+        $canView = $user->hasPerm('accomplishment-reports.view');
+        $canEdit = $user->hasPerm('accomplishment-reports.edit');
+        if (!$canEdit || !$canView) {
+            return Response::deny();
+        }
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
             $position = 'officers';
@@ -130,9 +135,6 @@ class EventPolicy
 
     public function returnAccomReport(User $user, Event $event): Response
     {
-        if (!self::canEdit($user, $event)) {
-            return Response::deny();
-        }
         if (!self::canChangeStatus($user, $event)) {
             return Response::deny();
         }
@@ -154,9 +156,6 @@ class EventPolicy
 
     public function approveAccomReport(User $user, Event $event): Response
     {
-        if (!self::canEdit($user, $event)) {
-            return Response::deny();
-        }
         if (!self::canChangeStatus($user, $event)) {
             return Response::deny();
         }
@@ -223,9 +222,7 @@ class EventPolicy
     private static function canChangeStatus(User $user, ?Event
         $event = null): bool
     {
-        $canView = $user->hasPerm('accomplishment-reports.view');
-        $canEdit = $user->hasPerm('accomplishment-reports.edit');
         $approved = $event?->accomReport?->status === 'approved';
-        return ($canView && $canEdit && !($approved ?? false));
+        return (!($approved ?? false));
     }
 }

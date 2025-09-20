@@ -1,7 +1,7 @@
 <x-layout.user class="signup form" :$backRoute title="Sign up">
 	<article class="article">
 		<x-alert/>
-		<form method="post" action="{{ route('users.store') }}" >
+		<form method="post" action="{{ $formAction }}" >
 			@csrf
 			<p>
 				<label for="email">Email</label>
@@ -31,12 +31,12 @@
 				<label for="password">Password</label>
 				<input type="password" id="password" name="password">
 			</p>
-			<p>			
+			<p>
 				<label for="password_confirmation">Confirm password</label>
 				<input type="password" id="password_confirmation" name="password_confirmation">
 			</p>
 			<p class="form-submit">
-				<button type="submit">Sign up</button>
+				<button>Sign up</button>
 			</p>
 		</form>
 	</article>

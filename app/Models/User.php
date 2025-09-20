@@ -192,7 +192,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        if ($this->role?->name === 'admin') return true;
+        if (strtolower($this->role?->name) === 'admin') return true;
         return false;
     }
 
@@ -209,7 +209,7 @@ class User extends Authenticatable
         }
         $allQuery = $query;
         foreach ($positions as $posName) {
-            $position = Position::whereRaw('lower(name) = ?', $posName)->first();
+            $position = Position::whereRaw('lower(name) = ?', [$posName])->first();
             if ($position) {
                 $allQuery = $allQuery->where('position_id', '!=', $position->id);
             }
@@ -221,7 +221,7 @@ class User extends Authenticatable
     protected function president(Builder $query): void
     {
         $query->whereHas('position', function ($query) {
-            $query->whereRaw('lower(name)', 'president');
+            $query->whereRaw('lower(name) = ?', ['president']);
         });
     }
 
@@ -229,7 +229,7 @@ class User extends Authenticatable
     protected function adviser(Builder $query): void
     {
         $query->whereHas('position', function ($query) {
-            $query->whereRaw('lower(name)', 'adviser');
+            $query->whereRaw('lower(name) = ?', ['adviser']);
         });
     }
 

@@ -5,15 +5,16 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\SignupInvitation;
+use App\Mail\SignupInvitation as SignupInvitationMail;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class SendSignupInvite implements ShouldQueue
 {
     use Queueable;
 
-    private SignupInvitation $signupInvite;
-
-    public function __construct(public SignupInvitation $signupInvite)
+    public function __construct(public SignupInvitation $signupInvite,
+            public string $url)
     {
 
     }
@@ -21,13 +22,8 @@ class SendSignupInvite implements ShouldQueue
     public function handle(): void
     {
         $signupInvite = $this->signupInvite;
-        $url = url('http://' . config('custom.user_domain') .
-            (str_starts_with(config('custom.user_domain'), '127.') ? ':8000'
-                : null) .
-            route('user.invitation', [
-                'invite-code' => $signupInvite->invite_code
-            ], false));
-        Mail::to($signupInvite->email)->send(new SignupInvitationMail($url));
+        Mail::to($signupInvite->email)->send(new SignupInvitationMail(
+            $this->url));
         $signupInvite->email_sent = true;
         $signupInvite->save();
     }

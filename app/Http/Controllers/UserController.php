@@ -25,14 +25,20 @@ class UserController extends Controller
             'invite_code', $inviteCode) : null;
         return view('users.create', [
             'backRoute' => route('user.invitation', [
-                'invite_code' => $inviteCode 
+                'invite_code' => $inviteCode
             ]),
             'email' => $signupInvite->email,
+            'formAction' => route('users.store', [
+                'invite_code' => $inviteCode
+            ])
         ]);
     }
 
     public function store(StoreUserRequest $request)
     {
+        $inviteCode = $request->invite_code;
+        $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
+            'invite_code', $inviteCode) : null;
         $user = new User();
         $user->first_name = $request->input('first_name');
         $user->middle_name = $request->input('middle_name');
@@ -41,14 +47,19 @@ class UserController extends Controller
         $user->email = $request->input('email');
         $user->username = $request->input('username');
         $user->password = Hash::make($request->input('password'));
+        if ($signupInvite?->position) {
+            $user->position()->associate($signupInvite->position);
+        }
 		$user->save();
+        $signupInvite->is_accepted = true;
+        $signupInvite->save();
         Auth::login($user);
         return redirect()->route('user.home');
     }
 
     public function showAvatar(string $id) {
         $user = User::find($id);
-        
+
         return response->file(Storage::path($user->avatar_filepath));
     }
 

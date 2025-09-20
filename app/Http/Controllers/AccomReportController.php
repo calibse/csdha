@@ -229,13 +229,12 @@ class AccomReportController extends Controller implements HasMiddleware
         $endDate = $request->end_date;
         $events = null;
         $start = false;
-        if ($startDate && $endDate ) {
+        if ($startDate && $endDate) {
             $events = Event::approved($startDate, $endDate)->exists();
         } elseif (!$startDate && !$endDate) {
             $start = true;
         }
-        if ($events)
-        {
+        if ($events) {
             $fileRoute = route('accom-reports.stream', [
                 'start_date' => $startDate,
                 'end_date' => $endDate

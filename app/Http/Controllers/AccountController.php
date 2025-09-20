@@ -20,7 +20,7 @@ class AccountController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:delete,user', only: [
+            new Middleware('can:delete,account', only: [
                 'destroy', 'confirmDestroy'
             ]),
         ];
@@ -66,8 +66,8 @@ class AccountController extends Controller implements HasMiddleware
         $account->middle_name = $request->middle_name;
         $account->last_name = $request->last_name;
         $account->suffix_name = $request->suffix_name;
-        $account->email = $request->email;
-        $account->username = $request->username;
+        // $account->email = $request->email;
+        // $account->username = $request->username;
         $account->save();
         return redirect()->route('accounts.show', [
             'account' => $account->public_id
@@ -113,7 +113,13 @@ class AccountController extends Controller implements HasMiddleware
         $signupInvite->is_accepted = false;
         $signupInvite->expires_at = now()->hour(24)->toDateTimeString();
         $signupInvite->save();
-        SendSignupInvite::dispatch($signupInvite);
+        $url = url('http://' . config('app.user_domain') .
+            (str_starts_with(config('app.user_domain'), '127.') ? ':8000'
+                : null) .
+            route('user.invitation', [
+                'invite_code' => $signupInvite->invite_code
+            ], false));
+        SendSignupInvite::dispatch($signupInvite, $url);
         return back()->with('status', 'Sign up invitation sent.');
     }
 

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\AccomReport;
 use App\Mail\AccomReportStatusChanged;
+use Illuminate\Support\Facades\Mail;
 
 class SendAccomReportStatusChangedMail implements ShouldQueue
 {

@@ -13,6 +13,14 @@
                 <input disabled value="{{ $account->role?->name }}">
             </p>
             <p>
+                <label>Email</label>
+                <input disabled value="{{ $account->email }}">
+            </p>
+            <p>
+                <label>Username</label>
+                <input disabled value="{{ $account->username }}" >
+            </p>
+            <p>
                 <label>First name</label>
                 <input name="first_name" value="{{ $account->first_name }}" >
             </p>
@@ -27,14 +35,6 @@
             <p>
                 <label>Suffix name</label>
                 <input name="suffix_name" value="{{ $account->suffix_name }}" >
-            </p>
-            <p>
-                <label>Email</label>
-                <input name="email" value="{{ $account->email }}" >
-            </p>
-            <p>
-                <label>Username</label>
-                <input name="username" value="{{ $account->username }}" >
             </p>
             <p class="form-submit">
                 <button>Update</button>

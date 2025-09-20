@@ -2,7 +2,7 @@
     <article class="article">
         <p id="noscript">
             <span class="text">
-                This page failed to work perhaps because Javascript is 
+                This page failed to work perhaps because Javascript is
                 unsupported or disabled, or the page did not load completely.
             </span>
         </p>
@@ -78,14 +78,12 @@
                         </span>
                     </template>
                     --}}
-                </p> 
+                </p>
                 <video class="video"></video>
             </div>
         </template>
-    @else 
-        <template id="scanner-feature">
-            <p>There are no ongoing events today.</p>
-        </template> 
+    @else
+        <p>There are no ongoing events today.</p>
     @endif
     </article>
 </x-layout.user>

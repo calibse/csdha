@@ -9,6 +9,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Models\SignupInvitation;
 use App\Http\Requests\SigninRequest;
+use App\Models\Role;
 
 class LoginController extends Controller
 {
@@ -51,23 +52,19 @@ class LoginController extends Controller
     }
 
     public function adminAuth(SigninRequest $request) {
+        $adminId = Role::whereRaw('lower(name) = ?', ['admin'])->first();
         if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
             $credentials = [
                 'email' => $request->username,
-                'password' => $request->password
+                'password' => $request->password,
+                'role_id' => $adminId
             ];
         } else {
             $credentials = [
                 'username' => $request->username,
-                'password' => $request->password
+                'password' => $request->password,
+                'role_id' => $adminId
             ];
-        }
-        $user = User::firstWhere('username', $request->username);
-        if (!$user || !$user->isAdmin()) {
-            return view('message', [
-                'message' => 'We only allow log-in to administrator account '
-                    . 'here.'
-            ]);
         }
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -91,11 +88,30 @@ class LoginController extends Controller
         ]);
     }
 
+    public function signupWith(Request $request, string $provider)
+    {
+        $inviteCode = $request->invite_code;
+        $request->session()->flash('inviteCode', $inviteCode);
+        switch ($provider) {
+        case 'google':
+            config(['services.google.redirect' => route('signup.callback', [
+                'provider' => 'google'
+            ])]);
+            return Socialite::driver('google')->with([
+                'access_type' => 'offline',
+            ])->redirect();
+        case 'facebook':
+            return Socialite::driver('facebook')->redirect();
+        }
+    }
+
     public function signinWith(Request $request, string $provider)
     {
+        /*
         if (auth()->check()) {
             return redirect()->intended('home.html');
         }
+        */
         $inviteCode = $request->invite_code;
         $request->session()->flash('inviteCode', $inviteCode);
         switch ($provider) {
@@ -108,20 +124,48 @@ class LoginController extends Controller
         }
     }
 
+    public function signupWithCallback(Request $request, string $provider)
+    {
+        $inviteCode = session('inviteCode') ?? $request->invite_code;
+        $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
+            'invite_code', $inviteCode) : null;
+        config(['services.google.redirect' => route('signup.callback', [
+            'provider' => 'google'
+        ])]);
+        $socialUser = self::getSocialUser($provider);
+        $user = $socialUser ? User::firstWhere("{$provider}_id",
+            $socialUser->id) : null;
+        if ($user) {
+            return redirect()->route('user.invitation', [
+                'invite_code' => $signupInvite->invite_code
+            ])->withErrors([
+                'signin' => "The {$provider} account is already taken."
+            ]);
+        } else {
+            $user = self::storeSocialUser($provider, $socialUser,
+                $signupInvite);
+        }
+        Auth::login($user, $remember = true);
+        $request->session()->regenerate();
+        return redirect()->intended('home.html');
+    }
+
     public function authWith(Request $request, string $provider)
     {
         $inviteCode = session('inviteCode') ?? $request->invite_code;
         $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
             'invite_code', $inviteCode) : null;
-        $user = self::getSocialUser($provider);
+        $socialUser = self::getSocialUser($provider);
+        $user = $socialUser ? User::firstWhere("{$provider}_id",
+            $socialUser->id) : null;
         if (!$user && !$signupInvite) {
-            return view('message', [
-                'message' => 'Sorry, we only allow sign-in for registered '
-                    . 'users or from a sign-up invitation link right now.'
+            return redirect()->route('user.login')->withErrors([
+                'signin' => 'The provided credentials do not match our records.'
             ]);
         }
         if (!$user) {
-            self::storeSocialUser($provider, $signupInvite);
+            $user = self::storeSocialUser($provider, $socialUser,
+                $signupInvite);
         }
         Auth::login($user, $remember = true);
         $request->session()->regenerate();
@@ -130,11 +174,12 @@ class LoginController extends Controller
 
     public function adminAuthWith(Request $request, string $provider)
     {
-        $user = self::getSocialUser($provider);
+        $socialUser = self::getSocialUser($provider);
+        $user = $socialUser ? User::firstWhere("{$provider}_id",
+            $socialUser->id) : null;
         if (!$user || !$user->isAdmin()) {
-            return view('message', [
-                'message' => 'We only allow log-in to administrator '
-                    . 'account here.'
+            return redirect()->route('user.login')->withErrors([
+                'signin' => 'The provided credentials do not match our records.'
             ]);
         }
         Auth::login($user);
@@ -148,7 +193,7 @@ class LoginController extends Controller
         return view('users.show-signup-invitation', [
             'inviteCode' => $inviteCode,
             'emailRoute' => route('users.create'),
-            'googleRoute' => route('auth.redirect', ['provider' => 'google'])
+            'googleRoute' => route('signup.redirect', ['provider' => 'google'])
         ]);
     }
 
@@ -159,32 +204,30 @@ class LoginController extends Controller
 		return redirect('/');
     }
 
-    private static function getSocialUser(string $provider): ?User
+    private static function getSocialUser(string $provider)
     {
         switch ($provider) {
         case 'google':
             $googleUser = Socialite::driver('google')->user();
-            $user = $googleUser ? User::firstWhere('google_id',
-                $googleUser->id) : null;
-            return $user;
+            return $googleUser;
         case 'facebook':
         }
     }
 
-    private static function storeSocialUser(string $provider, ?SignupInvitation
-            $signupInvite = null): void
+    private static function storeSocialUser(string $provider, $socialUser,
+            ?SignupInvitation $signupInvite = null): User
     {
         switch ($provider) {
         case 'google':
             $user = new User();
-            $user->google_id = $googleUser->id;
-            $user->google_token = $googleUser->token;
-            $user->google_refresh_token = $googleUser->refreshToken;
-            $user->google_expires_at = now()->second($googleUser->expiresIn)
+            $user->google_id = $socialUser->id;
+            $user->google_token = $socialUser->token;
+            $user->google_refresh_token = $socialUser->refreshToken;
+            $user->google_expires_at = now()->second($socialUser->expiresIn)
                 ->toDateTimeString();
-            $user->first_name = $googleUser->getRaw()['given_name'];
-            $user->last_name = $googleUser->getRaw()['family_name'];
-            if ($inviteCode) {
+            $user->first_name = $socialUser->getRaw()['given_name'];
+            $user->last_name = $socialUser->getRaw()['family_name'];
+            if ($signupInvite?->position) {
                 $user->position()->associate($signupInvite->position);
             }
             $user->save();
@@ -196,5 +239,6 @@ class LoginController extends Controller
             $signupInvite->is_accepted = true;
             $signupInvite->save();
         }
+        return $user;
     }
 }

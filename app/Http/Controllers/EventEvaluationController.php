@@ -8,10 +8,12 @@ use App\Models\EventEvaluation;
 use App\Models\EventStudent;
 use App\Models\Course;
 use App\Models\StudentYear;
+use App\EventEvaluationToken;
 use App\Services\Format;
 use App\Http\Requests\StoreEventEvalIdentityRequest;
 use App\Http\Requests\StoreEventEvalRequest;
 use App\Http\Requests\StoreConsentRequest;
+use Illuminate\Support\Str;
 
 class EventEvaluationController extends Controller
 {
@@ -122,6 +124,28 @@ class EventEvaluationController extends Controller
         return view('event-evaluations.end', [
             'end' => true
         ] + self::multiFormData($event));
+    }
+
+    public function sendEvaluationForms(Event $event)
+    {
+        foreach ($event->dates() as $date) {
+            foreach ($date->attendees as $attendee) {
+                $token = self::createToken();
+                $url = route('events.evaluations.consent.edit', [
+                    'token' => $token
+                ]);
+                //Mail::to($attendee->email)->send(new
+            }
+        }
+    }
+
+    private static function createToken(): string
+    {
+        $rawToken = Str::random(64);
+        $token = new EventEvaluationToken;
+        $token->token = Hash::make($rawToken);
+        $token->save();
+        return $rawToken;
     }
 
     private static function store(Event $event): void

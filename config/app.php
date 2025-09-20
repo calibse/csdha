@@ -123,5 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Custom config start here:
     'date_format' => 'j M Y h:i A',
+	'admin_domain' => env('ADMIN_DOMAIN'),
+	'user_domain' => env('USER_DOMAIN'),
 ];

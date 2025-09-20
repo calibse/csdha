@@ -57,62 +57,68 @@ Route::domain(config('custom.admin_domain'))->group(function () {
     Route::get('/auth/{provider}/callback', [LoginController::class,
         'adminAuthWith']);
 
-    Route::middleware('auth', EnsureUserIsAdmin::class)->group(function () {
-        Route::get('/home.html', [HomeController::class , 'adminIndex'])
-            ->name('admin.home');
+});
 
-        Route::prefix('accounts')->name('accounts.')->group(function () {
-            Route::get('/create-signup-invite/send.php',
-                [AccountController::class, 'sendSignupInvite'])
-                ->name('send-signup-invite');
+Route::domain(config('custom.admin_domain'))->middleware('auth')
+        ->group(function () {
 
-            Route::get('/create-signup-invite.html',
-                [AccountController::class, 'createSignupInvite'])
-                ->name('create-signup-invite');
+    Route::get('/home.html', [HomeController::class , 'adminIndex'])
+        ->name('admin.home');
 
-            Route::delete('/signup-invite/{invite}/revoke.php',
-                [AccountController::class, 'revokeSignupInvite'])
-                ->name('revoke-signup-invite');
+    Route::get('/logout', [LoginController::class, 'logout'])
+        ->name('admin.logout');
 
-            Route::get('/signup-invite/{invite}/revoke.html',
-                [AccountController::class, 'confirmRevokeSignupInvite'])
-                ->name('confirm-revoke-signup-invite');
-        });
+    Route::prefix('accounts')->name('accounts.')->group(function () {
+        Route::get('/create-signup-invite/send.php',
+            [AccountController::class, 'sendSignupInvite'])
+            ->name('send-signup-invite');
 
-        Route::name('accounts.')->controller(AccountController::class)
-            ->group(function () {
+        Route::get('/create-signup-invite.html',
+            [AccountController::class, 'createSignupInvite'])
+            ->name('create-signup-invite');
 
-            Route::get('/accounts.html', 'index')->name('index');
+        Route::delete('/signup-invite/{invite}/revoke.php',
+            [AccountController::class, 'revokeSignupInvite'])
+            ->name('revoke-signup-invite');
 
-            Route::prefix('account-{account}')->group(function () {
-
-                Route::get('/index.html', 'show')->name('show');
-
-                Route::put('/update.php', 'update')->name('update');
-
-                Route::get('/delete.html', 'confirmDestroy')
-                    ->name('confirm-destroy');
-
-                Route::delete('/delete.php', 'destroy')->name('destroy');
-
-            });
-        });
-
-        Route::prefix('roles')->name('roles.')->group(function () {
-
-            Route::put('/update', [RoleController::class, 'update'])
-                ->name('update');
-
-            Route::get('/', [RoleController::class, 'index'])
-                ->name('index');
-        });
-
-        Route::get('/analytics', [AnalyticController::class, 'index'])
-            ->name('analytics.index');
-
-        Route::resource('audit', AuditTrailController::class)
-            ->only(['index', 'show']);
+        Route::get('/signup-invite/{invite}/revoke.html',
+            [AccountController::class, 'confirmRevokeSignupInvite'])
+            ->name('confirm-revoke-signup-invite');
     });
+
+    Route::name('accounts.')->controller(AccountController::class)
+        ->group(function () {
+
+        Route::get('/accounts.html', 'index')->name('index');
+
+        Route::prefix('account-{account}')->group(function () {
+
+            Route::get('/index.html', 'show')->name('show');
+
+            Route::put('/update.php', 'update')->name('update');
+
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+
+        });
+    });
+
+    Route::prefix('roles')->name('roles.')->group(function () {
+
+        Route::put('/update', [RoleController::class, 'update'])
+            ->name('update');
+
+        Route::get('/', [RoleController::class, 'index'])
+            ->name('index');
+    });
+
+    Route::get('/analytics', [AnalyticController::class, 'index'])
+        ->name('analytics.index');
+
+    Route::resource('audit', AuditTrailController::class)
+        ->only(['index', 'show']);
 });
 
 Route::domain(config('custom.user_domain'))->group(function () {
@@ -215,6 +221,14 @@ Route::domain(config('custom.user_domain'))->group(function () {
 
     });
 
+    Route::get('/sign-up/{provider}/redirect', [LoginController::class,
+        'signupWith'])->name('signup.redirect')
+        ->middleware(CheckSignupInviteCode::class);
+
+    Route::get('/sign-up/{provider}/callback', [LoginController::class,
+        'signupWithCallback'])->name('signup.callback')
+        ->middleware(CheckSignupInviteCode::class);
+
     Route::name('users.')->middleware(CheckSignupInviteCode::class)
         ->controller(UserController::class)->group(function () {
 
@@ -223,6 +237,9 @@ Route::domain(config('custom.user_domain'))->group(function () {
         Route::post('/sign-up.php', 'store')->name('store');
 
     });
+
+    Route::get('/verify-email', [ProfileController::class, 'verifyEmail'])
+        ->name('verify-email');
 });
 
 Route::domain(config('custom.user_domain'))->middleware('auth')
@@ -566,17 +583,31 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
     Route::resource('positions', PositionController::class);
     */
 
-    Route::prefix('profile')->name('profile.')->group(function () {
+    Route::prefix('profile')->name('profile.')
+            ->controller(ProfileController::class)->group(function () {
 
-        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/', 'index')->name('index');
 
-        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::get('/edit.html', 'edit')->name('edit');
 
-        Route::post('/update', [ProfileController::class, 'update'])
-            ->name('update');
+        Route::put('/update.php', 'update')->name('update');
 
-        Route::get('/avatar_{avatar}', [ProfileController::class, 'showAvatar'])
-            ->name('showAvatar');
+        Route::get('/avatar_{avatar}', 'showAvatar')->name('showAvatar');
+
+        Route::get('/edit-email.html', 'editEmail')
+            ->name('email.edit');
+
+        Route::put('/update-email.php', 'updateEmail')
+            ->name('email.update');
+
+        Route::get('/send-email-verify.php', 'resendEmailVerify')
+            ->name('email.send-verify');
+
+        Route::get('/edit-password.html', 'editPassword')
+            ->name('password.edit');
+
+        Route::put('/update-password.php', 'updatePassword')
+            ->name('password.update');
     });
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])
