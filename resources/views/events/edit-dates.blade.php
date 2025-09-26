@@ -15,20 +15,15 @@ $routeParams = ['event' => $event->public_id]
             <li class="item event-date">
                 <time class="content">{{ $date->full_date }}</time>
                 <span class="context-menu">
+                    {{--
                     <form action="{{ route('events.dates.edit', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="edit-action">
                         <button type="submit"
                             @cannot ('update', $date)
                             disabled
                             @endcannot
                         >Edit</button>
-                        <script type="application/json" class="field-values">
-{
-    "date": "{{ $date->date }}",
-    "startTime": "{{ $date->start_time }}",
-    "endTime": "{{ $date->end_time }}" 
-}
-                        </script>
                     </form>
+                    --}}
                     <form action="{{ route('events.dates.confirmDestroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="delete-action">
                         <button type="submit">Delete</button>
                     </form>
@@ -89,7 +84,7 @@ $routeParams = ['event' => $event->public_id]
             @method('DELETE')
             @csrf
             <p>
-                <span>Are you sure you want to delete this 
+                <span>Are you sure you want to delete this
                 date</span>
                 <strong><time class="content-delete"></time></strong>?
             </p>

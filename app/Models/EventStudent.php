@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EventStudent extends Model
 {
-    public function eventDate(): BelongsToMany
+    public function eventDates(): BelongsToMany
     {
         return $this->belongsToMany(EventDate::class, 'event_attendees')
-            ->withPivot('created_at')->withTimestamps();
+            ->as('eventAttendee')->withPivot('created_at', 'eval_mail_sent')
+            ->withTimestamps();
     }
 
     public function eventAttended(): HasOne
@@ -28,13 +29,13 @@ class EventStudent extends Model
         return $this->belongsTo(Course::class);
     }
 
-    protected function fullName(): Attribute 
+    protected function fullName(): Attribute
     {
         $name = [
-            $this->last_name . ($this->first_name || $this->middle_name || 
-                $this->suffix_name ? ',' : ''), 
-            $this->first_name, 
-            $this->middle_name . ($this->suffix_name ? ',' : ''), 
+            $this->last_name . ($this->first_name || $this->middle_name ||
+                $this->suffix_name ? ',' : ''),
+            $this->first_name,
+            $this->middle_name . ($this->suffix_name ? ',' : ''),
             $this->suffix_name
         ];
         $nameFiltered = array_filter($name, function ($e) {
@@ -46,9 +47,9 @@ class EventStudent extends Model
         );
     }
 
-    protected function courseSection(): Attribute 
+    protected function courseSection(): Attribute
     {
-        $courseSection = preg_replace('!\s+!', ' ', $this->course->acronym . 
+        $courseSection = preg_replace('!\s+!', ' ', $this->course->acronym .
         " " . $this->year . " - " . $this->section);
         return Attribute::make(
             get: fn () => $courseSection,
@@ -89,7 +90,7 @@ class EventStudent extends Model
 
     protected function entryTime(): Attribute
     {
-        $time = $this->pivot->created_at;
+        $time = $this->eventAttendee->created_at;
         return Attribute::make(
             get: fn () => $time
         );

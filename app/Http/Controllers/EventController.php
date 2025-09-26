@@ -29,6 +29,8 @@ use App\Mail\EventEvaluation as EventEvaluationMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use DateTimeZone;
+use App\Events\EventUpdated;
 
 class EventController extends Controller implements HasMiddleware
 {
@@ -165,7 +167,9 @@ class EventController extends Controller implements HasMiddleware
             : route('events.show', [
                 'event' => $event->public_id
             ]);
+        $timezones = DateTimeZone::listIdentifiers();
         return view("events.edit", [
+            'timezones' => $timezones,
             'officersOnly' => $event->participant_type === 'officers',
             'participants' => $participants,
             'selectedParticipants' => $selectedParticipants,
@@ -198,6 +202,7 @@ class EventController extends Controller implements HasMiddleware
         $event->description = $request->description;
         $event->narrative = $request->narrative;
         $event->tag = $request->tag;
+        $event->timezone = $request->timezone;
         if ($request->record_attendance && !in_array('0',
                 $request->record_attendance)) {
             if (in_array('-1', $request->record_attendance)) {
@@ -222,6 +227,7 @@ class EventController extends Controller implements HasMiddleware
         if ($event->accept_evaluation) {
             // self::sendEvaluationForm($event);
         }
+        EventUpdated::dispatch($event);
         return redirect()->route('events.show', [
             'event' => $event->public_id
         ]);
@@ -433,16 +439,19 @@ class EventController extends Controller implements HasMiddleware
     public function storeDate(SaveEventDateRequest $request, Event $event)
     {
         self::storeOrUpdateDate($request, $event);
-        return redirect()->route('events.dates.index',
-            ['event' => $event->public_id])->with('status', 'Date saved.');
+        EventUpdated::dispatch($event);
+        return redirect()->route('events.dates.index', [
+            'event' => $event->public_id
+        ])->with('status', 'Date saved.');
     }
 
     public function updateDate(SaveEventDateRequest $request, Event $event,
             EventDate $date)
     {
         self::storeOrUpdateDate($request, $event, $date);
-        return redirect()->route('events.dates.index', ['event' => $event->public_id])
-            ->with('status', 'Date updated.');
+        return redirect()->route('events.dates.index', [
+            'event' => $event->public_id
+        ])->with('status', 'Date updated.');
     }
 
     public function destroyDate(Event $event, EventDate $date)

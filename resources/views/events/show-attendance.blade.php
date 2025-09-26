@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($date->attendees()->orderBy('pivot_created_at', 'desc')->get() as $attendee)
+                @foreach ($date->attendees()->orderByPivot('created_at', 'desc')->get() as $attendee)
                 <tr>
                     <td>{{ $attendee->student_id }}</td>
                     <td>{{ $attendee->full_name }}</td>

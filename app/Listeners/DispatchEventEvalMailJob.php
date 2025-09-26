@@ -20,8 +20,9 @@ class DispatchEventEvalMailJob
         $event = $event->event;
         if (!$event->accept_evaluation) return;
         foreach ($event->dates as $date) {
-            $delay = Carbon::createFromFormat('Y-m-d H:i:s',
-                "$date->date $date->end_time", $event->timezone);
+            $delay = Carbon::parse(
+                "{$date->date->format('Y-m-d')} {$date->end_time}",
+                $event->timezone);
             PrepareEventEvalMailJob::dispatch($date)->delay($delay);
         }
     }

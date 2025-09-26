@@ -17,10 +17,9 @@ class CheckEventEvalForm
             'message' => 'Your event evaluation link is invalid.'
         ]);
         if (!$rawToken) return $response;
-        $tokens = DB::table('event_evaluation_tokens')->pluck('token');
-        foreach ($tokens as $token) {
-            if (Hash::check($rawToken, $token)) return $next($request);
-        }
-        return $response;
+        $tokenExists = DB::table('event_evaluation_tokens')
+            ->where('token', hash('sha256', $rawToken))->exists();
+        if (!$tokenExists) return $response;
+        return $next($request);
     }
 }

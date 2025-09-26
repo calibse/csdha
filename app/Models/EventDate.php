@@ -23,11 +23,12 @@ class EventDate extends Model
             'date' => 'date'
         ];
     }
-    
+
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(EventStudent::class, 'event_attendees')
-            ->withPivot('created_at')->withTimestamps();
+            ->as('eventAttendee')->withPivot('created_at', 'eval_mail_sent')
+            ->withTimestamps();
     }
 
     public function officerAttendees(): BelongsToMany
@@ -41,9 +42,9 @@ class EventDate extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function startTimeShort(): Attribute 
+    public function startTimeShort(): Attribute
     {
-        $time = $this->start_time 
+        $time = $this->start_time
             ? Format::toLocal($this->start_time)->format('H:i')
             : null;
         return Attribute::make(
@@ -51,9 +52,9 @@ class EventDate extends Model
         );
     }
 
-    public function endTimeShort(): Attribute 
+    public function endTimeShort(): Attribute
     {
-        $time = $this->end_time 
+        $time = $this->end_time
             ? Format::toLocal($this->end_time)->format('H:i')
             : null;
         return Attribute::make(
@@ -61,7 +62,7 @@ class EventDate extends Model
         );
     }
 
-    public function dateFmt(): Attribute 
+    public function dateFmt(): Attribute
     {
         $date = $this->date->format('F j, Y');
         return Attribute::make(
@@ -71,7 +72,7 @@ class EventDate extends Model
 
     public function startTimeFmt(): Attribute
     {
-        $time = $this->start_time 
+        $time = $this->start_time
             ? Format::toLocal($this->start_time)->format('g:i A')
             : null;
         return Attribute::make(
@@ -81,7 +82,7 @@ class EventDate extends Model
 
     public function endTimeFmt(): Attribute
     {
-        $time = $this->end_time 
+        $time = $this->end_time
             ? Format::toLocal($this->end_time)->format('g:i A')
             : null;
         return Attribute::make(
@@ -89,16 +90,16 @@ class EventDate extends Model
         );
     }
 
-    public function fullDate(): Attribute 
+    public function fullDate(): Attribute
     {
-        $date = $this->date_fmt . ($this->start_time ? ' ' 
-            . $this->start_time_fmt : null) . ($this->end_time_fmt ? ' - ' 
+        $date = $this->date_fmt . ($this->start_time ? ' '
+            . $this->start_time_fmt : null) . ($this->end_time_fmt ? ' - '
             . $this->end_time_fmt : null);
         return Attribute::make(
             get: fn () => $date
         );
     }
-    
+
     #[Scope]
     protected function ongoing(Builder $query): void
     {
@@ -108,17 +109,17 @@ class EventDate extends Model
                     $query->where(function ($query) {
                         $query->whereColumn('start_time', '<=', 'end_time')
                             ->where(function ($query) {
-                                $query->where('start_time', '<=', 
+                                $query->where('start_time', '<=',
                                     Carbon::now()->toTimeString())
-                                    ->where('end_time', '>', 
+                                    ->where('end_time', '>',
                                         Carbon::now()->toTimeString());
                             });
                     })->orWhere(function ($query) {
                         $query->whereColumn('start_time', '>', 'end_time')
                             ->where(function ($query) {
-                                $query->where('start_time', '<=', 
+                                $query->where('start_time', '<=',
                                     Carbon::now()->toTimeString())
-                                    ->orWhere('end_time', '>', 
+                                    ->orWhere('end_time', '>',
                                         Carbon::now()->toTimeString());
                             });
                     });

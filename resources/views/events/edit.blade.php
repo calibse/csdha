@@ -44,6 +44,15 @@
 				<input name="venue" value="{{ $event->venue }}">
 			</p>
 			<p>
+				<label>Time Zone</label>
+				<select name="timezone">
+                    <option value="">-- Select --</option>
+                @foreach ($timezones as $timezone)
+                    <option value="{{ $timezone }}" {{ strtolower($event->timezone) === strtolower($timezone) ? 'selected' : null }}>{{ $timezone }}</option>
+                @endforeach
+                </select>
+			</p>
+			<p>
 				<label>Description</label>
 				<textarea name="description">{{ $event->description }}</textarea>
 			</p>

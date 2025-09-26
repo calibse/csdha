@@ -30,12 +30,12 @@ class GpoaActivity extends Model
             'adviser_approved_at' => 'datetime',
         ];
     }
-    
+
     protected static function booted(): void
     {
         static::created(function (GpoaActivity $activity) {
             if ($activity->eventHeads->isEmpty()) {
-                $activity->eventHeads()->attach(auth()->user(), 
+                $activity->eventHeads()->attach(auth()->user(),
                     ['role' => 'event head']);
                 $activity->save();
             }
@@ -59,25 +59,25 @@ class GpoaActivity extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(GpoaActivityType::class, 
+        return $this->belongsTo(GpoaActivityType::class,
             'gpoa_activity_type_id');
     }
 
     public function mode(): BelongsTo
     {
-        return $this->belongsTo(GpoaActivityMode::class, 
+        return $this->belongsTo(GpoaActivityMode::class,
             'gpoa_activity_mode_id');
     }
 
     public function partnershipType(): BelongsTo
     {
-        return $this->belongsTo(GpoaActivityPartnershipType::class, 
+        return $this->belongsTo(GpoaActivityPartnershipType::class,
             'gpoa_activity_partnership_type_id');
     }
 
     public function fundSource(): BelongsTo
     {
-        return $this->belongsTo(GpoaActivityFundSource::class, 
+        return $this->belongsTo(GpoaActivityFundSource::class,
             'gpoa_activity_fund_source_id');
     }
 
@@ -98,13 +98,13 @@ class GpoaActivity extends Model
 
     public function participantTypes(): BelongsToMany
     {
-        return $this->belongsToMany(StudentYear::class, 
+        return $this->belongsToMany(StudentYear::class,
             'gpoa_activity_participants');
     }
 
-    public function allAreEventHeads(): Attribute 
+    public function allAreEventHeads(): Attribute
     {
-        $all = true; 
+        $all = true;
         foreach (User::has('position')->notOfPosition(['adviser'])
                 ->get() as $user) {
             if (!($this->eventHeads()->where('user_id', $user->id)
@@ -112,37 +112,37 @@ class GpoaActivity extends Model
                 $all = false;
                 break;
             }
-        } 
+        }
         return Attribute::make(
             get: fn () => $all,
         );
     }
 
-    public function allAreParticipants(): Attribute 
+    public function allAreParticipants(): Attribute
     {
-        $all = true; 
+        $all = true;
         foreach (StudentYear::all() as $student) {
             if (!$this->participantTypes()->find($student->id)) {
                 $all = false;
                 break;
             }
-        } 
+        }
         return Attribute::make(
             get: fn () => $all,
         );
     }
 
-    public function date(): Attribute 
+    public function date(): Attribute
     {
         $start = $this->start_date;
         $end = $this->end_date ? $this->end_date : null;
 
         if (!$end) {
             $date = $start->format('F j, Y');
-        } else if ($start->month === $end->month && 
+        } else if ($start->month === $end->month &&
                 $start->year === $end->year) {
             $date = $start->format('F j') . '–' . $end->format('j, Y');
-        } else if ($start->month !== $end->month && 
+        } else if ($start->month !== $end->month &&
                 $start->year === $end->year) {
             $date = $start->format('F j') . ' – ' . $end->format('F j, Y');
         } else {
@@ -153,7 +153,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function currentStatus(): Attribute 
+    public function currentStatus(): Attribute
     {
         $status = $this->status;
         $currentStep = $this->current_step;
@@ -191,7 +191,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function commentsPurpose(): Attribute 
+    public function commentsPurpose(): Attribute
     {
         $status = $this->status;
         $currentStep = $this->current_step;
@@ -230,6 +230,7 @@ class GpoaActivity extends Model
             return;
         }
         $event = new Event();
+        $event->timezone = config('timezone') ?? 'UTC';
         $event->venue = $this->venue;
         $event->automatic_attendance = false;
         $event->accept_evaluation = false;
@@ -243,7 +244,7 @@ class GpoaActivity extends Model
         $date->save();
     }
 
-    
+
     #[Scope]
     protected function forAdviser(Builder $query): void
     {

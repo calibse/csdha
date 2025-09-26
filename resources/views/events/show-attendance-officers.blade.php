@@ -1,6 +1,6 @@
 <x-layout.user title="Event Attendance" :$backRoute class="events" >
     <x-slot:toolbar>
-        <a 
+        <a
             @can ('addAttendee', $event)
             href="{{ $addRoute }}"
             @endcan
@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($date->officerAttendees()->orderBy('pivot_created_at', 'desc')->get() as $attendee)
+                    @foreach ($date->officerAttendees()->orderByPivot('created_at', 'desc')->get() as $attendee)
                     <tr>
                         <td>{{ $attendee->full_name }}</td>
                         <td>{{ $attendee->position->name }}</td>

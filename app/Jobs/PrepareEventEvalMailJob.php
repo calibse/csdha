@@ -26,36 +26,47 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
 
     public function handle(): void
     {
+        $eventDate = $this->eventDate;
+        if (!$eventDate) return;
         $event = $eventDate->event;
         if (!$event->accept_evaluation) return;
         $batchName = "event_eval_mail_{$event->id}_{$eventDate->date}";
         $batch = self::findBatch($batchName);
         $batch?->cancel();
-        $date = Carbon::createFromFormat('Y-m-d H:i:s',
-            "$eventDate->date $eventDate->end_time", $event->timezone);
+        $date = Carbon::parse(
+            "{$eventDate->date->format('Y-m-d')} {$eventDate->end_time}",
+            $event->timezone);
         $delayHours = 24;
         $delayDate = Carbon::now($event->timezone)->addHours($delayHours);
-        $eventPassed = now($event->timezone)->diffHours($date) >=
+        $eventPassed = $date->diffInHours(now($event->timezone), false) >=
             $delayHours;
         $jobs = [];
-        foreach ($eventDate->attendees()->where('eval_mail_sent', 0)->get()
-                as $attendee) {
+        // $eventPassed = false;
+        foreach ($eventDate->attendees()->wherePivot('eval_mail_sent', 0)
+                ->get() as $attendee) {
             $token = self::createToken();
             $url = route('events.evaluations.consent.edit', [
                 'event' => $event->public_id,
                 'token' => $token
             ]);
-            $jobs[] = (new SendEventEvalMailJob($attendee, $event, $url))
+            $jobs[] = (new SendEventEvalMailJob($attendee, $eventDate, $url))
                 ->delay($eventPassed ? 0 : $delayDate);
         }
-        Bus::batch($jobs)->name($batchName)->dispatch();
+        if ($jobs) {
+            Bus::batch($jobs)->name($batchName)->dispatch();
+        }
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->eventDate->id;
     }
 
     private static function createToken(): string
     {
         $token = Str::random(64);
         DB::table('event_evaluation_tokens')->insert([
-            'token' => Hash::make($token),
+            'token' => hash('sha256', $token),
             'created_at' => now(),
         ]);
         return $token;

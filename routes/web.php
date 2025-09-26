@@ -357,7 +357,9 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
                     Route::prefix('date-{date}')->group(function () {
 
+                        /*
                         Route::get('/edit.html', 'editDate')->name('edit');
+                        */
 
                         Route::put('/update.php', 'updateDate')
                             ->name('update');

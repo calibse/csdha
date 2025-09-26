@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxText;
 use App\Rules\Exists;
 use App\Models\StudentYear;
+use Illuminate\Validation\Rule;
+use DateTimeZone;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -18,6 +20,7 @@ class UpdateEventRequest extends FormRequest
 
     public function rules(): array
     {
+        $timezones = DateTimeZone::listIdentifiers();
         return [
             'record_attendance' => ['array'],
             'record_attendance.*' => [new Exists(StudentYear::query(), 'id',
@@ -26,6 +29,7 @@ class UpdateEventRequest extends FormRequest
             'accept_evaluation' => ['boolean'],
             'tag' => ['max:15'],
             'venue' => ['max:255'],
+            'timezone' => ['required', Rule::in($timezones)],
             'description' => [new MaxText],
             'narrative' => [new MaxText]
         ];
