@@ -1,62 +1,62 @@
 <x-layout.user route="gspoas.index" class="gspoas" title="General Strategic Plan of Activities">
     <nav class="main-actions of-item">
     @if ($actions['edit'])
-        <a 
+        <a
         @can ('update', $gspoa)
             href="{{ route('gspoas.edit', ['gspoa' => $gspoa->id]) }}
         @endcan
         ">
-            <span class="icon"><x-phosphor-pencil-simple/></span> 
+            <span class="icon"><x-phosphor-pencil-simple/></span>
             <span class="text">Edit </span>
         </a>
     @endif
     @if ($actions['edit'])
-        <a 
+        <a
         @can ('update', $gspoa)
             href="{{ route('gspoas.events.index', ['gspoa' => $gspoa->id]) }}
         @endcan
         ">
-            <span class="icon"><x-phosphor-pencil-simple/></span> 
+            <span class="icon"><x-phosphor-pencil-simple/></span>
             <span class="text">Edit Events</span>
         </a>
     @endif
     @if ($actions['return'])
-        <a 
+        <a
         @can ('return', $gspoa)
             href="{{ route('gspoas.prepareForReturn', ['gspoa' => $gspoa->id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-arrow-fat-line-left/></span> 
+            <span class="icon"><x-phosphor-arrow-fat-line-left/></span>
             <span class="text">Return</span>
         </a>
     @endif
     @if ($actions['reject'])
-        <a 
+        <a
         @can ('reject', $gspoa)
             href="{{ route('gspoas.prepareForReject', ['gspoa' => $gspoa->id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-x-circle/></span> 
+            <span class="icon"><x-phosphor-x-circle/></span>
             <span class="text">Reject</span>
         </a>
     @endif
     @if ($actions['submit'])
-        <a 
+        <a
         @can ('submit', $gspoa)
             href="{{ route('gspoas.prepareForSubmit', ['gspoa' => $gspoa->id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-arrow-fat-line-right/></span> 
+            <span class="icon"><x-phosphor-arrow-fat-line-right/></span>
             <span class="text">Submit</span>
         </a>
     @endif
     @if ($actions['approve'])
-        <a 
+        <a
         @can ('approve', $gspoa)
             href="{{ route('gspoas.prepareForApprove', ['gspoa' => $gspoa->id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-check-circle/></span> 
+            <span class="icon"><x-phosphor-check-circle/></span>
             <span class="text">Approve</span>
         </a>
     @endif
@@ -67,7 +67,7 @@
             <header>
                 <p><strong>{{ $gspoa->comment_purpose }}</strong></p>
             </header>
-            <pre>{{ $gspoa->comments }}</pre> 
+            <pre>{{ $gspoa->comments }}</pre>
         @endif
             <p>Status: {{ $gspoa->current_status }}</p>
         </aside>
@@ -84,7 +84,7 @@
 
         <h2>Events</h2>
         <div class="table-block">
-            <table>
+            <table class="table-2">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -110,7 +110,7 @@
         <h4>{{ $event->title }}</h4>
         <p>Participants: {{ $event->participants }}</p>
         <p>Venue: {{ $event->venue }}</p>
-        <p>Objective:</p> 
+        <p>Objective:</p>
         <pre>{{ $event->objective }}</pre>
     @endforeach
     --}}

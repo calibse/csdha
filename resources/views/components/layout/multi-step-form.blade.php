@@ -19,7 +19,7 @@
             <p>{{ $eventName }}</p>
             <h1>{{ $formTitle }}</h1>
         </hgroup>
-    </header> 
+    </header>
     <main {{ $attributes }}>
         @if ($title)
         <h2>{{ $title }}</h2>
@@ -27,6 +27,9 @@
         {{ $slot }}
         @if ($previousStepRoute)
         <form method="get" action="{{ $previousStepRoute }}">
+        @if (isset($prevInput) && $prevInput->hasActualContent())
+            {{ $prevInput }}
+        @endif
             <p class="form-submit">
                 <button>Back</button>
                 <button form="current-form">{{ $lastStep ? 'Submit' : 'Next' }}</button>

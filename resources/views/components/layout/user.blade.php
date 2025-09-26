@@ -131,7 +131,6 @@
 						</a>
 					</li>
 					@endcan
-					--}}
 					@can ('viewAny', 'App\Models\Student')
 					<li>
 						<a href="{{ route('students.index') }}">
@@ -140,6 +139,7 @@
 						</a>
 					</li>
 					@endcan
+					--}}
 					@can ('viewAny', 'App\Models\Position')
 					<li>
 						<a href="{{ route('positions.index') }}">

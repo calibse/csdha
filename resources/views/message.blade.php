@@ -1,5 +1,5 @@
 <x-layout.text-only>
-    <main class="message">
+    <div class="message">
         <p>{{ $message }}</p>
-    </main>
+    </div>
 </x-layout.text-only>

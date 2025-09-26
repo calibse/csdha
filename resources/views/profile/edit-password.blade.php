@@ -1,4 +1,4 @@
-<x-layout.user class="profile form" :$backRoute title="Edit Password">
+<x-layout.user class="profile form" :$backRoute title="Change Password">
     <article class="article">
         <x-alert/>
         <form method="post" action="{{ $formAction }}">

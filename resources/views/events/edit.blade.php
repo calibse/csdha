@@ -15,12 +15,12 @@
 	                </option>
                 	<optgroup label="-- Students only --">
 	                    @foreach($selectedParticipants as $selectedParticipant)
-	                    <option value="{{ $selectedParticipant->id }}" selected> 
+	                    <option value="{{ $selectedParticipant->id }}" selected>
 	                        {{ $selectedParticipant->label }}
 		                    </option>
 	                    @endforeach
 	                    @foreach($participants as $participant)
-	                    <option value="{{ $participant->id }}"> 
+	                    <option value="{{ $participant->id }}">
 	                        {{ $participant->label }}
 	                    </option>
 	                    @endforeach
@@ -69,7 +69,7 @@
 			</p>
 			<p>
 				<label>Attendees Evaluation</label>
-				<a href="{{ $responsesRoute }}">Edit here</a>
+				<a href="{{ $commentsRoute }}">Edit here</a>
 			</p>
 			<p class="form-submit">
 			    <button type="submit">Update</button>

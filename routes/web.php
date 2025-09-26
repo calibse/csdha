@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
@@ -39,6 +40,7 @@ use App\Http\Middleware\CheckGpoaActivity;
 use App\Http\Middleware\CheckSignupInviteCode;
 use App\Http\Middleware\CheckEventRegisStep;
 use App\Http\Middleware\CheckEventEvalStep;
+use App\Http\Middleware\CheckEventEvalForm;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
@@ -65,7 +67,7 @@ Route::domain(config('custom.admin_domain'))->middleware('auth')
     Route::get('/home.html', [HomeController::class , 'adminIndex'])
         ->name('admin.home');
 
-    Route::get('/logout', [LoginController::class, 'logout'])
+    Route::get('/sign-out.php', [LoginController::class, 'logout'])
         ->name('admin.logout');
 
     Route::prefix('accounts')->name('accounts.')->group(function () {
@@ -155,7 +157,7 @@ Route::domain(config('custom.user_domain'))->group(function () {
     })->where('slash', '\/');
 
     Route::prefix('event-eval-form-{event}')->name('events.evaluations.')
-        ->middleware(['can:evaluate,event'])
+        ->middleware(['can:evaluate,event', CheckEventEvalForm::class])
         ->controller(EventEvaluationController::class)->group(function () {
 
         Route::get('/index.html', 'editConsentStep')->name('consent.edit');
@@ -163,12 +165,6 @@ Route::domain(config('custom.user_domain'))->group(function () {
         Route::post('/consent.php', 'storeConsentStep')->name('consent.store');
 
         Route::middleware([CheckEventEvalStep::class])->group(function () {
-
-            Route::get('/identity.html', 'editIdentityStep')
-                ->name('identity.edit');
-
-            Route::post('/identity.php', 'storeIdentityStep')
-                ->name('identity.store');
 
             Route::get('/evaluation.html', 'editEvaluationStep')
                 ->name('evaluation.edit');
@@ -187,15 +183,17 @@ Route::domain(config('custom.user_domain'))->group(function () {
         });
     });
 
-    Route::get('/event-eval-form-{event}{slash?}', function ($id) {
+    Route::get('/event-eval-form-{event}{slash?}', function (Request $request,
+            $id) {
         return redirect()->route('events.evaluations.consent.edit', [
-            'event' => $id
+            'event' => $id,
+            'token' => $request->token
         ]);
     })->where('slash', '\/');
 
     Route::name('user.')->group(function () {
 
-        Route::get('/logout', [LoginController::class, 'logout'])
+        Route::get('/sign-out.php', [LoginController::class, 'logout'])
             ->name('logout');
 
         Route::get('/', [LoginController::class, 'login'])->name('login');
@@ -389,6 +387,12 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
                 Route::get('/accom-report.pdf', 'streamAccomReport')
                     ->name('accom-report.stream');
+
+                Route::get('/evaluation.html', 'editComments')
+                    ->name('evaluations.comments.edit');
+
+                Route::put('/evaluation.php', 'updateComments')
+                    ->name('evaluations.comments.update');
             });
 
             Route::controller(EventEvalFormController::class)
@@ -400,11 +404,6 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
                 Route::put('/eval-form.php', 'updateQuestions')
                     ->name('update-questions');
 
-                Route::get('/evaluation.html', 'editResponses')
-                    ->name('edit-responses');
-
-                Route::put('/evaluation.php', 'updateResponses')
-                    ->name('update-responses');
             });
 
             Route::controller(EventRegisFormController::class)
@@ -613,7 +612,7 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
     Route::post('/attendance/store', [AttendanceController::class, 'store'])
         ->name('attendance.store');
 
-    Route::get('/attendance', [AttendanceController::class, 'create'])
+    Route::get('/attendance.html', [AttendanceController::class, 'create'])
         ->name('attendance.create');
 
     Route::resource('students', StudentController::class);

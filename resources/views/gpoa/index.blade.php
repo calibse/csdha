@@ -3,32 +3,32 @@
 	@if ($gpoa)
 		@can ('create', 'App\Models\GpoaActivity')
 		<a href="{{ route('gpoa.activities.create') }}">
-			<span class="icon"><x-phosphor-plus-circle/></span> 
+			<span class="icon"><x-phosphor-plus-circle/></span>
 			<span class="text">Add Activity</span>
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.showGenPdf') }}">
-				<span class="icon"><x-phosphor-file-plus/></span> 
+				<span class="icon"><x-phosphor-file-plus/></span>
 				<span class="text">Gen. PDF</span>
 		</a>
 		@endcan
 		@can ('update', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.edit') }}">
-				<span class="icon"><x-phosphor-pencil-simple/></span> 
+				<span class="icon"><x-phosphor-pencil-simple/></span>
 				<span class="text">Edit</span>
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.confirmClose') }}">
-				<span class="icon"><x-phosphor-archive/></span> 
+				<span class="icon"><x-phosphor-archive/></span>
 				<span class="text">Close</span>
 		</a>
 		@endcan
 	@else
 		@can ('create', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.create') }}">
-			<span class="icon"><x-phosphor-plus-circle/></span> 
+			<span class="icon"><x-phosphor-plus-circle/></span>
 			<span class="text">Create</span>
 		</a>
 		@endcan
@@ -45,6 +45,31 @@
 	@if (!$gpoa)
 		<p>There is no active GPOA right now.</p>
 	@elseif ($gpoa && $activities?->isNotEmpty())
+        <table class="table-2">
+            <colgroup>
+                <col style="width: 30%">
+                <col style="width: 70%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($activities as $activity)
+                <tr>
+                    <td class="activity-name">
+						<a href="{{ route('gpoa.activities.show', ['activity' => $activity->public_id]) }}">
+                            {{ $activity->name }}
+                        </a>
+                    </td>
+                    <td>{{ $activity->current_status }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        {{--
 		<ul class="item-list-icon">
 		@foreach ($activities as $activity)
 			<li class="item">
@@ -62,6 +87,7 @@
 			</li>
 		@endforeach
 		</ul>
+        --}}
 		{{ $activities->links('paginator.simple') }}
 	@else
 		@switch (auth()->user()->position_name)

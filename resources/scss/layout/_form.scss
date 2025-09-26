@@ -7,8 +7,8 @@ form {
 	}
 
 	input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="time"]),
-	select, 
-	textarea, 
+	select,
+	textarea,
 	fieldset {
 		width: 100%;
 		max-width: var(--text-width);
@@ -27,13 +27,30 @@ form {
 		}
 	}
 
-	input[type="checkbox"], input[type="radio"] {
-		margin-right: .5rem;
-	}
+    .checkbox {
+        white-space: nowrap;
+
+        input[type="checkbox"], input[type="radio"] {
+            display: inline-block;
+            margin-right: .5rem;
+            vertical-align: top;
+            margin-top: .2rem;
+
+            + label {
+                display: inline-block;
+                margin-bottom: unset;
+                max-width: 90%;
+                white-space: wrap;
+            }
+        }
+
+    }
 
 	input[type="checkbox"], input[type="radio"] {
+		margin-right: .5rem;
+
 		+ label {
-			display: inline;
+            display: inline;
 			margin-bottom: unset;
 		}
 	}
@@ -95,7 +112,7 @@ form {
 .submit-buttons, .submit-button {
 	max-width: var(--text-width);
 	text-align: right;
-	
+
 	button {
 		margin-right: .5rem;
 
@@ -103,7 +120,7 @@ form {
 			margin-right: 0;
 		}
 	}
-	
+
 	form {
 		display: inline;
 		margin-right: .5rem;

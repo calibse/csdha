@@ -6,4 +6,7 @@
         @csrf
         <x-consent :value="$inputs['consent'] ?? null" />
     </form>
+    <x-slot:prevInput>
+        <input type="hidden" name="token" value="{{ $token }}">
+    </x-slot>
 </x-layout>

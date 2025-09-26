@@ -15,7 +15,7 @@
 	background-color: var(--color-4);
 	padding-bottom: 1rem;
 	color: #ffffff;
-	border-radius: 0 1rem 1rem 0; 
+	border-radius: 0 1rem 1rem 0;
 	overflow: auto;
 	position: fixed;
 	top: 0;
@@ -130,7 +130,7 @@
 		padding: 0 1rem;
 
 		ul {
-			list-style-type: none;
+			list-style: none;
 			padding: 0;
 
 			li {
@@ -242,8 +242,8 @@
 		max-width: var(--page-width);
 		margin: 0 auto;
 		white-space: nowrap;
-		padding-left: var(--page-padding);  
-		padding-right: var(--page-padding);  
+		padding-left: var(--page-padding);
+		padding-right: var(--page-padding);
 	}
 
 	.title {
@@ -368,7 +368,7 @@
 	}
 
 	a:not([href]) {
-		color: var(--base-color-3);	
+		color: var(--base-color-3);
 
 		&:hover .text, &:focus .text {
 			text-decoration: none;
@@ -451,12 +451,12 @@
 
 		.content-block {
 			float: right;
-			width: var(--sidebar-width);	
-			max-width: var(--sidebar-width);	
+			width: var(--sidebar-width);
+			max-width: var(--sidebar-width);
 			height: 100vh;
 			overflow: auto;
 		}
-		
+
 		.close-menu-button {
 			visibility: hidden;
 		}
@@ -466,7 +466,7 @@
 		.main-actions {
 			~ .content-block {
 				height: calc(100vh - var(--header-height) - 2.85rem);
-			}	
+			}
 		}
 
 		.content-block {
@@ -483,7 +483,7 @@
 			}
 		}
 	}
-	
+
 	.main-actions {
 		&.toolbar {
 			border-radius: 1rem;

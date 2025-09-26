@@ -2,7 +2,7 @@
 
 import "./bootstrap";
 import {Html5QrcodeScanner} from "html5-qrcode";
-import quagga from "@ericblade/quagga2"; 
+import quagga from "@ericblade/quagga2";
 import QrScanner from "qr-scanner";
 
 import.meta.glob([
@@ -30,7 +30,7 @@ function showAttachmentPreview() {
     if (!mainPage) return;
     const fileInput = mainPage.querySelector("#images-input");
     createAttachmentPreview(fileInput);
-    fileInput.addEventListener("change", () => 
+    fileInput.addEventListener("change", () =>
         createAttachmentPreview(fileInput));
 }
 
@@ -71,7 +71,7 @@ function createAttachmentPreview(fileInput) {
             viewEl.remove();
             removeFileFromInput(file, fileInput);
         });
-    } 
+    }
 }
 
 function removeFileFromInput(fileToRemove, fileInput) {
@@ -94,7 +94,7 @@ function setTimezone() {
 function setCookie(name, value) {
     const now = new Date();
     now.setFullYear(now.getFullYear() + 1);
-    const expires = now.toUTCString(); 
+    const expires = now.toUTCString();
     document.cookie = `${name}=${value}; expires=${expires}; sameSite=Lax; path=/`;
 }
 
@@ -199,7 +199,7 @@ function initQuagga() {
         const videoStream = quagga.canvas.dom.overlay;
         const canvas = videoStream.getBoundingClientRect();
         const barcodeElement = document.querySelector("#barcode");
-        barcodeElement.style.width = canvas.width + "px";   
+        barcodeElement.style.width = canvas.width + "px";
     });
 
     quagga.onProcessed(function (result) {
@@ -213,16 +213,16 @@ function initQuagga() {
                 result.boxes.filter(function (box) {
                     return box !== result.box;
                 }).forEach(function (box) {
-                    quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx, 
+                    quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx,
                         {color: "green", lineWidth: 2});
                 });
             }
             if (result.box) {
-                quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, 
+                quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1},
                     drawingCtx, {color: "#00F", lineWidth: 2});
             }
             if (result.codeResult && result.codeResult.code) {
-                quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, 
+                quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'},
                     drawingCtx, {color: 'red', lineWidth: 3});
             }
         }
@@ -255,7 +255,7 @@ function initQuagga() {
             indicator.classList.add("success");
             timeout.addEventListener("animationend", function callback() {
                 indicator.classList.remove("success");
-                timeout.removeEventListener("animationend", callback);            
+                timeout.removeEventListener("animationend", callback);
                 showIdleStatus();
             });
         } else if (status === 404) {
@@ -272,7 +272,7 @@ function initQuagga() {
             indicator.classList.add("failure");
             timeout.addEventListener("animationend", function callback() {
                 indicator.classList.remove("failure");
-                timeout.removeEventListener("animationend", callback);            
+                timeout.removeEventListener("animationend", callback);
                 showIdleStatus();
             });
         }
@@ -344,7 +344,7 @@ async function storeAttendance(token) {
         return apiResponse.status;
     }
     const eventField = document.querySelector("#event");
-    try { 
+    try {
         CURRENT_REQUEST = axios.post(`/api/attendance/${eventField.value}`, {
             token: token
         });
@@ -385,7 +385,7 @@ function removeUrlLastSegment(url) {
     let u = new URL(url);
     u.pathname = u.pathname
         .replace(/\/[^\/?#]+\/?$/, '')
-        .replace(/\/+$/, '');  
+        .replace(/\/+$/, '');
     return u.toString();
 }
 
@@ -444,7 +444,7 @@ function showQrScannerStatus(type) {
     if (["success", "failure"].includes(type)) {
         timeout.addEventListener("animationend", function callback() {
             indicator.classList.remove(statusVal[type].class);
-            timeout.removeEventListener("animationend", callback);            
+            timeout.removeEventListener("animationend", callback);
             void indicator.offsetWidth;
             indicator.classList.value = `indicator ${statusVal.idle.class}`;
             statusText.textContent = statusVal.idle.text;
@@ -483,21 +483,25 @@ function stopQrScanner() {
 }
 
 function activateAttendanceRecorder() {
-    const mainPage = document.querySelector(".main-content.attendance .article");
+    const mainPage = document.querySelector(".main-content.attendance "
+        + ".article");
     if (!mainPage) return;
     if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
         const el = document.createElement("p");
-        el.textContent = "It looks like camera is not supported in this web browser.";
+        el.textContent = "It looks like camera is not supported in this web "
+            + "browser.";
         mainPage.append(el);
         return;
     }
     const mainElTemp = document.querySelector('.attendance #scanner-feature');
-    if (!mainElTemp) { 
+    if (!mainElTemp) {
         return;
     }
     const mainEl = mainElTemp?.content.cloneNode(1);
     const idScanner = mainEl.getElementById("id-scanner");
-    idScanner.hidden = true;
+    if (idScanner) {
+        idScanner.hidden = true;
+    }
     mainElTemp.before(mainEl);
     const selectEventEl = mainPage.querySelector("select#event");
     if (selectEventEl) {

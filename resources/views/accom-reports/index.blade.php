@@ -1,13 +1,38 @@
 <x-layout.user index title="Accomplishment Reports" class="gpoa index">
     <x-slot:toolbar>
         <a href="{{ $genRoute }}">
-            <span class="icon"><x-phosphor-file-plus/></span> 
+            <span class="icon"><x-phosphor-file-plus/></span>
             <span class="text">Gen. PDF</span>
         </a>
     </x-slot:toolbar>
     <article class="article">
         <x-alert/>
         @if ($accomReports->isNotEmpty())
+        <table class="table-2">
+            <colgroup>
+                <col style="width: 30%">
+                <col style="width: 70%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Event name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($accomReports as $accomReport)
+                <tr>
+                    <td class="activity-name">
+                        <a href="{{ route('accom-reports.show', ['event' => $accomReport->event->public_id]) }}">
+                            {{ $accomReport->event->gpoaActivity->name }}
+                        </a>
+                    </td>
+                    <td>{{ ucwords($accomReport->status) }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        {{--
         <ul class="item-list-icon">
         @foreach ($accomReports as $accomReport)
             <li class="item">
@@ -25,6 +50,7 @@
             </li>
         @endforeach
         </ul>
+        --}}
         {{ $accomReports->links('paginator.simple') }}
         @else
             @switch (auth()->user()->position_name)

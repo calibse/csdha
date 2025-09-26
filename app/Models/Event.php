@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Traits\HasPublicId;
 
 class Event extends Model
 {
     use HasPublicId;
-    
+
     public function evaluations(): HasMany
     {
         return $this->hasMany(EventEvaluation::class);
@@ -32,7 +33,7 @@ class Event extends Model
     {
         return $this->hasOne(AccomReport::class);
     }
-    
+
     public function regisForm(): HasOne
     {
         return $this->hasOne(EventRegisForm::class);
@@ -73,7 +74,7 @@ class Event extends Model
 
     public function attendance(): HasMany
     {
-        return $this->hasMany(EventAttendance::class, 'event_id'); 
+        return $this->hasMany(EventAttendance::class, 'event_id');
     }
 
     public function studentYears(): BelongsToMany
@@ -119,7 +120,7 @@ class Event extends Model
         if ($this->editors->contains($user)
             || $this->creator->is($user)
         ) return true;
-            
+
         return false;
     }
 
@@ -157,12 +158,11 @@ class Event extends Model
             'BSIT' => ['1', '2', '3', '4'],
             'DIT' => ['1', '2']
         ];
-        $attendance = collect([]);
+        $attendance = collect();
         $attendanceTotal = null;
         $attendanceView = null;
         switch ($this->participant_type) {
         case 'students':
-            $attendance = collect([]);
             $attendanceQuery = EventStudent::whereHas(
                 'eventDate.event', function ($query) {
                     $query->whereKey($this->id);
@@ -210,7 +210,34 @@ class Event extends Model
             'attendanceTotal' => $attendanceTotal,
             'attendanceView' => $attendanceView,
             'activity' => $this->gpoaActivity,
+            'comments' => $this->comments(),
         ];
+    }
+
+    public function comments()
+    {
+        $subQuery = $this->evaluations()
+                ->select('topics_covered as comment')
+                ->where('feature_topics_covered', 1);
+        $commentQueries = [
+            $this->evaluations()
+                ->select('suggestions_for_improvement as comment')
+                ->where('feature_suggestions_for_improvement', 1),
+            $this->evaluations()
+                ->select('future_topics as comment')
+                ->where('feature_future_topics', 1),
+            $this->evaluations()
+                ->select('overall_experience as comment')
+                ->where('feature_overall_experience', 1),
+            $this->evaluations()
+                ->select('additional_comments as comment')
+                ->where('feature_additional_comments', 1)
+        ];
+        foreach ($commentQueries as $commentQuery) {
+            $subQuery->unionAll($commentQuery);
+        }
+        return DB::query()->fromSub($subQuery, 'comment')
+            ->orderByRaw('length(comment) desc')->pluck('comment');
     }
 
     public function compactDates()
@@ -220,16 +247,16 @@ class Event extends Model
         $newDates = [];
         $dateCount = count($dates);
         for ($i = 0; $i < $dateCount; ++$i) {
-            $fullDate = $dates[$i]->date_fmt . ' | ' . 
+            $fullDate = $dates[$i]->date_fmt . ' | ' .
                 $dates[$i]->start_time_fmt . ' - ' . $dates[$i]->end_time_fmt;
             while ($i + 1 < $dateCount && $dates[$i]->date->toDateString()
                     === $dates[$i + 1]->date->toDateString()) {
                 ++$i;
                 if ($i + 1 < $dateCount) {
-                    $fullDate .= ', ' . $dates[$i]->start_time_fmt . ' - ' . 
+                    $fullDate .= ', ' . $dates[$i]->start_time_fmt . ' - ' .
                         $dates[$i]->end_time_fmt;
                 } else {
-                    $fullDate .= ' and ' . $dates[$i]->start_time_fmt . ' - ' . 
+                    $fullDate .= ' and ' . $dates[$i]->start_time_fmt . ' - ' .
                         $dates[$i]->end_time_fmt;
                     break;
                 }
@@ -239,7 +266,7 @@ class Event extends Model
         return $newDates;
     }
 
-    public function isUpcoming(): Attribute 
+    public function isUpcoming(): Attribute
     {
         date_default_timezone_set(config('timezone'));
         $isUpcoming = $this->dates()->where(function ($query) {
@@ -251,7 +278,7 @@ class Event extends Model
         );
     }
 
-    public function isOngoing(): Attribute 
+    public function isOngoing(): Attribute
     {
         date_default_timezone_set(config('timezone'));
         $isOngoing = $this->dates()->where(function ($query) {
@@ -272,7 +299,7 @@ class Event extends Model
         $attendees = User::withAggregate('position', 'position_order')
             ->whereHas('eventDates.event', function ($query) {
                 $query->whereKey($this->id);
-            })->orderBy('position_position_order', 'asc')->get(); 
+            })->orderBy('position_position_order', 'asc')->get();
         return $attendees;
     }
 
@@ -280,20 +307,20 @@ class Event extends Model
     {
         $attendees = EventStudent::whereHas('eventDate.event', function ($query) {
             $query->whereKey($this->id);
-        })->get(); 
+        })->get();
         return $attendees;
     }
 
     #[Scope]
-    protected function approved(Builder $query, $startDate = null, 
+    protected function approved(Builder $query, $startDate = null,
             $endDate = null): void
     {
         $query->withAggregate('dates', 'date')
             ->whereRelation('accomReport', 'status', 'approved');
         if ($startDate && $endDate) {
-            $query->whereHas('dates', function ($query) 
+            $query->whereHas('dates', function ($query)
                     use ($startDate, $endDate) {
-                $query->whereBetween('date', [$startDate, $endDate]); 
+                $query->whereBetween('date', [$startDate, $endDate]);
             });
         }
         $query->orderBy('dates_date', 'asc');

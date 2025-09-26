@@ -18,11 +18,17 @@ use App\Models\EventDate;
 use App\Models\EventStudent;
 use App\Models\StudentYear;
 use App\Models\Course;
+use App\Models\EventEvaluation;
 use Intervention\Image\Laravel\Facades\Image as IImage;
 use App\Http\Requests\SaveEventDateRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Requests\SaveAttendeeRequest;
+use App\Http\Requests\UpdateCommentsRequest;
 use App\Services\Format;
+use App\Mail\EventEvaluation as EventEvaluationMail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller implements HasMiddleware
 {
@@ -180,7 +186,7 @@ class EventController extends Controller implements HasMiddleware
             'attachmentRoute' => route('events.attachments.index', [
                 'event' => $event->public_id
             ]),
-            'responsesRoute' => route('events.eval-form.edit-responses', [
+            'commentsRoute' => route('events.evaluations.comments.edit', [
                 'event' => $event->public_id
             ]),
         ]);
@@ -213,9 +219,37 @@ class EventController extends Controller implements HasMiddleware
             $event->accept_evaluation = false;
         }
         $event->save();
+        if ($event->accept_evaluation) {
+            // self::sendEvaluationForm($event);
+        }
         return redirect()->route('events.show', [
             'event' => $event->public_id
         ]);
+    }
+
+    private static function sendEvaluationForm(Event $event): void
+    {
+        foreach ($event->dates as $date) {
+            foreach ($date->attendees as $attendee) {
+                $token = self::createToken();
+                $url = route('events.evaluations.consent.edit', [
+                    'event' => $event->public_id,
+                    'token' => $token
+                ]);
+                Mail::to($attendee->email)->send(new EventEvaluationMail(
+                    $attendee, $event->gpoaActivity->name, $url));
+            }
+        }
+    }
+
+    private static function createToken(): string
+    {
+        $token = Str::random(64);
+        DB::table('event_evaluation_tokens')->insert([
+            'token' => Hash::make($token),
+            'created_at' => now(),
+        ]);
+        return $token;
     }
 
     public function showCoverPhoto(Event $event)
@@ -427,4 +461,191 @@ class EventController extends Controller implements HasMiddleware
         ]);
     }
 
+    public function editComments(Request $request, Event $event)
+    {
+        $type = $request->type;
+        $selectedComments = collect();
+        $unselectedComments = collect();
+        $commentType = '';
+        $typeRoutes = [
+            'Topics Covered' => route('events.evaluations.comments.edit', [
+                'event' => $event->public_id,
+                'type' => 'topics covered'
+            ]),
+            'Suggestions for Improvement' => route('events.evaluations.'
+                    . 'comments.edit', [
+                'event' => $event->public_id,
+                'type' => 'suggestions for improvement'
+            ]),
+            'Future Topics' => route('events.evaluations.comments.edit', [
+                'event' => $event->public_id,
+                'type' => 'future topics'
+            ]),
+            'Overall Experience' => route('events.evaluations.comments.edit', [
+                'event' => $event->public_id,
+                'type' => 'overall experience'
+            ]),
+            'Additional Comments' => route('events.evaluations.comments.edit', [
+                'event' => $event->public_id,
+                'type' => 'additional comments'
+            ]),
+        ];
+        switch ($type) {
+        case 'topics covered':
+            $comments = $event->evaluations()->select('id',
+                'topics_covered as comment',
+                'feature_topics_covered as feature')
+                ->whereNotNull('topics_covered')
+                ->orderByRaw('length(comment) desc')
+                ->get();
+            $commentOpt = self::getCommentOpt($comments);
+            $selectedComments = $commentOpt['selected'];
+            $unselectedComments = $commentOpt['unselected'];
+            $commentType = 'Topics Covered';
+            break;
+        case 'suggestions for improvement':
+            $comments = $event->evaluations()->select('id',
+                'suggestions_for_improvement as comment',
+                'feature_suggestions_for_improvement as feature')
+                ->whereNotNull('suggestions_for_improvement')
+                ->orderByRaw('length(comment) desc')
+                ->get();
+            $commentOpt = self::getCommentOpt($comments);
+            $selectedComments = $commentOpt['selected'];
+            $unselectedComments = $commentOpt['unselected'];
+            $commentType = 'Suggestions for Improvement';
+            break;
+        case 'future topics':
+            $comments = $event->evaluations()->select('id',
+                'future_topics as comment',
+                'feature_future_topics as feature')
+                ->whereNotNull('future_topics')
+                ->orderByRaw('length(comment) desc')
+                ->get();
+            $commentOpt = self::getCommentOpt($comments);
+            $selectedComments = $commentOpt['selected'];
+            $unselectedComments = $commentOpt['unselected'];
+            $commentType = 'Future Topics';
+            break;
+        case 'overall experience':
+            $comments = $event->evaluations()->select('id',
+                'overall_experience as comment',
+                'feature_overall_experience as feature')
+                ->whereNotNull('overall_experience')
+                ->orderByRaw('length(comment) desc')
+                ->get();
+            $commentOpt = self::getCommentOpt($comments);
+            $selectedComments = $commentOpt['selected'];
+            $unselectedComments = $commentOpt['unselected'];
+            $commentType = 'Overall Experience';
+            break;
+        case 'additional comments':
+            $comments = $event->evaluations()->select('id',
+                'additional_comments as comment',
+                'feature_additional_comments as feature')
+                ->whereNotNull('additional_comments')
+                ->orderByRaw('length(comment) desc')
+                ->get();
+            $commentOpt = self::getCommentOpt($comments);
+            $selectedComments = $commentOpt['selected'];
+            $unselectedComments = $commentOpt['unselected'];
+            $commentType = 'Additional Comments';
+            break;
+        }
+        return view('events.edit-comments', [
+            'selectedComments' => $selectedComments,
+            'unselectedComments' => $unselectedComments,
+            'typeRoutes' => $typeRoutes,
+            'backRoute' => route('events.edit', [
+                'event' => $event->public_id
+            ]),
+            'commentType' => $commentType,
+            'formAction' => route('events.evaluations.comments.update', [
+                'event' => $event->public_id,
+                'type' => $type
+            ]),
+        ]);
+    }
+
+    public function updateComments(UpdateCommentsRequest $request, Event $event)
+    {
+        $comments = $request->comments;
+        $type = $request->type;
+        switch ($type) {
+        case 'topics covered':
+            $evals = $event->evaluations()->select('id',
+                'topics_covered as comment',
+                'feature_topics_covered as feature')
+                ->whereNotNull('topics_covered')->get();
+            foreach ($evals as $eval) {
+                $eval->feature_topics_covered = $comments[$eval->id] ?? false;
+                $eval->save();
+            }
+            break;
+        case 'suggestions for improvement':
+            $evals = $event->evaluations()->select('id',
+                'suggestions_for_improvement as comment',
+                'feature_suggestions_for_improvement as feature')
+                ->whereNotNull('suggestions_for_improvement')
+                ->get();
+            foreach ($evals as $eval) {
+                $eval->feature_suggestions_for_improvement =
+                    $comments[$eval->id] ?? false;
+                $eval->save();
+            }
+            break;
+        case 'future topics':
+            $evals = $event->evaluations()->select('id',
+                'future_topics as comment',
+                'feature_future_topics as feature')
+                ->whereNotNull('future_topics')
+                ->get();
+            foreach ($evals as $eval) {
+                $eval->feature_future_topics = $comments[$eval->id] ?? false;
+                $eval->save();
+            }
+            break;
+        case 'overall experience':
+            $evals = $event->evaluations()->select('id',
+                'overall_experience as comment',
+                'feature_overall_experience as feature')
+                ->whereNotNull('overall_experience')
+                ->get();
+            foreach ($evals as $eval) {
+                $eval->feature_overall_experience = $comments[$eval->id]
+                    ?? false;
+                $eval->save();
+            }
+            break;
+        case 'additional comments':
+            $evals = $event->evaluations()->select('id',
+                'additional_comments as comment',
+                'feature_additional_comments as feature')
+                ->whereNotNull('additional_comments')
+                ->get();
+            foreach ($evals as $eval) {
+                $eval->feature_additional_comments = $comments[$eval->id]
+                    ?? false;
+                $eval->save();
+            }
+            break;
+        }
+        return redirect()->back()->with('status',
+            'Evaluation comments updated.');
+    }
+
+    private static function getCommentOpt($comments)
+    {
+        $options = collect();
+        $options['selected'] = collect();
+        $options['unselected'] = collect();
+        foreach ($comments as $comment) {
+            if ($comment->feature) {
+                $options['selected'][] = $comment;
+            } else {
+                $options['unselected'][] = $comment;
+            }
+        }
+        return $options;
+    }
 }

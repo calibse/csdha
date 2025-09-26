@@ -1,6 +1,6 @@
 <x-layout.user :$backRoute class="events event" title="Event">
     <x-slot:toolbar>
-        <a 
+        <a
             @can ('update', $event)
             href="{{ $editRoute }}"
             @endcan
@@ -8,7 +8,7 @@
             <span class="icon"><x-phosphor-pencil-simple/></span>
             <span class="text">Edit</span>
         </a>
-        <a 
+        <a
             @can ('viewAccomReport', $event)
             href="{{ $genArRoute }}"
             @endcan
@@ -21,7 +21,7 @@
         <x-alert/>
 
         <h2>{{ $activity->name }}</h2>
-        <table class="document alt">
+        <table class="table-2">
             <colgroup>
                 <col style="width: 9rem;">
             </colgroup>
@@ -97,16 +97,6 @@
                 <td><a href="{{ $attendanceRoute }}">Attendance</a></td>
             </tr>
             @endcan
-            @can ('evaluate', $event)
-            <tr>
-                <th>Evaluation Form</th>
-                <td>
-                    <a href="{{ $evalRoute }}">
-                        {{ $evalRoute }}
-                    </a>
-                </td>
-            </tr>
-            @endcan
         </table>
 
 
@@ -158,7 +148,7 @@
             </a>
         </p>
         @endcan
-        
+
         @can ('recordAttendance', $event)
         <h3>Attendance</h3>
         <p><a href="{{ $attendanceRoute }}">Attendance</a></p>

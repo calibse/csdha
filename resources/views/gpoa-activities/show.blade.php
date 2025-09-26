@@ -76,7 +76,7 @@
         </aside>
         <hr>
         <h2>{{ $activity->name }}</h2>
-        <table class="document alt">
+        <table class="table-2">
             <colgroup>
                 <col style="width: 9rem;">
             </colgroup>

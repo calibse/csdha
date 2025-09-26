@@ -99,4 +99,7 @@
             <textarea name="additional_comments">{{ old('additional_comments') ?? ($inputs['additional_comments'] ?? null) }}</textarea>
         </p>
     </form>
+    <x-slot:prevInput>
+        <input type="hidden" name="token" value="{{ $token }}">
+    </x-slot>
 </x-layout>

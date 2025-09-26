@@ -1,15 +1,21 @@
+/* _position.scss */
 
+.positions.index {
+    .position-name {
+        font-weight: bold;
 
-table.positions {
-	border-collapse: collapse;
-	tbody {
-		text-align: left;
-	}
-	th, td {
-		padding: 1rem;
-		width: 20rem;
-		max-width: 20rem;
-		border: solid .1rem var(--color-1);
-	}
+        a {
+            font-weight: normal;
+        }
+    }
 
+}
+@media (min-width: 31rem) {
+    .positions.index {
+        .table-2 {
+            .position-name {
+                font-weight: normal;
+            }
+        }
+    }
 }

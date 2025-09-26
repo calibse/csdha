@@ -7,27 +7,30 @@
     	</a>
 	@endcan
 	</x-slot:toolbar>
-
 @if ($positions->isNotEmpty())
     <article class="table-block">
-	    <table>
+	    <table class="table-2">
+            <colgroup>
+                <col style="width: 30%">
+                <col style="width: 70%">
+            </colgroup>
 			<thead>
 			    <tr>
-					<th>Officer Name</th>
 					<th>Position</th>
+					<th>Officer Name</th>
 			    </tr>
 			</thead>
 			<tbody>
 		    @foreach ($positions as $position)
 				<tr>
-				    <td>{{ $position->user->full_name ?? '' }}</td>
-				    <td>
+				    <td class="position-name">
 					@can ('create', 'App\Models\Position')
 					    <a href="{{ route('positions.show', ['position' => $position->id]) }}">{{ $position->name }}</a>
-					@else 
+					@else
 					    {{ $position->name }}
 					@endcan
 				    </td>
+				    <td>{{ $position->user->full_name ?? '' }}</td>
 				</tr>
 		    @endforeach
 			</tbody>

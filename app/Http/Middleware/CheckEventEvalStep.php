@@ -17,7 +17,6 @@ class CheckEventEvalStep
         $routePrefix = 'events.evaluations.';
         $steps = [
             $routePrefix . 'consent',
-            $routePrefix . 'identity',
             $routePrefix . 'evaluation',
             $routePrefix . 'acknowledgement',
             $routePrefix . 'end'
@@ -26,7 +25,8 @@ class CheckEventEvalStep
         $previousStep = $steps[array_search($resourceRoute, $steps) - 1];
         if (!array_key_exists($previousStep, $inputs)) {
             return redirect()->route('events.registrations.consent.edit', [
-                'event' => $event->public_id
+                'event' => $event->public_id,
+                'token' => $request->token ?? null
             ]);
         }
         return $next($request);

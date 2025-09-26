@@ -49,9 +49,10 @@ class PositionPolicy
             : Response::allow();
     }
 
-    public function changePerm(User $user, Position $position, 
+    public function changePerm(User $user, Position $position,
             Permission $permission): Response
     {
+        return Response::allow();
         $positionName = strtolower($position->name);
         switch ($positionName) {
         case 'adviser':
@@ -67,11 +68,10 @@ class PositionPolicy
                 return Response::deny();
             }
         }
-        return Response::allow();
     }
 
     public function removeOfficer(User $user, Position $position): Response
-    {    
+    {
         $adviser = strtolower($position->name) === 'adviser';
         $president = strtolower($position->name) === 'president';
         return ($adviser || $president)

@@ -13,11 +13,13 @@
 @use "modules/account-home";
 @use "modules/login";
 @use "modules/events";
+@use "modules/gpoa";
 @use "modules/funds";
 @use "modules/attendance";
 @use "modules/signup-invitation";
 @use "modules/event-registration";
 @use "modules/accom-report";
+@use "modules/positions";
 @use "layout";
 @use "theme";
 @use "test";
@@ -49,7 +51,7 @@
     --accent-color: #c6e0ff;
     --shadow-color: #e2e2e2;
     --disabled-color: #d5d6df;
-    --disabled-border-color: #b2b3bb; 
+    --disabled-border-color: #b2b3bb;
     --color-0: #B3F8FF;
     --color-1: #00d4ea;
     --color-2: #00bbe3;

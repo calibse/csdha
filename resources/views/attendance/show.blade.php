@@ -1,11 +1,11 @@
 <x-layout.user title="Attendance" route='user.home' class="attendance form">
     <article class="article">
-        <p id="noscript">
-            <span class="text">
+        <noscript>
+            <p>
                 This page failed to work perhaps because Javascript is
                 unsupported or disabled, or the page did not load completely.
-            </span>
-        </p>
+            </p>
+        </noscript>
     @if ($dates->isNotEmpty())
         <template id="scanner-feature">
             <form class="event-selector">
@@ -83,7 +83,9 @@
             </div>
         </template>
     @else
-        <p>There are no ongoing events today.</p>
+        <template id="scanner-feature">
+            <p>There are no ongoing events today.</p>
+        </template>
     @endif
     </article>
 </x-layout.user>

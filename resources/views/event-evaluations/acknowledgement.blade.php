@@ -3,4 +3,7 @@
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
     </form>
+    <x-slot:prevInput>
+        <input type="hidden" name="token" value="{{ $token }}">
+    </x-slot>
 </x-layout>
