@@ -110,4 +110,13 @@ class Format
         }
         return $result;
     }
+
+    public static function localSeconds(int $seconds, string $timezone): int
+    {
+        $nowUtc = Carbon::now('UTC');
+        $nowTz = $nowUtc->copy()->setTimezone($timezone);
+        $offsetSeconds = $nowTz->getOffset();
+        $normalizedSeconds = $seconds - $offsetSeconds;
+        return $normalizedSeconds;
+    }
 }

@@ -10,22 +10,19 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\EventStudent;
 
-class EventEvaluation extends Mailable implements ShouldQueue
+class EventEvaluation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(public EventStudent $attendee, public string
-            $eventName, public string $url)
+    public function __construct(
+            public EventStudent $attendee,
+            public string $eventName,
+            public string $url
+        )
     {
         //
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -33,9 +30,6 @@ class EventEvaluation extends Mailable implements ShouldQueue
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
