@@ -1,4 +1,4 @@
-<x-layout.multi-step-form :$eventName :$formTitle  title="Identity" :$previousStepRoute :$lastStep :$submitRoute> 
+<x-layout.event-registration-form :$eventName :$step :$completeSteps :$routes>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
@@ -52,5 +52,8 @@
             <label>Section</label>
             <input name="section" value="{{ old('section') ?? ($inputs['section'] ?? null) }}">
         </p>
+        <p class="form-submit">
+            <button>Next</button>
+        </p>
     </form>
-</x-layout.multi-step-form>
+</x-layout>

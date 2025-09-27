@@ -30,6 +30,7 @@ class UpdateEventRequest extends FormRequest
             'tag' => ['max:15'],
             'venue' => ['max:255'],
             'timezone' => ['required', Rule::in($timezones)],
+            'evaluation_delay_hours' => ['required', 'min:0', 'max:255'],
             'description' => [new MaxText],
             'narrative' => [new MaxText]
         ];

@@ -30,18 +30,14 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
         if (!$eventDate) return;
         $event = $eventDate->event;
         if (!$event->accept_evaluation) return;
-        $batchName = "event_eval_mail_{$event->id}_{$eventDate->date}";
-        $batch = self::findBatch($batchName);
-        $batch?->cancel();
         $date = Carbon::parse(
             "{$eventDate->date->format('Y-m-d')} {$eventDate->end_time}",
             $event->timezone);
-        $delayHours = 24;
+        $delayHours = $event->evaluation_delay_hours;
         $delayDate = Carbon::now($event->timezone)->addHours($delayHours);
         $eventPassed = $date->diffInHours(now($event->timezone), false) >=
             $delayHours;
         $jobs = [];
-        // $eventPassed = false;
         foreach ($eventDate->attendees()->wherePivot('eval_mail_sent', 0)
                 ->get() as $attendee) {
             $token = self::createToken();
@@ -52,7 +48,11 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
             $jobs[] = (new SendEventEvalMailJob($attendee, $eventDate, $url))
                 ->delay($eventPassed ? 0 : $delayDate);
         }
-        if ($jobs) {
+        $batchName = "event_eval_mail_{$event->id}_{$eventDate->date}";
+        $batch = self::findBatch($batchName);
+        if ($batch && $jobs) {
+            $batch->add($jobs);
+        } elseif ($jobs) {
             Bus::batch($jobs)->name($batchName)->dispatch();
         }
     }

@@ -8,6 +8,6 @@
     forbidden.
 </p>
 <p>
-    <input type="checkbox" name="consent" id="consent-1" value="1" {{ ($value ?? null) === '1' ? 'checked' : null }}>
+    <input type="checkbox" name="consent" id="consent-1" value="1" {{ $value === '1' ? 'checked' : null }}>
     <label for="consent-1">I agree</label>
 </p>

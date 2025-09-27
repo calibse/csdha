@@ -20,6 +20,6 @@ p {
 	hyphens: auto;
 }
 
-a {
+a[href] {
 	color: var(--color-4);
 }

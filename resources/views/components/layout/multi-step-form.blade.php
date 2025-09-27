@@ -16,30 +16,32 @@
     <header>
         <hgroup>
             <p>Computer Society</p>
-            <p>{{ $eventName }}</p>
             <h1>{{ $formTitle }}</h1>
+            <p>{{ $eventName }}</p>
         </hgroup>
     </header>
     <main {{ $attributes }}>
-        @if ($title)
+    @if ($title)
         <h2>{{ $title }}</h2>
-        @endif
+    @endif
         {{ $slot }}
-        @if ($previousStepRoute)
-        <form method="get" action="{{ $previousStepRoute }}">
-        @if (isset($prevInput) && $prevInput->hasActualContent())
-            {{ $prevInput }}
-        @endif
-            <p class="form-submit">
-                <button>Back</button>
-                <button form="current-form">{{ $lastStep ? 'Submit' : 'Next' }}</button>
-            </p>
-        </form>
-        @elseif (!$end)
+    @if ($previousStepRoute)
+        <p class="submit-button">
+            <button form="previous-form">Back</button>
+            <button form="current-form">{{ $lastStep ? 'Submit' : 'Next' }}</button>
+        </p>
+    @elseif (!$end)
         <p class="submit-button">
             <button form="current-form">Next</button>
         </p>
-        @endif
+    @endif
     </main>
+@if ($previousStepRoute)
+    <form id="previous-form" method="get" action="{{ $previousStepRoute }}">
+    @if (isset($prevInput) && $prevInput->hasActualContent())
+        {{ $prevInput }}
+    @endif
+    </form>
+@endif
 </body>
 </html>

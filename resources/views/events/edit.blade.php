@@ -28,29 +28,33 @@
                 </select>
             </p>
             <p>
-            	<input value="1" type="checkbox" id="auto-attendance" name="automatic_attendance" {{ $event->automatic_attendance ? 'checked' : null }}>
+            	<input value="1" type="checkbox" id="auto-attendance" name="automatic_attendance" {{ $errors->any() ? (old('automatic_attendance') === '1' ? 'checked' : null) : ($event->automatic_attendance ? 'checked' : null) }}>
             	<label for="auto-attendance">Automatic Attendance <small>(for students only)</small></label>
             </p>
             <p>
-            	<input value="1" type="checkbox" id="accept-eval" name="accept_evaluation" {{ $event->accept_evaluation ? 'checked' : null }}>
+                <input value="1" type="checkbox" id="accept-eval" name="accept_evaluation" {{ $errors->any() ? (old('accept_evaluation') === '1' ? 'checked' : null) : ($event->accept_evaluation ? 'checked' : null) }}>
             	<label for="accept-eval">Accept Evaluation <small>(for students only)</small></label>
             </p>
 			<p>
 				<label>Tag <small>(for QR code label)</small></label>
-				<input name="tag" value="{{ $event->tag }}">
+				<input name="tag" value="{{ old('tag') ?? $event->tag }}">
 			</p>
 			<p>
 				<label>Venue</label>
-				<input name="venue" value="{{ $event->venue }}">
+				<input name="venue" value="{{ old('venue') ?? $event->venue }}">
 			</p>
 			<p>
 				<label>Time Zone</label>
 				<select name="timezone">
                     <option value="">-- Select --</option>
                 @foreach ($timezones as $timezone)
-                    <option value="{{ $timezone }}" {{ strtolower($event->timezone) === strtolower($timezone) ? 'selected' : null }}>{{ $timezone }}</option>
+                    <option value="{{ $timezone }}" {{ strtolower(old('timezone') ?? $event->timezone) === strtolower($timezone) ? 'selected' : null }}>{{ $timezone }}</option>
                 @endforeach
                 </select>
+			</p>
+			<p>
+				<label>Evaluation Delay in Hours</label>
+				<input type="number" name="evaluation_delay_hours" value="{{ old('evaluation_delay_hours') ?? $event->evaluation_delay_hours }}">
 			</p>
 			<p>
 				<label>Description</label>

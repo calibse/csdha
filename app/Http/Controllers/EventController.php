@@ -203,6 +203,7 @@ class EventController extends Controller implements HasMiddleware
         $event->narrative = $request->narrative;
         $event->tag = $request->tag;
         $event->timezone = $request->timezone;
+        $event->evaluation_delay_hours = $request->evaluation_delay_hours;
         if ($request->record_attendance && !in_array('0',
                 $request->record_attendance)) {
             if (in_array('-1', $request->record_attendance)) {

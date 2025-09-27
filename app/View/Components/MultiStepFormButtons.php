@@ -1,17 +1,21 @@
 <?php
 
-namespace App\View\Components\Layout;
+namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class EventRegistration extends Component
+class MultiStepFormButtons extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+            public ?string $previousStepRoute = null,
+            public bool $lastStep = false,
+            public bool $end = false
+        )
     {
         //
     }
@@ -21,6 +25,6 @@ class EventRegistration extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layout.event-registration');
+        return view('components.multi-step-form-buttons');
     }
 }

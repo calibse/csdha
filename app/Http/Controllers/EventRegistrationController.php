@@ -27,12 +27,15 @@ class EventRegistrationController extends Controller
     public function editConsentStep(Request $request, Event $event)
     {
         $inputs = session(self::$sessionDataName, []);
+        $step = 0;
         return view('event-registration.consent', [
+            'step' => $step,
+            'completeSteps' => count($inputs),
             'submitRoute' => route('events.registrations.consent.store', [
                 'event' => $event->public_id
             ]),
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $step));
     }
 
     public function storeConsentStep(StoreConsentRequest $request,
@@ -41,24 +44,27 @@ class EventRegistrationController extends Controller
         self::storeFormStep(Format::getResourceRoute($request), $request);
         return redirect()->route('events.registrations.identity.edit', [
             'event' => $event->public_id
-        ]);
+        ])->withFragment('content');
     }
 
     public function editIdentityStep(Request $request, Event $event)
     {
         $inputs = session(self::$sessionDataName, []);
+        $step = 1;
         return view('event-registration.identity', [
+            'step' => $step,
+            'completeSteps' => count($inputs),
             'programs' => Course::all(),
             'yearLevels' => $event->participants,
             'previousStepRoute' => route('events.registrations.consent.edit', [
                 'event' => $event->public_id
-            ]),
+            ]) . '#content',
             'submitRoute' => route('events.registrations.identity.store', [
                 'event' => $event->public_id
             ]),
             'lastStep' => true,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $step));
     }
 
     public function storeIdentityStep(StoreEventRegisIdentityRequest $request,
@@ -67,19 +73,22 @@ class EventRegistrationController extends Controller
         self::storeFormStep(Format::getResourceRoute($request), $request);
         return redirect()->route('events.registrations.end.show', [
             'event' => $event->public_id
-        ]);
+        ])->withFragment('content');
     }
 
     public function showEndStep(Request $request, Event $event)
     {
         self::store($event);
         session()->forget(self::$sessionDataName);
+        $step = 2;
         return view('event-registration.end', [
+            'step' => $step,
+            'completeSteps' => count($inputs),
             'qrCodeRoute' => route('events.registrations.qr-code.show', [
                 'event' => $event->public_id
             ]),
             'end' => true
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $step));
     }
 
     public function showQrCode(Request $request, Event $event)
@@ -119,12 +128,24 @@ class EventRegistrationController extends Controller
         ]]);
     }
 
-    private static function multiFormData(Event $event): array
+    private static function multiFormData(Event $event, int $step): array
     {
+        $routes = [
+            route('events.registrations.consent.edit', [
+                'event' => $event->public_id
+            ]) . '#content',
+            route('events.registrations.identity.edit', [
+                'event' => $event->public_id
+            ]) . '#content',
+            route('events.registrations.end.show', [
+                'event' => $event->public_id
+            ]) . '#content',
+        ];
         return [
             'formTitle' => 'Registration',
             'eventName' => $event->gpoaActivity->name,
             'event' => $event,
+            'routes' => $routes
         ];
     }
 
