@@ -30,7 +30,6 @@ class EventRegistrationController extends Controller
         $step = 0;
         return view('event-registration.consent', [
             'step' => $step,
-            'completeSteps' => count($inputs),
             'submitRoute' => route('events.registrations.consent.store', [
                 'event' => $event->public_id
             ]),
@@ -53,7 +52,6 @@ class EventRegistrationController extends Controller
         $step = 1;
         return view('event-registration.identity', [
             'step' => $step,
-            'completeSteps' => count($inputs),
             'programs' => Course::all(),
             'yearLevels' => $event->participants,
             'previousStepRoute' => route('events.registrations.consent.edit', [
@@ -83,7 +81,6 @@ class EventRegistrationController extends Controller
         $step = 2;
         return view('event-registration.end', [
             'step' => $step,
-            'completeSteps' => count($inputs),
             'qrCodeRoute' => route('events.registrations.qr-code.show', [
                 'event' => $event->public_id
             ]),
@@ -141,10 +138,12 @@ class EventRegistrationController extends Controller
                 'event' => $event->public_id
             ]) . '#content',
         ];
+        $inputs = session(self::$sessionDataName, []);
         return [
             'formTitle' => 'Registration',
             'eventName' => $event->gpoaActivity->name,
             'event' => $event,
+            'completeSteps' => count($inputs),
             'routes' => $routes
         ];
     }

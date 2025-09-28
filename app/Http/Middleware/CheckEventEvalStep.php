@@ -24,7 +24,7 @@ class CheckEventEvalStep
         $resourceRoute = Format::getResourceRoute($request);
         $previousStep = $steps[array_search($resourceRoute, $steps) - 1];
         if (!array_key_exists($previousStep, $inputs)) {
-            return redirect()->route('events.registrations.consent.edit', [
+            return redirect()->route('events.evaluations.consent.edit', [
                 'event' => $event->public_id,
                 'token' => $request->token ?? null
             ]);

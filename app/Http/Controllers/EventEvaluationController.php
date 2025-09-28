@@ -30,13 +30,14 @@ class EventEvaluationController extends Controller
     {
         $inputs = session(self::$sessionDataName, []);
         return view('event-evaluations.consent', [
+            'step' => 0,
             'submitRoute' => route('events.evaluations.consent.store', [
                 'event' => $event->public_id,
                 'token' => $request->token
             ]),
             'token' => $request->token,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $request->token));
     }
 
     public function storeConsentStep(StoreConsentRequest $request,
@@ -46,13 +47,14 @@ class EventEvaluationController extends Controller
         return redirect()->route('events.evaluations.evaluation.edit', [
             'event' => $event->public_id,
             'token' => $request->token
-        ]);
+        ])->withFragment('content');
     }
 
     public function editEvaluationStep(Request $request, Event $event)
     {
         $inputs = session(self::$sessionDataName, []);
         return view('event-evaluations.evaluation', [
+            'step' => 1,
             'previousStepRoute' => route('events.evaluations.consent.edit', [
                 'event' => $event->public_id,
             ]),
@@ -62,7 +64,7 @@ class EventEvaluationController extends Controller
             ]),
             'token' => $request->token,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $request->token));
     }
 
     public function storeEvaluationStep(StoreEventEvalRequest $request,
@@ -72,13 +74,14 @@ class EventEvaluationController extends Controller
         return redirect()->route('events.evaluations.acknowledgement.edit', [
             'event' => $event->public_id,
             'token' => $request->token
-        ]);
+        ])->withFragment('content');
     }
 
     public function editAcknowledgementStep(Request $request, Event $event)
     {
         $inputs = session(self::$sessionDataName, []);
         return view('event-evaluations.acknowledgement', [
+            'step' => 2,
             'previousStepRoute' => route('events.evaluations.evaluation.edit',
                 [
                 'event' => $event->public_id,
@@ -91,7 +94,7 @@ class EventEvaluationController extends Controller
             'lastStep' => true,
             'token' => $request->token,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $request->token));
     }
 
     public function storeAcknowledgementStep(Request $request, Event $event)
@@ -100,7 +103,7 @@ class EventEvaluationController extends Controller
         return redirect()->route('events.evaluations.end.show', [
             'event' => $event->public_id,
             'token' => $request->token
-        ]);
+        ])->withFragment('content');
     }
 
     public function showEndStep(Request $request, Event $event)
@@ -108,15 +111,15 @@ class EventEvaluationController extends Controller
         self::store($event);
         session()->forget(self::$sessionDataName);
         return view('event-evaluations.end', [
+            'step' => 3,
             'end' => true
-        ] + self::multiFormData($event));
+        ] + self::multiFormData($event, $request->token));
     }
 
     private static function store(Event $event): void
     {
         $inputs = session(self::$sessionDataName, []);
         $evalInput = $inputs['events.evaluations.evaluation'];
-        self::deleteToken($evalInput['token']);
         $eval = new EventEvaluation;
         $eval->event()->associate($event);
         $eval->overall_satisfaction = $evalInput['overall_satisfaction'];
@@ -130,25 +133,43 @@ class EventEvaluationController extends Controller
         $eval->future_topics = $evalInput['future_topics'];
         $eval->overall_experience = $evalInput['overall_experience'];
         $eval->additional_comments = $evalInput['additional_comments'];
-        $eval->selected = false;
         $eval->save();
+        self::deleteToken($evalInput['token']);
     }
 
     private static function deleteToken($rawToken): void
     {
-        $tokens = DB::table('event_evaluation_tokens')->pluck('token');
-        foreach ($tokens as $token) {
-            if (Hash::check($rawToken, $token)) $key = $token;
-        }
-        DB::table('event_evaluation_tokens')->where('token', $key)->delete();
+        DB::table('event_evaluation_tokens')
+            ->where('token', hash('sha256', $rawToken))->delete();
     }
 
-    private static function multiFormData(Event $event): array
+    private static function multiFormData(Event $event, string $token): array
     {
+        $routes = [
+            route('events.evaluations.consent.edit', [
+                'event' => $event->public_id,
+                'token' => $token
+            ]) . '#content',
+            route('events.evaluations.evaluation.edit', [
+                'event' => $event->public_id,
+                'token' => $token
+            ]) . '#content',
+            route('events.evaluations.acknowledgement.edit', [
+                'event' => $event->public_id,
+                'token' => $token
+            ]) . '#content',
+            route('events.evaluations.end.show', [
+                'event' => $event->public_id,
+                'token' => $token
+            ]) . '#content',
+        ];
+        $inputs = session(self::$sessionDataName, []);
         return [
             'formTitle' => 'Evaluation',
             'eventName' => $event->gpoaActivity->name,
             'event' => $event,
+            'completeSteps' => count($inputs),
+            'routes' => $routes
         ];
     }
 

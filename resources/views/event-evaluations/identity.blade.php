@@ -1,4 +1,4 @@
-<x-layout.multi-step-form :$formTitle :$eventName title="Identity" :$previousStepRoute>
+<x-layout.event-evaluation-form :$formTitle :$eventName title="Identity" :$previousStepRoute>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf

@@ -1,6 +1,5 @@
-<x-layout.event-registration-form :$eventName :$step :$completeSteps :$routes>
-    <p>{{ $event->regisForm?->introduction }}</p>
-    <h3>Data Privacy Act of 2012</h3>
+<x-layout.event-registration-form class="event-registration multi-step-form" :$event :$step :$completeSteps :$routes>
+    <h3 class="title">Data Privacy Act of 2012</h3>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf

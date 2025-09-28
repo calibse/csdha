@@ -1,4 +1,4 @@
-<x-layout.multi-step-form :$formTitle :$eventName title="Evaluation" :$previousStepRoute>
+<x-layout.event-evaluation-form class="event-evaluation multi-step-form" :$event :$step :$completeSteps :$routes>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
@@ -98,8 +98,8 @@
             <label>Additional Comments (optional)</label>
             <textarea name="additional_comments">{{ old('additional_comments') ?? ($inputs['additional_comments'] ?? null) }}</textarea>
         </p>
+        <p class="form-submit">
+            <button>Next</button>
+        </p>
     </form>
-    <x-slot:prevInput>
-        <input type="hidden" name="token" value="{{ $token }}">
-    </x-slot>
 </x-layout>

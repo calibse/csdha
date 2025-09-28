@@ -1,4 +1,4 @@
-<x-layout.event-registration-form :$eventName :$step :$completeSteps :$routes>
+<x-layout.event-registration-form class="event-registration multi-step-form" :$event :$step :$completeSteps :$routes>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
@@ -11,7 +11,7 @@
             <input name="first_name" value="{{ old('first_name') ?? ($inputs['first_name'] ?? null) }}">
         </p>
         <p>
-            <label>Middle name (optional)</label>
+            <label>Middle name</label>
             <input name="middle_name" value="{{ old('middle_name') ?? ($inputs['middle_name'] ?? null) }}">
         </p>
         <p>
@@ -19,7 +19,7 @@
             <input name="last_name" value="{{ old('last_name') ?? ($inputs['last_name'] ?? null) }}">
         </p>
         <p>
-            <label>Suffix name (optional)</label>
+            <label>Suffix name</label>
             <input name="suffix_name" value="{{ old('suffix_name') ?? ($inputs['suffix_name'] ?? null) }}">
         </p>
         <p>

@@ -12,6 +12,8 @@ class CheckEventEvalForm
 {
     public function handle(Request $request, Closure $next): Response
     {
+        $route = $request->route()->getName();
+        if ($route === 'events.evaluations.end.show') return $next($request);
         $rawToken = $request->token;
         $response = response()->view('message', [
             'message' => 'Your event evaluation link is invalid.'

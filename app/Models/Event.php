@@ -142,7 +142,7 @@ class Event extends Model
         foreach ($members as $program => $years) {
             foreach ($years as $year) {
                 $exists = EventStudent::whereHas(
-                    'eventDate.event', function ($query) {
+                    'eventDates.event', function ($query) {
                         $query->whereKey($this->id);
                     })->whereRelation('yearModel', 'year', $year)
                     ->whereRelation('course', 'acronym', $program)->exists();
@@ -164,7 +164,7 @@ class Event extends Model
         switch ($this->participant_type) {
         case 'students':
             $attendanceQuery = EventStudent::whereHas(
-                'eventDate.event', function ($query) {
+                'eventDates.event', function ($query) {
                     $query->whereKey($this->id);
             });
             $yearLevels = $this->participants;
@@ -188,7 +188,7 @@ class Event extends Model
                 foreach ($members as $program => $years) {
                     foreach ($years as $year) {
                         $count = EventStudent::whereHas(
-                            'eventDate.event', function ($query) {
+                            'eventDates.event', function ($query) {
                                 $query->whereKey($this->id);
                             })->whereRelation('yearModel', 'year', $year)
                             ->whereRelation('course', 'acronym', $program)
@@ -305,7 +305,7 @@ class Event extends Model
 
     public function attendees()
     {
-        $attendees = EventStudent::whereHas('eventDate.event', function ($query) {
+        $attendees = EventStudent::whereHas('eventDates.event', function ($query) {
             $query->whereKey($this->id);
         })->get();
         return $attendees;

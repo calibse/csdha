@@ -26,7 +26,7 @@
 		</a>
 		<div class="content-block">
 			<div class="main-info">
-				<a class="brand" href="#">
+				<a class="main-brand" href="#">
 					<span class="logo">
 						<img src="{{ Vite::asset('resources/images/app-logo.png') }}">
 					</span>

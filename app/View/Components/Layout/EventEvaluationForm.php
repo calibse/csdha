@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\Event;
 
-class EventRegistrationForm extends Component
+class EventEvaluationForm extends Component
 {
     /**
      * Create a new component instance.
@@ -27,6 +27,6 @@ class EventRegistrationForm extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layout.event-registration-form');
+        return view('components.layout.event-evaluation-form');
     }
 }

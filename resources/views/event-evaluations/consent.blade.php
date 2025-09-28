@@ -1,12 +1,11 @@
-<x-layout.multi-step-form :$formTitle :$eventName :$submitRoute>
-    <p>{{ $event->evalForm?->introduction }}</p>
-    <h2>Data Privacy Act of 2012</h2>
+<x-layout.event-evaluation-form class="event-evaluation multi-step-form" :$event :$step :$completeSteps :$routes>
+    <h3 class="title">Data Privacy Act of 2012</h3>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
-        <x-consent :value="$inputs['consent'] ?? null" />
+        <x-consent :value="$errors->any() ? old('consent') : ($inputs['consent'] ?? null)" />
+        <p class="form-submit">
+            <button>Next</button>
+        </p>
     </form>
-    <x-slot:prevInput>
-        <input type="hidden" name="token" value="{{ $token }}">
-    </x-slot>
 </x-layout>

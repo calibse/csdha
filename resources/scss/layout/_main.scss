@@ -11,6 +11,35 @@
 	}
 }
 
+.main-brand {
+    text-decoration: none;
+    padding: 0 1rem;
+    margin: .75rem 0;
+    display: block;
+    text-align: center;
+
+    .name {
+        display: inline-block;
+        font-family: Oxanium;
+        font-size: 1.5rem;
+        font-weight: 600;
+        vertical-align: middle;
+        color: var(--color-2);
+    }
+
+    .logo {
+        vertical-align: middle;
+        display: inline-block;
+        height: 2rem;
+
+        img {
+            height: 100%;
+            display: block;
+        }
+
+    }
+}
+
 #menu.main-header {
 	background-color: var(--color-4);
 	padding-bottom: 1rem;
@@ -50,35 +79,6 @@
 	.main-info {
 		background-repeat: no-repeat;
 		background-size: cover;
-
-		.brand {
-			text-decoration: none;
-			color: var(--color-2);
-			padding: 0 1rem;
-			margin: .75rem 0;
-			display: block;
-			text-align: center;
-
-			.name {
-				display: inline-block;
-				font-family: Oxanium;
-				font-size: 1.5rem;
-				font-weight: 600;
-				vertical-align: middle;
-			}
-
-			.logo {
-				vertical-align: middle;
-				display: inline-block;
-				height: 2rem;
-
-				img {
-					height: 100%;
-					display: block;
-				}
-
-			}
-		}
 
 		.account {
 			color: #ffffff;

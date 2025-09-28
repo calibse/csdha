@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>CS Event Registration Form</title>
+    <title>CS Event Evaluation Form</title>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body {{ $attributes }}>
@@ -16,13 +16,13 @@
                 </span>
                 <span class="name">Computer Society</span>
             </p>
-            <h1 class="title of-form">Event Registration</h1>
+            <h1 class="title of-form">Event Evaluation</h1>
         </hgroup>
     </header>
     <section class="intro section">
         <img hidden>
         <h2 class="title">Introduction</h2>
-        <pre>{{ $event->regisForm?->introduction }}</pre>
+        <pre>{{ $event->evalForm?->introduction }}</pre>
     </section>
 @php
     $steps = [
@@ -31,7 +31,11 @@
             'show_status' => true
         ],
         [
-            'title' => 'Identity',
+            'title' => 'Evaluation',
+            'show_status' => true
+        ],
+        [
+            'title' => 'Acknowledgement',
             'show_status' => true
         ],
         [

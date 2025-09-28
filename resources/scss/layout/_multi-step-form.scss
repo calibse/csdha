@@ -1,0 +1,69 @@
+/* _multi-step-form.scss */
+
+.multi-step-form {
+	.qr-code {
+		height: 100vh;
+
+		img {
+			border: .05rem solid #000000;
+			height: 100%;
+			width: 100%;
+			object-fit: contain;
+		}
+	}
+}
+
+.multi-step-form {
+    background-color: var(--base-color-0);
+}
+
+.multi-step-form .org-name {
+    background-color: var(--color-4);
+    margin-top: 0;
+    text-align: center;
+    max-width: 100vw;
+    padding: 1rem 0;
+
+    .name {
+        font-family: MuseoModerno;
+        font-weight: 600;
+    }
+}
+
+.multi-step-form .title.of-form {
+    max-width: 100vw;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.multi-step-form .section {
+    max-width: calc(var(--text-width) + 2rem);
+    padding: .01rem 1rem;
+    margin: 1rem auto;
+    background-color: var(--bg-color);
+    border-radius: 1rem;
+    border: solid .05rem var(--base-color-1);
+
+    .title:first-child, &.intro .title {
+        font-size: 1.2rem;
+    }
+
+    &:target {
+        scroll-margin-top: 1rem;
+    }
+}
+
+.multi-step-form .section:not(.main):not(.intro) {
+    white-space: nowrap;
+
+    .title, .status {
+        white-space: wrap;
+        display: inline-block;
+        max-width: 49%;
+        width: 100%;
+    }
+
+    .status {
+        text-align: right;
+    }
+}

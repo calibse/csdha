@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\Exists;
 
-class StoreEventRegisIdentityRequest extends FormRequest
+class StoreEventRegisIdentityRequest extends MultiStepFormRequest
 {
     public function rules(): array
     {

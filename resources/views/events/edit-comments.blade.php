@@ -1,4 +1,4 @@
-<x-layout.user class="events form" :$backRoute title="Edit Evaluation Comments">
+<x-layout.user class="events" :$backRoute title="Edit Evaluation Comments">
     <div class="article">
         <x-alert/>
         <nav>

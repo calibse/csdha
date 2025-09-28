@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxText;
 
-class StoreEventEvalRequest extends FormRequest
+class StoreEventEvalRequest extends MultiStepFormRequest
 {
     public function rules(): array
     {
