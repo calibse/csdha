@@ -14,6 +14,8 @@ use App\Models\AcademicPeriod;
 use Illuminate\Support\Carbon;
 use App\Services\Format;
 use App\Http\Requests\SaveGpoaRequest;
+use WeasyPrint\Facade as WeasyPrint;
+use App\Services\PagedView;
 
 class GpoaController extends Controller implements HasMiddleware
 {
@@ -27,25 +29,25 @@ class GpoaController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:viewAny,' . GpoaActivity::class, 
+            new Middleware('can:viewAny,' . GpoaActivity::class,
                 only: ['index']),
-            new Middleware('can:create,' . Gpoa::class, 
+            new Middleware('can:create,' . Gpoa::class,
                 only: ['create', 'store']),
-            new Middleware('can:update,' . Gpoa::class, 
+            new Middleware('can:update,' . Gpoa::class,
                 only: ['edit', 'update']),
-            new Middleware('can:close,' . Gpoa::class, 
+            new Middleware('can:close,' . Gpoa::class,
                 only: ['confirmClose', 'close']),
         ];
     }
 
     public function index()
     {
-        $gpoa = $this->gpoa; 
+        $gpoa = $this->gpoa;
         if (!$gpoa) {
             return view('gpoa.index', ['gpoa' => $gpoa, 'activities' => null]);
         }
         switch(auth()->user()->position_name) {
-        case 'president': 
+        case 'president':
             $activities = $gpoa->activities()->forPresident();
             break;
         case 'adviser':
@@ -80,14 +82,16 @@ class GpoaController extends Controller implements HasMiddleware
     {
         if (!$gpoa) $gpoa = new Gpoa();
         $term = AcademicTerm::find($request->academic_term);
-        $period = AcademicPeriod::where('start_date', $request->start_date)
-            ->where('end_date', $request->end_date)->first();
-        if (!$period) {
+        if ($gpoa->academicPeriod()->exists()) {
+            $period = $gpoa->academicPeriod;
+        } else {
             $period = new AcademicPeriod();
-            $period->start_date = $request->start_date;
-            $period->end_date = $request->end_date;
         }
+        $period->start_date = $request->start_date;
+        $period->end_date = $request->end_date;
         $period->term()->associate($term);
+        $period->head_of_student_services = $request->head_of_student_services;
+        $period->branch_director = $request->branch_director;
         $period->save();
         $gpoa->academicPeriod()->associate($period);
         $gpoa->adviser()->associate(auth()->user());
@@ -102,7 +106,7 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function edit()
     {
-        $gpoa = $this->gpoa; 
+        $gpoa = $this->gpoa;
         return view('gpoa.create', [
             'update' => true,
             'terms' => AcademicTerm::all(),
@@ -112,14 +116,14 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function update(SaveGpoaRequest $request)
     {
-        $gpoa = $this->gpoa; 
+        $gpoa = $this->gpoa;
         self::storeOrUpdate($request, $gpoa);
         return redirect()->route('gpoa.index');
     }
 
     public function showGenPdf(Request $request)
     {
-        $gpoa = $this->gpoa; 
+        $gpoa = $this->gpoa;
         return view('gpoa.show-gpoa-report', [
             'gpoa' => $gpoa,
             'fileRoute' => route('gpoa.genPdf', ['gpoa' => $gpoa->public_id ])
@@ -128,24 +132,25 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function genPdf(Request $request)
     {
-        $gpoa = $this->gpoa; 
-        return $gpoa->report();
-    } 
+        $gpoa = $this->gpoa;
+        return WeasyPrint::prepareSource(new PagedView('gpoa.report',
+            $gpoa->reportViewData()))->inline('gpoa_report.pdf');
+    }
 
     public function confirmClose(Request $request)
     {
-        $gpoa = $this->gpoa; 
+        $gpoa = $this->gpoa;
         return view('gpoa.close', ['gpoa' => $gpoa]);
     }
 
     public function close(Request $request)
     {
-        $gpoa = $this->gpoa; 
+        $gpoa = $this->gpoa;
         $gpoa->active = null;
         $gpoa->save();
         return redirect()->route('gpoa.index');
     }
-    
+
     public function destroy(string $id)
     {
 

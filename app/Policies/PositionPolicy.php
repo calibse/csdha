@@ -52,22 +52,23 @@ class PositionPolicy
     public function changePerm(User $user, Position $position,
             Permission $permission): Response
     {
-        return Response::allow();
         $positionName = strtolower($position->name);
         switch ($positionName) {
         case 'adviser':
             $edit = $permission->resourceActionType->name === 'edit';
             $centralBody = $permission->resourceType->name === 'central-body';
-            if ($edit || $centralBody)  {
+            if ($centralBody)  {
                 return Response::deny();
             }
             break;
         default:
+            break;
             $centralBody = $permission->resourceType->name === 'central-body';
             if ($centralBody)  {
                 return Response::deny();
             }
         }
+        return Response::allow();
     }
 
     public function removeOfficer(User $user, Position $position): Response

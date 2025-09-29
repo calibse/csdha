@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>Test</title>
-    {{-- 
+    {{--
     @vite(['resources/scss/gpoa-report.scss'])
-    --}} 
+    --}}
     <style>{!! Vite::content('resources/scss/gpoa-report.scss') !!}</style>
 </head>
 <body>
     <article id="page-header">
         <div class="logos">
             <div class="logo">
-                <img src="resources/pdf/images/pup-logo.svg"> 
+                <img src="resources/pdf/images/pup-logo.svg">
             </div>
             <div class="logo">
                 <img src="resources/pdf/images/cs-logo.png">
@@ -27,7 +27,7 @@
     </article>
     <header class="main-header">
         <p>GENERAL PLAN OF ACTIVITIES</p>
-        <p>{{ $gpoa->academicPeriod?->term?->label }} 
+        <p>{{ $gpoa->academicPeriod?->term?->label }}
             A.Y. {{ $gpoa->academicPeriod?->year_label }}
         </p>
         <p>PUP-TAGUIG COMPUTER SOCIETY</p>
@@ -106,7 +106,7 @@ $coheads = $activity->coheads
                 <li>
                     <div class="signature"></div>
                     <p class="name">{{ auth()->user()->full_name }}</p>
-                    <p class="position">{{ auth()->user()->position?->name }}, 
+                    <p class="position">{{ auth()->user()->position?->name }},
                         PUP-Taguig Computer Society
                     </p>
                 </li>
@@ -123,7 +123,7 @@ $coheads = $activity->coheads
                 <li>
                     <div class="signature"></div>
                     <p class="name">{{ $adviser?->full_name }}</p>
-                    <p class="position">{{ $adviser?->position?->name }}, 
+                    <p class="position">{{ $adviser?->position?->name }},
                         PUP-Taguig Computer Society
                     </p>
                 </li>
@@ -134,12 +134,18 @@ $coheads = $activity->coheads
             <ul class="person-list">
                 <li>
                     <div class="signature"></div>
+                    {{--
                     <p class="name">Asst. Prof. Bernadette L. Canlas</p>
+                    --}}
+                    <p class="name">{{ $academicPeriod->head_of_student_services }}</p>
                     <p class="position">Head of Student Services</p>
                 </li>
                 <li>
                     <div class="signature"></div>
+                    {{--
                     <p class="name">Dr. Marissa B. Ferrer</p>
+                    --}}
+                    <p class="name">{{ $academicPeriod->branch_director }}</p>
                     <p class="position">PUP-Taguig Branch Director</p>
                 </li>
             </ul>

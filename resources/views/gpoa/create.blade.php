@@ -29,6 +29,14 @@
                 <label>End date</label>
                 <input type="date" name="end_date" value="{{ old('end_date') ?? $gpoa?->academicPeriod->end_date }}">
             </p>
+            <p>
+                <label>Head of Student Services</label>
+                <input name="head_of_student_services" value="{{ old('head_of_student_services') ?? $gpoa?->academicPeriod->head_of_student_services }}">
+            </p>
+            <p>
+                <label>Branch Director</label>
+                <input name="branch_director" value="{{ old('branch_director') ?? $gpoa?->academicPeriod->branch_director }}">
+            </p>
             <p class="form-submit">
                 <button>{{ $update ? 'Update' : 'Create' }}</button>
             </p>
