@@ -24,6 +24,14 @@ class AccomReport extends Model
     }
 
     #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->whereHas('event.gpoaActivity.gpoa', function ($query) {
+            $query->where('active', 1);
+        });
+    }
+
+    #[Scope]
     protected function forAdviser(Builder $query): void
     {
         $query->where('status', 'approved');

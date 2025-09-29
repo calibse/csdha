@@ -256,10 +256,10 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
             Route::controller(GpoaController::class)->group(function () {
 
-                Route::get('/gen-pdf/gpoa_report.pdf', 'genPdf')
+                Route::get('/gen-pdf/gpoa_report.pdf', 'streamPdf')
                     ->name('genPdf');
 
-                Route::get('/gen-pdf.html', 'showGenPdf')->name('showGenPdf');
+                Route::get('/gen-pdf.html', 'genPdf')->name('showGenPdf');
 
                 Route::get('/confirm-close.html', 'confirmClose')
                     ->name('confirmClose');
@@ -501,6 +501,8 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
         });
     });
 
+/*
+
     Route::resource('meetings', MeetingController::class);
 
     Route::resource('meetings', MeetingController::class)->only([
@@ -533,6 +535,7 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
     Route::resource('partnerships', PartnershipController::class)->only([
         'index', 'show'
     ]);
+*/
 
     Route::controller(PositionController::class)->name('positions.')
             ->group(function () {
@@ -617,12 +620,14 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
     Route::get('/attendance.html', [AttendanceController::class, 'create'])
         ->name('attendance.create');
 
+/*
     Route::resource('students', StudentController::class);
 
     Route::prefix('students')->group(function () {
 
         Route::resource('courses', CourseController::class)->except('index');
     });
+*/
 
 });
 

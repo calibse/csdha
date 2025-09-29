@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -18,6 +19,11 @@ use App\Traits\HasPublicId;
 class Event extends Model
 {
     use HasPublicId;
+
+    public function gpoa()
+    {
+        return $this->gpoaActivity->gpoa;
+    }
 
     public function evaluations(): HasMany
     {
@@ -309,6 +315,14 @@ class Event extends Model
             $query->whereKey($this->id);
         })->get();
         return $attendees;
+    }
+
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->whereHas('gpoaActivity.gpoa', function ($query) {
+            $query->where('active', 1);
+        });
     }
 
     #[Scope]

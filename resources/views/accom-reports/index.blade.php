@@ -1,9 +1,11 @@
 <x-layout.user index title="Accomplishment Reports" class="gpoa index">
     <x-slot:toolbar>
+    @if ($gpoa)
         <a href="{{ $genRoute }}">
             <span class="icon"><x-phosphor-file-plus/></span>
             <span class="text">Gen. PDF</span>
         </a>
+    @endif
     </x-slot:toolbar>
     <article class="article">
         <x-alert/>
@@ -52,13 +54,15 @@
         </ul>
         --}}
         {{ $accomReports->links('paginator.simple') }}
+        @elseif (!$gpoa)
+		<p>There is no active GPOA right now.</p>
         @else
             @switch (auth()->user()->position_name)
             @case('president')
         <p>No one has submitted anything yet.</p>
                 @break
             @default
-            <p>No one has added anything yet.</p>
+        <p>No one has added anything yet.</p>
             @endswitch
         @endif
     </article>

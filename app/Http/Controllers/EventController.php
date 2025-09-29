@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use DateTimeZone;
 use App\Events\EventUpdated;
+use App\Models\Gpoa;
 
 class EventController extends Controller implements HasMiddleware
 {
@@ -59,6 +60,8 @@ class EventController extends Controller implements HasMiddleware
                 'destroyDate',
                 'createAttendee',
                 'storeAttendee',
+                'editComments',
+                'updateComments'
             ]),
             new Middleware('can:delete,event', only: ['destroy']),
             new Middleware('can:update,date', only: [
@@ -77,8 +80,12 @@ class EventController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-		$events = Event::orderBy("updated_at", "desc")->paginate("7");
-        return view('events.index', ["events" => $events]);
+		$events = Event::active()->orderBy("updated_at", "desc")->paginate("7");
+        $gpoa = Gpoa::active()->exists();
+        return view('events.index', [
+            'gpoa' => $gpoa,
+            'events' => $events
+        ]);
     }
 
     public function create()

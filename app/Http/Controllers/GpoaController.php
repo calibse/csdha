@@ -37,6 +37,8 @@ class GpoaController extends Controller implements HasMiddleware
                 only: ['edit', 'update']),
             new Middleware('can:close,' . Gpoa::class,
                 only: ['confirmClose', 'close']),
+            new Middleware('can:genPdf,' . Gpoa::class,
+                only: ['genPdf', 'streamPdf']),
         ];
     }
 
@@ -121,7 +123,7 @@ class GpoaController extends Controller implements HasMiddleware
         return redirect()->route('gpoa.index');
     }
 
-    public function showGenPdf(Request $request)
+    public function genPdf(Request $request)
     {
         $gpoa = $this->gpoa;
         return view('gpoa.show-gpoa-report', [
@@ -130,7 +132,7 @@ class GpoaController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function genPdf(Request $request)
+    public function streamPdf(Request $request)
     {
         $gpoa = $this->gpoa;
         return WeasyPrint::prepareSource(new PagedView('gpoa.report',
@@ -146,7 +148,26 @@ class GpoaController extends Controller implements HasMiddleware
     public function close(Request $request)
     {
         $gpoa = $this->gpoa;
+        $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
+        $accomReportFile = "gpoas/gpoa_{$gpoa->id}/accom_report.pdf";
+        WeasyPrint::prepareSource(new PagedView('gpoa.report',
+            $gpoa->reportViewData()))->putFile($reportFile);
+        $allEvents = $gpoa->events()->approved()->get();
+        $events = [];
+        foreach ($allEvents as $event) {
+            $events[] = $event->accomReportViewData();
+        }
+        WeasyPrint::prepareSource(new PagedView('events.accom-report', [
+            'events' => $events,
+            'editors' => User::withPerm('accomplishment-reports.edit')
+                ->notOfPosition('adviser')->get(),
+            'approved' => true,
+            'president' => User::ofPosition('president')->first()
+        ]))->putFile($accomReportFile);
         $gpoa->active = null;
+        $gpoa->closed_at = now();
+        $gpoa->report_filepath = $reportFile;
+        $gpoa->accom_report_filepath = $accomReportFile;
         $gpoa->save();
         return redirect()->route('gpoa.index');
     }

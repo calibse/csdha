@@ -42,7 +42,7 @@ class GpoaPolicy
         if (!($canView && $canEdit)) {
             return Response::deny();
         }
-        return Gpoa::active()->exists() 
+        return Gpoa::active()->exists()
             && $user->position_name === 'adviser'
             ? Response::allow()
             : Response::deny();
@@ -55,8 +55,15 @@ class GpoaPolicy
         if (!($canView && $canEdit)) {
             return Response::deny();
         }
-        return Gpoa::active()->exists() 
+        return Gpoa::active()->exists()
             && $user->position_name === 'adviser'
+            ? Response::allow()
+            : Response::deny();
+    }
+
+    public function genPdf(User $user): Response
+    {
+        return Gpoa::active()->exists()
             ? Response::allow()
             : Response::deny();
     }

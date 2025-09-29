@@ -13,6 +13,7 @@ use WeasyPrint\Facade as WeasyPrint;
 use App\Models\User;
 use App\Models\EventDate;
 use App\Events\AccomReportStatusChanged;
+use App\Models\Gpoa;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -30,6 +31,9 @@ class AccomReportController extends Controller implements HasMiddleware
             ]),
             new Middleware('can:approveAccomReport,event', only: [
                 'approve', 'prepareForApprove'
+            ]),
+            new Middleware('can:genAccomReport,event', only: [
+                'generate', 'stream'
             ]),
         ];
     }
@@ -50,9 +54,11 @@ class AccomReportController extends Controller implements HasMiddleware
             $accomReports = AccomReport::forAdviser();
             break;
         }
-        $accomReports = $accomReports->orderBy("updated_at", "desc")
+        $accomReports = $accomReports->active()->orderBy("updated_at", "desc")
             ->paginate("7");
+        $gpoa = Gpoa::active()->exists();
         return view('accom-reports.index', [
+            'gpoa' => $gpoa,
             'accomReports' => $accomReports,
             'genRoute' => route('accom-reports.generate')
         ]);

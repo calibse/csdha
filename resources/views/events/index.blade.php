@@ -69,6 +69,8 @@
 		</ul>
         --}}
 		{{ $events->links('paginator.simple') }}
+    @elseif (!$gpoa)
+		<p>There is no active GPOA right now.</p>
 	@else
 		<p>No one has added anything yet</p>
 	@endif
