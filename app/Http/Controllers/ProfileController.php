@@ -87,7 +87,7 @@ class ProfileController extends Controller
         }
         $user->email = $request->email;
         $user->save();
-        if (!$user->email_verified_at) {
+        if ($user->email && !$user->email_verified_at) {
             self::sendEmailVerify();
             return redirect()->back()->with('status', $status);
         }
@@ -97,9 +97,13 @@ class ProfileController extends Controller
     public function resendEmailVerify()
     {
         $user = auth()->user();
-        if ($user->email_verified_at) {
+        if ($user->email && $user->email_verified_at) {
             return view('message', [
                 'message' => 'Your email is already verified.'
+            ]);
+        } elseif (!$user->email) {
+            return view('message', [
+                'message' => 'You do not have email on your profile.'
             ]);
         }
         self::sendEmailVerify();
@@ -110,7 +114,7 @@ class ProfileController extends Controller
     private static function sendEmailVerify()
     {
         $user = auth()->user();
-        $url = URL::temporarySignedRoute('verify-email', now()
+        $url = URL::temporarySignedRoute('verify-email', now(config('timezone'))
             ->addHours(24), [
             'id' => $user->public_id,
             'email' => $user->email

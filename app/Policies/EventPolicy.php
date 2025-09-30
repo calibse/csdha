@@ -41,7 +41,9 @@ class EventPolicy
         $pending = $event->accomReport?->status === 'pending';
         $eventHead = $event->gpoaActivity->eventHeads()->whereKey($user->id)
             ->exists();
-        return (!($approved || $pending) && $eventHead)
+        $editor = $user->hasPerm('accomplishment-reports.view') &&
+            $user->hasPerm('accomplishment-reports.edit');
+        return (!($approved || $pending) && ($eventHead || $editor))
             ? Response::allow() : Response::deny();
     }
 

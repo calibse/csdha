@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Mail;
 use DateTimeZone;
 use App\Events\EventUpdated;
 use App\Models\Gpoa;
+use Illuminate\Support\Carbon;
 
 class EventController extends Controller implements HasMiddleware
 {
@@ -151,8 +152,9 @@ class EventController extends Controller implements HasMiddleware
     public function edit(Request $request, Event $event)
     {
         $participantGroups = ['-1'];
-        $selectedParticipants = [];
+        $selectedParticipants = $event->participants;
         $participants = StudentYear::all();
+        /*
         if (session('errors')?->any() && old('participant_year_levels')
                 && count(array_intersect(old('participant_year_levels'),
                     $participantGroups)) === 0) {
@@ -166,6 +168,7 @@ class EventController extends Controller implements HasMiddleware
             $selectedParticipants = $options['selected'];
             $participants = $options['unselected'];
         }
+        */
         $backRoute = $request->from === 'accom-reports'
             ? route('accom-reports.show', [
                 'event' => $event->public_id,
@@ -439,8 +442,8 @@ class EventController extends Controller implements HasMiddleware
             $date = $event->dates()->find($date->id);
         }
         $date->date = $request->date;
-        $date->start_time = Format::toUtc($request->start_time);
-        $date->end_time = Format::toUtc($request->end_time);
+        $date->start_time = $request->start_time;
+        $date->end_time = $request->end_time;
         $date->save();
     }
 
@@ -466,8 +469,9 @@ class EventController extends Controller implements HasMiddleware
     {
         $date->attendees()->detach();
         $date->delete();
-        return redirect()->route('events.dates.index', ['event' => $event->public_id])
-            ->with('status', 'Date deleted.');
+        return redirect()->route('events.dates.index', [
+            'event' => $event->public_id
+        ])->with('status', 'Date deleted.');
     }
 
     public function confirmDestroyDate(Event $event, EventDate $date)

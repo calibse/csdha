@@ -272,12 +272,13 @@ class Event extends Model
         return $newDates;
     }
 
+    /*
     public function isUpcoming(): Attribute
     {
-        date_default_timezone_set(config('timezone'));
         $isUpcoming = $this->dates()->where(function ($query) {
             $query->whereRaw('? between date_sub(date, interval 5 day) and date'
-                , [Carbon::today()->utc()]);
+                , [Carbon::today(config('timezone'))
+                    ->setTimezone($this->timezone)]->toDateString());
         })->exists();
         return Attribute::make(
             get: fn () => $isUpcoming,
@@ -286,19 +287,23 @@ class Event extends Model
 
     public function isOngoing(): Attribute
     {
-        date_default_timezone_set(config('timezone'));
         $isOngoing = $this->dates()->where(function ($query) {
-            $query->where('date', Carbon::now()->utc()->toDateString())
+            $query->where('date', Carbon::now(config('timezone'))
+                    ->setTimezone($this->timezone)->toDateString())
                 ->where('start_time', null)->where('end_time', null);
         })->orWhere(function ($query) {
-            $query->where('date', Carbon::now()->utc()->toDateString())
-                ->where('start_time', '<=', Carbon::now()->utc()->toTimeString())
-                ->where('end_time', '>=', Carbon::now()->utc()->toTimeString());
+            $query->where('date', Carbon::now(config('timezone'))
+                    ->setTimezone($this->timezone)->toDateString())
+                ->where('start_time', '<=', Carbon::now(config('timezone'))
+                    ->setTimezone($this->timezone)->toTimeString())
+                ->where('end_time', '>=', Carbon::now(config('timezone'))
+                    ->setTimezone($this->timezone)->toTimeString());
         })->exists();
         return Attribute::make(
             get: fn () => $isOngoing,
         );
     }
+    */
 
     public function officerAttendees()
     {

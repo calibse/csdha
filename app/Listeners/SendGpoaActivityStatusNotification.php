@@ -17,7 +17,6 @@ class SendGpoaActivityStatusNotification
 
     public function handle(GpoaActivityStatusChanged $event): void
     {
-        return;
         $activity = $event->activity;
         $status = $activity->status;
         $step = $activity->current_step;
@@ -27,25 +26,31 @@ class SendGpoaActivityStatusNotification
         case 'rejected_president':
         case 'rejected_adviser':
         case 'approved_adviser':
-            foreach (activity->eventHeads() as $officer) {
-                $email = $officer->email;
+            foreach ($activity->eventHeads()->notOfPosition('president')->get()
+                    as $officer) {
+                $email = $officer->email_verified_at ? $officer->email : null;
                 if ($email) {
                     $emails[] = $email;
                 }
             }
+            break;
         case 'pending_president':
         case 'returned_president':
         case 'rejected_adviser':
         case 'approved_adviser':
-            $email = User::president->first()->email;
+            $email = User::president()->first()->email_verified_at
+                ? User::president()->first()->email : null;
             if ($email) {
                 $emails[] = $email;
             }
+            break;
         case 'pending_adviser':
-            $email = User::adviser->first()->email;
+            $email = User::adviser()->first()->email_verified_at
+                ? User::adviser()->first()->email : null;
             if ($email) {
                 $emails[] = $email;
             }
+            break;
         }
         foreach ($emails as $email) {
             SendGpoaActivityStatusChangedMail::dispatch($email, $activity);

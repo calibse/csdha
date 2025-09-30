@@ -34,10 +34,11 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
             "{$eventDate->date->format('Y-m-d')} {$eventDate->end_time}",
             $event->timezone);
         $delayHours = $event->evaluation_delay_hours;
-        $delayDate = Carbon::now($event->timezone)->addHours($delayHours);
+        $delayDate = $date->addHours($delayHours);
         $eventPassed = $date->diffInHours(now($event->timezone), false) >=
             $delayHours;
         $jobs = [];
+        // $eventPassed = true;
         foreach ($eventDate->attendees()->wherePivot('eval_mail_sent', 0)
                 ->get() as $attendee) {
             $token = self::createToken();

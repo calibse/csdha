@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasPublicId;
 use App\Services\Format;
+use Illuminate\Support\Facades\DB;
 
 class EventDate extends Model
 {
@@ -45,8 +46,7 @@ class EventDate extends Model
     public function startTimeShort(): Attribute
     {
         $time = $this->start_time
-            ? Format::toLocal($this->start_time)->format('H:i')
-            : null;
+            ? Carbon::parse($this->start_time, $this->event->timezone)->format('H:i') : null;
         return Attribute::make(
             get: fn () => $time,
         );
@@ -55,8 +55,7 @@ class EventDate extends Model
     public function endTimeShort(): Attribute
     {
         $time = $this->end_time
-            ? Format::toLocal($this->end_time)->format('H:i')
-            : null;
+            ? Carbon::parse($this->end_time, $this->event->timezone)->format('H:i') : null;
         return Attribute::make(
             get: fn () => $time,
         );
@@ -73,8 +72,7 @@ class EventDate extends Model
     public function startTimeFmt(): Attribute
     {
         $time = $this->start_time
-            ? Format::toLocal($this->start_time)->format('g:i A')
-            : null;
+            ? Carbon::parse($this->start_time, $this->event->timezone)->format('g:i A') : null;
         return Attribute::make(
             get: fn () => $time
         );
@@ -83,8 +81,7 @@ class EventDate extends Model
     public function endTimeFmt(): Attribute
     {
         $time = $this->end_time
-            ? Format::toLocal($this->end_time)->format('g:i A')
-            : null;
+            ? Carbon::parse($this->end_time, $this->event->timezone)->format('g:i A') : null;
         return Attribute::make(
             get: fn () => $time
         );
@@ -103,32 +100,47 @@ class EventDate extends Model
     #[Scope]
     protected function ongoing(Builder $query): void
     {
-        $query->where(function ($query) {
-            $query->where('date', Carbon::now()->toDateString())
-                ->where(function ($query) {
-                    $query->where(function ($query) {
-                        $query->whereColumn('start_time', '<=', 'end_time')
-                            ->where(function ($query) {
-                                $query->where('start_time', '<=',
-                                    Carbon::now()->toTimeString())
-                                    ->where('end_time', '>',
-                                        Carbon::now()->toTimeString());
-                            });
-                    })->orWhere(function ($query) {
-                        $query->whereColumn('start_time', '>', 'end_time')
-                            ->where(function ($query) {
-                                $query->where('start_time', '<=',
-                                    Carbon::now()->toTimeString())
-                                    ->orWhere('end_time', '>',
-                                        Carbon::now()->toTimeString());
-                            });
+        $timezone = config('timezone');
+        $date = "date(convert_tz(date, timezone, '{$timezone}'))";
+        $startTime = "time(convert_tz(start_time, timezone, '{$timezone}'))";
+        $endTime = "time(convert_tz(end_time, timezone, '{$timezone}'))";
+        $now = Carbon::now(config('timezone'));
+        $timeQuery = function ($query) use ($now, $startTime, $endTime) {
+            $query->where(function ($query) use ($now, $startTime, $endTime) {
+                $query->whereColumn(DB::raw($startTime), '<=',
+                        DB::raw($endTime))
+                    ->where(function ($query) use ($now, $startTime, $endTime) {
+                        $query->whereRaw($startTime . ' <= ?',
+                                [$now->toTimeString()])
+                            ->whereRaw($endTime . ' > ?',
+                                [$now->toTimeString()]);
                     });
-                });
-        })->where(function ($query) {
-            $query->whereHas('event.accomReport', function ($query) {
-                $query->whereNotIn('status', ['pending', 'approved']);
-            })->orDoesntHave('event.accomReport');
-        });
+            })->orWhere(function ($query) use ($now, $startTime, $endTime) {
+                $query->whereColumn(DB::raw($startTime), '>',
+                        DB::raw($endTime))
+                    ->where(function ($query) use ($now, $startTime, $endTime) {
+                        $query->whereRaw($startTime . ' <= ?',
+                                [$now->toTimeString()])
+                            ->orWhereRaw($endTime . ' > ?',
+                                [$now->toTimeString()]);
+                    });
+            });
+        };
+        $dateQuery = function ($query) use ($now, $date, $timeQuery) {
+            $query->whereRaw($date . ' = ?', [$now->toDateString()])
+                ->where($timeQuery);
+        };
+        $query->join('events', 'events.id', '=', 'event_dates.event_id')
+            ->join('gpoa_activities', 'events.gpoa_activity_id', '=',
+                'gpoa_activities.id')
+            ->join('gpoas', 'gpoa_activities.gpoa_id', '=', 'gpoas.id')
+            ->select('event_dates.*')
+            ->where('gpoas.active', 1)
+            ->where($dateQuery)->where(function ($query) {
+                $query->whereHas('event.accomReport', function ($query) {
+                    $query->whereNotIn('status', ['pending', 'approved']);
+                })->orDoesntHave('event.accomReport');
+            });
     }
 
     #[Scope]

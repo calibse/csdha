@@ -474,10 +474,10 @@
 		}
 
 		&.index {
-			border-top-left-radius: 1rem;
+			border-top-left-radius: .3rem;
 
 			.main-actions.toolbar {
-				border-radius: 1rem;
+				border-radius: .3rem;
 				margin: .3rem;
 				border: solid .05rem var(--line-color);
 			}
@@ -486,7 +486,7 @@
 
 	.main-actions {
 		&.toolbar {
-			border-radius: 1rem;
+			border-radius: .3rem;
 			margin: .3rem;
 			border: solid .05rem var(--line-color);
 			margin: .3rem auto;

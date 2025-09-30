@@ -3,14 +3,18 @@ $routeParams = ['event' => $event->public_id];
 @endphp
 <x-layout.user route="events.dates.index" :$routeParams class="events form" title="Delete Date">
     <article class="article">
-        <p>Attendance records in this date will be destroyed. Are you sure you want to delete this date 
+        <p>
+        @if ($date->attendees->isNotEmpty())
+            Attendance records in this date will be destroyed.
+        @endif
+            Are you sure you want to delete this date
             <strong><time>{{ $date->full_date }}</time></strong>?
-        </p> 
+        </p>
         <div class="submit-buttons">
             <form action="{{ route('events.dates.index', $routeParams) }}">
                 <button>Cancel</button>
             </form>
-            <form method="POST" action="{{ route('events.dates.destroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}"> 
+            <form method="POST" action="{{ route('events.dates.destroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}">
                 @method('DELETE')
                 @csrf
                 <button>Delete</button>

@@ -6,6 +6,16 @@
                 @method('PUT')
             @endif
             @csrf
+            <fieldset>
+                <legend>Academic Term</legend>
+            @foreach ($terms as $term)
+                <p class="checkbox">
+                    <input id="academic-term-{{ $term->id }}" type="radio" name="academic_term" value="{{ $term->id }}" {{ (old('academic_term') ?? (string)$gpoa?->academicPeriod->term->id) === (string)$term->id ? 'checked' : null }}>
+                    <label for="academic-term-{{ $term->id }}">{{ $term->label }}</label>
+                </p>
+            @endforeach
+            </fieldset>
+            {{--
             <p>
                 <label>Academic term</label>
                 <select name="academic_term">
@@ -21,6 +31,7 @@
                 @endif
                 </select>
             </p>
+            --}}
             <p>
                 <label>Academic start date</label>
                 <input type="date" name="start_date" value="{{ old('start_date') ?? $gpoa?->academicPeriod->start_date }}">

@@ -1,7 +1,7 @@
 <x-layout.user class="profile form" :$backRoute title="Change Email">
     <article class="article">
         <x-alert/>
-    @if (!$user->email_verified_at)
+    @if ($user->email && !$user->email_verified_at)
         <p>
             Your email is not verified. Please check your inbox to verify.
         </p>

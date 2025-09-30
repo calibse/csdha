@@ -34,7 +34,7 @@ class GpoaActivityStatusChanged extends Mailable
                 'name' => $this->activity->name,
                 'status' => $this->activity->status,
                 'step' => $this->activity->current_step,
-                'url' => route('gpoa.activity.show', [
+                'url' => route('gpoa.activities.show', [
                     'activity' => $this->activity->public_id
                 ])
             ]

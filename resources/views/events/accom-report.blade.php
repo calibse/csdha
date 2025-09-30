@@ -206,9 +206,11 @@
     @if ($event['event']->accept_evaluation)
         <section>
             <h3>{{ Format::roman(++$i) }}. EVALUATION</h3>
+            {{--
             <section>
                 <h4>Scale</h4>
             </section>
+            --}}
         @if ($event['comments']->isNotEmpty())
             <section>
                 <h4>What are your comments, feedback, or suggestions?</h4>

@@ -394,26 +394,26 @@ class GpoaActivityController extends Controller implements HasMiddleware
     {
         $gpoa = $this->gpoa;
         $activity->comments = $request->comments;
+        $status = '';
         switch(auth()->user()->position_name) {
         case 'president':
             $activity->status = 'returned';
             $activity->current_step = 'officers';
             $activity->president_returned_at = now();
             $activity->save();
-            return redirect()->route('gpoa.index')->with('status',
-                'Activity returned to the officers.');
+            $status = 'Activity returned to the officers.';
+            break;
         case 'adviser':
             $activity->status = 'returned';
             $activity->current_step = 'president';
             $activity->adviser_returned_at = now();
             $activity->save();
-            return redirect()->route('gpoa.index')->with('status',
-                'Activity returned to the President.');
+            $status = 'Activity returned to the President.';
+            break;
         }
         GpoaActivityStatusChanged::dispatch($activity);
-        return redirect()->route('gpoa.activities.show', [
-            'activity' => $activity->public_id
-        ]);
+        return redirect()->route('gpoa.index')
+            ->with('status', $status);
     }
 
     public function reject(SaveGpoaActivityCommentsRequest $request,
@@ -456,6 +456,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $type = new GpoaActivityType();
             $type->name = $request->type_of_activity;
             $type->save();
+            $activity->type()->associate($type);
         } elseif ($type) {
             $activity->type()->associate($type);
         }
@@ -465,6 +466,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $fundSource = new GpoaActivityFundSource();
             $fundSource->name = $request->fund_source;
             $fundSource->save();
+            $activity->fundSource()->associate($fundSource);
         } elseif ($fundSource) {
             $activity->fundSource()->associate($fundSource);
         }
@@ -473,6 +475,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $mode = new GpoaActivityMode();
             $mode->name = $request->mode;
             $mode->save();
+            $activity->mode()->associate($mode);
         } elseif ($mode) {
             $activity->mode()->associate($mode);
         }
@@ -482,6 +485,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $partnershipType = new GpoaActivityPartnershipType();
             $partnershipType->name = $request->partnership;
             $partnershipType->save();
+            $activity->partnershipType()->associate($partnershipType);
         } elseif ($partnershipType) {
             $activity->partnershipType()->associate($partnershipType);
         }

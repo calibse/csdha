@@ -23,6 +23,7 @@ class DispatchEventEvalMailJob
             $delay = Carbon::parse(
                 "{$date->date->format('Y-m-d')} {$date->end_time}",
                 $event->timezone);
+            // $delay = 0;
             PrepareEventEvalMailJob::dispatch($date)->delay($delay);
         }
     }

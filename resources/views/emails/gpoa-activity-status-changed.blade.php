@@ -1,8 +1,8 @@
-@use ('App/Services/Format')
+@use ('App\Services\Format')
 This is an automated notification.
 
 @switch ($step)
-@case ('officers'):
+@case ('officers')
     @switch ($status)
     @case ('returned')
 The GPOA activity "{{ $name }}" was returned by the President on
@@ -10,7 +10,7 @@ The GPOA activity "{{ $name }}" was returned by the President on
         @break
     @endswitch
     @break
-@case ('president'):
+@case ('president')
     @switch ($status)
     @case ('pending')
 The GPOA activity "{{ $name }}" was submitted by the officers on
@@ -26,7 +26,7 @@ The GPOA activity "{{ $name }}" was rejected by the President on
         @break
     @endswitch
     @break
-@case ('adviser'):
+@case ('adviser')
     @switch ($status)
     @case ('pending')
 The GPOA activity "{{ $name }}" was submitted by the President on
@@ -44,12 +44,12 @@ The GPOA activity "{{ $name }}" was approved by the Adviser on
     @break
 @endswitch
 
-Link to GPOA Activity: {{ $url }}
+Link to GPOA Activity: {!! $url !!}
 
 Please do not reply to this message.
 
 --
-This message was sent automatically by CSDHA ({{ url() }}).
+This message was sent automatically by CSDHA ({!! url('/') !!}).
 {{--
 For assistance, visit [https://yourwebsite.com/support] or contact
 [support@yourwebsite.com].
