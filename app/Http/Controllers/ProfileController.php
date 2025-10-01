@@ -82,7 +82,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         $status = 'Email updated.';
-        if ($user->email !== $request->email) {
+        if ($user->email !== $request->email || !$request->email) {
             $user->email_verified_at = null;
         }
         $user->email = $request->email;

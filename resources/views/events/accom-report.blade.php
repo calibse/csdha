@@ -206,20 +206,15 @@
     @if ($event['event']->accept_evaluation)
         <section>
             <h3>{{ Format::roman(++$i) }}. EVALUATION</h3>
-            {{--
-            <section>
-                <h4>Scale</h4>
-            </section>
-            --}}
         @if ($event['comments']->isNotEmpty())
-            <section>
-                <h4>What are your comments, feedback, or suggestions?</h4>
+            <div class="list-section">
+                <p>What are your comments, feedback, or suggestions?</p>
                 <ul class="comment-list">
                 @foreach ($event['comments'] as $comment)
                     <li><pre>{{ $comment }}</pre></li>
                 @endforeach
                 </ul>
-            </section>
+            </div>
         @endif
         </section>
         {{--

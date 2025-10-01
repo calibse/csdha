@@ -153,7 +153,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function currentStatus(): Attribute
+    public function fullStatus(): Attribute
     {
         $status = $this->status;
         $currentStep = $this->current_step;
@@ -169,10 +169,10 @@ class GpoaActivity extends Model
             $currentStatus = 'Pending Adviser Approval';
             break;
         case 'president_returned':
-            $currentStatus = 'Returned to President for Update';
+            $currentStatus = 'Returned to President';
             break;
         case 'officers_returned':
-            $currentStatus = 'Returned to Officers for Update';
+            $currentStatus = 'Returned to Officers';
             break;
         case 'president_rejected':
             $currentStatus = 'Rejected by President';
@@ -181,7 +181,7 @@ class GpoaActivity extends Model
             $currentStatus = 'Rejected by Adviser';
             break;
         case 'adviser_approved':
-            $currentStatus = 'Approved';
+            $currentStatus = 'Approved by Adviser';
             break;
         default:
             $currentStatus = 'Unknown';

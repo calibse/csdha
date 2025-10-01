@@ -1,14 +1,17 @@
 /* _alert.scss */
 
 @keyframes collapse {
+    /*
 	from {
 		visibility: visible;
 		height: max-content;
 	}
+    */
 
 	to {
 		visibility: collapse;
 		height: 0;
+        margin: 0;
 	}
 }
 

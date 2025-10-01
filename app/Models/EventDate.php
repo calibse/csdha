@@ -131,16 +131,28 @@ class EventDate extends Model
                 ->where($timeQuery);
         };
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
+            /*
             ->join('gpoa_activities', 'events.gpoa_activity_id', '=',
                 'gpoa_activities.id')
             ->join('gpoas', 'gpoa_activities.gpoa_id', '=', 'gpoas.id')
+            */
             ->select('event_dates.*')
+            /*
             ->where('gpoas.active', 1)
+            */
             ->where($dateQuery)->where(function ($query) {
                 $query->whereHas('event.accomReport', function ($query) {
                     $query->whereNotIn('status', ['pending', 'approved']);
                 })->orDoesntHave('event.accomReport');
             });
+    }
+
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->whereHas('event.gpoaActivity.gpoa', function ($query) {
+            $query->where('active', 1);
+        });
     }
 
     #[Scope]

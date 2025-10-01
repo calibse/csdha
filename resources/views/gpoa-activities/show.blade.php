@@ -63,16 +63,13 @@
     </x-slot>
     <article class="article document">
         <aside>
+            <p>Status: {{ $activity->full_status }}</p>
         @if ($activity->comments)
-            <header>
-                <p><strong>{{ $activity->comments_purpose }}</strong></p>
-            </header>
-            <pre>{{ $activity->comments }}</pre>
+            <pre>"{{ $activity->comments }}"</pre>
         @endif
-            <p>Status: {{ $activity->current_status }}</p>
-            @if ($date)
-            <p>Date: {{ $date }}</p>
-            @endif
+        @if ($date)
+            <p>{{ $date }}</p>
+        @endif
         </aside>
         <hr>
         <h2>{{ $activity->name }}</h2>

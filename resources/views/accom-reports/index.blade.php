@@ -29,7 +29,7 @@
                             {{ $accomReport->event->gpoaActivity->name }}
                         </a>
                     </td>
-                    <td>{{ ucwords($accomReport->status) }}</td>
+                    <td>{{ $accomReport->full_status }}</td>
                 </tr>
             @endforeach
             </tbody>

@@ -18,7 +18,7 @@
                 </div>
             </form>
         </div>
-        @if ($fileRoute)
+    @if ($fileRoute)
         <figure class="pdf-document">
             <div class="pdf-file">
                 <object data="{{ $fileRoute }}" type="application/pdf">
@@ -30,8 +30,10 @@
             </div>
             <figcaption class="caption">Accomplishment Report</figcaption>
         </figure>
-        @elseif (!$start)
+    @elseif (!$start)
+        <p>There are no approved accomplishment reports yet.</p>
+    @elseif ($start && $empty)
         <p>No records available to generate.</p>
-        @endif
+    @endif
     </article>
 </x-layout.user>

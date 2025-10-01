@@ -39,17 +39,17 @@ class EventController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:viewAny,' . Event::class, only: ['index']),
-            new Middleware('can:view,event', only: [
+            new Middleware('auth.index:viewAny,' . Event::class, only: ['index']),
+            new Middleware('auth.event:view,event', only: [
                 'show',
                 'showCoverPhoto',
                 'showLetterOfIntentFile',
                 'showLetterOfIntent',
                 'showAttendance',
             ]),
-            new Middleware('can:create,' . Event::class,
+            new Middleware('auth.index:create,' . Event::class,
                 only: ['create', 'store']),
-            new Middleware('can:update,event', only: [
+            new Middleware('auth.event:update,event', only: [
                 'edit',
                 'update',
                 'dateIndex',
@@ -64,16 +64,16 @@ class EventController extends Controller implements HasMiddleware
                 'editComments',
                 'updateComments'
             ]),
-            new Middleware('can:delete,event', only: ['destroy']),
-            new Middleware('can:update,date', only: [
+            new Middleware('auth.event:delete,event', only: ['destroy']),
+            new Middleware('auth.event:update,date', only: [
                 'editDate',
                 'updateDate'
             ]),
-            new Middleware('can:addAttendee,event', only: [
+            new Middleware('auth.event:addAttendee,event', only: [
                 'createAttendee',
                 'storeAttendee'
             ]),
-            new Middleware('can:recordAttendance,event', only: [
+            new Middleware('auth.event:recordAttendance,event', only: [
                 'showAttendance',
             ]),
         ];

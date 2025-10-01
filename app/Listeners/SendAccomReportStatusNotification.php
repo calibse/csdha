@@ -22,32 +22,26 @@ class SendAccomReportStatusNotification
         $step = $accomReport->current_step;
         $emails = [];
         switch ("{$status}_{$step}") {
-        case 'returned_officers':
         case 'approved_adviser':
-            foreach (User::accomReportEditor->get() as $officer) {
-                $email = $officer->email_verified_at ? $officer->email : null;
-                if ($email) {
-                    $emails[] = $email;
-                }
+            foreach (User::accomReportEditor()->verified()->get() as $officer) {
+                $emails[] = $officer->email;
+            }
+            $emails[] = User::adviser()->verified()->first()?->email;
+            break;
+        case 'returned_officers':
+            foreach (User::accomReportEditor()->verified()->get() as $officer) {
+                $emails[] = $officer->email;
             }
             break;
         case 'pending_president':
-            $email = User::president->first()->email_verified_at
-                ? User::president->first()->email : null;
-            if ($email) {
-                $emails[] = $email;
-            }
-            break;
-        case 'approved_adviser':
-            $email = User::adviser->first()->email_verified_at
-                ? User::adviser->first()->email : null;
-            if ($email) {
-                $emails[] = $email;
-            }
+            $emails[] = User::president()->verified()->first()?->email;
             break;
         }
         foreach ($emails as $email) {
-            SendAccomReportStatusChangedMail::dispatch($email, $accomReport);
+            if ($email) {
+                SendAccomReportStatusChangedMail::dispatch($email,
+                    $accomReport);
+            }
         }
     }
 }

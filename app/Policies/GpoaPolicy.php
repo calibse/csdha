@@ -63,7 +63,8 @@ class GpoaPolicy
 
     public function genPdf(User $user): Response
     {
-        return Gpoa::active()->exists()
+        $canView = $user->hasPerm('general-plan-of-activities.view');
+        return (Gpoa::active()->exists() && $canView)
             ? Response::allow()
             : Response::deny();
     }

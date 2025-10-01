@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\SetAuditVariables;
 use App\Http\Middleware\SetTimezone;
+use App\Http\Middleware\AuthorizeGpoa;
+use App\Http\Middleware\AuthorizeEvent;
+use App\Http\Middleware\AuthorizeAccomReport;
+use App\Http\Middleware\AuthorizeIndex;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,6 +20,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'auth.index' => AuthorizeIndex::class,
+            'auth.gpoa' => AuthorizeGpoa::class,
+            'auth.event' => AuthorizeEvent::class,
+            'auth.accom-report' => AuthorizeAccomReport::class,
+        ]);
         $middleware->trustProxies(at: '*');
         $middleware->trustProxies(headers: Request::HEADER_X_FORWARDED_FOR |
             Request::HEADER_X_FORWARDED_HOST |

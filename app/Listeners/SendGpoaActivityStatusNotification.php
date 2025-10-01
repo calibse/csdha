@@ -22,38 +22,42 @@ class SendGpoaActivityStatusNotification
         $step = $activity->current_step;
         $emails = [];
         switch ("{$status}_{$step}") {
-        case 'returned_officers':
-        case 'rejected_president':
         case 'rejected_adviser':
         case 'approved_adviser':
-            foreach ($activity->eventHeads()->notOfPosition('president')->get()
-                    as $officer) {
-                $email = $officer->email_verified_at ? $officer->email : null;
-                if ($email) {
-                    $emails[] = $email;
-                }
+            foreach ($activity->eventHeads()->notOfPosition('president')
+                    ->verified()->get() as $officer) {
+                $emails[] = $officer->email;
+            }
+            $emails[] = User::president()->verified()->first()?->email;
+            break;
+        case 'returned_president':
+            $emails[] = User::president()->verified()->first()?->email;
+            if (!$activity->eventHeads()->ofPosition('president')->exists()) {
+                break;
+            }
+            foreach ($activity->eventHeads()->notOfPosition('president')
+                    ->verified()->get() as $officer) {
+                $emails[] = $officer->email;
+            }
+            break;
+        case 'returned_officers':
+        case 'rejected_president':
+            foreach ($activity->eventHeads()->notOfPosition('president')
+                    ->verified()->get() as $officer) {
+                $emails[] = $officer->email;
             }
             break;
         case 'pending_president':
-        case 'returned_president':
-        case 'rejected_adviser':
-        case 'approved_adviser':
-            $email = User::president()->first()->email_verified_at
-                ? User::president()->first()->email : null;
-            if ($email) {
-                $emails[] = $email;
-            }
+            $emails[] = User::president()->verified()->first()?->email;
             break;
         case 'pending_adviser':
-            $email = User::adviser()->first()->email_verified_at
-                ? User::adviser()->first()->email : null;
-            if ($email) {
-                $emails[] = $email;
-            }
+            $emails[] = User::adviser()->verified()->first()?->email;
             break;
         }
         foreach ($emails as $email) {
-            SendGpoaActivityStatusChangedMail::dispatch($email, $activity);
+            if ($email) {
+                SendGpoaActivityStatusChangedMail::dispatch($email, $activity);
+            }
         }
     }
 }

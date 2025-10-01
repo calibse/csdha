@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class AccomReport extends Model
 {
@@ -21,6 +22,29 @@ class AccomReport extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function fullStatus(): Attribute
+    {
+        $status = $this->status;
+        $step = $this->current_step;
+        $fullStatus = '';
+        switch ("{$status}_{$step}") {
+        case 'approved_adviser':
+            $fullStatus = 'Approved by President';
+            break;
+        case 'returned_officers':
+            $fullStatus = 'Returned to Officers';
+            break;
+        case 'pending_president':
+            $fullStatus = 'Pending President Approval';
+            break;
+        default:
+            $fullStatus = 'Unknown';
+        }
+        return Attribute::make(
+            get: fn () => $fullStatus,
+        );
     }
 
     #[Scope]

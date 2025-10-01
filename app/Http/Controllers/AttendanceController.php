@@ -18,21 +18,21 @@ class AttendanceController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('can:storeAttendance,event_date', only: ['store']),
-            new Middleware('can:viewAttendance,' . Event::class, 
+            new Middleware('can:viewAttendance,' . Event::class,
                 only: ['create'])
         ];
     }
-    
+
     public function create()
     {
-        $dates = EventDate::ongoing()->get();
+        $dates = EventDate::active()->ongoing()->get();
         return view('attendance.show', [
             'dates' => $dates
         ]);
     }
 
-    public function store(StoreAttendanceRequest $request, 
-            EventDate $eventDate) 
+    public function store(StoreAttendanceRequest $request,
+            EventDate $eventDate)
     {
         $regis = EventRegistration::where('token', $request->token)
             ->whereBelongsTo($eventDate->event)->first();

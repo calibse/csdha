@@ -187,10 +187,13 @@ class EventPolicy
         return Response::deny();
     }
 
-    public function genAccomReport(User $user, Event $event): Response
+    public function genAccomReport(User $user): Response
     {
-        $active = $event->gpoa()->active()->exists();
-        if (!$active) return Response::deny();
+        $hasPerm = $user->hasPerm('accomplishment-reports.view');
+        if ($hasPerm) {
+            return Response::allow();
+        }
+        return Response::deny();
     }
 
     public function register(?User $user, Event $event): Response

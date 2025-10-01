@@ -29,15 +29,15 @@ class GpoaController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:viewAny,' . GpoaActivity::class,
+            new Middleware('auth.index:viewAny,' . GpoaActivity::class,
                 only: ['index']),
-            new Middleware('can:create,' . Gpoa::class,
+            new Middleware('auth.index:create,' . Gpoa::class,
                 only: ['create', 'store']),
-            new Middleware('can:update,' . Gpoa::class,
+            new Middleware('auth.index:update,' . Gpoa::class,
                 only: ['edit', 'update']),
-            new Middleware('can:close,' . Gpoa::class,
+            new Middleware('auth.index:close,' . Gpoa::class,
                 only: ['confirmClose', 'close']),
-            new Middleware('can:genPdf,' . Gpoa::class,
+            new Middleware('auth.index:genPdf,' . Gpoa::class,
                 only: ['genPdf', 'streamPdf']),
         ];
     }
@@ -126,9 +126,13 @@ class GpoaController extends Controller implements HasMiddleware
     public function genPdf(Request $request)
     {
         $gpoa = $this->gpoa;
+        $fileRoute = null;
+        if ($gpoa->activities()->where('status', 'approved')->exists()) {
+            $fileRoute = route('gpoa.genPdf');
+        }
         return view('gpoa.show-gpoa-report', [
             'gpoa' => $gpoa,
-            'fileRoute' => route('gpoa.genPdf', ['gpoa' => $gpoa->public_id ])
+            'fileRoute' => $fileRoute
         ]);
     }
 

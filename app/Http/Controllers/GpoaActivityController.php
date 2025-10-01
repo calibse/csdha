@@ -33,17 +33,17 @@ class GpoaActivityController extends Controller implements HasMiddleware
         return [
             new Middleware('can:create,' . GpoaActivity::class,
                 only: ['create', 'store']),
-            new Middleware('can:view,activity', only: ['show']),
-            new Middleware('can:update,activity',
+            new Middleware('auth.gpoa:view,activity', only: ['show']),
+            new Middleware('auth.gpoa:update,activity',
                 only: ['edit', 'update', 'destroy', 'confirmDestroy']),
-            new Middleware('can:submit,activity',
+            new Middleware('auth.gpoa:submit,activity',
                 only: ['prepareForSubmit', 'submit']),
-            new Middleware('can:return,activity',
+            new Middleware('auth.gpoa:return,activity',
                 only: ['prepareForReturn', 'return']),
-            new Middleware('can:reject,activity',
+            new Middleware('auth.gpoa:reject,activity',
                 only: ['prepareForReject', 'reject']),
-            new Middleware('can:approve,activity',
-                only: ['prepareForApprove', 'approve'])
+            new Middleware('auth.gpoa:approve,activity',
+                only: ['prepareForApprove', 'approve']),
         ];
     }
 

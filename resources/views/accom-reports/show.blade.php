@@ -1,6 +1,6 @@
 <x-layout.user :$backRoute title="Accomplishment Report" class="event">
     <x-slot:toolbar>
-        <a 
+        <a
             @can ('update', $event)
             href="{{ $editRoute }}"
             @endcan
@@ -9,48 +9,47 @@
             <span class="text">Edit</span>
         </a>
         @if ($actions['submit'])
-        <a 
+        <a
         @can('submitAccomReport', $event)
             href="{{ $submitRoute }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-arrow-fat-line-right/></span> 
+            <span class="icon"><x-phosphor-arrow-fat-line-right/></span>
             <span class="text">Submit</span>
         </a>
         @endif
         @if ($actions['return'])
-        <a 
+        <a
         @can('returnAccomReport', $event)
             href="{{ $returnRoute }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-arrow-fat-line-left/></span> 
+            <span class="icon"><x-phosphor-arrow-fat-line-left/></span>
             <span class="text">Return</span>
         </a>
         @endif
         @if ($actions['approve'])
-        <a 
+        <a
         @can('approveAccomReport', $event)
             href="{{ $approveRoute }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-check-circle/></span> 
+            <span class="icon"><x-phosphor-check-circle/></span>
             <span class="text">Approve</span>
         </a>
         @endif
     </x-slot:toolbar>
     <article class="article">
         <x-alert/>
-        @if ($accomReport?->status)
-        <p>Status: {{ ucwords($accomReport?->status) }}</p>
-        @endif
-        @if ($date)
-        <p>Date: {{ $date }}</p>
-        @endif
-        @if ($accomReport?->comments)
-        <p>Comments</p>
-        <pre>{{ $accomReport?->comments }}</pre>
-        @endif
+    @if ($accomReport)
+        <p>Status: {{ $accomReport->full_status }}</p>
+    @endif
+    @if ($accomReport?->comments)
+        <pre>"{{ $accomReport?->comments }}"</pre>
+    @endif
+    @if ($date)
+        <p>{{ $date }}</p>
+    @endif
         <figure class="pdf-document">
             <div class="pdf-file">
                 <object data="{{ $fileRoute }}" type="application/pdf">

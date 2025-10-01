@@ -20,19 +20,19 @@ class AccomReportController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:viewAnyAccomReport,' . Event::class,
+            new Middleware('auth.index:viewAnyAccomReport,' . Event::class,
                 only: ['index']),
-            new Middleware('can:viewAccomReport,event', only: ['show']),
-            new Middleware('can:submitAccomReport,event', only: [
+            new Middleware('auth.accom-report:viewAccomReport,event', only: ['show']),
+            new Middleware('auth.accom-report:submitAccomReport,event', only: [
                 'submit', 'prepareForSubmit'
             ]),
-            new Middleware('can:returnAccomReport,event', only: [
+            new Middleware('auth.accom-report:returnAccomReport,event', only: [
                 'return', 'prepareForReturn'
             ]),
-            new Middleware('can:approveAccomReport,event', only: [
+            new Middleware('auth.accom-report:approveAccomReport,event', only: [
                 'approve', 'prepareForApprove'
             ]),
-            new Middleware('can:genAccomReport,event', only: [
+            new Middleware('auth.index:genAccomReport,' . Event::class, only: [
                 'generate', 'stream'
             ]),
         ];
@@ -233,23 +233,23 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        $events = null;
         $start = false;
+        $empty = true;
+        $fileRoute = null;
         if ($startDate && $endDate) {
-            $events = Event::approved($startDate, $endDate)->exists();
-        } elseif (!$startDate && !$endDate) {
             $start = true;
-        }
-        if ($events) {
-            $fileRoute = route('accom-reports.stream', [
+            $events = Event::active()->approved($startDate, $endDate)->exists();
+            $fileRoute = $events ? route('accom-reports.stream', [
                 'start_date' => $startDate,
                 'end_date' => $endDate
-            ]);
-        } else {
-            $fileRoute = null;
-            $startDate = $startDate ?? EventDate::approved()
+            ]) : null;
+            $empty = $events ? false : true;
+        } elseif (Event::active()->approved()->exists()) {
+            $empty = false;
+            $start = true;
+            $startDate = $startDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'asc')->value('date')->toDateString();
-            $endDate = $endDate ?? EventDate::approved()
+            $endDate = $endDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'desc')->value('date')->toDateString();
         }
         return view('accom-reports.gen-accom-report', [
@@ -257,7 +257,8 @@ class AccomReportController extends Controller implements HasMiddleware
             'fileRoute' => $fileRoute,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'start' => $start
+            'start' => $start,
+            'empty' => $empty
         ]);
     }
 
@@ -266,7 +267,7 @@ class AccomReportController extends Controller implements HasMiddleware
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         if (!($startDate && $endDate)) abort(404);
-        $allEvents = Event::approved($startDate, $endDate)->get();
+        $allEvents = Event::active()->approved($startDate, $endDate)->get();
         if (!$allEvents) abort(404);
         foreach ($allEvents as $event) {
             $events[] = $event->accomReportViewData();

@@ -8,9 +8,9 @@
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
-		<a href="{{ route('gpoa.showGenPdf') }}">
-				<span class="icon"><x-phosphor-file-plus/></span>
-				<span class="text">Gen. PDF</span>
+		<a href="{{ route('gpoa.confirmClose') }}">
+				<span class="icon"><x-phosphor-archive/></span>
+				<span class="text">Close</span>
 		</a>
 		@endcan
 		@can ('update', 'App\Models\Gpoa')
@@ -20,9 +20,9 @@
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
-		<a href="{{ route('gpoa.confirmClose') }}">
-				<span class="icon"><x-phosphor-archive/></span>
-				<span class="text">Close</span>
+		<a href="{{ route('gpoa.showGenPdf') }}">
+				<span class="icon"><x-phosphor-file-plus/></span>
+				<span class="text">Gen. PDF</span>
 		</a>
 		@endcan
 	@else
@@ -64,7 +64,7 @@
                             {{ $activity->name }}
                         </a>
                     </td>
-                    <td>{{ $activity->current_status }}</td>
+                    <td>{{ $activity->full_status }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -82,7 +82,7 @@
 							{{ mb_strimwidth($activity->name, 0, 70, '...') }}
 						</a>
 					</p>
-					<p class="subtitle">Status: {{ mb_strimwidth($activity->current_status, 0, 70, '...') }} </p>
+					<p class="subtitle">Status: {{ mb_strimwidth($activity->full_status, 0, 70, '...') }} </p>
 				</div>
 			</li>
 		@endforeach

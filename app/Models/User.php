@@ -276,6 +276,12 @@ class User extends Authenticatable
             ->notOfPosition('adviser');
     }
 
+    #[Scope]
+    protected function verified(Builder $query): void
+    {
+        $query->whereNotNull('email_verified_at');
+    }
+
     protected function entryTime(): Attribute
     {
         $time = $this->pivot?->created_at;
