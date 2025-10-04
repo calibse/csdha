@@ -39,6 +39,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function google(): HasOne
+    {
+        return $this->hasOne(GoogleAccount::class);
+    }
+
     public function eventDates(): BelongsToMany
     {
         return $this->belongsToMany(EventDate::class, 'event_officer_attendees')

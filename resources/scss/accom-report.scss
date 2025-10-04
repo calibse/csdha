@@ -42,7 +42,7 @@ $header-margin: 4.7cm;
 @page {
     margin: $margin;
     size: $size;
-    background: url("resources/pdf/images/ar-bg.jpg") no-repeat;
+    background: url("storage/app/private/accom_reports/background.jpg") no-repeat;
     background-attachment: fixed;
     background-size: cover;
 }

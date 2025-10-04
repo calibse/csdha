@@ -25,7 +25,7 @@
 			<span class="text">Close Menu</span>
 		</a>
 		<div class="content-block">
-			<div class="main-info">
+			<div class="main-header-info">
 				<a class="main-brand" href="#">
 					<span class="logo">
 						<img src="{{ Vite::asset('resources/images/app-logo.png') }}">
@@ -34,43 +34,40 @@
 				</a>
 				<div class="account">
 					<div class="info">
-						<div class="avatar">
+						<p class="avatar">
 							@if (auth()->user()->avatar_filepath)
 							<img src="{{ route('profile.showAvatar', ['avatar' => basename(auth()->user()->avatar_filepath)]) }}">
 							@else
 							<x-icon.avatar/>
 							@endif
+						</p>
+						<div class="details">
+							<p>{{ auth()->user()->full_name }}</p>
+                        @if ($siteContext === 'admin')
+                            <p>{{ ucwords(auth()->user()->role?->name) }}</p>
+                        @elseif ($siteContext === 'user')
+                            <p>{{ auth()->user()->position?->name }}</p>
+                        @endif
 						</div>
-						<dl class="details">
-							<dt class="name">Name</dt><dd class="value">{{ auth()->user()->full_name }}</dd>
-							<dt class="name">Role</dt>
-							@if ($siteContext === 'admin')
-								<dd class="value">{{ ucwords(auth()->user()->role?->name) }}</dd>
-							@elseif ($siteContext === 'user')
-								<dd class="value">{{ auth()->user()->position?->name }}</dd>
-							@endif
-						</dl>
 					</div>
                     @if ($siteContext === 'user')
-					<nav class="main-actions">
-						<a href="
-                            {{ route('profile.edit') }}
-                            ">
+					<p class="main-action">
+						<a href="{{ route('profile.edit') }}">
 							<span class="icon"><x-phosphor-pencil-simple/></span>
 							<span class="text">Edit profile</span>
 						</a>
-					</nav>
+					</p>
                     @endif
 				</div>
 			</div>
-			<nav class="main-menu">
+			<nav class="main-header-menu">
 				<p class="title">Main Menu</p>
 				<ul class="list">
                     @if ($siteContext === 'user')
 					<li>
 						<a href="{{ route('user.home') }}">
 							<span class="icon"><x-phosphor-house/></span>
-							<span class="text">Home</span>
+                            <span class="text">Home</span>
 						</a>
 					</li>
 					@can ('viewAny', 'App\Models\Gpoa')
@@ -245,40 +242,33 @@
 		</div>
 	</header>
 	@endif
-	<main class="main">
+	<main class="main-main">
 		<header class="main-content-header">
 			<div class="content-block">
-				<nav class="nav-actions">
-					@if ($index)
-					<a href="#menu" class="menu-button">
+				<p class="nav-actions">
+                @if ($index)
+					<a href="#menu" class="main-menu-button">
 						<span class="icon"><x-phosphor-list/></span>
 						<span class="text">Menu</span>
 					</a>
-					<template id="menu-button-template">
-						<button class="menu-button">
-							<span class="icon"><x-phosphor-list/></span>
-						</button>
-					</template>
-					@else
-						@if ($backRoute)
-					<a class="back-link" href="{{ $backRoute }}" >
+                @elseif ($backRoute)
+					<a class="main-back-link" href="{{ $backRoute }}" >
 						<span class="icon"><x-phosphor-arrow-left/></span>
 						<span class="text">Back to previous page</span>
 					</a>
-						@else
-					<a class="back-link" href="{{ route($route, $routeParams) }}" >
+                @else
+					<a class="main-back-link" href="{{ route($route, $routeParams) }}" >
 						<span class="icon"><x-phosphor-arrow-left/></span>
 						<span class="text">Back to previous page</span>
 					</a>
-						@endif
-					@endif
-				</nav>
+                @endif
+				</p>
 				<h1 class="title">{{ $title ?? 'CSDHA' }}</h1>
 			</div>
 		</header>
 		<div {{ $attributes->merge(['class' => 'main-content']) }}>
 			@if (isset($toolbar) && $toolbar->hasActualContent())
-			<nav class="main-actions toolbar">{{ $toolbar }}</nav>
+			<nav class="main-toolbar">{{ $toolbar }}</nav>
 			@endif
 			<div class="content-block">
 				{{ $slot }}

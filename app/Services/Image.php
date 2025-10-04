@@ -8,21 +8,28 @@ class Image
 {
     private $image;
 
-    public function __construct($image)
+    public function __construct(public $image)
     {
-        $this->image = $image;
+
     }
 
     public function scaleDown($imageSize)
     {
         $image = IImage::read($this->image);
-        if ($image->width() !== $imageSize && $image->width() <= $image->height()) {
+        if ($image->width() !== $imageSize && $image->width() <=
+                $image->height()) {
             $image->scaleDown(width: $imageSize);
         }
-        elseif ($image->height() !== $imageSize && $image->height() <= $image->width()) {
+        elseif ($image->height() !== $imageSize && $image->height()
+                <= $image->width()) {
             $image->scaleDown(height: $imageSize);
         }
+        return $image->toJpeg();
+    }
 
+    public function get()
+    {
+        $image = IImage::read($this->image);
         return $image->toJpeg();
     }
 

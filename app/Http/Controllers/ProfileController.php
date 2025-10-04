@@ -17,16 +17,6 @@ use App\Mail\EmailVerify;
 
 class ProfileController extends Controller
 {
-    private string $siteContext;
-    public function __construct()
-    {
-        if (request()->getHost() === config('app.user_domain')) {
-            $this->siteContext = 'user';
-        } elseif (request()->getHost() === config('app.admin_domain')) {
-            $this->siteContext = 'admin';
-        }
-    }
-
 	public function index()
 	{
 		return view('profile.index');
@@ -169,9 +159,83 @@ class ProfileController extends Controller
         return redirect()->back();
     }
 
-	public function showAvatar() {
+    public function showAvatar()
+    {
 		$user = auth()->user();
 		return $user->avatar_filepath ? response()->file(Storage::path(
 			$user->avatar_filepath)) : null;
 	}
+
+    public function connectSocial(string $provider)
+    {
+        switch ($provider) {
+        case 'google':
+            config(['services.google.redirect' => route(
+                    'connect-account.callback', [
+                'provider' => $provider
+            ])]);
+            return Socialite::driver($provider)->with([
+                'access_type' => 'offline',
+            ])->redirect();
+            break;
+        }
+    }
+
+    public function updateSocial(string $provider)
+    {
+        $socialUser = Socialite::driver($provider)->user();
+        $user = $socialUser ? self::findSocial($provider,
+            $socialUser->id) : null;
+        if ($user) {
+            return redirect()->route('profile.edit')->withErrors([
+                'connect_account' => "The {$provider} account is already taken."
+            ]);
+        }
+        self::storeOrUpdateSocial($provider, $socialUser);
+        return redirect()->route('profile.edit')->with('status',
+            'Profile updated.');
+    }
+
+    public function deleteSocial(string $provider)
+    {
+        $user = auth()->user();
+        switch ($provider) {
+        case 'google':
+            $user->google->delete();
+            break
+        }
+        return redirect()->back()->with('status',
+            'Profile updated.');
+    }
+
+    private static function findSocialUser(string $provider, string $id)
+    {
+        switch ($provider) {
+        case 'google':
+            $user = GoogleAccount::firstWhere('google_id', $id)?->user;
+            break;
+        }
+        return $user;
+    }
+
+    private static function storeOrUpdateSocial(string $provider, $socialUser)
+    {
+        $user = auth()->user();
+        switch ($provider) {
+        case 'google':
+            if (!$user->google) {
+                $google = new GoogleAccount;
+                $google->user()->associate($user);
+            } else {
+                $google = $user->google;
+            }
+            $google->google_id = $socialUser->id;
+            $google->token = $socialUser->token;
+            $google->refresh_token = $socialUser->refreshToken;
+            $google->expires_at = now()->second($socialUser->expiresIn)
+                ->toDateTimeString();
+            $google->save();
+            break;
+        }
+    }
 }

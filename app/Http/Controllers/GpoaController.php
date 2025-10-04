@@ -61,7 +61,7 @@ class GpoaController extends Controller implements HasMiddleware
         return view('gpoa.index', [
             'gpoa' => $gpoa,
             'activities' => $activities->orderBy('updated_at', 'desc')
-                ->paginate(7)
+                ->paginate(3)
         ]);
     }
 

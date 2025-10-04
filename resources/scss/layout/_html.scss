@@ -20,6 +20,20 @@ p {
 	hyphens: auto;
 }
 
-a[href] {
-	color: var(--color-4);
+a, button {
+    > .icon, > .text {
+        display: inline-block;
+        white-space: normal;
+        vertical-align: middle;
+    }
+
+    > .icon {
+        line-height: 0;
+        margin-right: .3rem;
+    }
+}
+
+a:hover > .text,
+a:focus > .text {
+    text-decoration: underline;
 }

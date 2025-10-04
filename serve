@@ -7,12 +7,12 @@ export DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock
 export PODMAN_COMPOSE_WARNING_LOGS=false
 export PODMAN_COMPOSE_PROVIDER=podman-compose
 
-if [ -d "$HOME/bin" ] 
+if [ -d "$HOME/bin" ]
 then
 	PATH="$HOME/bin:$PATH"
 fi
 
-if [ -d "$HOME/.local/bin" ] 
+if [ -d "$HOME/.local/bin" ]
 then
 	PATH="$HOME/.local/bin:$PATH"
 fi
@@ -23,6 +23,44 @@ usage() {
 	exit 1
 }
 
+restart_queue() {
+    queue_container="csdha-queue-pod-queue"
+    if [ -n "$(podman ps -q -f name="$queue_container")" ]
+    then
+        podman exec $queue_container php artisan queue:restart
+        set +e
+        podman wait $queue_container
+        set -e
+    fi
+}
+
+start_db() {
+    database_container="csdha-database-pod-database"
+    k8s_db_files="secret.yaml pvc.yaml database.yaml"
+    container_name=$(podman ps --filter "name=$database_container" \
+        --format "{{.Names}}")
+    if [ -z "$(podman ps -q -f name="$database_container")" ]
+    then
+        for yaml_file in $k8s_db_files
+        do
+            podman kube play --replace k8s/$yaml_file
+        done
+    fi
+}
+
+reload_web() {
+    podman build -f container/base/Dockerfile -t alpine-laravel:1.0 .
+    podman build -f container/web/Dockerfile -t laravel-web:1.0 .
+    podman build -f container/queue/Dockerfile -t laravel-queue:1.0 .
+    podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
+    k8s_web_files="migrate.yaml web-user.yaml web-admin.yaml queue.yaml"
+    for yaml_file in $k8s_web_files
+    do
+        podman kube play --replace k8s/$yaml_file
+    done
+    podman image prune -f
+}
+
 while getopts "" opt
 do
 	case $opt in
@@ -30,25 +68,7 @@ do
 	esac
 done
 
-database_container="csdha-database-pod-database"
-k8s_db_files="secret.yaml pvc.yaml database.yaml"
-container_name=$(podman ps --filter "name=$database_container" --format "{{.Names}}")
-if [ -z "$container_name" ]; then
-	for yaml_file in $k8s_db_files
-	do
-		podman kube play --replace k8s/$yaml_file
-	done
-fi
-
-podman build -f container/base/Dockerfile -t alpine-laravel:1.0 .
-podman build -f container/web/Dockerfile -t laravel-web:1.0 .
-podman build -f container/queue/Dockerfile -t laravel-queue:1.0 .
-podman build -f container/migrate/Dockerfile -t laravel-migrate:1.0 .
-k8s_web_files="migrate.yaml web-user.yaml web-admin.yaml queue.yaml"
-for yaml_file in $k8s_web_files
-do
-	podman kube play --replace k8s/$yaml_file
-done
-# docker-compose up -d
-podman image prune -f 
+restart_queue
+start_db
+reload_web
 

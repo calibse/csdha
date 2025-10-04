@@ -14,6 +14,8 @@ use App\Models\User;
 use App\Models\EventDate;
 use App\Events\AccomReportStatusChanged;
 use App\Models\Gpoa;
+use App\Services\Image;
+use Illuminate\Support\Facades\Storage;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -279,5 +281,18 @@ class AccomReportController extends Controller implements HasMiddleware
             'approved' => true,
             'president' => User::ofPosition('president')->first()
         ]))->stream('accom_report_set.pdf');
+    }
+
+    public function editBackground(Request $request)
+    {
+
+    }
+
+    public function updateBackground(Request $request)
+    {
+        $imageFile = 'accom_reports/background.jpg';
+        $image = new Image($request->file('background')->get());
+        Storage::put($imageFile, (string)$image->get());
+        return redirect()->back()->with('status', 'Background updated');
     }
 }

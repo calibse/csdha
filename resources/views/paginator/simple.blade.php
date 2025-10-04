@@ -1,27 +1,23 @@
 @if ($paginator->lastPage() > 1)
-<nav class="paginator">
+<div class="main-paginator">
 	<p>Page {{ $paginator->currentPage() }} of {{ $paginator->lastPage() }}</p>
 	<div class="controls">
 	@unless ($paginator->onFirstPage())
-		<div class="previous">
-			<div class="main-actions">
-				<a href="{{ $paginator->previousPageUrl() }}">
-					<span class="icon"><x-phosphor-caret-left/></span> 
-					<span class="text">Previous Page</span>
-				</a>
-			</div>
-		</div>
+        <p class="previous main-action">
+            <a href="{{ $paginator->previousPageUrl() }}">
+                <span class="icon"><x-phosphor-caret-left/></span>
+                <span class="text">Previous Page</span>
+            </a>
+        </p>
 	@endunless
 	@if ($paginator->hasMorePages() && $paginator->currentPage() >= 1)
-		<div class="next">
-			<div class="main-actions">
-				<a href="{{ $paginator->nextPageUrl() }}">
-					<span class="icon"><x-phosphor-caret-right/></span>
-					<span class="text">Next Page</span>
-				</a>
-			</div>
-		</div>
+        <p class="next main-action">
+            <a href="{{ $paginator->nextPageUrl() }}">
+                <span class="icon"><x-phosphor-caret-right/></span>
+                <span class="text">Next Page</span>
+            </a>
+        </p>
 	@endif
 	</div>
-</nav>
+</div>
 @endif

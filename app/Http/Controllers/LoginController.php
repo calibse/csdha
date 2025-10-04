@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\SignupInvitation;
 use App\Http\Requests\SigninRequest;
 use App\Models\Role;
+use App\Models\GoogleAccount;
 
 class LoginController extends Controller
 {
@@ -101,7 +102,6 @@ class LoginController extends Controller
                 'access_type' => 'offline',
             ])->redirect();
         case 'facebook':
-            return Socialite::driver('facebook')->redirect();
         }
     }
 
@@ -120,7 +120,6 @@ class LoginController extends Controller
                 'access_type' => 'offline',
             ])->redirect();
         case 'facebook':
-            return Socialite::driver('facebook')->redirect();
         }
     }
 
@@ -132,8 +131,8 @@ class LoginController extends Controller
         config(['services.google.redirect' => route('signup.callback', [
             'provider' => 'google'
         ])]);
-        $socialUser = self::getSocialUser($provider);
-        $user = $socialUser ? User::firstWhere("{$provider}_id",
+        $socialUser = Socialite::driver($provider)->user();
+        $user = $socialUser ? self::findSocialUser($provider,
             $socialUser->id) : null;
         if ($user) {
             return redirect()->route('user.invitation', [
@@ -155,8 +154,8 @@ class LoginController extends Controller
         $inviteCode = session('inviteCode') ?? $request->invite_code;
         $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
             'invite_code', $inviteCode) : null;
-        $socialUser = self::getSocialUser($provider);
-        $user = $socialUser ? User::firstWhere("{$provider}_id",
+        $socialUser = Socialite::driver($provider)->user();
+        $user = $socialUser ? self::findSocialUser($provider,
             $socialUser->id) : null;
         if (!$user && !$signupInvite) {
             return redirect()->route('user.login')->withErrors([
@@ -174,8 +173,8 @@ class LoginController extends Controller
 
     public function adminAuthWith(Request $request, string $provider)
     {
-        $socialUser = self::getSocialUser($provider);
-        $user = $socialUser ? User::firstWhere("{$provider}_id",
+        $socialUser = Socialite::driver($provider)->user();
+        $user = $socialUser ? self::findSocialUser($provider,
             $socialUser->id) : null;
         if (!$user || !$user->isAdmin()) {
             return redirect()->route('user.login')->withErrors([
@@ -204,14 +203,14 @@ class LoginController extends Controller
 		return redirect('/');
     }
 
-    private static function getSocialUser(string $provider)
+    private static function findSocialUser(string $provider, string $id)
     {
         switch ($provider) {
         case 'google':
-            $googleUser = Socialite::driver('google')->user();
-            return $googleUser;
-        case 'facebook':
+            $user = GoogleAccount::firstWhere('google_id', $id)?->user;
+            break;
         }
+        return $user;
     }
 
     private static function storeSocialUser(string $provider, $socialUser,
@@ -219,18 +218,21 @@ class LoginController extends Controller
     {
         switch ($provider) {
         case 'google':
-            $user = new User();
-            $user->google_id = $socialUser->id;
-            $user->google_token = $socialUser->token;
-            $user->google_refresh_token = $socialUser->refreshToken;
-            $user->google_expires_at = now()->second($socialUser->expiresIn)
-                ->toDateTimeString();
+            $user = new User;
             $user->first_name = $socialUser->getRaw()['given_name'];
             $user->last_name = $socialUser->getRaw()['family_name'];
             if ($signupInvite?->position) {
                 $user->position()->associate($signupInvite->position);
             }
             $user->save();
+            $google = new GoogleAccount;
+            $google->user()->associate($user);
+            $google->google_id = $socialUser->id;
+            $google->token = $socialUser->token;
+            $google->refresh_token = $socialUser->refreshToken;
+            $google->expires_at = now()->second($socialUser->expiresIn)
+                ->toDateTimeString();
+            $google->save();
             break;
         case 'facebook':
             break;

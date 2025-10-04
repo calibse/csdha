@@ -7,8 +7,8 @@
     	</a>
 	@endcan
 	</x-slot:toolbar>
-@if ($positions->isNotEmpty())
-    <article class="table-block">
+    <div class="article">
+    @if ($positions->isNotEmpty())
 	    <table class="table-2">
             <colgroup>
                 <col style="width: 30%">
@@ -35,8 +35,8 @@
 		    @endforeach
 			</tbody>
 	    </table>
-   	</article>
-@else
-    <p>No one has added anything yet</p>
-@endif
+    @else
+        <p>No one has added anything yet</p>
+    @endif
+   	</div>
 </x-layout.user>
