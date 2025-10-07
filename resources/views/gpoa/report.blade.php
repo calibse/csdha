@@ -72,11 +72,11 @@ $actCount = 0;
                 <td>{{ $activity->date }}</td>
                 <td>{{ $activity->objectives }}</td>
                 <td>{{ $activity->participants }}</td>
-                <td>{{ $activity->type?->name }}</td>
-                <td>{{ $activity->partnershipType?->name }}</td>
+                <td>{{ $activity->type }}</td>
+                <td>{{ $activity->partnership_type }}</td>
                 <td>{{ $activity->proposed_budget }}</td>
-                <td>{{ $activity->fundSource?->name }}</td>
-                <td>{{ $activity->mode?->name }}</td>
+                <td>{{ $activity->fund_source }}</td>
+                <td>{{ $activity->mode }}</td>
                 <td>
                     <ul>
                     @foreach ($activity->eventHeadsOnly as $eventHead)

@@ -100,8 +100,8 @@ class LoginController extends Controller
             ])]);
             return Socialite::driver('google')->with([
                 'access_type' => 'offline',
+                'prompt' => 'consent'
             ])->redirect();
-        case 'facebook':
         }
     }
 
@@ -119,7 +119,6 @@ class LoginController extends Controller
             return Socialite::driver('google')->with([
                 'access_type' => 'offline',
             ])->redirect();
-        case 'facebook':
         }
     }
 
@@ -233,8 +232,6 @@ class LoginController extends Controller
             $google->expires_at = now()->second($socialUser->expiresIn)
                 ->toDateTimeString();
             $google->save();
-            break;
-        case 'facebook':
             break;
         }
         if ($signupInvite) {

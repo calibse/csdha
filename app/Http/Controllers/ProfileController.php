@@ -10,10 +10,14 @@ use App\Services\Image;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateEmailRequest;
+use App\Http\Requests\StoreForgotPasswordRequest;
+use App\Http\Requests\UpdateForgotPasswordRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerify;
+use App\Mail\PasswordReset;
 
 class ProfileController extends Controller
 {
@@ -99,17 +103,6 @@ class ProfileController extends Controller
         self::sendEmailVerify();
         return redirect()->back()->with('status', 'Verification email sent. ' .
             'Please check your inbox.');
-    }
-
-    private static function sendEmailVerify()
-    {
-        $user = auth()->user();
-        $url = URL::temporarySignedRoute('verify-email', now(config('timezone'))
-            ->addHours(24), [
-            'id' => $user->public_id,
-            'email' => $user->email
-        ]);
-        Mail::to($user->email)->send(new EmailVerify($url));
     }
 
     public function verifyEmail(Request $request)
@@ -208,6 +201,46 @@ class ProfileController extends Controller
             'Profile updated.');
     }
 
+    public function createForgotPassword()
+    {
+        return view('profile.create-forgot-password');
+    }
+
+    public function storeForgotPassword(StoreForgotPasswordRequest $request)
+    {
+        $token = Str::random(64);
+        DB::table('password_reset_tokens')->upsert([
+            [
+                'email' => $request->email,
+                'token' => Hash::make($token);
+            ],
+            ['email'],
+            ['token']
+        ]);
+        $url = route('profile.forgot-password.edit', [
+            'email' => $request->email,
+            'token' => $token
+        ]);
+        Mail::to($request->email)->send(new PasswordReset($url)); 
+        return redirect()->route('login.login')->with('status',
+            'Now check the email inbox for update password page link.');
+    }
+
+    public function editForgotPassword(Request $request)
+    {
+        return view('profile.edit-forgot-password');
+    }
+
+    public function updateForgotPassword(UpdateForgotPasswordRequest $request)
+    {
+        $user = User::firstWhere('email', $request->email);
+        $user->password = Hash::make($request->password);
+        $user->save();
+        DB::table('password_reset_tokens')->where('email', $request->email)
+            ->delete();
+        return view('profile.password-changed');
+    }
+
     private static function findSocialUser(string $provider, string $id)
     {
         switch ($provider) {
@@ -237,5 +270,16 @@ class ProfileController extends Controller
             $google->save();
             break;
         }
+    }
+
+    private static function sendEmailVerify()
+    {
+        $user = auth()->user();
+        $url = URL::temporarySignedRoute('verify-email', now(config('timezone'))
+            ->addHours(24), [
+            'id' => $user->public_id,
+            'email' => $user->email
+        ]);
+        Mail::to($user->email)->send(new EmailVerify($url));
     }
 }

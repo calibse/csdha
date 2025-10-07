@@ -57,25 +57,25 @@ class GpoaActivity extends Model
         return $this->belongsTo(User::class, 'adviser_user_id');
     }
 
-    public function type(): BelongsTo
+    public function typeModel(): BelongsTo
     {
         return $this->belongsTo(GpoaActivityType::class,
             'gpoa_activity_type_id');
     }
 
-    public function mode(): BelongsTo
+    public function modeModel(): BelongsTo
     {
         return $this->belongsTo(GpoaActivityMode::class,
             'gpoa_activity_mode_id');
     }
 
-    public function partnershipType(): BelongsTo
+    public function partnershipTypeModel(): BelongsTo
     {
         return $this->belongsTo(GpoaActivityPartnershipType::class,
             'gpoa_activity_partnership_type_id');
     }
 
-    public function fundSource(): BelongsTo
+    public function fundSourceModel(): BelongsTo
     {
         return $this->belongsTo(GpoaActivityFundSource::class,
             'gpoa_activity_fund_source_id');
@@ -102,7 +102,95 @@ class GpoaActivity extends Model
             'gpoa_activity_participants');
     }
 
-    public function allAreEventHeads(): Attribute
+    protected function partnershipType(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->partnershipTypeModel?->name,
+            set: function (string $value) {
+                $key = null;
+                $partnership = GpoaActivityPartnershipType::findByName($value);
+                if (!$partnership && $value) {
+                    $partnership = new GpoaActivityPartnershipType();
+                    $partnership->name = $value;
+                    $partnership->save();
+                    $key = $partnership->id;
+                } elseif ($partnership) {
+                    $key = $partnership->id;
+                }
+                return [
+                    'gpoa_activity_partnership_type_id' => $key
+                ];
+            } 
+        );
+    }
+
+    protected function mode(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->modeModel?->name,
+            set: function (string $value) {
+                $key = null;
+                $mode = GpoaActivityMode::findByName($value);
+                if (!$mode && $value) {
+                    $mode = new GpoaActivityMode();
+                    $mode->name = $value;
+                    $mode->save();
+                    $key = $mode->id;
+                } elseif ($mode) {
+                    $key = $mode->id;
+                }
+                return [
+                    'gpoa_activity_mode_id' => $key
+                ];
+            } 
+        );
+    }
+
+    protected function fundSource(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->fundSourceModel?->name,
+            set: function (string $value) {
+                $key = null;
+                $fund = GpoaActivityFundSource::findByName($value);
+                if (!$fund && $value) {
+                    $fund = new GpoaActivityFundSource();
+                    $fund->name = $value;
+                    $fund->save();
+                    $key = $fund->id;
+                } elseif ($fund) {
+                    $key = $fund->id;
+                }
+                return [
+                    'gpoa_activity_fund_source_id' => $key
+                ];
+            } 
+        );
+    }
+
+    protected function type(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->typeModel?->name,
+            set: function (string $value) {
+                $key = null;
+                $type = GpoaActivityType::findByName($value);
+                if (!$type && $value) {
+                    $type = new GpoaActivityType();
+                    $type->name = $value;
+                    $type->save();
+                    $key = $type->id;
+                } elseif ($type) {
+                    $key = $type->id;
+                }
+                return [
+                    'gpoa_activity_type_id' => $key
+                ];
+            } 
+        );
+    }
+
+    protected function allAreEventHeads(): Attribute
     {
         $all = true;
         foreach (User::has('position')->notOfPosition(['adviser'])
@@ -118,7 +206,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function allAreParticipants(): Attribute
+    protected function allAreParticipants(): Attribute
     {
         $all = true;
         foreach (StudentYear::all() as $student) {
@@ -132,7 +220,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function date(): Attribute
+    protected function date(): Attribute
     {
         $start = $this->start_date;
         $end = $this->end_date ? $this->end_date : null;
@@ -153,7 +241,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function fullStatus(): Attribute
+    protected function fullStatus(): Attribute
     {
         $status = $this->status;
         $currentStep = $this->current_step;
@@ -191,7 +279,7 @@ class GpoaActivity extends Model
         );
     }
 
-    public function commentsPurpose(): Attribute
+    protected function commentsPurpose(): Attribute
     {
         $status = $this->status;
         $currentStep = $this->current_step;

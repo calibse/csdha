@@ -451,44 +451,10 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity = new GpoaActivity();
             $update = false;
         }
-        $type = GpoaActivityType::findByName($request->type_of_activity);
-        if (!$type && $request->type_of_activity) {
-            $type = new GpoaActivityType();
-            $type->name = $request->type_of_activity;
-            $type->save();
-            $activity->type()->associate($type);
-        } elseif ($type) {
-            $activity->type()->associate($type);
-        }
-        $fundSource = GpoaActivityFundSource::findByName($request
-            ->fund_source);
-        if (!$fundSource && $request->fund_source) {
-            $fundSource = new GpoaActivityFundSource();
-            $fundSource->name = $request->fund_source;
-            $fundSource->save();
-            $activity->fundSource()->associate($fundSource);
-        } elseif ($fundSource) {
-            $activity->fundSource()->associate($fundSource);
-        }
-        $mode = GpoaActivityMode::findByName($request->mode);
-        if (!$mode && $request->mode) {
-            $mode = new GpoaActivityMode();
-            $mode->name = $request->mode;
-            $mode->save();
-            $activity->mode()->associate($mode);
-        } elseif ($mode) {
-            $activity->mode()->associate($mode);
-        }
-        $partnershipType = GpoaActivityPartnershipType::findByName($request
-            ->partnership);
-        if (!$partnershipType && $request->partnership) {
-            $partnershipType = new GpoaActivityPartnershipType();
-            $partnershipType->name = $request->partnership;
-            $partnershipType->save();
-            $activity->partnershipType()->associate($partnershipType);
-        } elseif ($partnershipType) {
-            $activity->partnershipType()->associate($partnershipType);
-        }
+        $activity->type = $request->type_of_activity;
+        $activity->fund_source = $request->fund_source;
+        $activity->mode = $request->mode;
+        $activity->partnership_type = $request->partnership;
         $activity->name = $request->name;
         $activity->start_date = $request->start_date;
         $activity->end_date = $request->end_date;

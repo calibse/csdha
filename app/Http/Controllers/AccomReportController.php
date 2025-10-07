@@ -285,7 +285,7 @@ class AccomReportController extends Controller implements HasMiddleware
 
     public function editBackground(Request $request)
     {
-
+        return view('accom-reports.edit-background');
     }
 
     public function updateBackground(Request $request)

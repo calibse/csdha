@@ -41,6 +41,7 @@ use App\Http\Middleware\CheckSignupInviteCode;
 use App\Http\Middleware\CheckEventRegisStep;
 use App\Http\Middleware\CheckEventEvalStep;
 use App\Http\Middleware\CheckEventEvalForm;
+use App\Http\Middleware\CheckPasswordResetToken;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
@@ -612,6 +613,20 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
         Route::put('/update-password.php', 'updatePassword')
             ->name('password.update');
+
+        Route::get('/forgot-password.html', 'createForgotPassword')
+            ->name('forgot-password.create');
+
+        Route::post('/forgot-password.php', 'storeForgotPassword')
+            ->name('forgot-password.store');
+
+        Route::middleware(CheckPasswordResetToken::class)->group(function () {
+            Route::get('/change-password.html', 'editForgotPassword')
+                ->name('forgot-password.edit');
+
+            Route::put('/change-password.php', 'updateForgotPassword')
+                ->name('forgot-password.update');
+        });
     });
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])

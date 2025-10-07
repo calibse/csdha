@@ -35,12 +35,15 @@ class SaveGpoaActivityRequest extends FormRequest
             'type_of_activity' => ['required', 'max:255'],
             'mode' => ['required', 'max:50'],
             'partnership' => ['max:255'],
-            'proposed_budget' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
+            'proposed_budget' => ['nullable', 'numeric', 'min:0', 
+                'max:999999.99'],
             'fund_source' => ['max:255'],
             'event_heads.*' => ['nullable', new Exists(User::has('position')
-                ->notAuthUser()->notOfPosition(['adviser']), 'public_id', ['0'])],
-            'coheads.*' => ['nullable', new Exists(User::has('position')->notAuthUser()->
-                notOfPosition(['adviser']), 'public_id', ['0'])]
+                ->notAuthUser()->notOfPosition(['adviser']), 'public_id', 
+                ['0'])],
+            'coheads.*' => ['nullable', new Exists(User::has('position')
+                ->notAuthUser()->notOfPosition(['adviser']), 'public_id', 
+                ['0'])]
         ];
     }
 }

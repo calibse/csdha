@@ -93,11 +93,11 @@
             </tr>
             <tr>
                 <th>Type of Activity</th>
-                <td>{{ $activity->type?->name }}</td>
+                <td>{{ $activity->type }}</td>
             </tr>
             <tr>
                 <th>Partnership</th>
-                <td>{{ $activity->partnershipType?->name }}</td>
+                <td>{{ $activity->partnership_type }}</td>
             </tr>
             <tr>
                 <th>Proposed Budget</th>
@@ -105,11 +105,11 @@
             </tr>
             <tr>
                 <th>Source of Fund</th>
-                <td>{{ $activity->fundSource?->name }}</td>
+                <td>{{ $activity->fund_source }}</td>
             </tr>
             <tr>
                 <th>Mode</th>
-                <td>{{ $activity->mode?->name }}</td>
+                <td>{{ $activity->mode }}</td>
             </tr>
             <tr>
                 <th>Event Head</th>

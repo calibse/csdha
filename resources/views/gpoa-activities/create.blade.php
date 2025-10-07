@@ -48,7 +48,7 @@
             --}}
             <p>
                 <label>Type of Activity</label>
-                <input name="type_of_activity" list="activity_types" autocomplete="off" value="{{ old('type_of_activity') ?? $activity?->type?->name }}">
+                <input name="type_of_activity" list="activity_types" autocomplete="off" value="{{ old('type_of_activity') ?? $activity?->type }}">
                 <datalist id="activity_types">
                 @foreach ($activityTypes as $type)
                     <option value="{{ $type->name }}">
@@ -57,7 +57,7 @@
             </p>
             <p>
                 <label>Mode</label>
-                <input name="mode" list="modes" autocomplete="off" value="{{ old('mode') ?? $activity?->mode?->name }}">
+                <input name="mode" list="modes" autocomplete="off" value="{{ old('mode') ?? $activity?->mode }}">
                 <datalist id="modes">
                 @foreach ($modes as $mode)
                     <option value="{{ $mode->name }}">
@@ -66,7 +66,7 @@
             </p>
             <p>
                 <label>Partnership (optional)</label>
-                <input name="partnership" list="partnership_types" autocomplete="off" value="{{ old('partnership') ?? $activity?->partnershipType?->name }}">
+                <input name="partnership" list="partnership_types" autocomplete="off" value="{{ old('partnership') ?? $activity?->partnership_type }}">
                 <datalist id="partnership_types">
                 @foreach ($partnershipTypes as $type)
                     <option value="{{ $type->name }}">
@@ -79,7 +79,7 @@
             </p>
             <p>
                 <label>Source of Fund (optional)</label>
-                <input name="fund_source" list="fund_sources" autocomplete="off" value="{{ old('fund_source') ?? $activity?->fundSource?->name }}">
+                <input name="fund_source" list="fund_sources" autocomplete="off" value="{{ old('fund_source') ?? $activity?->fund_source }}">
                 <datalist id="fund_sources">
                 @foreach ($fundSources as $source)
                     <option value="{{ $source->name }}">
