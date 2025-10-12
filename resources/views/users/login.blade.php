@@ -56,6 +56,9 @@
 						<p class="button"><button type="submit">Sign in</button></p>
 					</form>
 				</article>
+				<p>
+					<a href="{{ $passwordResetRoute }}">Reset password</a>
+				</p>
 			@endif
 			</article>
 		</main>

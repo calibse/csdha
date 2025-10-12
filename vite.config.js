@@ -14,7 +14,7 @@ export default defineConfig({
         }),
     ],
     build: {
-        minify: true
-    },
-    server: { cors: true }
+        minify: false,
+        cssMinify: true
+    }
 });

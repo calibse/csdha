@@ -47,6 +47,17 @@ use App\Models\Event;
 use App\Services\EvalFormStep;
 use App\Services\QrCode;
 
+Route::get('/test', function (Request $request) {
+    return view('test');
+    $cookies = $request->cookies->all();
+$lines = [];
+foreach ($cookies as $k => $v) {
+    $lines[] = "$k=$v";
+}
+$text = implode("\n", $lines);
+return $text . 'hello';
+});
+
 Route::domain(config('custom.admin_domain'))->group(function () {
 
     Route::name('admin.')->group(function () {
@@ -122,6 +133,27 @@ Route::domain(config('custom.admin_domain'))->middleware('auth')
 
     Route::resource('audit', AuditTrailController::class)
         ->only(['index', 'show']);
+});
+
+Route::name('profile.')->controller(ProfileController::class)
+    ->group(function () {
+
+    Route::get('/reset-password.html', 'createPasswordReset')
+        ->name('password-reset.create');
+
+    Route::post('/reset-password.php', 'storePasswordReset')
+        ->name('password-reset.store');
+
+    Route::get('/password-changed.html', 'endPasswordReset')
+        ->name('password-reset.end');
+
+    Route::middleware(CheckPasswordResetToken::class)->group(function () {
+        Route::get('/change-password.html', 'editPasswordReset')
+            ->name('password-reset.edit');
+
+        Route::put('/change-password.php', 'updatePasswordReset')
+            ->name('password-reset.update');
+    });
 });
 
 Route::domain(config('custom.user_domain'))->group(function () {
@@ -213,19 +245,19 @@ Route::domain(config('custom.user_domain'))->group(function () {
         ->middleware(CheckSignupInviteCode::class)->group(function () {
 
         Route::get('/{provider}/redirect', [LoginController::class,
-            'signinWith'])->name('redirect');
+            'redirectSignin'])->name('redirect');
 
         Route::get('/{provider}/callback', [LoginController::class,
-            'authWith'])->name('callback');
+            'signinWith'])->name('callback');
 
     });
 
     Route::get('/sign-up/{provider}/redirect', [LoginController::class,
-        'signupWith'])->name('signup.redirect')
+        'redirectSignup'])->name('signup.redirect')
         ->middleware(CheckSignupInviteCode::class);
 
     Route::get('/sign-up/{provider}/callback', [LoginController::class,
-        'signupWithCallback'])->name('signup.callback')
+        'signupWith'])->name('signup.callback')
         ->middleware(CheckSignupInviteCode::class);
 
     Route::name('users.')->middleware(CheckSignupInviteCode::class)
@@ -475,6 +507,12 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
         Route::get('/accom-reports.html', 'index')->name('index');
 
+        Route::get('/accom-reports/change-background.html', 
+            'editBackground')->name('background.edit');
+
+        Route::put('/accom-reports/change-background.php', 
+            'updateBackground')->name('background.update');
+
         Route::get('/accom-reports/gen-pdf.html', 'generate')
             ->name('generate');
 
@@ -613,20 +651,16 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
         Route::put('/update-password.php', 'updatePassword')
             ->name('password.update');
+    });
 
-        Route::get('/forgot-password.html', 'createForgotPassword')
-            ->name('forgot-password.create');
+    Route::prefix('connect')->name('profile.connect.')
+            ->controller(ProfileController::class)->group(function () {
 
-        Route::post('/forgot-password.php', 'storeForgotPassword')
-            ->name('forgot-password.store');
+        Route::get('/{provider}/redirect', 'connectSocial')->name('redirect');
 
-        Route::middleware(CheckPasswordResetToken::class)->group(function () {
-            Route::get('/change-password.html', 'editForgotPassword')
-                ->name('forgot-password.edit');
+        Route::get('/{provider}/callback', 'updateSocial')->name('callback');
 
-            Route::put('/change-password.php', 'updateForgotPassword')
-                ->name('forgot-password.update');
-        });
+        Route::get('/{provider}/remove', 'deleteSocial')->name('remove');
     });
 
     Route::post('/attendance/store', [AttendanceController::class, 'store'])

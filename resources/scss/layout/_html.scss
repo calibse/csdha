@@ -1,22 +1,27 @@
 /* _html.scss */
 
+@use "../size";
+
 h1, h2, h3, h4, h5, h6, th {
 	&.title {
 	    font-weight: normal;
 	    font-size: 1rem;
-		max-width: var(--text-width);
+		width: size.$text-width;
+		max-width: 100%;
 	}
 }
 
 pre {
 	font-family: inherit;
 	white-space: pre-wrap;
-	max-width: var(--text-width);
+	width: size.$text-width;
+	max-width: 100%;
 	hyphens: auto;
 }
 
 p {
-	max-width: var(--text-width);
+	width: size.$text-width;
+	max-width: 100%;
 	hyphens: auto;
 }
 
@@ -29,7 +34,10 @@ a, button {
 
     > .icon {
         line-height: 0;
-        margin-right: .3rem;
+    }
+
+    > .text {
+        margin-left: .3rem;
     }
 }
 

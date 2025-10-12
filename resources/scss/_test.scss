@@ -1,12 +1,43 @@
 /* test.css */
 
-.pie-chart {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: conic-gradient(
-	#4CAF50 0% 40%,     /* 40% Green */
-	#2196F3 40% 70%,    /* 30% Blue */
-	#f44336 70% 100%    /* 30% Red */
-    );
+$my-color: #000000;
+
+#box:target {
+	background-color: blue;
+}
+
+.textbox {
+	background-color: yellow;
+	height: 30rem;
+	width: 5rem;
+	float: left;
+}
+
+.box {
+	margin-left: 5rem;
+	background-color: yellow;
+	height: 30rem;
+	display: block;
+
+	.divo, .diva {
+		background-color: $my-color;
+		width: 10rem;
+		height: 10rem;
+		display: inline-block;
+	}
+
+	.divo {
+		background-color: pink;
+		
+	}
+
+	.diva {
+
+	}
+}
+
+@media (min-width: 30rem) {
+	.box {
+		background-color: green;
+	}
 }

@@ -14,7 +14,7 @@
             @endcan
         >
             <span class="icon"><x-phosphor-file-plus/></span>
-            <span class="text">Submit AR</span>
+            <span class="text">{{ $event->accomReport?->approved_at ? 'View' : 'Submit' }} AR</span>
         </a>
     </x-slot:toolbar>
     <article class="article document">
@@ -45,7 +45,7 @@
             </tr>
             <tr>
                 <th>Type of Activity</th>
-                <td>{{ $activity->type?->name }}</td>
+                <td>{{ $activity->type }}</td>
             </tr>
             <tr>
                 <th>Objectives</th>
@@ -113,7 +113,7 @@
         <p>{{ $activity->participants }}</p>
 
         <h3>Type of Activity</h3>
-        <p>{{ $activity->type?->name }}</p>
+        <p>{{ $activity->type }}</p>
 
         <h3>Objectives</h3>
         <pre>{{ $activity->objectives }}</pre>

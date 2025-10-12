@@ -90,7 +90,7 @@
         </section>
         <section>
             <h3>{{ Format::roman(++$i) }}. TYPE OF ACTIVITY</h3>
-            <p>{{ $event['activity']->type?->name }}</p>
+            <p>{{ $event['activity']->type }}</p>
         </section>
         <section>
             <h3>{{ Format::roman(++$i) }}. PARTICIPANTS</h3>

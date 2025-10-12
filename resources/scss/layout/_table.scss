@@ -1,5 +1,8 @@
 /* _table.scss */
 
+@use "../color";
+@use "../size";
+
 .table-block {
 	margin: 1rem;
 	margin-top: 0;
@@ -11,7 +14,7 @@ table {
     display: block;
 
     a {
-        color: var(--color-4);
+        color: color.$link;
     }
 
     thead {
@@ -55,7 +58,7 @@ table {
 
     tr {
         display: block;
-        border-bottom: solid .05rem var(--base-color-1);
+        border-bottom: solid size.$line-width color.$table-divider;
         margin-bottom: 1rem;
         padding-bottom: 1rem;
     }
@@ -89,7 +92,7 @@ table {
             opacity: unset;
 
             tr {
-                border-color: var(--fg-color);
+                border-color: color.$table-header-divider;
             }
 
             tr th {
@@ -114,57 +117,3 @@ table {
     }
 }
 
-/*
-table {
-	border-collapse: collapse;
-	// border-spacing: 0;
-	width: 100%;
-
-	&.document {
-		width: unset;
-		border: solid .05rem var(--base-color-1);
-		margin: 1rem 0;
-
-		td {
-			white-space: nowrap;
-		}
-	}
-
-	thead {
-		th {
-			border-bottom: solid .05rem #000000;
-			font-weight: normal;
-		}
-	}
-
-	tbody {
-        tr {
-			border-bottom: solid .05rem var(--base-color-1);
-        }
-
-        tr:last-child td {
-            border-bottom: 0;
-        }
-
-		td, th {
-			font-weight: normal;
-			text-align: left;
-		}
-	}
-
-	th, td {
-	}
-
-	td {
-		ul, ol {
-			margin-top: 0;
-			margin-bottom: 0;
-			padding-left: 1rem;
-		}
-	}
-
-	th {
-
-	}
-}
-*/

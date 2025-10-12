@@ -1,9 +1,9 @@
-<x-layout.user class="profile form" :$backRoute title="Edit Profile">
+<x-layout.user form class="profile form" :$backRoute title="Edit Profile">
 	<article class="article">
-        <x-alert/>
+		<x-alert/>
 		<form method="POST" action="{{ $formAction }}" enctype="multipart/form-data">
-			@csrf
-            @method('PUT')
+		@csrf
+		@method('PUT')
 			<p>
 				<label>Avatar</label>
 				<input type="file" name="avatar" accept="image/png, image/jpeg">
@@ -13,17 +13,27 @@
 				<label for="remove-avatar">Remove avatar</label>
 			</p>
 			<p>
+				<label>Email</label>
+				<a href="{{ $emailRoute }}">Change here</a>
+			</p>
+			<p>
+				<label>Password</label>
+				<a href="{{ $passwordRoute }}">Change here</a>
+			</p>
+			<p>
+				<label>Google Account</label>
+			@if (!auth()->user()->email_verified_at)
+				<i>Add an email to be able to remove this account.</i>
+			@elseif (auth()->user()->google)
+				<a href="{{ $googleRoute }}">Remove</a>
+			@else
+				<a href="{{ $googleRoute }}">Connect</a>
+			@endif
+			</p>
+			<p>
 				<label>Username</label>
 				<input name="username" value="{{ old('username') ?? auth()->user()->username }}">
 			</p>
-			<p>
-				<label>Email</label>
-                <a href="{{ $emailRoute }}">Change here</a>
-			</p>
-            <p>
-                <label>Password</label>
-                <a href="{{ $passwordRoute }}">Change here</a>
-            </p>
 			<p class="form-submit">
 				<button type="submit">Update profile</button>
 			</p>

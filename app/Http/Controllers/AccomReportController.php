@@ -16,6 +16,7 @@ use App\Events\AccomReportStatusChanged;
 use App\Models\Gpoa;
 use App\Services\Image;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\UpdateAccomReportBackgroundRequest;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -23,18 +24,25 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth.index:viewAnyAccomReport,' . Event::class,
-                only: ['index']),
-            new Middleware('auth.accom-report:viewAccomReport,event', only: ['show']),
-            new Middleware('auth.accom-report:submitAccomReport,event', only: [
+                only: [
+                'index', 'editBackground', 'updateBackground'
+            ]),
+            new Middleware('auth.accom-report:viewAccomReport,event', 
+                only: ['show']),
+            new Middleware('auth.accom-report:submitAccomReport,event', 
+                only: [
                 'submit', 'prepareForSubmit'
             ]),
-            new Middleware('auth.accom-report:returnAccomReport,event', only: [
+            new Middleware('auth.accom-report:returnAccomReport,event', 
+                only: [
                 'return', 'prepareForReturn'
             ]),
-            new Middleware('auth.accom-report:approveAccomReport,event', only: [
+            new Middleware('auth.accom-report:approveAccomReport,event', 
+                only: [
                 'approve', 'prepareForApprove'
             ]),
-            new Middleware('auth.index:genAccomReport,' . Event::class, only: [
+            new Middleware('auth.index:genAccomReport,' . Event::class, 
+                only: [
                 'generate', 'stream'
             ]),
         ];
@@ -128,6 +136,9 @@ class AccomReportController extends Controller implements HasMiddleware
                 'from' => 'accom-reports',
                 'accom_reports_from' => $request->from
             ]),
+            'changeBgRoute' => route('accom-reports.background.edit', [
+                'from' => $event->public_id
+            ])
         ]);
     }
 
@@ -285,14 +296,40 @@ class AccomReportController extends Controller implements HasMiddleware
 
     public function editBackground(Request $request)
     {
-        return view('accom-reports.edit-background');
+        $backRoute = $request->from 
+            ? route('accom-reports.show', [
+                'event' => $request->from
+            ])
+            : route('accom-reports.index');
+        return view('accom-reports.edit-background', [
+            'backRoute' => $backRoute,
+            'formAction' => route('accom-reports.background.update'),
+            'from' => $request->from
+        ]);
     }
 
-    public function updateBackground(Request $request)
+    public function updateBackground(UpdateAccomReportBackgroundRequest 
+        $request)
     {
         $imageFile = 'accom_reports/background.jpg';
-        $image = new Image($request->file('background')->get());
+        if ($request->boolean('remove_background')) {
+            Storage::delete($imageFile);
+            if ($request->from) {
+                return redirect()->route('accom-reports.show', [
+                    'event' => $request->from
+                ]);
+            }
+            return redirect()->route('accom-reports.index')->with('status', 
+                'AR background changed.');
+        }
+        $image = new Image($request->file('background_file')->get());
         Storage::put($imageFile, (string)$image->get());
-        return redirect()->back()->with('status', 'Background updated');
+        if ($request->from) {
+            return redirect()->route('accom-reports.show', [
+                'event' => $request->from
+            ]);
+        }
+        return redirect()->route('accom-reports.index')->with('status', 
+            'AR background changed.');
     }
 }

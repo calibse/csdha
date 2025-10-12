@@ -10,48 +10,57 @@ use App\Services\Image;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateEmailRequest;
-use App\Http\Requests\StoreForgotPasswordRequest;
-use App\Http\Requests\UpdateForgotPasswordRequest;
+use App\Http\Requests\StorePasswordResetRequest;
+use App\Http\Requests\UpdatePasswordResetRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerify;
 use App\Mail\PasswordReset;
+use Laravel\Socialite\Facades\Socialite;
 
 class ProfileController extends Controller
 {
-	public function index()
-	{
-		return view('profile.index');
-	}
+    public function index()
+    {
+        return view('profile.index');
+    }
 
-	public function edit(Request $request)
-	{
+    public function edit(Request $request)
+    {
         $backRoute = route('user.home');
         $passwordRoute = route('profile.password.edit');
         $emailRoute = route('profile.email.edit');
         $formAction = route('profile.update');
+        $googleRoute = auth()->user()->google 
+            ? route('profile.connect.remove', [
+                'provider' => 'google'
+            ])
+            : route('profile.connect.redirect', [
+                'provider' => 'google'
+            ]);
         return view('profile.edit', [
             'backRoute' => $backRoute,
             'passwordRoute' => $passwordRoute,
             'emailRoute' => $emailRoute,
-            'formAction' => $formAction
+            'formAction' => $formAction,
+            'googleRoute' => $googleRoute
         ]);
-	}
+    }
 
-	public function update(UpdateProfileRequest $request)
-	{
-		$user = auth()->user();
+    public function update(UpdateProfileRequest $request)
+    {
+        $user = auth()->user();
         $user->username = $request->username;
         if ($request->remove_avatar && $user->avatar_filepath) {
         	Storage::delete($user->avatar_filepath);
         	$user->avatar_filepath = null;
         }
         elseif ($request->avatar) {
-	        $imageFile = 'user/avatar/' . Str::random(8) . '.jpg';
-	        $image = new Image($request->file('avatar')->get());
-	        Storage::put($imageFile, (string) $image->scaleDown(300));
+        $imageFile = 'user/avatar/' . Str::random(8) . '.jpg';
+        $image = new Image($request->file('avatar')->get());
+        Storage::put($imageFile, (string) $image->scaleDown(300));
         	if ($user->avatar_filepath) {
         		Storage::delete($user->avatar_filepath);
         	}
@@ -59,7 +68,7 @@ class ProfileController extends Controller
         }
         $user->save();
         return redirect()->back()->with('status', 'Profile updated.');
-	}
+    }
 
     public function editEmail()
     {
@@ -154,21 +163,22 @@ class ProfileController extends Controller
 
     public function showAvatar()
     {
-		$user = auth()->user();
-		return $user->avatar_filepath ? response()->file(Storage::path(
-			$user->avatar_filepath)) : null;
-	}
+        $user = auth()->user();
+        return $user->avatar_filepath ? response()->file(Storage::path(
+        $user->avatar_filepath)) : null;
+    }
 
     public function connectSocial(string $provider)
     {
         switch ($provider) {
         case 'google':
             config(['services.google.redirect' => route(
-                    'connect-account.callback', [
+                    'profile.connect.callback', [
                 'provider' => $provider
             ])]);
             return Socialite::driver($provider)->with([
                 'access_type' => 'offline',
+                'prompt' => 'consent'
             ])->redirect();
             break;
         }
@@ -191,54 +201,80 @@ class ProfileController extends Controller
 
     public function deleteSocial(string $provider)
     {
+        if (!auth()->user()->email_verified_at) {
+            return redirect()->route('profile.edit')->with('status',
+                'Add email first.');
+        }
         $user = auth()->user();
         switch ($provider) {
         case 'google':
             $user->google->delete();
-            break
+            break;
         }
-        return redirect()->back()->with('status',
+        return redirect()->route('profile.edit')->with('status',
             'Profile updated.');
     }
 
-    public function createForgotPassword()
+    public function createPasswordReset()
     {
-        return view('profile.create-forgot-password');
+        return view('users.request-password-reset', [
+            'backRoute' => route('user.login'),
+            'formAction' => route('profile.password-reset.store')
+        ]);
     }
 
-    public function storeForgotPassword(StoreForgotPasswordRequest $request)
+    public function storePasswordReset(StorePasswordResetRequest $request)
     {
+	$status = 'Now check the email inbox for update password page link.';
+        $user = User::firstWhere('email', $request->email);
+        if (!$user) {
+            return redirect()->route('user.login')->with('status', $status);
+        }
         $token = Str::random(64);
-        DB::table('password_reset_tokens')->upsert([
+        DB::table('password_reset_tokens')->upsert(
             [
                 'email' => $request->email,
-                'token' => Hash::make($token);
+                'token' => Hash::make($token)
             ],
             ['email'],
             ['token']
-        ]);
-        $url = route('profile.forgot-password.edit', [
+        );
+        $url = route('profile.password-reset.edit', [
             'email' => $request->email,
             'token' => $token
         ]);
-        Mail::to($request->email)->send(new PasswordReset($url)); 
-        return redirect()->route('login.login')->with('status',
-            'Now check the email inbox for update password page link.');
+        $duration = config('auth.passwords.users.expire') . ' minutes';
+        Mail::to($request->email)->send(new PasswordReset($url, $user, 
+            $duration)); 
+        return redirect()->route('user.login')->with('status', $status);
     }
 
-    public function editForgotPassword(Request $request)
+    public function endPasswordReset(Request $request)
     {
-        return view('profile.edit-forgot-password');
+        return view('users.password-reset-successful', [
+            'backRoute' => route('user.login'),
+            'signinRoute' => route('user.login')
+        ]);
     }
 
-    public function updateForgotPassword(UpdateForgotPasswordRequest $request)
+    public function editPasswordReset(Request $request)
+    {
+        return view('users.reset-password', [
+            'backRoute' => route('user.login'),
+            'formAction' => route('profile.password-reset.update'),
+            'email' => $request->email,
+            'token' => $request->token
+        ]);
+    }
+
+    public function updatePasswordReset(UpdatePasswordResetRequest $request)
     {
         $user = User::firstWhere('email', $request->email);
         $user->password = Hash::make($request->password);
         $user->save();
         DB::table('password_reset_tokens')->where('email', $request->email)
             ->delete();
-        return view('profile.password-changed');
+        return redirect()->route('profile.password-reset.end');
     }
 
     private static function findSocialUser(string $provider, string $id)

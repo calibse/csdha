@@ -3,7 +3,7 @@
 	@if ($gpoa)
 		@can ('create', 'App\Models\GpoaActivity')
 		<a href="{{ route('gpoa.activities.create') }}">
-			<span class="icon"><x-phosphor-plus-circle/></span>
+			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 			<span class="text">Add Activity</span>
 		</a>
 		@endcan

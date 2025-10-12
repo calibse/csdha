@@ -7,6 +7,10 @@
 	@vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-	<video id="qr-scanner"></video>
+	<p class="textbox"><a href="#box">Box</a> Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello  Hello Hello Hello Hello Hello Hello</p>
+	<a id="box" class="box">
+		<span class="divo"><img></span>
+		<span class="diva"></span>
+	</a>
 </body>
 </html>

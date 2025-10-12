@@ -25,6 +25,7 @@ class LoginController extends Controller
                 'invite_code' => $inviteCode
             ]),
             'signinRoute' => route('user.auth'),
+            'passwordResetRoute' => route('profile.password-reset.create'),
         ]);
     }
 
@@ -89,7 +90,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function signupWith(Request $request, string $provider)
+    public function redirectSignup(Request $request, string $provider)
     {
         $inviteCode = $request->invite_code;
         $request->session()->flash('inviteCode', $inviteCode);
@@ -105,15 +106,15 @@ class LoginController extends Controller
         }
     }
 
-    public function signinWith(Request $request, string $provider)
+    public function redirectSignin(Request $request, string $provider)
     {
         /*
         if (auth()->check()) {
             return redirect()->intended('home.html');
         }
-        */
         $inviteCode = $request->invite_code;
         $request->session()->flash('inviteCode', $inviteCode);
+        */
         switch ($provider) {
         case 'google':
             return Socialite::driver('google')->with([
@@ -122,7 +123,7 @@ class LoginController extends Controller
         }
     }
 
-    public function signupWithCallback(Request $request, string $provider)
+    public function signupWith(Request $request, string $provider)
     {
         $inviteCode = session('inviteCode') ?? $request->invite_code;
         $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
@@ -148,23 +149,27 @@ class LoginController extends Controller
         return redirect()->intended('home.html');
     }
 
-    public function authWith(Request $request, string $provider)
+    public function signinWith(Request $request, string $provider)
     {
+	/*
         $inviteCode = session('inviteCode') ?? $request->invite_code;
         $signupInvite = $inviteCode ? SignupInvitation::firstWhere(
             'invite_code', $inviteCode) : null;
+	*/
         $socialUser = Socialite::driver($provider)->user();
         $user = $socialUser ? self::findSocialUser($provider,
             $socialUser->id) : null;
-        if (!$user && !$signupInvite) {
+        if (!$user) {
             return redirect()->route('user.login')->withErrors([
                 'signin' => 'The provided credentials do not match our records.'
             ]);
         }
+	/*
         if (!$user) {
             $user = self::storeSocialUser($provider, $socialUser,
                 $signupInvite);
         }
+	*/
         Auth::login($user, $remember = true);
         $request->session()->regenerate();
         return redirect()->intended('home.html');

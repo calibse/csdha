@@ -6,7 +6,8 @@
             href="{{ route('gpoa.activities.edit', ['activity' => $activity->public_id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-pencil-simple/></span>
+            <img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
+
             <span class="text">Edit </span>
         </a>
     @endif
@@ -16,7 +17,7 @@
             href="{{ route('gpoa.activities.prepareForReject', ['activity' => $activity->public_id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-x-circle/></span>
+            <img class="icon" src="{{ asset('icon/light/x-circle-duotone.png') }}">
             <span class="text">Reject</span>
         </a>
     @endif
@@ -26,7 +27,7 @@
             href="{{ route('gpoa.activities.prepareForReturn', ['activity' => $activity->public_id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-arrow-fat-line-left/></span>
+            <img class="icon" src="{{ asset('icon/light/arrow-fat-line-left-duotone.png') }}">
             <span class="text">Return</span>
         </a>
     @endif
@@ -36,7 +37,7 @@
             href="{{ route('gpoa.activities.prepareForSubmit', ['activity' => $activity->public_id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-arrow-fat-line-right/></span>
+            <img class="icon" src="{{ asset('icon/light/arrow-fat-line-right-duotone.png') }}">
             <span class="text">Submit</span>
         </a>
     @endif
@@ -46,7 +47,7 @@
             href="{{ route('gpoa.activities.prepareForApprove', ['activity' => $activity->public_id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-check-circle/></span>
+            <img class="icon" src="{{ asset('icon/light/check-circle-duotone.png') }}">
             <span class="text">Approve</span>
         </a>
     @endif
@@ -56,7 +57,7 @@
             href="{{ route('gpoa.activities.confirmDestroy', ['activity' => $activity->public_id]) }}"
         @endcan
         >
-            <span class="icon"><x-phosphor-trash/></span>
+            <img class="icon" src="{{ asset('icon/light/trash-duotone.png') }}">
             <span class="text">Delete</span>
         </a>
     @endif

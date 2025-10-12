@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\User;
 
 class PasswordReset extends Mailable implements ShouldQueue
 {
@@ -16,7 +17,11 @@ class PasswordReset extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $url)
+    public function __construct(
+        public string $url, 
+        public User $user, 
+        public string $duration
+    )
     {
         //
     }
@@ -27,7 +32,7 @@ class PasswordReset extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Password Reset',
+            subject: 'Reset your CSDHA password',
         );
     }
 

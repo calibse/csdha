@@ -1,5 +1,4 @@
 @use('Illuminate\Support\Facades\Route')
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -7,73 +6,87 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>
-        @switch ($siteContext)
-        @case ('user')
-            CSDHA
-            @break
-        @case ('admin')
-            CSDHA Admin
-            @break
-        @endswitch
-    </title>
-	@vite(['resources/scss/app.scss', 'resources/js/app.js'])
+	@switch ($siteContext)
+	@case ('user')
+		CSDHA
+		@break
+	@case ('admin')
+		CSDHA Admin
+		@break
+	@endswitch
+	</title>
+	{{--
+	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
+	--}}
+	@vite(['resources/scss/app.scss']) 
 </head>
-<body class="main-body {{ $index ? 'index' : null }}">
-	@if ($index)
+<body class="main-body {{ $index ? 'index' : null }} {{ $form ? 'form' : null }}">
+@if ($index)
 	<header class="main-header" id="menu">
 		<a href="#" class="close-menu-button">
 			<span class="text">Close Menu</span>
 		</a>
 		<div class="content-block">
-			<div class="main-header-info">
-				<a class="main-brand" href="#">
+			<div class="main-header-title">
+				<div class="main-brand">
 					<span class="logo">
+						<img src="{{ asset('storage/app-logo.png') }}">
+						{{--
 						<img src="{{ Vite::asset('resources/images/app-logo.png') }}">
+						--}}
 					</span>
 					<span class="name">CSDHA</span>
-				</a>
+				</div>
+				<div class="main-account-link">
+						<a href="{{ route('profile.edit') }}">
+							<img class="icon" src="{{ asset('icon/dark/user-circle-duotone.png') }}">
+							<span class="text">Profile</span>
+						</a>
+				</div>
+			</div>
+			<div class="main-header-info">
 				<div class="account">
 					<div class="info">
-						<p class="avatar">
-							@if (auth()->user()->avatar_filepath)
+						<div class="avatar">
+						@if (auth()->user()->avatar_filepath)
 							<img src="{{ route('profile.showAvatar', ['avatar' => basename(auth()->user()->avatar_filepath)]) }}">
-							@else
-							<x-icon.avatar/>
-							@endif
-						</p>
+						@else
+							<img src="{{ asset('icon/user.png') }}">
+						@endif
+						</div>
 						<div class="details">
 							<p>{{ auth()->user()->full_name }}</p>
-                        @if ($siteContext === 'admin')
-                            <p>{{ ucwords(auth()->user()->role?->name) }}</p>
-                        @elseif ($siteContext === 'user')
-                            <p>{{ auth()->user()->position?->name }}</p>
-                        @endif
+						@if ($siteContext === 'admin')
+							<p>{{ ucwords(auth()->user()->role?->name) }}</p>
+						@elseif ($siteContext === 'user')
+							<p>{{ auth()->user()->position?->name }}</p>
+						@endif
 						</div>
 					</div>
-                    @if ($siteContext === 'user')
+				@if ($siteContext === 'user')
 					<p class="main-action">
 						<a href="{{ route('profile.edit') }}">
 							<span class="icon"><x-phosphor-pencil-simple/></span>
 							<span class="text">Edit profile</span>
 						</a>
 					</p>
-                    @endif
+				@endif
 				</div>
 			</div>
 			<nav class="main-header-menu">
 				<p class="title">Main Menu</p>
 				<ul class="list">
-                    @if ($siteContext === 'user')
+				@if ($siteContext === 'user')
 					<li>
 						<a href="{{ route('user.home') }}">
-							<span class="icon"><x-phosphor-house/></span>
+							<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
                             <span class="text">Home</span>
 						</a>
 					</li>
 					@can ('viewAny', 'App\Models\Gpoa')
 					<li>
 						<a href="{{ route('gpoa.index') }}">
-							<span class="icon"><x-phosphor-blueprint/></span>
+							<img class="icon" src="{{ asset('icon/dark/blueprint-duotone.png') }}">
 							<span class="text">GPOA</span>
 						</a>
 					</li>
@@ -81,7 +94,7 @@
 					@can ('viewAny', 'App\Models\Event')
 					<li>
 						<a href="{{ route('events.index') }}">
-							<span class="icon"><x-phosphor-calendar/></span>
+							<img class="icon" src="{{ asset('icon/dark/calendar-duotone.png') }}">
 							<span class="text">Events</span>
 						</a>
 					</li>
@@ -89,7 +102,7 @@
 					@can ('viewAnyAccomReport', 'App\Models\Event')
 					<li>
 						<a href="{{ route('accom-reports.index') }}">
-							<span class="icon"><x-phosphor-files/></span>
+							<img class="icon" src="{{ asset('icon/dark/files-duotone.png') }}">
 							<span class="text">Accom. Reports</span>
 						</a>
 					</li>
@@ -111,7 +124,6 @@
 						</a>
 					</li>
 					@endcan
-
 					@can ('viewAny', 'App\Models\Platform')
 					<li>
 						<a href="{{ route('platforms.index') }}">
@@ -140,7 +152,7 @@
 					@can ('viewAny', 'App\Models\Position')
 					<li>
 						<a href="{{ route('positions.index') }}">
-							<span class="icon"><x-phosphor-users-three/></span>
+							<img class="icon" src="{{ asset('icon/dark/users-three-duotone.png') }}">
 							<span class="text">Central Body</span>
 						</a>
 					</li>
@@ -148,56 +160,18 @@
 					@can ('viewAttendance', 'App\Models\Event')
 					<li>
 						<a href="{{ route('attendance.create') }}">
-							<span class="icon"><x-phosphor-user-check/></span>
+							<img class="icon" src="{{ asset('icon/dark/user-check-duotone.png') }}">
 							<span class="text">Attendance</span>
 						</a>
 					</li>
 					@endcan
 					<li>
 						<a href="{{ route('user.logout') }}">
-							<span class="icon"><x-phosphor-sign-out/></span>
+							<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 							<span class="text">Sign out</span>
 						</a>
 					</li>
-
-					{{-- Start of temp routes from admin --}}
-					{{--
-					@if (Route::has('analytics.index'))
-					<li>
-						<a href="{{ route('analytics.index') }}">
-							<span class="icon"><x-phosphor-chart-line-up/></span>
-							<span class="text">Analytics</span>
-						</a>
-					</li>
-					@endif
-					@if (Route::has('accounts.index'))
-					<li>
-						<a href="{{ route('accounts.index') }}">
-							<span class="icon"><x-phosphor-user-square/></span>
-							<span class="text">Accounts</span>
-						</a>
-					</li>
-					@endif
-					@if (Route::has('roles.index'))
-					<li>
-						<a href="{{ route('roles.index') }}">
-							<span class="icon"><x-phosphor-user-gear/></span>
-							<span class="text">Roles</span>
-						</a>
-					</li>
-					@endif
-					@if (Route::has('audit.index'))
-					<li>
-						<a href="{{ route('audit.index') }}">
-							<span class="icon"><x-phosphor-table/></span>
-							<span class="text">Audit Trail</span>
-						</a>
-					</li>
-					@endif
-					--}}
-					{{-- End of temp routes from admin --}}
-
-                    @elseif ($siteContext === 'admin')
+				@elseif ($siteContext === 'admin')
 					<li>
 						<a href="{{ route('admin.home') }}">
 							<span class="icon"><x-phosphor-house/></span>
@@ -236,40 +210,41 @@
 							<span class="text">Sign out</span>
 						</a>
 					</li>
-					@endif
+				@endif
 				</ul>
 			</nav>
 		</div>
 	</header>
-	@endif
+@endif
 	<main class="main-main">
 		<header class="main-content-header">
 			<div class="content-block">
-				<p class="nav-actions">
-                @if ($index)
+				<div class="nav-actions">
+				@if ($index)
 					<a href="#menu" class="main-menu-button">
-						<span class="icon"><x-phosphor-list/></span>
+						<img class="icon" src="{{ asset('icon/dark/list-duotone.png') }}">
 						<span class="text">Menu</span>
 					</a>
-                @elseif ($backRoute)
+				@elseif ($backRoute)
 					<a class="main-back-link" href="{{ $backRoute }}" >
-						<span class="icon"><x-phosphor-arrow-left/></span>
+						<img class="icon" src="{{ asset('icon/dark/arrow-left-duotone.png') }}">
+
 						<span class="text">Back to previous page</span>
 					</a>
-                @else
+				@else
 					<a class="main-back-link" href="{{ route($route, $routeParams) }}" >
-						<span class="icon"><x-phosphor-arrow-left/></span>
+						<img class="icon" src="{{ asset('icon/dark/arrow-left-duotone.png') }}">
 						<span class="text">Back to previous page</span>
 					</a>
-                @endif
-				</p>
+				@endif
+				</div>
 				<h1 class="title">{{ $title ?? 'CSDHA' }}</h1>
 			</div>
 		</header>
 		<div {{ $attributes->merge(['class' => 'main-content']) }}>
-			@if (isset($toolbar) && $toolbar->hasActualContent())
+		@if (isset($toolbar) && $toolbar->hasActualContent())
 			<nav class="main-toolbar">{{ $toolbar }}</nav>
-			@endif
+		@endif
 			<div class="content-block">
 				{{ $slot }}
 			</div>

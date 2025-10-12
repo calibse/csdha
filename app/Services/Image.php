@@ -6,9 +6,7 @@ use Intervention\Image\Laravel\Facades\Image as IImage;
 
 class Image
 {
-    private $image;
-
-    public function __construct(public $image)
+    public function __construct(private $image)
     {
 
     }

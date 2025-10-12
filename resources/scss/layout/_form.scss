@@ -1,6 +1,12 @@
 /* _form.scss */
 
+@use "../size";
+
 form {
+	a {
+		color: var(--color-4);
+	}
+
 	label {
 		display: block;
 		margin-bottom: .5rem;
@@ -10,8 +16,8 @@ form {
 	select,
 	textarea,
 	fieldset {
-		width: 100%;
-		max-width: var(--text-width);
+		max-width: 100%;
+		width: size.$text-width;
 	}
 
 	.datetime-range {
@@ -94,7 +100,7 @@ form {
 	}
 
 	.inline {
-		max-width: var(--text-width);
+		max-width: size.$text-width;
 
 		p {
 			display: inline-block;
@@ -110,7 +116,7 @@ form {
 }
 
 .submit-buttons, .submit-button {
-	max-width: var(--text-width);
+	max-width: size.$text-width;
 	text-align: right;
 
 	button {

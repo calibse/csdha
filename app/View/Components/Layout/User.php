@@ -14,6 +14,7 @@ class User extends Component
     public function __construct(
         public string $route = '',
         public bool $index = false,
+        public bool $form = false,
         public string $title = '',
         public array $routeParams = [],
         public string $backRoute = ''

@@ -26,4 +26,5 @@ Thumbs.db
 /k8s/secret.yaml
 .env.admin
 .env.production.admin
+/public/icon
 
