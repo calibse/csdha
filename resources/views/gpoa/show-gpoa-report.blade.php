@@ -1,4 +1,4 @@
-<x-layout.user route="gpoa.index" title="GPOA Report" class="gpoa">
+<x-layout.user :$backRoute title="GPOA Report" class="gpoa">
     <article class="article">
     @if ($fileRoute)
         <figure class="pdf-document">

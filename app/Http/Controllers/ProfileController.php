@@ -19,9 +19,20 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerify;
 use App\Mail\PasswordReset;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\GoogleAccount;
 
 class ProfileController extends Controller
 {
+    private bool $hasPassword;
+
+    public function __construct()
+    {
+	$this->hasPassword = true;
+        if (!auth()->user()->password && auth()->user()->google) {
+		$this->hasPassword = false;
+	}
+    }
+
     public function index()
     {
         return view('profile.index');
@@ -45,6 +56,7 @@ class ProfileController extends Controller
             'passwordRoute' => $passwordRoute,
             'emailRoute' => $emailRoute,
             'formAction' => $formAction,
+            'hasPassword' => $this->hasPassword,
             'googleRoute' => $googleRoute
         ]);
     }
@@ -72,6 +84,7 @@ class ProfileController extends Controller
 
     public function editEmail()
     {
+        if (!$this->hasPassword) abort(403);
         $backRoute = route('profile.edit');
         return view('profile.edit-email', [
             'backRoute' => $backRoute,
@@ -83,6 +96,7 @@ class ProfileController extends Controller
 
     public function updateEmail(UpdateEmailRequest $request)
     {
+        if (!$this->hasPassword) abort(403);
         $user = auth()->user();
         $status = 'Email updated.';
         if ($user->email !== $request->email || !$request->email) {
@@ -99,6 +113,7 @@ class ProfileController extends Controller
 
     public function resendEmailVerify()
     {
+        if (!$this->hasPassword) abort(403);
         $user = auth()->user();
         if ($user->email && $user->email_verified_at) {
             return view('message', [
@@ -116,6 +131,7 @@ class ProfileController extends Controller
 
     public function verifyEmail(Request $request)
     {
+        if (!$this->hasPassword) abort(403);
         if (!$request->hasValidSignature()) {
             return 'Hello';
             abort(401);
@@ -142,6 +158,7 @@ class ProfileController extends Controller
         $backRoute = route('profile.edit');
         return view('profile.edit-password', [
             'backRoute' => $backRoute,
+            'hasPassword' => $this->hasPassword,
             'formAction' => route('profile.password.update')
         ]);
     }
@@ -150,9 +167,10 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         $changed = false;
-        if (Hash::make($request->password) !== Hash::make($user->password)) {
+        if ($request->password && Hash::make($request->password) !== 
+            Hash::make($user->password)) {
             $changed = true;
-        }
+        } else $changed = true;
         $user->password = Hash::make($request->password);
         $user->save();
         if ($changed) {
@@ -186,8 +204,12 @@ class ProfileController extends Controller
 
     public function updateSocial(string $provider)
     {
+        config(['services.google.redirect' => route(
+                'profile.connect.callback', [
+            'provider' => $provider
+        ])]);
         $socialUser = Socialite::driver($provider)->user();
-        $user = $socialUser ? self::findSocial($provider,
+        $user = $socialUser ? self::findSocialUser($provider,
             $socialUser->id) : null;
         if ($user) {
             return redirect()->route('profile.edit')->withErrors([

@@ -5,7 +5,8 @@
 			href="{{ $editRoute }}"
 		@endcan
 		>
-			<span class="icon"><x-phosphor-pencil-simple/></span>
+                        <img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
+
 			<span class="text">Edit</span>
 		</a>
 		<a
@@ -13,7 +14,7 @@
 			href="{{ $changeBgRoute }}"
 		@endcan
 		>
-			<span class="icon"><x-phosphor-pencil-simple/></span>
+                        <img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
 			<span class="text">Change Background</span>
 		</a>
 	@if ($actions['submit'])
@@ -22,7 +23,7 @@
 			href="{{ $submitRoute }}"
 		@endcan
 		>
-			<span class="icon"><x-phosphor-arrow-fat-line-right/></span>
+                        <img class="icon" src="{{ asset('icon/light/arrow-fat-line-right-duotone.png') }}">
 			<span class="text">Submit</span>
 		</a>
 	@endif
@@ -32,7 +33,7 @@
 			href="{{ $returnRoute }}"
 		@endcan
 		>
-			<span class="icon"><x-phosphor-arrow-fat-line-left/></span>
+                        <img class="icon" src="{{ asset('icon/light/arrow-fat-line-left-duotone.png') }}">
 			<span class="text">Return</span>
 		</a>
 	@endif
@@ -42,7 +43,7 @@
 			href="{{ $approveRoute }}"
 		@endcan
 		>
-			<span class="icon"><x-phosphor-check-circle/></span>
+                        <img class="icon" src="{{ asset('icon/light/check-circle-duotone.png') }}">
 			<span class="text">Approve</span>
 		</a>
 	@endif

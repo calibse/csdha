@@ -1,5 +1,7 @@
 <x-layout.user :$backRoute class="gpoa" title="Old GPOA">
 	<div class="article">
+		<p><a href="{{ $reportRoute }}">GPOA Report</a></p>
+		<p><a href="{{ $accomReportRoute }}">Accomplishment Report</a></p>
 		<dl>
 			<dt>Created by</dt>
 			<dd>{{ $createdBy }}</dd>
@@ -12,8 +14,6 @@
 			<dt>Number of approved accomplishment reports</dt>
 			<dd>{{ $accomReportCount }} accomplishment reports</dd>
 		</dl>
-		<p><a href="#">GPOA Report</a></p>
-		<p><a href="#">Accomplishment Report</a></p>
 	</div>
 </x-layout>
 

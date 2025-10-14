@@ -13,22 +13,32 @@
 				<label for="remove-avatar">Remove avatar</label>
 			</p>
 			<p>
-				<label>Email</label>
-				<a href="{{ $emailRoute }}">Change here</a>
-			</p>
-			<p>
-				<label>Password</label>
-				<a href="{{ $passwordRoute }}">Change here</a>
-			</p>
-			<p>
 				<label>Google Account</label>
 			@if (!auth()->user()->email_verified_at)
-				<i>Add an email to be able to remove this account.</i>
+				Connected (Add an email to be able to remove this account)
 			@elseif (auth()->user()->google)
 				<a href="{{ $googleRoute }}">Remove</a>
 			@else
 				<a href="{{ $googleRoute }}">Connect</a>
 			@endif
+			</p>
+			<p>
+				<label>Email</label>
+			@if ($hasPassword)
+				<a href="{{ $emailRoute }}">Change here</a>
+			@else
+				Set up a password first.
+			@endif
+			</p>
+			<p>
+				<label>Password</label>
+				<a href="{{ $passwordRoute }}">
+			@if ($hasPassword)
+				Change here
+			@else
+				Set up here
+			@endif
+				</a>
 			</p>
 			<p>
 				<label>Username</label>

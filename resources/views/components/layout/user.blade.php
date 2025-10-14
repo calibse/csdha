@@ -66,7 +66,7 @@
 				@if ($siteContext === 'user')
 					<p class="main-action">
 						<a href="{{ route('profile.edit') }}">
-							<span class="icon"><x-phosphor-pencil-simple/></span>
+							<img class="icon" src="{{ asset('icon/dark/pencil-simple-duotone.png') }}">
 							<span class="text">Edit profile</span>
 						</a>
 					</p>
@@ -80,7 +80,7 @@
 					<li>
 						<a href="{{ route('user.home') }}">
 							<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
-                            <span class="text">Home</span>
+							<span class="text">Home</span>
 						</a>
 					</li>
 					@can ('viewAny', 'App\Models\Gpoa')
@@ -108,38 +108,6 @@
 					</li>
 					@endcan
 					{{--
-					@can ('viewAny', 'App\Models\Meeting')
-					<li>
-						<a href="{{ route('meetings.index') }}">
-							<span class="icon"><x-phosphor-video-conference/></span>
-							<span class="text">Meetings</span>
-						</a>
-					</li>
-					@endcan
-					@can ('viewAny', 'App\Models\Fund')
-					<li>
-						<a href="{{ route('funds.index') }}">
-							<span class="icon"><x-phosphor-coins/></span>
-							<span class="text">Funds</span>
-						</a>
-					</li>
-					@endcan
-					@can ('viewAny', 'App\Models\Platform')
-					<li>
-						<a href="{{ route('platforms.index') }}">
-							<span class="icon"><x-phosphor-cube-transparent/></span>
-							<span class="text">Platforms</span>
-						</a>
-					</li>
-					@endcan
-					@can ('viewAny', 'App\Models\Partnership')
-					<li>
-						<a href="{{ route('partnerships.index') }}">
-							<span class="icon"><x-phosphor-handshake/></span>
-							<span class="text">Partnership</span>
-						</a>
-					</li>
-					@endcan
 					@can ('viewAny', 'App\Models\Student')
 					<li>
 						<a href="{{ route('students.index') }}">
@@ -166,6 +134,12 @@
 					</li>
 					@endcan
 					<li>
+						<a href="{{ route('settings.index') }}">
+							<img class="icon" src="{{ asset('icon/dark/wrench-duotone.png') }}">
+							<span class="text">Settings</span>
+						</a>
+					</li>
+					<li>
 						<a href="{{ route('user.logout') }}">
 							<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 							<span class="text">Sign out</span>
@@ -174,39 +148,39 @@
 				@elseif ($siteContext === 'admin')
 					<li>
 						<a href="{{ route('admin.home') }}">
-							<span class="icon"><x-phosphor-house/></span>
+							<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
 							<span class="text">Home</span>
 						</a>
 					</li>
 					<li>
 						<a href="{{ route('audit.index') }}">
-							<span class="icon"><x-phosphor-table/></span>
+							<img class="icon" src="{{ asset('icon/dark/table-duotone.png') }}">
 							<span class="text">Audit Trail</span>
 						</a>
 					</li>
 					{{--
 					<li>
 						<a href="{{ route('analytics.index') }}">
-							<span class="icon"><x-phosphor-chart-line-up/></span>
+							<img class="icon" src="{{ asset('icon/dark/chart-line-up-duotone.png') }}">
 							<span class="text">Analytics</span>
 						</a>
 					</li>
 					--}}
 					<li>
 						<a href="{{ route('accounts.index') }}">
-							<span class="icon"><x-phosphor-user-square/></span>
+							<img class="icon" src="{{ asset('icon/dark/user-square-duotone.png') }}">
 							<span class="text">Accounts</span>
 						</a>
 					</li>
 					<li>
 						<a href="{{ route('roles.index') }}">
-							<span class="icon"><x-phosphor-user-gear/></span>
+							<img class="icon" src="{{ asset('icon/dark/user-gear-duotone.png') }}">
 							<span class="text">Roles</span>
 						</a>
 					</li>
 					<li>
 						<a href="{{ route('admin.logout') }}">
-							<span class="icon"><x-phosphor-sign-out/></span>
+							<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 							<span class="text">Sign out</span>
 						</a>
 					</li>

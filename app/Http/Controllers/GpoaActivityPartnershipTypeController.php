@@ -11,14 +11,19 @@ class GpoaActivityPartnershipTypeController extends Controller
     {
         $partnerships = GpoaActivityPartnershipType::all();
         return view('settings.gpoa-activities.index-partnerships', [
-            'partnerships' = $partnerships
+            'partnerships' => $partnerships,
+            'backRoute' => route('settings.index'),
         ]);
     }
 
     public function confirmDestroy(GpoaActivityPartnershipType $partnership)
     {
         return view('settings.gpoa-activities.delete-partnership', [
-            'partnership' => $partnership
+            'partnership' => $partnership,
+            'formAction' => route('settings.gpoa-activities.partnership-types.destroy', [
+                'partnership' => $partnership->id
+            ]),
+            'backRoute' => route('settings.gpoa-activities.partnership-types.index'),
         ]);
     }
 

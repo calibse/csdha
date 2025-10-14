@@ -4,8 +4,8 @@
 		<form method="post" action="{{ $formAction }}">
 		@csrf
 			<p>
-				<label for="student-section">Student Section</label>
-				<input id="student-section" name="student_section">
+				<label for="section">Section</label>
+				<input id="section" name="section">
 			</p>
 			<p class="form-submit">
 				<button>Add</button>

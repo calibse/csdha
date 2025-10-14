@@ -33,13 +33,14 @@
                 <ul class="toolbar">
                     <li>
                         <a href="#" class="close-button">
-                            <span class="icon"><x-phosphor-arrow-left/></span>
+				<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
+
                             <span class="text">Close Viewer</span>
                         </a>
                     </li>
                     <li>
                         <button id="remove-button" class="remove-button">
-                            <span class="icon"><x-phosphor-minus-circle/></span>
+				<img class="icon" src="{{ asset('icon/light/minus-circle-duotone.png') }}">
                             <span class="text">Remove file</span>
                         </button>
                     </li>

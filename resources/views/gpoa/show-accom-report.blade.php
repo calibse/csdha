@@ -1,3 +1,19 @@
-<div>
-    <!-- It is quality rather than quantity that matters. - Lucius Annaeus Seneca -->
-</div>
+<x-layout.user :$backRoute title="Accomplishment Report" class="gpoa">
+    <article class="article">
+    @if ($fileRoute)
+        <figure class="pdf-document">
+            <div class="pdf-file">
+                <object data="{{ $fileRoute }}" type="application/pdf">
+                    <p>
+                        Preview of this file is unsupported. You may download
+                        this file <a href="{{ $fileRoute }}">here</a>.
+                    </p>
+                </object>
+            </div>
+            <figcaption class="caption">Accomplishment Report</figcaption>
+        </figure>
+    @else
+        <p>There are no approved accomplishment reports yet.</p>
+    @endif
+    </article>
+</x-layout.user>

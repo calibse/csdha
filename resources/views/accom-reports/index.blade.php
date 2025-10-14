@@ -2,7 +2,8 @@
     <x-slot:toolbar>
     @if ($gpoa)
         <a href="{{ $genRoute }}">
-            <span class="icon"><x-phosphor-file-plus/></span>
+		<img class="icon" src="{{ asset('icon/light/file-plus-duotone.png') }}">
+
             <span class="text">Gen. PDF</span>
         </a>
     @endif

@@ -4,7 +4,8 @@
 <x-layout.user route="events.edit" :$routeParams class="events" title="Edit Dates">
 	<x-slot:toolbar>
 		<a href="{{ route('events.dates.create', ['event' => $event->public_id]) }}">
-			<span class="icon"><x-phosphor-plus-circle/></span>
+			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
+
 			<span class="text">Add Date</span>
 		</a>
 	</x-slot:toolbar>

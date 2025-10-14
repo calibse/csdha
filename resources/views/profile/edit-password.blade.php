@@ -4,10 +4,12 @@
         <form method="post" action="{{ $formAction }}">
             @csrf
             @method('PUT')
+		@if ($hasPassword)
 			<p>
 				<label for="old_password">Old Password</label>
 				<input type="password" id="old_password" name="old_password">
 			</p>
+		@endif
 			<p>
 				<label for="password">New Password</label>
 				<input type="password" id="password" name="password">

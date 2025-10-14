@@ -11,14 +11,19 @@ class GpoaActivityFundSourceController extends Controller
     {
         $funds = GpoaActivityFundSource::all();
         return view('settings.gpoa-activities.index-funds', [
-            'funds' = $funds
+            'funds' => $funds,
+            'backRoute' => route('settings.index'),
         ]);
     }
 
     public function confirmDestroy(GpoaActivityFundSource $fund)
     {
         return view('settings.gpoa-activities.delete-fund', [
-            'fund' => $fund
+            'fund' => $fund,
+            'formAction' => route('settings.gpoa-activities.fund-sources.destroy', [
+                'fund' => $fund->id
+            ]),
+            'backRoute' => route('settings.gpoa-activities.fund-sources.index'),
         ]);
     }
 

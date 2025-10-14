@@ -16,6 +16,7 @@ use App\Services\Format;
 use App\Http\Requests\SaveGpoaRequest;
 use WeasyPrint\Facade as WeasyPrint;
 use App\Services\PagedView;
+use Illuminate\Support\Facades\Storage;
 
 class GpoaController extends Controller implements HasMiddleware
 {
@@ -65,6 +66,16 @@ class GpoaController extends Controller implements HasMiddleware
         ]);
     }
 
+    public function oldIndex()
+    {
+        $gpoas = Gpoa::closed()->withApprovedActivity()
+            ->orderBy('closed_at', 'desc')->paginate(7);
+        return view('gpoa.index-old', [
+            'gpoas' => $gpoas,
+            'backRoute' => route('gpoa.index'),
+        ]);
+    }
+
     public function create()
     {
         return view('gpoa.create', [
@@ -96,14 +107,65 @@ class GpoaController extends Controller implements HasMiddleware
         $period->branch_director = $request->branch_director;
         $period->save();
         $gpoa->academicPeriod()->associate($period);
-        $gpoa->adviser()->associate(auth()->user());
+        $gpoa->creator()->associate(auth()->user());
         $gpoa->active = true;
         $gpoa->save();
     }
 
     public function show(Gpoa $gpoa)
     {
+        return view('gpoa.show', [
+            'reportRoute' => route('gpoas.report.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+            'accomReportRoute' => route('gpoas.accom-report.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+            'createdBy' => $gpoa->creator->full_name,
+            'closedBy' => $gpoa->closer,
+            'academicPeriod' => $gpoa->full_academic_period,
+            'activityCount' => $gpoa->activities()->count(),
+            'accomReportCount' => $gpoa->events()->approved()->count(),
+            'backRoute' => route('gpoas.old-index'),
+        ]);
+    }
 
+    public function showReport(Gpoa $gpoa)
+    {
+        return view('gpoa.show-gpoa-report', [
+            'fileRoute' => route('gpoas.report-file.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+            'backRoute' => route('gpoas.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+        ]);
+    }
+
+    public function showReportFile(Gpoa $gpoa)
+    {
+        $file = $gpoa->report_filepath;
+        if (!$file) abort(404);
+        return response()->file(Storage::path($file));
+    }
+
+    public function showAccomReport(Gpoa $gpoa)
+    {
+        return view('gpoa.show-accom-report', [
+            'fileRoute' => route('gpoas.accom-report-file.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+            'backRoute' => route('gpoas.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+        ]);
+    }
+
+    public function showAccomReportFile(Gpoa $gpoa)
+    {
+        $file = $gpoa->accom_report_filepath;
+        if (!$file) abort(404);
+        return response()->file(Storage::path($file));
     }
 
     public function edit()
@@ -152,6 +214,11 @@ class GpoaController extends Controller implements HasMiddleware
     public function close(Request $request)
     {
         $gpoa = $this->gpoa;
+        $status = 'GPOA closed.';
+        if (!$gpoa->has_approved_activity) {
+            self::closeGpoa();
+            return redirect()->route('gpoa.index')->with('status', $status);
+        }
         $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
         $accomReportFile = "gpoas/gpoa_{$gpoa->id}/accom_report.pdf";
         WeasyPrint::prepareSource(new PagedView('gpoa.report',
@@ -168,12 +235,20 @@ class GpoaController extends Controller implements HasMiddleware
             'approved' => true,
             'president' => User::ofPosition('president')->first()
         ]))->putFile($accomReportFile);
-        $gpoa->active = null;
-        $gpoa->closed_at = now();
         $gpoa->report_filepath = $reportFile;
         $gpoa->accom_report_filepath = $accomReportFile;
         $gpoa->save();
-        return redirect()->route('gpoa.index');
+        self::closeGpoa();
+        return redirect()->route('gpoa.index')->with('status', $status);
+    }
+
+    private static function closeGpoa(): void
+    {
+        $gpoa = $this->gpoa;
+        $gpoa->active = null;
+        $gpoa->closer()->associate(auth()->user());
+        $gpoa->closed_at = now();
+        $gpoa->save();
     }
 
     public function destroy(string $id)

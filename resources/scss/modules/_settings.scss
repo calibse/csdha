@@ -1,0 +1,18 @@
+/* _settings.scss */
+
+@use "../size";
+@use "../color";
+
+.main-content.settings {
+	section p {
+		margin-top: .5rem;
+	}
+
+	section h2 {
+		margin-bottom: .5rem;
+	}
+
+        section {
+            border-bottom: solid size.$line-width color.$line;
+        }
+}

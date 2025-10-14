@@ -331,10 +331,6 @@
 		width: max-content;
 	}
 
-	:last-child {
-		margin-right: unset;
-	}
-
 	a:not([href]) {
 		color: color.$toolbar-disabled-link;
 

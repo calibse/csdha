@@ -1,7 +1,8 @@
 <x-layout.user class="events attachments" :$backRoute title="Attachments">
     <x-slot:toolbar>
         <a href="{{ $createRoute }}">
-            <span class="icon"><x-phosphor-plus-circle/></span>
+			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
+
             <span class="text">Create Set</span>
         </a>
     </x-slot:toolbar>

@@ -5,7 +5,8 @@
             href="{{ $editRoute }}"
             @endcan
         >
-            <span class="icon"><x-phosphor-pencil-simple/></span>
+            <img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
+
             <span class="text">Edit</span>
         </a>
         <a
@@ -13,7 +14,7 @@
             href="{{ $genArRoute }}"
             @endcan
         >
-            <span class="icon"><x-phosphor-file-plus/></span>
+            <img class="icon" src="{{ asset('icon/light/file-plus-duotone.png') }}">
             <span class="text">{{ $event->accomReport?->approved_at ? 'View' : 'Submit' }} AR</span>
         </a>
     </x-slot:toolbar>

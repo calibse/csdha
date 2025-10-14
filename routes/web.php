@@ -32,6 +32,14 @@ use App\Http\Controllers\EventRegisFormController;
 use App\Http\Controllers\AccomReportController;
 use App\Http\Controllers\EventAttachmentController;
 use App\Http\Controllers\EventEvaluationController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StudentSectionController;
+use App\Http\Controllers\StudentYearController;
+use App\Http\Controllers\StudentCourseController;
+use App\Http\Controllers\GpoaActivityModeController;
+use App\Http\Controllers\GpoaActivityPartnershipTypeController;
+use App\Http\Controllers\GpoaActivityTypeController;
+use App\Http\Controllers\GpoaActivityFundSourceController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -47,7 +55,7 @@ use App\Models\Event;
 use App\Services\EvalFormStep;
 use App\Services\QrCode;
 
-Route::get('/test', function (Request $request) {
+Route::get('/test.html', function (Request $request) {
     return view('test');
     $cookies = $request->cookies->all();
 $lines = [];
@@ -57,6 +65,133 @@ foreach ($cookies as $k => $v) {
 $text = implode("\n", $lines);
 return $text . 'hello';
 });
+
+    Route::prefix('settings')->name('settings.')->group(function () {
+
+        Route::get('/index.html', [SettingController::class, 'index'])
+            ->name('index');
+    
+        Route::controller(StudentSectionController::class)
+            ->name('students.sections.')->group(function () {
+    
+            Route::get('/student-sections.html', 'index')->name('index');
+    
+            Route::get('/add-student-sections.html', 'create')->name('create');
+    
+            Route::post('/add-student-sections.php', 'store')->name('store');
+        });
+    
+        Route::prefix('student-section-{section}')->name('students.sections.')
+            ->controller(StudentSectionController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(StudentYearController::class)
+            ->name('students.years.')->group(function () {
+    
+            Route::get('/student-year-levels.html', 'index')->name('index');
+    
+            Route::get('/add-student-year-levels.html', 'create')
+                ->name('create');
+    
+            Route::post('/add-student-year-levels.php', 'store')
+                ->name('store');
+        });
+    
+        Route::prefix('student-year-level-{year}')->name('students.years.')
+            ->controller(StudentYearController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(StudentCourseController::class)
+            ->name('students.courses.')->group(function () {
+    
+            Route::get('/student-courses.html', 'index')->name('index');
+    
+            Route::get('/add-student-course.html', 'create')
+                ->name('create');
+    
+            Route::post('/add-student-course.php', 'store')
+                ->name('store');
+        });
+    
+        Route::prefix('student-course-{course}')->name('students.courses.')
+            ->controller(StudentCourseController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityModeController::class)
+            ->name('gpoa-activities.modes.')->group(function () {
+    
+            Route::get('/gpoa-modes.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-mode-{mode}')->name('gpoa-activities.modes.')
+            ->controller(GpoaActivityModeController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityFundSourceController::class)
+            ->name('gpoa-activities.fund-sources.')->group(function () {
+    
+            Route::get('/gpoa-sources-of-fund.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-source-of-fund-{fund}')->name('gpoa-activities.fund-sources.')
+            ->controller(GpoaActivityFundSourceController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityPartnershipTypeController::class)
+            ->name('gpoa-activities.partnership-types.')->group(function () {
+    
+            Route::get('/gpoa-partnerships.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-partnership-{partnership}')->name('gpoa-activities.partnership-types.')
+            ->controller(GpoaActivityPartnershipTypeController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityTypeController::class)
+            ->name('gpoa-activities.types.')->group(function () {
+    
+            Route::get('/gpoa-types.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-type-{type}')->name('gpoa-activities.types.')
+            ->controller(GpoaActivityTypeController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    });
 
 Route::domain(config('custom.admin_domain'))->group(function () {
 
@@ -244,7 +379,7 @@ Route::domain(config('custom.user_domain'))->group(function () {
     Route::prefix('auth')->name('auth.')
         ->middleware(CheckSignupInviteCode::class)->group(function () {
 
-        Route::get('/{provider}/redirect', [LoginController::class,
+        Route::get('/{provider}/redirect.php', [LoginController::class,
             'redirectSignin'])->name('redirect');
 
         Route::get('/{provider}/callback', [LoginController::class,
@@ -252,7 +387,7 @@ Route::domain(config('custom.user_domain'))->group(function () {
 
     });
 
-    Route::get('/sign-up/{provider}/redirect', [LoginController::class,
+    Route::get('/sign-up/{provider}/redirect.php', [LoginController::class,
         'redirectSignup'])->name('signup.redirect')
         ->middleware(CheckSignupInviteCode::class);
 
@@ -278,6 +413,25 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
     Route::get('/home.html', [HomeController::class, 'index'])
         ->name('user.home');
+
+    Route::get('/old.html', [GpoaController::class, 'oldIndex'])
+        ->name('gpoas.old-index');
+
+    Route::prefix('gpoa-{gpoa}')->name('gpoas.')
+            ->controller(GpoaController::class)->group(function () {
+
+        Route::get('/index.html', 'show')->name('show');
+
+        Route::get('/report.html', 'showReport')->name('report.show');
+
+        Route::get('/report.pdf', 'showReportFile')->name('report-file.show');
+
+        Route::get('/accomplishment-report.html', 'showAccomReport')
+            ->name('accom-report.show');
+
+        Route::get('/accomplishment-report.pdf', 'showAccomReportFile')
+            ->name('accom-report-file.show');
+    });
 
     Route::name('gpoa.')->middleware(CheckGpoaActivity::class)
             ->group(function () {
@@ -656,7 +810,8 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
     Route::prefix('connect')->name('profile.connect.')
             ->controller(ProfileController::class)->group(function () {
 
-        Route::get('/{provider}/redirect', 'connectSocial')->name('redirect');
+        Route::get('/{provider}/redirect.php', 'connectSocial')
+            ->name('redirect');
 
         Route::get('/{provider}/callback', 'updateSocial')->name('callback');
 

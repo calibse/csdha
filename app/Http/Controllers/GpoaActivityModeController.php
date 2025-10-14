@@ -11,14 +11,19 @@ class GpoaActivityModeController extends Controller
     {
         $modes = GpoaActivityMode::all();
         return view('settings.gpoa-activities.index-modes', [
-            'modes' = $modes
+            'modes' => $modes,
+            'backRoute' => route('settings.index'),
         ]);
     }
 
     public function confirmDestroy(GpoaActivityMode $mode)
     {
         return view('settings.gpoa-activities.delete-mode', [
-            'mode' => $mode
+            'mode' => $mode,
+            'formAction' => route('settings.gpoa-activities.modes.destroy', [
+                'mode' => $mode->id
+            ]),
+            'backRoute' => route('settings.gpoa-activities.modes.index'),
         ]);
     }
 

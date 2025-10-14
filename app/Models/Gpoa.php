@@ -19,6 +19,13 @@ class Gpoa extends Model
 {
     use HasPublicId;
 
+    protected function casts(): array
+    {
+        return [
+            'closed_at' => 'datetime'
+        ];
+    }
+
     public function events(): HasManyThrough
     {
         return $this->hasManyThrough(Event::class, GpoaActivity::class);
@@ -29,9 +36,31 @@ class Gpoa extends Model
         return $this->hasMany(GpoaActivity::class);
     }
 
-    public function adviser(): BelongsTo
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'adviser_user_id');
+        return $this->belongsTo(User::class, 'creator_user_id');
+    }
+
+    public function closer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closer_user_id');
+    }
+
+    protected function hasApprovedActivity(): Attribute
+    {
+        $has = $this->activities()->where('status', 'approved')->exists();
+        return Attribute::make(
+            get: fn () => $has
+        );
+    }
+
+    protected function fullAcademicPeriod(): Attribute
+    {
+        $academicPeriod = $this->academicPeriod?->term?->label . ' A.Y. ' . 
+            $this->academicPeriod?->year_label;
+        return Attribute::make(
+            get: fn () => $academicPeriod
+        );
     }
 
     public function academicPeriod(): BelongsTo
@@ -57,6 +86,18 @@ class Gpoa extends Model
     #[Scope]
     protected function active(Builder $query): void
     {
-        $query->where('active', true);
+        $query->whereNull('closed_at');
+    }
+
+    #[Scope]
+    protected function closed(Builder $query): void
+    {
+        $query->whereNotNull('closed_at');
+    }
+
+    #[Scope]
+    protected function withApprovedActivity(Builder $query): void
+    {
+        $query->whereRelation('activities', 'status', 'approved');
     }
 }

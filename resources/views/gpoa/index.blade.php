@@ -9,30 +9,34 @@
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.confirmClose') }}">
-				<span class="icon"><x-phosphor-archive/></span>
-				<span class="text">Close</span>
+			<img class="icon" src="{{ asset('icon/light/archive-duotone.png') }}">
+			<span class="text">Close</span>
 		</a>
 		@endcan
 		@can ('update', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.edit') }}">
-				<span class="icon"><x-phosphor-pencil-simple/></span>
-				<span class="text">Edit</span>
+			<img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
+			<span class="text">Edit</span>
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.showGenPdf') }}">
-				<span class="icon"><x-phosphor-file-plus/></span>
-				<span class="text">Gen. PDF</span>
+			<img class="icon" src="{{ asset('icon/light/file-plus-duotone.png') }}">
+			<span class="text">Gen. PDF</span>
 		</a>
 		@endcan
 	@else
 		@can ('create', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.create') }}">
-			<span class="icon"><x-phosphor-plus-circle/></span>
+			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 			<span class="text">Create</span>
 		</a>
 		@endcan
 	@endif
+		<a href="{{ route('gpoas.old-index') }}">
+			<img class="icon" src="{{ asset('icon/light/archive-duotone.png') }}">
+			<span class="text">Browse Closed GPOAs</span>
+		</a>
 	</x-slot:toolbar>
 	<article class="article">
 	@if (session('status') === 'returned')

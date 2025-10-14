@@ -11,14 +11,19 @@ class GpoaActivityTypeController extends Controller
     {
         $types = GpoaActivityType::all();
         return view('settings.gpoa-activities.index-types', [
-            'types' = $types
+            'types' => $types,
+            'backRoute' => route('settings.index'),
         ]);
     }
 
     public function confirmDestroy(GpoaActivityType $type)
     {
         return view('settings.gpoa-activities.delete-type', [
-            'type' => $type
+            'type' => $type,
+            'formAction' => route('settings.gpoa-activities.types.destroy', [
+                'type' => $type->id
+            ]),
+            'backRoute' => route('settings.gpoa-activities.types.index'),
         ]);
     }
 
