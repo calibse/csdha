@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>CS Event Registration Form</title>
-    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    @vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
     <header>
         <hgroup>
             <p class="main-brand org-name">
                 <span class="logo">
-                    <img src="{{ Vite::asset('resources/images/app-logo.png') }}">
+                    <img src="{{ asset('storage/org-logo.png') }}">
                 </span>
                 <span class="name">Computer Society</span>
             </p>

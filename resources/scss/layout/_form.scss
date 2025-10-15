@@ -82,7 +82,11 @@ form {
 	}
 
 	fieldset {
-        margin: 1rem 0;
+		margin: 1rem 0;
+		
+		p {
+			width: 100%;
+		}
 	}
 
 	button {

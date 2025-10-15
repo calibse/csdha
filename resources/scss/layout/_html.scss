@@ -1,6 +1,7 @@
 /* _html.scss */
 
 @use "../size";
+@use "../color";
 
 h1, h2, h3, h4, h5, h6, th {
 	&.title {
@@ -44,4 +45,23 @@ a, button {
 a:hover > .text,
 a:focus > .text {
     text-decoration: underline;
+}
+
+.signin-link {
+	border: solid size.$line-width color.$icon-dark;
+	width: 100%;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: inherit;
+	padding: .3rem;
+	border-radius: size.$corner-roundness;
+
+	&:hover .text, &:focus .text {
+		text-decoration: none;
+	}
+
+	&:hover, &:focus {
+		border-color: color.$header-fg;
+	}
 }

@@ -1,5 +1,8 @@
 /* _alert.scss */
 
+@use "../size";
+@use "../color";
+
 @keyframes collapse {
     /*
 	from {
@@ -16,17 +19,25 @@
 }
 
 .alert {
-	border-bottom: .05rem solid var(--line-color);
+	border-bottom: size.$line-width solid color.$line;
 	max-width: max-content;
 	margin: 1rem 0;
-	padding: .01rem 1rem;
+	padding: 1rem;
+
+	:first-child {
+		margin-top: 0;
+	}
+
+	:last-child {
+		margin-bottom: 0;
+	}
 
 	li {
-		max-width: var(--text-width);
+		max-width: size.$text-width;
 	}
 
 	&.alert-info {
-		background-color: var(--success-color);
+		background-color: color.$success;
 		margin: .3rem 0;
 		max-width: unset;
 		width: unset;
@@ -39,7 +50,7 @@
 	}
 
 	&.alert-error {
-		background-color: var(--failure-color);
+		background-color: color.$failure;
 	}
 }
 

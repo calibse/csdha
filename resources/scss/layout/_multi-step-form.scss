@@ -1,5 +1,8 @@
 /* _multi-step-form.scss */
 
+@use "../size";
+@use "../color";
+
 .multi-step-form {
 	.qr-code {
 		height: 100vh;
@@ -14,14 +17,19 @@
 }
 
 .multi-step-form {
-    background-color: var(--base-color-0);
+    background-color: color.$form-bg;
+}
+
+.multi-step-form a[href] {
+	color: color.$link;
 }
 
 .multi-step-form .org-name {
-    background-color: var(--color-4);
+    background-color: color.$header-bg;
     margin-top: 0;
     text-align: center;
-    max-width: 100vw;
+    width: 100%;
+	height: 100%;
     padding: 1rem 0;
 
     .name {
@@ -31,18 +39,18 @@
 }
 
 .multi-step-form .title.of-form {
-    max-width: 100vw;
+    width: 100%;
     font-size: 1.5rem;
     text-align: center;
 }
 
 .multi-step-form .section {
-    max-width: calc(var(--text-width) + 2rem);
-    padding: .01rem 1rem;
+    max-width: size.$text-width + 2rem;
+    padding: 0 1rem;
     margin: 1rem auto;
-    background-color: var(--bg-color);
-    border-radius: .3rem;
-    border: solid .05rem var(--base-color-1);
+    background-color: color.$background;
+    border-radius: size.$corner-roundness;
+    border: solid .05rem color.$line;
 
     .title:first-child, &.intro .title {
         font-size: 1.2rem;
@@ -51,6 +59,22 @@
     &:target {
         scroll-margin-top: 1rem;
     }
+}
+.multi-step-form .intro.section h2 {
+	margin-top: 0;
+}
+
+.multi-step-form .main.section,
+.multi-step-form .intro.section {
+	padding: 1rem;
+
+	:first-child {
+		margin-top: 0;
+	}
+
+	:last-child {
+		margin-bottom: 0;
+	}
 }
 
 .multi-step-form .section:not(.main):not(.intro) {
@@ -61,6 +85,7 @@
         display: inline-block;
         max-width: 49%;
         width: 100%;
+	vertical-align: middle;
     }
 
     .status {
