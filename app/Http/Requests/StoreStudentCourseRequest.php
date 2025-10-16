@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class StoreStudentCourseRequest extends FormRequest
 {
@@ -10,9 +12,11 @@ class StoreStudentCourseRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:255', 
-                'unique:App\Models\Course,name'],
+                Rule::unique('App\Models\Course', 'name')->withoutTrashed()
+            ],
             'acronym' => ['required', 'max:8',
-                'unique:App\Models\Course,acronym']
+                Rule::unique('App\Models\Course', 'acronym')->withoutTrashed()
+            ]
         ];
     }
 }

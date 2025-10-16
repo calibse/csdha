@@ -13,7 +13,8 @@ class StoreSignupInvitationRequest extends FormRequest
 {
     public function rules(): array
     {
-        $uniqueFromUsers = Rule::unique(User::class, 'email');
+        $uniqueFromUsers = Rule::unique(User::class, 'email')
+            ->withoutTrashed();
         $uniqueFromInvitations = Rule::unique(SignupInvitation::class, 'email');
         return [
             'position' => ['required', 'integer', new Exists(Position::open(), 

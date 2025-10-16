@@ -29,7 +29,7 @@ p {
 a, button {
     > .icon, > .text {
         display: inline-block;
-        white-space: normal;
+        white-space: wrap;
         vertical-align: middle;
     }
 

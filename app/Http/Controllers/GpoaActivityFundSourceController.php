@@ -41,7 +41,7 @@ class GpoaActivityFundSourceController extends Controller implements HasMiddlewa
     public function destroy(GpoaActivityFundSource $fund)
     {
         $fund->delete();
-        return redirect()->route('gpoa-activities.funds.index')
+        return redirect()->route('settings.gpoa-activities.fund-sources.index')
             ->with('status', 'Activity fund source deleted.');
     }
 }

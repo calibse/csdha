@@ -16,9 +16,10 @@ class GenerateAuditTriggers
         self::$dbName = DB::getDatabaseName();
         self::$prefix = 'audit_';
         self::$tableName = 'audit_trail';
-        self::$excludes = [self::$tableName, 'migrations', 
-            'password_reset_tokens', 'sessions', 'cache', 'cache_locks', 
-            'jobs', 'job_batches', 'failed_jobs'];
+        self::$excludes = [self::$tableName, 'migrations', 'sessions', 
+            'personal_access_tokens', 'event_evaluation_tokens', 
+            'password_reset_tokens', 'cache', 'cache_locks', 'jobs', 
+            'job_batches', 'failed_jobs'];
     }
 
     public static function run()

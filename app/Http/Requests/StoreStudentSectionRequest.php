@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreStudentSectionRequest extends FormRequest
 {
@@ -10,7 +11,8 @@ class StoreStudentSectionRequest extends FormRequest
     {
         return [
             'section' => ['required', 'max:10', 
-                'unique:App\Models\StudentSection,section']
+                Rule::unique('App\Models\StudentSection', 'section')
+                    ->withoutTrashed()]
         ];
     }
 }

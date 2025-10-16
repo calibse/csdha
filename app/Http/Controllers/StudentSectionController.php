@@ -46,8 +46,8 @@ class StudentSectionController extends Controller implements HasMiddleware
         $section = new StudentSection;
         $section->section = $request->section;
         $section->save();
-        return view('settings.student-sections.index')->with('status', 
-            'Student section added.'); 
+        return redirect()->route('settings.students.sections.index')
+            ->with('status', 'Student section added.'); 
     }
 
     public function confirmDestroy(StudentSection $section)
@@ -64,7 +64,7 @@ class StudentSectionController extends Controller implements HasMiddleware
     public function destroy(StudentSection $section)
     {
         $section->delete();
-        return redirect()->route('settings.student-sections.index')
+        return redirect()->route('settings.students.sections.index')
             ->with('status', 'Student section deleted.'); 
     }
 }

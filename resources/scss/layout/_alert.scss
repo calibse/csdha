@@ -4,13 +4,6 @@
 @use "../color";
 
 @keyframes collapse {
-    /*
-	from {
-		visibility: visible;
-		height: max-content;
-	}
-    */
-
 	to {
 		visibility: collapse;
 		height: 0;
@@ -21,7 +14,6 @@
 
 .alert {
 	border-bottom: size.$line-width solid color.$line;
-	max-width: max-content;
 
 	li {
 		max-width: size.$text-width;
@@ -39,19 +31,18 @@
 .alert.alert-info {
 	background-color: color.$success;
 	margin: .3rem 0rem;
-	max-width: unset;
-	width: unset;
 	animation: collapse .001s 5s forwards;
 	padding: .5rem 1rem;
-
-	p {
-		width: unset;
-	}
 }
 
 .alert.alert-error {
 	background-color: color.$failure;
 	padding: 1rem;
 	margin: 1rem 0;
+	max-width: max-content;
+
+	p {
+		width: auto;
+	}
 }
 

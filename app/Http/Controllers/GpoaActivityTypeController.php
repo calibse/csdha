@@ -41,7 +41,7 @@ class GpoaActivityTypeController extends Controller implements HasMiddleware
     public function destroy(GpoaActivityType $type)
     {
         $type->delete();
-        return redirect()->route('gpoa-activities.types.index')
+        return redirect()->route('settings.gpoa-activities.types.index')
             ->with('status', 'Activity type deleted.');
     }
 }

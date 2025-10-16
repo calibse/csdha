@@ -109,7 +109,7 @@ class GpoaActivity extends Model
             set: function (string $value) {
                 $key = null;
                 $partnership = GpoaActivityPartnershipType::findByName($value);
-                if (!$partnership && $value) {
+                if (!$partnership && !is_null($value)) {
                     $partnership = new GpoaActivityPartnershipType();
                     $partnership->name = $value;
                     $partnership->save();
@@ -131,7 +131,7 @@ class GpoaActivity extends Model
             set: function (string $value) {
                 $key = null;
                 $mode = GpoaActivityMode::findByName($value);
-                if (!$mode && $value) {
+                if (!$mode && !is_null($value)) {
                     $mode = new GpoaActivityMode();
                     $mode->name = $value;
                     $mode->save();
@@ -153,7 +153,7 @@ class GpoaActivity extends Model
             set: function (string $value) {
                 $key = null;
                 $fund = GpoaActivityFundSource::findByName($value);
-                if (!$fund && $value) {
+                if (!$fund && !is_null($value)) {
                     $fund = new GpoaActivityFundSource();
                     $fund->name = $value;
                     $fund->save();
@@ -175,7 +175,7 @@ class GpoaActivity extends Model
             set: function (string $value) {
                 $key = null;
                 $type = GpoaActivityType::findByName($value);
-                if (!$type && $value) {
+                if (!$type && !is_null($value)) {
                     $type = new GpoaActivityType();
                     $type->name = $value;
                     $type->save();

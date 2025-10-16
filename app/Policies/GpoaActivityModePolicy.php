@@ -16,9 +16,7 @@ class GpoaActivityModePolicy
 
     public function delete(User $user, GpoaActivityMode $gpoaActivityMode): bool
     {
-        return false;
         $gpoaActive = Gpoa::active()->exists();
         return ($gpoaActive) ? false : true;
-
     }
 }

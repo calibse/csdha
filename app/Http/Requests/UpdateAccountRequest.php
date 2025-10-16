@@ -12,9 +12,9 @@ class UpdateAccountRequest extends FormRequest
     {
         $account = $this->route('account');
         $uniqueEmail = Rule::unique(User::class, 'email')
-            ->ignore($account->id);
+            ->withoutTrashed()->ignore($account->id);
         $uniqueUsername = Rule::unique(User::class, 'username')
-            ->ignore($account->id);
+            ->withoutTrashed()->ignore($account->id);
         return [
             'first_name' => ['required', 'max:50'],
             'middle_name' => ['max:50'],

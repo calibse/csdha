@@ -15,12 +15,13 @@ class StoreUserRequest extends FormRequest
             'last_name' => ['required', 'max:50'],
             'suffix_name' => ['max:50'],
             'email' => ['required', 'email', 'max:255', 
-                'unique:App\Models\User,email'],
+                Rule::unique('App\Models\User', 'email')->withoutTrashed()
+            ],
             'username' => ['required', 'max:30', 
-                'unique:App\Models\User,username'],
+                Rule::unique('App\Models\User', 'username')->withoutTrashed()
+            ],
             'password' => ['required', 'ascii', 'max:55',  Password::min(8)
-                ->letters()->mixedCase()->numbers()->symbols(), 
-                'confirmed']
+                ->letters()->mixedCase()->numbers()->symbols(), 'confirmed']
         ];
     }
 }

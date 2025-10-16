@@ -9,12 +9,10 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MeetingController;
-use App\Http\Controllers\FundController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\EventDeliverableController;
 use App\Http\Controllers\EventDeliverableTaskController;
@@ -722,9 +720,7 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
             ->name('showMinutes');
     });
 
-    Route::resource('funds', FundController::class);
 
-    Route::resource('funds', FundController::class)->only(['index', 'show']);
 
     Route::resource('platforms', PlatformController::class);
 
@@ -832,16 +828,6 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
 
     Route::get('/attendance.html', [AttendanceController::class, 'create'])
         ->name('attendance.create');
-
-/*
-    Route::resource('students', StudentController::class);
-
-    Route::prefix('students')->group(function () {
-
-        Route::resource('courses', CourseController::class)->except('index');
-    });
-*/
-
 });
 
 

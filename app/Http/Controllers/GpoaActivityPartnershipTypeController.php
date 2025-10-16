@@ -41,7 +41,7 @@ class GpoaActivityPartnershipTypeController extends Controller implements HasMid
     public function destroy(GpoaActivityPartnershipType $partnership)
     {
         $partnership->delete();
-        return redirect()->route('gpoa-activities.partnerships.index')
+        return redirect()->route('settings.gpoa-activities.partnership-types.index')
             ->with('status', 'Activity partnership type deleted.');
     }
 }

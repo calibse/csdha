@@ -4,11 +4,11 @@
 		<form method="post" action="{{ $formAction }}">
 		@csrf
 			<p>
-				<label for="year-level">Year Level <small>(ex: 2)</small></label>
+				<label for="year-level">Year Level <small>(e.g. 2)</small></label>
 				<input id="year-level" name="year_level">
 			</p>
 			<p>
-				<label for="label">Label <small>(ex: 2nd year)</small></label>
+				<label for="label">Label <small>(.e.g. 2nd year)</small></label>
 				<input id="label" name="label">
 			</p>
 			<p class="form-submit">

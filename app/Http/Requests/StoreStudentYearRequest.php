@@ -3,15 +3,18 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class StoreStudentYearRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'year' => ['required', 'max:4', 
-                'unique:App\Models\StudentYear,year'],
-            'label => ['required', 'max:15']
+            'year_level' => ['required', 'max:4', 
+                Rule::unique('App\Models\StudentYear', 'year')->withoutTrashed()
+            ],
+            'label' => ['required', 'max:15']
         ];
     }
 }

@@ -20,11 +20,11 @@ use Illuminate\Support\Facades\Storage;
 
 class GpoaController extends Controller implements HasMiddleware
 {
-    private $gpoa;
+    private static $gpoa;
 
     public function __construct()
     {
-        $this->gpoa = Gpoa::active()->first();
+        self::$gpoa = Gpoa::active()->first();
     }
 
     public static function middleware(): array
@@ -45,7 +45,7 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         if (!$gpoa) {
             return view('gpoa.index', ['gpoa' => $gpoa, 'activities' => null]);
         }
@@ -121,7 +121,7 @@ class GpoaController extends Controller implements HasMiddleware
                 'gpoa' => $gpoa->public_id
             ]),
             'createdBy' => $gpoa->creator->full_name,
-            'closedBy' => $gpoa->closer,
+            'closedBy' => $gpoa->closer->full_name,
             'academicPeriod' => $gpoa->full_academic_period,
             'activityCount' => $gpoa->activities()->count(),
             'accomReportCount' => $gpoa->events()->approved()->count(),
@@ -169,7 +169,7 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function edit()
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         return view('gpoa.create', [
             'update' => true,
             'terms' => AcademicTerm::all(),
@@ -179,14 +179,14 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function update(SaveGpoaRequest $request)
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         self::storeOrUpdate($request, $gpoa);
         return redirect()->route('gpoa.index');
     }
 
     public function genPdf(Request $request)
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         $fileRoute = null;
         if ($gpoa->activities()->where('status', 'approved')->exists()) {
             $fileRoute = route('gpoa.genPdf');
@@ -200,23 +200,23 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function streamPdf(Request $request)
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         return WeasyPrint::prepareSource(new PagedView('gpoa.report',
             $gpoa->reportViewData()))->inline('gpoa_report.pdf');
     }
 
     public function confirmClose(Request $request)
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         return view('gpoa.close', ['gpoa' => $gpoa]);
     }
 
     public function close(Request $request)
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         $status = 'GPOA closed.';
         if (!$gpoa->has_approved_activity) {
-            self::closeGpoa();
+            self::destroyGpoa();
             return redirect()->route('gpoa.index')->with('status', $status);
         }
         $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
@@ -242,9 +242,16 @@ class GpoaController extends Controller implements HasMiddleware
         return redirect()->route('gpoa.index')->with('status', $status);
     }
 
+    private static function destroyGpoa(): void
+    {
+        $gpoa = self::$gpoa;
+        $gpoa->activities->delete();
+        $gpoa->delete();
+    }
+
     private static function closeGpoa(): void
     {
-        $gpoa = $this->gpoa;
+        $gpoa = self::$gpoa;
         $gpoa->closer()->associate(auth()->user());
         $gpoa->closed_at = now();
         $gpoa->save();

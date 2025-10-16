@@ -41,7 +41,7 @@ class GpoaActivityModeController extends Controller implements HasMiddleware
     public function destroy(GpoaActivityMode $mode)
     {
         $mode->delete();
-        return redirect()->route('gpoa-activities.modes.index')
+        return redirect()->route('settings.gpoa-activities.modes.index')
             ->with('status', 'Activity mode deleted.');
     }
 }

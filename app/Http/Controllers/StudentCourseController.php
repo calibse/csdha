@@ -48,8 +48,8 @@ class StudentCourseController extends Controller implements HasMiddleware
         $course->name = $request->name;
         $course->acronym = $request->acronym;
         $course->save();
-        return view('settings.student-courses.index')->with('status', 
-            'Student course added.'); 
+        return redirect()->route('settings.students.courses.index')
+            ->with('status', 'Student course added.'); 
     }
 
     public function confirmDestroy(Course $course)
@@ -66,7 +66,7 @@ class StudentCourseController extends Controller implements HasMiddleware
     public function destroy(Course $course)
     {
         $course->delete();
-        return redirect()->route('settings.student-courses.index')
+        return redirect()->route('settings.students.courses.index')
             ->with('status', 'Student course deleted.'); 
     }
 }

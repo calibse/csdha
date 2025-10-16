@@ -44,11 +44,11 @@ class StudentYearController extends Controller implements HasMiddleware
     public function store(StoreStudentYearRequest $request)
     {
         $year = new StudentYear;
-        $year->year = $request->year;
+        $year->year = $request->year_level;
         $year->label = $request->label;
         $year->save();
-        return view('settings.student-years.index')->with('status', 
-            'Student year added.'); 
+        return redirect()->route('settings.students.years.index')
+            ->with('status', 'Student year added.'); 
     }
 
     public function confirmDestroy(StudentYear $year)
@@ -65,7 +65,7 @@ class StudentYearController extends Controller implements HasMiddleware
     public function destroy(StudentYear $year)
     {
         $year->delete();
-        return redirect()->route('settings.student-years.index')
+        return redirect()->route('settings.students.years.index')
             ->with('status', 'Student year deleted.'); 
     }
 }
