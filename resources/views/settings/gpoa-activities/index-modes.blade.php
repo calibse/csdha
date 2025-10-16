@@ -7,7 +7,7 @@
 				<span class="content">{{ $mode->name }}</span>
 				<span class="context-menu">
 					<form method="get" action="{{ route('settings.gpoa-activities.modes.confirm-destroy', ['mode' => $mode->id]) }}"> 
-						<button>Delete</button>
+                                                <button {{ auth()->user()->cannot('delete', $mode) ? 'disabled' : null }} >Delete</button>
 					</form>
 				</span>
 			</li>

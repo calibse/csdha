@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GpoaActivityMode;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class GpoaActivityModeController extends Controller
+class GpoaActivityModeController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.setting:delete,mode', only: [
+                'confirmDestroy', 'destroy'
+            ]),
+        ];
+    }
+
     public function index()
     {
         $modes = GpoaActivityMode::all();

@@ -7,7 +7,7 @@
 				<span class="content">{{ $partnership->name }}</span>
 				<span class="context-menu">
 					<form method="get" action="{{ route('settings.gpoa-activities.partnership-types.confirm-destroy', ['partnership' => $partnership->id]) }}"> 
-						<button>Delete</button>
+                                                <button {{ auth()->user()->cannot('delete', $partnership) ? 'disabled' : null }} >Delete</button>
 					</form>
 				</span>
 			</li>

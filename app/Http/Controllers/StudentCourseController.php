@@ -5,9 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Http\Requests\StoreStudentCourseRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class StudentCourseController extends Controller
+class StudentCourseController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.setting:create,' . Course::class, only: [
+                'create', 'store'
+            ]),
+            new Middleware('auth.setting:delete,course', only: [
+                'confirmDestroy', 'destroy'
+            ]),
+        ];
+    }
+
     public function index()
     {
         $courses = Course::all();

@@ -1,6 +1,10 @@
 <x-layout.user :$backRoute class="settings" title="Edit Student Courses">
 	<x-slot:toolbar>
-		<a href="{{ $createRoute }}">
+		<a 
+                @can ('create', 'App\Models\Course')
+		href="{{ $createRoute }}"
+		@endcan
+		>
 			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 			<span class="text">Add student course</span>
 		</a>
@@ -13,7 +17,8 @@
 				<span class="content">{{ "{$course->name} ({$course->acronym})"  }}</span>
 				<span class="context-menu">
 					<form method="get" action="{{ route('settings.students.courses.confirm-destroy', ['course' => $course->id]) }}"> 
-						<button>Delete</button>
+                                                <button {{ auth()->user()->cannot('delete', $course) ? 'disabled' : null }} >Delete</button>
+
 					</form>
 				</span>
 			</li>

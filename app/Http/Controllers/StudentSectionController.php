@@ -5,9 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\StudentSection;
 use App\Http\Requests\StoreStudentSectionRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class StudentSectionController extends Controller
+class StudentSectionController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.setting:create,'. StudentSection::class, 
+                only: [
+                'create', 'store'
+            ]),
+            new Middleware('auth.setting:delete,section', only: [
+                'confirmDestroy', 'destroy'
+            ]),
+        ];
+    }
+
     public function index()
     {
         $sections = StudentSection::all();

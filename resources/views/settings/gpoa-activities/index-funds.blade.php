@@ -7,7 +7,7 @@
 				<span class="content">{{ $fund->name }}</span>
 				<span class="context-menu">
 					<form method="get" action="{{ route('settings.gpoa-activities.fund-sources.confirm-destroy', ['fund' => $fund->id]) }}"> 
-						<button>Delete</button>
+                                                <button {{ auth()->user()->cannot('delete', $fund) ? 'disabled' : null }} >Delete</button>
 					</form>
 				</span>
 			</li>

@@ -1,6 +1,10 @@
 <x-layout.user :$backRoute class="settings" title="Edit Student Sections">
 	<x-slot:toolbar>
-		<a href="{{ $createSectionRoute }}">
+		<a 
+		@can ('create', 'App\Models\StudentSection')
+		href="{{ $createSectionRoute }}"
+		@endcan
+		>
 			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 
 			<span class="text">Add student section</span>
@@ -14,7 +18,7 @@
 				<span class="content">{{ $section->section }}</span>
 				<span class="context-menu">
 					<form method="get" action="{{ route('settings.students.sections.confirm-destroy', ['section' => $section->id]) }}"> 
-						<button>Delete</button>
+						<button {{ auth()->user()->cannot('delete', $section) ? 'disabled' : null }} >Delete</button>
 					</form>
 				</span>
 			</li>

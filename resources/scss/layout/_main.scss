@@ -317,6 +317,10 @@
 	a:not([href]) {
 		color: color.$toolbar-disabled-link;
 
+		.icon {
+			opacity: .5;
+		}
+
 		&:hover .text, &:focus .text {
 			text-decoration: none;
 		}

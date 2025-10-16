@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GpoaActivityPartnershipType;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class GpoaActivityPartnershipTypeController extends Controller
+class GpoaActivityPartnershipTypeController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.setting:delete,partnership', only: [
+                'confirmDestroy', 'destroy'
+            ]),
+        ];
+    }
+
     public function index()
     {
         $partnerships = GpoaActivityPartnershipType::all();

@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GpoaActivityType;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class GpoaActivityTypeController extends Controller
+class GpoaActivityTypeController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.setting:delete,type', only: [
+                'confirmDestroy', 'destroy'
+            ]),
+        ];
+    }
+
     public function index()
     {
         $types = GpoaActivityType::all();

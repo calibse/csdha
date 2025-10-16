@@ -11,6 +11,7 @@ use App\Http\Middleware\AuthorizeGpoa;
 use App\Http\Middleware\AuthorizeEvent;
 use App\Http\Middleware\AuthorizeAccomReport;
 use App\Http\Middleware\AuthorizeIndex;
+use App\Http\Middleware\AuthorizeSetting;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.gpoa' => AuthorizeGpoa::class,
             'auth.event' => AuthorizeEvent::class,
             'auth.accom-report' => AuthorizeAccomReport::class,
+            'auth.setting' => AuthorizeSetting::class,
         ]);
         $middleware->trustProxies(at: '*');
         $middleware->trustProxies(headers: Request::HEADER_X_FORWARDED_FOR |

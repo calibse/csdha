@@ -108,7 +108,6 @@ class GpoaController extends Controller implements HasMiddleware
         $period->save();
         $gpoa->academicPeriod()->associate($period);
         $gpoa->creator()->associate(auth()->user());
-        $gpoa->active = true;
         $gpoa->save();
     }
 
@@ -246,7 +245,6 @@ class GpoaController extends Controller implements HasMiddleware
     private static function closeGpoa(): void
     {
         $gpoa = $this->gpoa;
-        $gpoa->active = null;
         $gpoa->closer()->associate(auth()->user());
         $gpoa->closed_at = now();
         $gpoa->save();

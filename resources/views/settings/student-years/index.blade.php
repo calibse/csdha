@@ -1,6 +1,10 @@
 <x-layout.user :$backRoute class="settings" title="Edit Student Year Levels">
 	<x-slot:toolbar>
-		<a href="{{ $createRoute }}">
+		<a 
+                @can ('create', 'App\Models\StudentYear')
+		href="{{ $createRoute }}"
+		@endcan
+		>
 			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 
 			<span class="text">Add student year level</span>
@@ -14,7 +18,8 @@
 				<span class="content">{{ "{$year->label} ({$year->year})" }}</span>
 				<span class="context-menu">
 					<form method="get" action="{{ route('settings.students.years.confirm-destroy', ['year' => $year->id]) }}"> 
-						<button>Delete</button>
+                                                <button {{ auth()->user()->cannot('delete', $year) ? 'disabled' : null }} >Delete</button>
+
 					</form>
 				</span>
 			</li>

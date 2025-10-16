@@ -5,16 +5,14 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>
-	@switch ($siteContext)
-	@case ('user')
-		CSDHA
-		@break
-	@case ('admin')
-		CSDHA Admin
-		@break
-	@endswitch
-	</title>
+@switch ($siteContext)
+@case ('user')
+	<title>{{ $title }} | CSDHA</title>
+	@break
+@case ('admin')
+	<title>{{ $title }} | CSDHA Admin</title>
+	@break
+@endswitch
 	{{--
 	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
 	--}}

@@ -5,9 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\StudentYear;
 use App\Http\Requests\StoreStudentYearRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class StudentYearController extends Controller
+class StudentYearController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.setting:create,' . StudentYear::class, only: [
+                'create', 'store'
+            ]),
+            new Middleware('auth.setting:delete,year', only: [
+                'confirmDestroy', 'destroy'
+            ]),
+        ];
+    }
+
     public function index()
     {
         $years = StudentYear::all();
