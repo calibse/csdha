@@ -11,7 +11,7 @@
 		<div class="content-block">
 			<header class="front-header">
 				<h1 class="title">
-						<img class="logo"src="{{ asset('storage/app-logo.png') }}">
+						<img class="logo"src="{{ asset('storage/website-logo.png') }}">
 
 						<span class="name">
 							<span class="org-name">COMPUTER SOCIETY</span>

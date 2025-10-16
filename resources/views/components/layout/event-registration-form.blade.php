@@ -11,9 +11,7 @@
     <header>
         <hgroup>
             <p class="main-brand org-name">
-                <span class="logo">
-                    <img src="{{ asset('storage/org-logo.png') }}">
-                </span>
+			<img class="logo" src="{{ asset('storage/organization-logo.png') }}">
                 <span class="name">Computer Society</span>
             </p>
             <h1 class="title of-form">Event Registration</h1>

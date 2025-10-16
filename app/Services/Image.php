@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Intervention\Image\Laravel\Facades\Image as IImage;
+use Imagick;
+use ImagickPixel;
 
 class Image
 {
@@ -29,6 +31,23 @@ class Image
     {
         $image = IImage::read($this->image);
         return $image->toJpeg();
+    }
+
+    public function toPng()
+    {
+	config(['image.driver' => \Intervention\Image\Drivers\Imagick\Driver::class]);
+        $mime = $this->image->getMimeType();
+	if ($mime !== 'image/svg+xml') {
+            $image = IImage::read($this->image);
+            return $image->toPng();
+        }
+        $file = file_get_contents($this->image->getRealPath());
+        $imagick = new Imagick();
+        $imagick->setBackgroundColor(new ImagickPixel('transparent'));
+        $imagick->readImageBlob($file);
+        $imagick->setImageFormat('png32');
+        $image = IImage::read($imagick);
+        return $image->toPng();
     }
 
     public function orientation()

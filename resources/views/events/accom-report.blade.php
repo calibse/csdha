@@ -15,10 +15,10 @@
     <article id="page-header" class="page-header">
         <div class="logos">
             <div class="logo">
-                <img src="resources/pdf/images/pup-logo.svg">
+                <img src="storage/app/public/university-logo.png">
             </div>
             <div class="logo">
-                <img src="resources/pdf/images/cs-logo.png">
+                <img src="storage/app/public/organization-logo.png">
             </div>
         </div>
         <div class="text">

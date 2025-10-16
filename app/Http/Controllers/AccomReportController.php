@@ -322,7 +322,7 @@ class AccomReportController extends Controller implements HasMiddleware
             return redirect()->route('accom-reports.index')->with('status', 
                 'AR background changed.');
         }
-        $image = new Image($request->file('background_file')->get());
+        $image = new Image($request->file('background_file'));
         Storage::put($imageFile, (string)$image->get());
         if ($request->from) {
             return redirect()->route('accom-reports.show', [

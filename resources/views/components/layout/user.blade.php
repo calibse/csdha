@@ -29,12 +29,7 @@
 		<div class="content-block">
 			<div class="main-header-title">
 				<div class="main-brand">
-					<span class="logo">
-						<img src="{{ asset('storage/app-logo.png') }}">
-						{{--
-						<img src="{{ Vite::asset('resources/images/app-logo.png') }}">
-						--}}
-					</span>
+					<img class="logo" src="{{ asset('storage/website-logo.png') }}">
 					<span class="name">CSDHA</span>
 				</div>
 				<div class="main-account-link">

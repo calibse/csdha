@@ -14,15 +14,18 @@
 	to {
 		visibility: collapse;
 		height: 0;
-        margin: 0;
+		margin: 0;
+		padding: 0;
 	}
 }
 
 .alert {
 	border-bottom: size.$line-width solid color.$line;
 	max-width: max-content;
-	margin: 1rem 0;
-	padding: 1rem;
+
+	li {
+		max-width: size.$text-width;
+	}
 
 	:first-child {
 		margin-top: 0;
@@ -31,26 +34,24 @@
 	:last-child {
 		margin-bottom: 0;
 	}
+}
 
-	li {
-		max-width: size.$text-width;
-	}
+.alert.alert-info {
+	background-color: color.$success;
+	margin: .3rem 0rem;
+	max-width: unset;
+	width: unset;
+	animation: collapse .001s 5s forwards;
+	padding: .5rem 1rem;
 
-	&.alert-info {
-		background-color: color.$success;
-		margin: .3rem 0;
-		max-width: unset;
+	p {
 		width: unset;
-		animation: collapse .001s 5s forwards;
-
-		p {
-			margin: .5rem 0;
-			width: unset;
-		}
 	}
+}
 
-	&.alert-error {
-		background-color: color.$failure;
-	}
+.alert.alert-error {
+	background-color: color.$failure;
+	padding: 1rem;
+	margin: 1rem 0;
 }
 

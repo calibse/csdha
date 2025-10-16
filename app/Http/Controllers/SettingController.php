@@ -13,9 +13,12 @@ class SettingController extends Controller
             'studentYearsRoute' => route('settings.students.years.index'),
             'studentCoursesRoute' => route('settings.students.courses.index'),
             'gpoaModesRoute' => route('settings.gpoa-activities.modes.index'),
-            'gpoaFundSourcesRoute' => route('settings.gpoa-activities.fund-sources.index'),
-            'gpoaPartnershipsRoute' => route('settings.gpoa-activities.partnership-types.index'),
+            'gpoaFundSourcesRoute' => route(
+                'settings.gpoa-activities.fund-sources.index'),
+            'gpoaPartnershipsRoute' => route(
+                'settings.gpoa-activities.partnership-types.index'),
             'gpoaTypesRoute' => route('settings.gpoa-activities.types.index'),
+            'logoRoute' => route('settings.logos.edit'),
         ]);
     }
 }

@@ -194,7 +194,8 @@ class GpoaController extends Controller implements HasMiddleware
         }
         return view('gpoa.show-gpoa-report', [
             'gpoa' => $gpoa,
-            'fileRoute' => $fileRoute
+            'fileRoute' => $fileRoute,
+            'backRoute' => route('gpoa.index'),
         ]);
     }
 

@@ -69,9 +69,9 @@ class ProfileController extends Controller
         	Storage::delete($user->avatar_filepath);
         	$user->avatar_filepath = null;
         }
-        elseif ($request->avatar) {
+        elseif ($request->has('avatar')) {
         $imageFile = 'user/avatar/' . Str::random(8) . '.jpg';
-        $image = new Image($request->file('avatar')->get());
+        $image = new Image($request->file('avatar'));
         Storage::put($imageFile, (string) $image->scaleDown(300));
         	if ($user->avatar_filepath) {
         		Storage::delete($user->avatar_filepath);

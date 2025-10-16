@@ -6,6 +6,10 @@
 .main-body {
 	margin: 0;
 	background-color: color.$background;
+
+	a {
+		color: color.$link;
+	}
 }
 
 .main-body.form {
@@ -75,12 +79,6 @@
 
 	.logo {
 		height: 2rem;
-		width: 3rem;
-
-		img {
-			height: 100%;
-		}
-
 	}
 }
 
@@ -204,15 +202,17 @@
 		white-space: nowrap;
 	}
 
-	.nav-actions {
+	.nav-actions, .title {
 		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.nav-actions {
 		margin: 0;
 	}
 
 	.title {
 		margin: 0;
-		display: inline-block;
-		vertical-align: middle;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		font-size: 1.2rem;

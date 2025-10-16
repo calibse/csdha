@@ -40,6 +40,7 @@ use App\Http\Controllers\GpoaActivityModeController;
 use App\Http\Controllers\GpoaActivityPartnershipTypeController;
 use App\Http\Controllers\GpoaActivityTypeController;
 use App\Http\Controllers\GpoaActivityFundSourceController;
+use App\Http\Controllers\AssetController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -70,6 +71,14 @@ return $text . 'hello';
 
         Route::get('/index.html', [SettingController::class, 'index'])
             ->name('index');
+
+	Route::controller(AssetController::class)->name('logos.')
+            ->group(function () {
+
+            Route::get('/logos.html', 'editLogo')->name('edit');  
+
+            Route::put('/logos.php', 'updateLogo')->name('update');  
+        });
     
         Route::controller(StudentSectionController::class)
             ->name('students.sections.')->group(function () {
