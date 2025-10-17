@@ -20,7 +20,7 @@ class GpoaActivityFundSourceController extends Controller implements HasMiddlewa
 
     public function index()
     {
-        $funds = GpoaActivityFundSource::all();
+        $funds = GpoaActivityFundSource::orderBy('created_at', 'desc')->get();
         return view('settings.gpoa-activities.index-funds', [
             'funds' => $funds,
             'backRoute' => route('settings.index'),

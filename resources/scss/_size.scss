@@ -1,5 +1,7 @@
 /* _size.scss */
 
+@use "sass:math";
+
 $page-margin: 1rem;
 $text-width: 40rem;
 $page-width: 72rem;
@@ -8,4 +10,4 @@ $sidebar-width: 17rem;
 $line-width: .06rem;
 $wide-screen: 48rem;
 $edge-padding: .06rem;
-$content-only-left-margin: (($sidebar-width + $page-width) - $page-width) / 2;
+$content-only-left-margin: math.div(($sidebar-width + $page-width - $page-width), 2);

@@ -20,7 +20,7 @@ class GpoaActivityTypeController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $types = GpoaActivityType::all();
+        $types = GpoaActivityType::orderBy('created_at', 'desc')->get();
         return view('settings.gpoa-activities.index-types', [
             'types' => $types,
             'backRoute' => route('settings.index'),

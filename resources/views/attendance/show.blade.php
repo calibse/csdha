@@ -1,10 +1,9 @@
 <x-layout.user title="Attendance" route='user.home' class="attendance form">
     <article class="article">
         <noscript>
-            <p>
-                This page failed to work perhaps because Javascript is
-                unsupported or disabled, or the page did not load completely.
-            </p>
+		<p>
+			This page requires JavaScript, which your browser doesn't support.
+		</p>
         </noscript>
     @if ($dates->isNotEmpty())
         <template id="scanner-feature">

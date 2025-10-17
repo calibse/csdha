@@ -106,7 +106,7 @@ class GpoaActivity extends Model
     {
         return Attribute::make(
             get: fn () => $this->partnershipTypeModel?->name,
-            set: function (string $value) {
+            set: function (?string $value) {
                 $key = null;
                 $partnership = GpoaActivityPartnershipType::findByName($value);
                 if (!$partnership && !is_null($value)) {
@@ -128,7 +128,7 @@ class GpoaActivity extends Model
     {
         return Attribute::make(
             get: fn () => $this->modeModel?->name,
-            set: function (string $value) {
+            set: function (?string $value) {
                 $key = null;
                 $mode = GpoaActivityMode::findByName($value);
                 if (!$mode && !is_null($value)) {
@@ -150,7 +150,7 @@ class GpoaActivity extends Model
     {
         return Attribute::make(
             get: fn () => $this->fundSourceModel?->name,
-            set: function (string $value) {
+            set: function (?string $value) {
                 $key = null;
                 $fund = GpoaActivityFundSource::findByName($value);
                 if (!$fund && !is_null($value)) {
@@ -172,7 +172,7 @@ class GpoaActivity extends Model
     {
         return Attribute::make(
             get: fn () => $this->typeModel?->name,
-            set: function (string $value) {
+            set: function (?string $value) {
                 $key = null;
                 $type = GpoaActivityType::findByName($value);
                 if (!$type && !is_null($value)) {
@@ -318,7 +318,7 @@ class GpoaActivity extends Model
             return;
         }
         $event = new Event();
-        $event->timezone = config('timezone') ?? 'UTC';
+        $event->timezone = self::getTimezone();
         $event->venue = $this->venue;
         $event->automatic_attendance = false;
         $event->accept_evaluation = false;
@@ -326,12 +326,20 @@ class GpoaActivity extends Model
         $event->save();
         $date = new EventDate();
         $date->date = $this->start_date;
-        $date->start_time = Format::toUtc('00:00');
-        $date->end_time = Format::toUtc('23:59');
+        $date->start_time = '00:00';
+        $date->end_time = '23:59';
         $date->event()->associate($this->event);
         $date->save();
     }
 
+    private static function getTimezone(): string
+    {
+        $timezone = config('timezone');
+        if (Format::isTimezoneNumeric($timezone)) {
+            return Format::getTimezoneRegion($timezone) ?? 'UTC';
+        }
+        return $timezone;
+    }
 
     #[Scope]
     protected function forAdviser(Builder $query): void

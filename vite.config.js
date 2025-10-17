@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import legacy from '@vitejs/plugin-legacy';
 
 export default defineConfig({
     plugins: [
@@ -11,6 +12,9 @@ export default defineConfig({
                 'resources/js/app.js',
             ],
             refresh: true,
+        }),
+        legacy({
+            targets: ['defaults', 'ie >= 11'],
         }),
     ],
     build: {

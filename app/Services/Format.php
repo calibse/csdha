@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use App\Traits\HasPublicId;
+use DateTimeZone;
 
 class Format
 {
@@ -118,5 +119,48 @@ class Format
         $offsetSeconds = $nowTz->getOffset();
         $normalizedSeconds = $seconds - $offsetSeconds;
         return $normalizedSeconds;
+    }
+
+    public static function getNumericTimezone($jsOffsetMinutes)
+    {
+        $offsetMinutes = -$jsOffsetMinutes;
+        $sign = ($offsetMinutes >= 0) ? '+' : '-';
+        $hours = intdiv(abs($offsetMinutes), 60);
+        $minutes = abs($offsetMinutes) % 60;
+        $tzString = sprintf('%s%02d:%02d', $sign, $hours, $minutes);
+        return $tzString;
+    }
+
+    public static function isTimezoneRaw($value)
+    {
+        return (is_int($value) || (is_numeric($value) && 
+            (int)$value == $value));
+    }
+
+    public static function isTimezoneNumeric($timezone)
+    { 
+        return (isset($timezone[0]) && ($timezone[0] === '+' || 
+            $timezone[0] === '-'));
+    }
+
+    public static function isTimezoneValid($value)
+    { 
+        return (is_string($value) && in_array($value, 
+            DateTimeZone::listIdentifiers()));
+    }
+
+    public static function getTimezoneRegion($offset) {
+        $sign = $offset[0];
+        list($hours, $minutes) = explode(':', substr($offset, 1));
+        $seconds = ($hours * 3600 + $minutes * 60) * ($sign === '+' ? 1 : -1);
+        foreach (timezone_identifiers_list() as $zone) {
+            $tz = new DateTimeZone($zone);
+            $transitions = $tz->getTransitions(time(), time());
+            if (isset($transitions[0]['offset']) && 
+                $transitions[0]['offset'] === $seconds) {
+                return $zone; // return the first matching region
+            }
+        }
+        return null;
     }
 }

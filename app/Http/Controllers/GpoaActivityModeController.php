@@ -20,7 +20,7 @@ class GpoaActivityModeController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $modes = GpoaActivityMode::all();
+        $modes = GpoaActivityMode::orderBy('created_at', 'desc')->get();
         return view('settings.gpoa-activities.index-modes', [
             'modes' => $modes,
             'backRoute' => route('settings.index'),

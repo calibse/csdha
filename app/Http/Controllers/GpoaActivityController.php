@@ -58,34 +58,26 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $selectedParticipants = [];
         $participants = StudentYear::all();
         $participantGroups = ['0'];
-        if (session('errors')?->any() && old('participant_year_levels')
-                && count(array_intersect(old('participant_year_levels'),
-                    $participantGroups)) === 0) {
-
-            $options = Format::getOpt(old('participant_year_levels'),
-                $participants);
-            $selectedParticipants = $options['selected'];
-            $participants = $options['unselected'];
-        }
         $selectedEventHeads = [];
         $eventHeads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
         $eventHeadGroups = ['0'];
-        if (session('errors')?->any() && old('event_heads')
-                && count(array_intersect(old('event_heads'),
-                    $eventHeadGroups)) === 0) {
-
-            $options = Format::getOpt(old('event_heads'), $eventHeads);
-            $selectedEventHeads = $options['selected'];
-            $eventHeads = $options['unselected'];
-        }
         $selectedCoheads = [];
         $coheads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
-        if (session('errors')?->any() && old('coheads')) {
-            $options = Format::getOpt(old('coheads'), $coheads);
-            $selectedCoheads = $options['selected'];
-            $coheads = $options['unselected'];
+        if (session('errors')?->any()) {
+            $selectedEventHeads = User::whereIn('public_id', old('event_heads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $eventHeads = User::whereNotIn('public_id', old('event_heads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $selectedCoheads = User::whereIn('public_id', old('coheads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $coheads = User::whereNotIn('public_id', old('coheads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
         }
         return view('gpoa-activities.create', [
             'participants' => $participants,
@@ -95,10 +87,10 @@ class GpoaActivityController extends Controller implements HasMiddleware
             'coheads' => $coheads,
             'selectedCoheads' => $selectedCoheads,
             'yearLevels' => StudentYear::all(),
-            'activityTypes' => GpoaActivityType::all(),
-            'modes' => GpoaActivityMode::all(),
-            'partnershipTypes' => GpoaActivityPartnershipType::all(),
-            'fundSources' => GpoaActivityFundSource::all(),
+            'activityTypes' => GpoaActivityType::orderBy('created_at', 'desc')->get(),
+            'modes' => GpoaActivityMode::orderBy('created_at', 'desc')->get(),
+            'partnershipTypes' => GpoaActivityPartnershipType::orderBy('created_at', 'desc')->get(),
+            'fundSources' => GpoaActivityFundSource::orderBy('created_at', 'desc')->get(),
             'positionCateg' => PositionCategory::all(),
             'officers' => User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get(),
@@ -169,7 +161,9 @@ class GpoaActivityController extends Controller implements HasMiddleware
         };
         $date = $date?->timezone(config('timezone'))
             ->format(config('app.date_format'));
-
+        if (config('timezone') === 'UTC') {
+            $date = $date . ' UTC';
+        }
         return view('gpoa-activities.show', [
             'date' => $date,
             'gpoa' => $gpoa,
@@ -190,49 +184,44 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $selectedParticipants = [];
         $participants = StudentYear::all();
         $allAreParticipants = $activity->all_are_participants;
-        if (session('errors')?->any() && old('participant_year_levels')
-                && count(array_intersect(old('participant_year_levels'),
-                    $participantGroups)) === 0) {
-            $options = Format::getOpt(old('participant_year_levels'),
-                $participants);
-            $selectedParticipants = $options['selected'];
-            $participants = $options['unselected'];
-        } elseif (!$allAreParticipants) {
-            $options = Format::getOpt($activity->participantTypes,
-                $participants);
-            $selectedParticipants = $options['selected'];
-            $participants = $options['unselected'];
-        }
         $allAreEventHeads = $activity->all_are_event_heads;
         $selectedEventHeads = [];
         $eventHeads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
         $eventHeadGroups = ['0'];
-        if (session('errors')?->any() && old('event_heads')
-                && count(array_intersect(old('event_heads'),
-                    $eventHeadGroups)) === 0) {
-
-            $options = Format::getOpt(old('event_heads'), $eventHeads);
-            $selectedEventHeads = $options['selected'];
-            $eventHeads = $options['unselected'];
+        if (session('errors')?->any()) {
+            $selectedEventHeads = User::whereIn('public_id', old('event_heads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $eventHeads = User::whereNotIn('public_id', old('event_heads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
         } elseif (!$allAreEventHeads) {
-            $options = Format::getOpt($activity->eventHeadsOnly()
-                ->notAuthUser()->get(), $eventHeads);
-            $selectedEventHeads = $options['selected'];
-            $eventHeads = $options['unselected'];
+            $selectedEventHeads = $activity->eventHeadsOnly()->notAuthUser()
+                ->get();
+            $eventHeads = User::whereDoesntHave('gpoaActivities', 
+                function ($query) use ($activity) {
+                $query->where('gpoa_activities.id', $activity->id)
+                    ->where('gpoa_activity_event_heads.role', 'event head');
+            })->notAuthUser()->notOfPosition('adviser')->get();
         }
         $selectedCoheads = [];
         $coheads = User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get();
-        if (session('errors')?->any() && old('coheads')) {
-            $options = Format::getOpt(old('coheads'), $coheads);
-            $selectedCoheads = $options['selected'];
-            $coheads = $options['unselected'];
+        if (session('errors')?->any()) { 
+            $selectedCoheads = User::whereIn('public_id', old('coheads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $coheads = User::whereNotIn('public_id', old('coheads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
         } else {
-            $options = Format::getOpt($activity->coheads()->notAuthUser()
-                ->get(), $coheads);
-            $selectedCoheads = $options['selected'];
-            $coheads = $options['unselected'];
+            $selectedCoheads = $activity->coheads()->notAuthUser()->get();
+            $coheads = User::whereDoesntHave('gpoaActivities', 
+                function ($query) use ($activity) {
+                $query->where('gpoa_activities.id', $activity->id)
+                    ->where('gpoa_activity_event_heads.role', 'co-head');
+            })->notAuthUser()->notOfPosition('adviser')->get();
         }
         return view('gpoa-activities.create', [
             'participants' => $participants,
@@ -242,10 +231,10 @@ class GpoaActivityController extends Controller implements HasMiddleware
             'coheads' => $coheads,
             'selectedCoheads' => $selectedCoheads,
             'yearLevels' => StudentYear::all(),
-            'activityTypes' => GpoaActivityType::all(),
-            'modes' => GpoaActivityMode::all(),
-            'partnershipTypes' => GpoaActivityPartnershipType::all(),
-            'fundSources' => GpoaActivityFundSource::all(),
+            'activityTypes' => GpoaActivityType::orderBy('created_at', 'desc')->get(),
+            'modes' => GpoaActivityMode::orderBy('created_at', 'desc')->get(),
+            'partnershipTypes' => GpoaActivityPartnershipType::orderBy('created_at', 'desc')->get(),
+            'fundSources' => GpoaActivityFundSource::orderBy('created_at', 'desc')->get(),
             'positionCateg' => PositionCategory::all(),
             'officers' => User::has('position')->notAuthUser()->
                 notOfPosition(['adviser'])->get(),

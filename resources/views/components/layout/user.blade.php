@@ -14,9 +14,10 @@
 	@break
 @endswitch
 	{{--
-	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
-	--}}
 	@vite(['resources/scss/app.scss']) 
+	--}}
+	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
+        @scriptLegacy('resources/js/app-legacy.js')
 </head>
 <body class="main-body {{ $index ? 'index' : null }} {{ $form ? 'form' : null }}">
 @if ($index)

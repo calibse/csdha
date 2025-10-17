@@ -154,21 +154,18 @@ class EventController extends Controller implements HasMiddleware
         $participantGroups = ['-1'];
         $selectedParticipants = $event->participants;
         $participants = StudentYear::all();
-        /*
-        if (session('errors')?->any() && old('participant_year_levels')
-                && count(array_intersect(old('participant_year_levels'),
-                    $participantGroups)) === 0) {
-            $options = Format::getOpt(old('participant_year_levels'),
-                $participants);
-            $selectedParticipants = $options['selected'];
-            $participants = $options['unselected'];
-        } elseif ($event->participant_type === 'students') {
-            $options = Format::getOpt($event->participants,
-                $participants);
-            $selectedParticipants = $options['selected'];
-            $participants = $options['unselected'];
+        if (session('errors')?->any()) { 
+            $selectedCourses = Course::whereIn('id', 
+                old('student_courses') ?? [])->get();
+            $courses = Course::whereNotIn('id', 
+                old('student_courses') ?? [])->get();
+        } else {
+            $selectedCourses = $event->courses;
+            $courses = Course::whereDoesntHave('events', function ($query) 
+                use ($event) {
+                $query->where('events.id', $event->id);
+            })->get();
         }
-        */
         $backRoute = $request->from === 'accom-reports'
             ? route('accom-reports.show', [
                 'event' => $event->public_id,
@@ -183,6 +180,8 @@ class EventController extends Controller implements HasMiddleware
             'officersOnly' => $event->participant_type === 'officers',
             'participants' => $participants,
             'selectedParticipants' => $selectedParticipants,
+            'courses' => $courses,
+            'selectedCourses' => $selectedCourses,
             'event' => $event,
             'backRoute' => $backRoute,
             'formAction' => route('events.update', [
@@ -213,17 +212,19 @@ class EventController extends Controller implements HasMiddleware
         $event->narrative = $request->narrative;
         $event->tag = $request->tag;
         $event->timezone = $request->timezone;
-        $event->evaluation_delay_hours = $request->evaluation_delay_hours;
+        $event->evaluation_delay_hours = $request->evaluation_delay_hours ?? 0;
         if ($request->record_attendance && !in_array('0',
                 $request->record_attendance)) {
             if (in_array('-1', $request->record_attendance)) {
                 $event->participant_type = 'officers';
                 $event->participants()->sync([]);
+                $event->courses()->sync([]);
                 $event->automatic_attendance = false;
                 $event->accept_evaluation = false;
             } else {
                 $event->participant_type = 'students';
                 $event->participants()->sync($request->record_attendance);
+                $event->courses()->sync($request->student_courses);
                 $event->automatic_attendance = $request
                     ->boolean('automatic_attendance');
                 $event->accept_evaluation = $request
@@ -231,6 +232,8 @@ class EventController extends Controller implements HasMiddleware
             }
         } else {
             $event->participant_type = null;
+            $event->participants()->sync([]);
+            $event->courses()->sync([]);
             $event->automatic_attendance = false;
             $event->accept_evaluation = false;
         }

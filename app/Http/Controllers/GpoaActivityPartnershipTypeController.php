@@ -20,7 +20,8 @@ class GpoaActivityPartnershipTypeController extends Controller implements HasMid
 
     public function index()
     {
-        $partnerships = GpoaActivityPartnershipType::all();
+        $partnerships = GpoaActivityPartnershipType::orderBy('created_at', 
+            'desc')->get();
         return view('settings.gpoa-activities.index-partnerships', [
             'partnerships' => $partnerships,
             'backRoute' => route('settings.index'),

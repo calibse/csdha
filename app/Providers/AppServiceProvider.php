@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Blade::directive('scriptLegacy', function ($entry) {
+            if (!app()->environment('production')) {
+                return '';
+            }
+            $manifestPath = public_path('build/manifest.json');
+            $filename = '';
+
+            if (file_exists($manifestPath)) {
+                $manifest = json_decode(file_get_contents($manifestPath), true);
+                $entry = trim($entry, "'\""); 
+                if (isset($manifest[$entry])) {
+                    $filename = $manifest[$entry]['file'];
+                }
+            }
+            if (true || $filename) {
+                return '<script nomodule defer src="' . asset('build/' . $filename) . '"></script>';
+            }
+            return '';
+        });
+
         /*
         if ($this->app->environment('production')) {
             URL::forceScheme('https');

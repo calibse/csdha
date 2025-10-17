@@ -100,6 +100,11 @@ class Event extends Model
         return $this->belongsToMany(StudentYear::class, 'event_participants');
     }
 
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'event_participant_courses');
+    }
+
     public function attendeesByYear($year)
     {
         return $this->studentYears()->where('year', '=', $year)->get();

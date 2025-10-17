@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->hasOne(GoogleAccount::class);
     }
 
+    public function gpoaActivities(): BelongsToMany
+    {
+        return $this->belongsToMany(GpoaActivity::class, 'gpoa_activity_event_heads');
+    }
+
     public function eventDates(): BelongsToMany
     {
         return $this->belongsToMany(EventDate::class, 'event_officer_attendees')

@@ -1,8 +1,6 @@
 // app.js
 
 import "./bootstrap";
-import {Html5QrcodeScanner} from "html5-qrcode";
-import quagga from "@ericblade/quagga2";
 import QrScanner from "qr-scanner";
 
 import.meta.glob([
@@ -14,328 +12,36 @@ let CURRENT_REQUEST = null;
 let BLOB_URLS = [];
 let QR_SCANNER = null;
 
-hideNoscript();
-setTimezone();
-activateAttendanceRecorder();
-showAttachmentPreview();
-
-function hideNoscript() {
-    const noscript = document.querySelector("#noscript");
-    if (noscript) noscript.remove();
+function setCookie(name, value) {
+    var now, expires;
+    now = new Date();
+    now.setFullYear(now.getFullYear() + 1);
+    expires = now.toUTCString();
+    document.cookie = name + "=" + value + "; expires=" + expires 
+        + "; samesite=lax; path=/";
 }
 
-function showAttachmentPreview() {
-    const mainPage = document.querySelector(
-        ".main-content.events.attachments.form.create");
-    if (!mainPage) return;
-    const fileInput = mainPage.querySelector("#images-input");
-    createAttachmentPreview(fileInput);
-    fileInput.addEventListener("change", () =>
-        createAttachmentPreview(fileInput));
-}
-
-function createAttachmentPreview(fileInput) {
-    const files = fileInput.files;
-    if (!files.length) return;
-    const mainPage = document.querySelector(
-        ".main-content.events.attachments.form.create");
-    const viewLinksEl = mainPage.querySelector("#attachment-view-links");
-    const viewsEl= mainPage.querySelector("#attachment-views");
-    const viewLinkTemp = mainPage.querySelector("#attachment-view-link-temp")
-        .content;
-    const viewTemp = mainPage.querySelector("#attachment-view-temp").content;
-    for (let url of BLOB_URLS) {
-        URL.revokeObjectURL(url);
-        BLOB_URLS = [];
-    }
-    viewLinksEl.replaceChildren();
-    viewsEl.replaceChildren();
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const url = URL.createObjectURL(file);
-        const viewLinkEl = viewLinkTemp.cloneNode(true).firstElementChild;
-        const imageEl = viewLinkEl.querySelector("img");
-        const viewEl = viewTemp.cloneNode(true).firstElementChild;
-        const fullImageEl = viewEl.querySelector("img");
-        const removeBtnEl = viewEl.querySelector("#remove-button");
-        BLOB_URLS.push(url);
-        imageEl.src = fullImageEl.src = url;
-        viewLinkEl.href = `#attachment-item-${i}`;
-        viewEl.id = `attachment-item-${i}`;
-        viewLinksEl.appendChild(viewLinkEl);
-        viewsEl.appendChild(viewEl);
-        removeBtnEl.id = `remove-button-${i}`;
-        removeBtnEl.addEventListener("click", () => {
-            window.location.href = "#";
-            viewLinkEl.remove();
-            viewEl.remove();
-            removeFileFromInput(file, fileInput);
-        });
-    }
-}
-
-function removeFileFromInput(fileToRemove, fileInput) {
-    const files = fileInput.files;
-    const newFileInput = new DataTransfer();
-    for (let file of files) {
-        if (file !== fileToRemove) {
-            newFileInput.items.add(file);
+function supportsTimeZoneName() {
+    try {
+        if (typeof Intl === "object" && 
+                typeof Intl.DateTimeFormat === "function") {
+            var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (typeof tz === "string" && tz.length > 0) {
+                return true;
+            }
         }
-    }
-    fileInput.files = newFileInput.files;
+    } catch (e) {}
+    return false;
 }
 
 function setTimezone() {
-    let timezone;
-    timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    setCookie('timezone', timezone);
-}
-
-function setCookie(name, value) {
-    const now = new Date();
-    now.setFullYear(now.getFullYear() + 1);
-    const expires = now.toUTCString();
-    document.cookie = `${name}=${value}; expires=${expires}; sameSite=Lax; path=/`;
-}
-
-function activateToggler(togglerSelector, selector) {
-    let e, f;
-    e = document.querySelector(selector);
-    f = document.querySelector(togglerSelector);
-    if (e && f) {
-       f.addEventListener("click", () => {
-           e.classList.toggle("visible");
-       });
-   }
-}
-
-function activateExpander(togglerSelector, selector) {
-    let e, f, body;
-    e = document.querySelector(selector);
-    f = document.querySelector(togglerSelector);
-    body = document.querySelector("body");
-    if (e && f) {
-       f.addEventListener("click", () => {
-           e.classList.remove("hidden");
-           body.classList.add("underlay");
-           e.firstElementChild.focus();
-       });
-   }
-}
-
-function activateCollapser(togglerSelector, selector) {
-    let e, f, body;
-    e = document.querySelector(selector);
-    f = document.querySelector(togglerSelector);
-    body = document.querySelector("body");
-    if (e && f) {
-       f.addEventListener("click", () => {
-           e.classList.add("hidden");
-           body.classList.remove("underlay");
-       });
-   }
-}
-
-function addClass(classList, elements) {
-    elements.forEach((e) => {
-        const element = document.querySelector(e);
-        if (element) {
-            element.classList.add(...classList);
-        }
-    });
-}
-
-
-function showIdleStatus() {
-    const indicator = document.querySelector("#barcode .indicator");
-    const statuses = document.querySelector("template.statuses").content;
-    const statusText = indicator.querySelector(".status");
-    if (statusText) {
-        statusText.remove();
-    }
-    let statusEl = statuses.querySelector(".idle").cloneNode(true);
-    indicator.appendChild(statusEl);
-}
-
-function removeIdleStatus() {
-    const statusText = document.querySelector("#barcode .indicator .status");
-    if (statusText) {
-        statusText.remove();
-    }
-}
-
-function initQuagga() {
-    quagga.init({
-        inputStream: {
-            name : "Live",
-            type : "LiveStream",
-            target: document.querySelector('#barcode .scanner'),
-            constraints: {
-                width: {min: 640},
-                height: {min: 480},
-                facingMode: "environment",
-                aspectRatio: {min: 1, max: 2}
-            }
-        },
-        locator: {
-            patchSize: "medium",
-            halfSample: true
-        },
-        numOfWorkers: 2,
-        frequency: 10,
-        decoder: {
-            readers : [{
-                format: "code_39_reader",
-                config: {}
-            }]
-        },
-        locate: true
-    }, function(err) {
-        if (err) {
-            return
-        }
-        quagga.start();
-        showIdleStatus();
-        const videoStream = quagga.canvas.dom.overlay;
-        const canvas = videoStream.getBoundingClientRect();
-        const barcodeElement = document.querySelector("#barcode");
-        barcodeElement.style.width = canvas.width + "px";
-    });
-
-    quagga.onProcessed(function (result) {
-        let drawingCtx = quagga.canvas.ctx.overlay;
-        let drawingCanvas = quagga.canvas.dom.overlay;
-        if (result) {
-            if (result.boxes) {
-                drawingCtx.clearRect(0, 0, parseInt(drawingCanvas
-                    .getAttribute("width")), parseInt(drawingCanvas
-                    .getAttribute("height")));
-                result.boxes.filter(function (box) {
-                    return box !== result.box;
-                }).forEach(function (box) {
-                    quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx,
-                        {color: "green", lineWidth: 2});
-                });
-            }
-            if (result.box) {
-                quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1},
-                    drawingCtx, {color: "#00F", lineWidth: 2});
-            }
-            if (result.codeResult && result.codeResult.code) {
-                quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'},
-                    drawingCtx, {color: 'red', lineWidth: 3});
-            }
-        }
-    });
-    const indicator = document.querySelector("#barcode .indicator");
-    const timeout = indicator.querySelector(".timeout");
-    const statuses = document.querySelector("template.statuses").content;
-    quagga.onDetected(async function (data) {
-        const statusText = indicator.querySelector(".status");
-        if (statusText) {
-            statusText.remove();
-        }
-        const statusEl = statuses.querySelector(".processing").cloneNode(true);
-        indicator.appendChild(statusEl);
-        indicator.classList.remove("success", "failure", "processing");
-        void indicator.offsetWidth;
-        indicator.classList.add("processing");
-        let status = await storeAttendance(data.codeResult.code);
-        if (status === 200) {
-            const statusText = indicator.querySelector(".status");
-            if (statusText) {
-                statusText.remove();
-            }
-            const statusEl = statuses.querySelector(".success").cloneNode(true);
-            indicator.appendChild(statusEl);
-            const resultCode = document.querySelector("#result-code");
-            resultCode.textContent = data.codeResult.code;
-            indicator.classList.remove("success", "processing");
-            void indicator.offsetWidth;
-            indicator.classList.add("success");
-            timeout.addEventListener("animationend", function callback() {
-                indicator.classList.remove("success");
-                timeout.removeEventListener("animationend", callback);
-                showIdleStatus();
-            });
-        } else if (status === 404) {
-            const statusText = indicator.querySelector(".status");
-            if (statusText) {
-                statusText.remove();
-            }
-            const statusEl = statuses.querySelector(".failure").cloneNode(true);
-            indicator.appendChild(statusEl);
-            const resultCode = document.querySelector("#result-code");
-            resultCode.textContent = data.codeResult.code;
-            indicator.classList.remove("failure", "processing");
-            void indicator.offsetWidth;
-            indicator.classList.add("failure");
-            timeout.addEventListener("animationend", function callback() {
-                indicator.classList.remove("failure");
-                timeout.removeEventListener("animationend", callback);
-                showIdleStatus();
-            });
-        }
-    });
-}
-
-function quaggajs() {
-    hideNoscript();
-    const attendancePage = document.querySelector(".main-content.attendance " +
-        ".scripting");
-    if (!attendancePage) return;
-    attendancePage.hidden = false;
-    const barcodeScannerElement = document.querySelector("#barcode .scanner");
-    const resultCode = document.querySelector("#result-code");
-    const eventField = document.querySelector("#event");
-    if (!barcodeScannerElement) {
-        return;
-    }
-    if (eventField.value) {
-        initQuagga();
+    var timezone;
+    if (supportsTimeZoneName()) {
+        timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     } else {
-        quagga.stop();
-        removeIdleStatus();
+        timezone = new Date().getTimezoneOffset();
     }
-    eventField.addEventListener("change", function () {
-        if (this.value) {
-            initQuagga();
-        } else {
-            quagga.stop();
-            removeIdleStatus();
-            while (barcodeScannerElement.firstChild) {
-                barcodeScannerElement.removeChild(barcodeScannerElement
-                    .firstChild);
-            }
-        }
-    });
-}
-
-
-function showBarcodeScanner() {
-    hideNoscript();
-    const attendancePage = document.querySelector(".main-content.attendance " +
-        ".scripting");
-    if (!attendancePage) return;
-    attendancePage.hidden = false;
-
-    const barcodeScannerElement = document.querySelector("#barcode-scanner");
-    const eventField = document.querySelector("#event");
-    if (!barcodeScannerElement) {
-        return;
-    }
-    barcodeScannerElement.hidden = eventField.value ? false : true;
-    eventField.addEventListener("change", () => {
-        barcodeScannerElement.hidden = eventField.value ? false : true;
-    });
-    const html5QrcodeScanner = new Html5QrcodeScanner("barcode-scanner", {
-        fps: 10,
-    }, true);
-    html5QrcodeScanner.render((decodedText, decodedResult) => {
-        storeAttendance(decodedText);
-    }, (error) => {
-        // console.warn(`Code scan error = ${error}`);
-    });
+    setCookie('timezone', timezone);
 }
 
 async function storeAttendance(token) {
@@ -345,7 +51,7 @@ async function storeAttendance(token) {
     }
     const eventField = document.querySelector("#event");
     try {
-        CURRENT_REQUEST = axios.post(`/api/attendance/${eventField.value}`, {
+        CURRENT_REQUEST = axios.post("/api/attendance/" + eventField.value, {
             token: token
         });
         const apiResponse =  await CURRENT_REQUEST;
@@ -353,81 +59,6 @@ async function storeAttendance(token) {
     } finally {
         CURRENT_REQUEST = null;
     }
-}
-
-function addCloseMenuButton() {
-    const parent = document.querySelector(".main-header .content-block");
-    if (parent) {
-        const closeMenuButton = document.createElement("button");
-        closeMenuButton.classList.add("close-menu-button");
-        parent.prepend(closeMenuButton);
-    }
-}
-
-function addMenuButton() {
-    const oldMenuButton = document.querySelector('.menu-button')
-    const template = document.querySelector("#menu-button-template");
-    if (oldMenuButton) {
-        oldMenuButton.remove();
-    }
-    if (template) {
-        const parent = document.querySelector(".main-content-header " +
-            ".content-block nav");
-        parent.prepend(template.content);
-    }
-}
-
-function camelToSnake(str) {
-    return str.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
-}
-
-function removeUrlLastSegment(url) {
-    let u = new URL(url);
-    u.pathname = u.pathname
-        .replace(/\/[^\/?#]+\/?$/, '')
-        .replace(/\/+$/, '');
-    return u.toString();
-}
-
-function activateDeleteButton(...items) {
-    items.forEach(e => {
-        const items = document.querySelectorAll(".item." + e);
-        if (!items.length) return false;
-        const dialog = document.getElementById("delete-" + e + "-dialog");
-        const dialogForm = dialog.querySelector("form");
-        const contentToDelete = dialog.querySelector(".content-delete");
-        items.forEach(item => {
-            const form = item.querySelector(".delete-action");
-            const content = item.querySelector(".content");
-            const button = item.querySelector(".delete-action button");
-            button.addEventListener("click", function() {
-                contentToDelete.textContent = " " + content.textContent;
-                dialogForm.action = removeUrlLastSegment(form.action);
-                dialog.showModal();
-            });
-        })
-    })
-}
-
-function activateEditButton(...items) {
-    items.forEach(e => {
-        const forms = document.querySelectorAll(".item." + e + " .edit-action");
-        if (!forms.length) return false;
-        const dialog = document.getElementById("edit-" + e + "-dialog");
-        const dialogForm = dialog.querySelector("form");
-        forms.forEach(form => {
-            const button = form.querySelector("button");
-            const fields = JSON.parse(button.parentElement.querySelector(".field-values").textContent);
-            button.addEventListener("click", function () {
-                dialogForm.action = removeUrlLastSegment(form.action);
-                for (const name in fields) {
-                    const fieldElement = dialogForm.elements.namedItem(camelToSnake(name));
-                    fieldElement.value = fields[name];
-                }
-                dialog.showModal();
-            });
-        })
-    })
 }
 
 function showQrScannerStatus(type) {
@@ -439,14 +70,14 @@ function showQrScannerStatus(type) {
     const timeout = indicator.querySelector(".timeout");
     const statusText = indicator.querySelector(".status .text");
     void indicator.offsetWidth;
-    indicator.classList.value = `indicator ${statusVal[type].class}`;
+    indicator.classList.value = "indicator " + statusVal[type].class;
     statusText.textContent = statusVal[type].text;
     if (["success", "failure"].includes(type)) {
         timeout.addEventListener("animationend", function callback() {
             indicator.classList.remove(statusVal[type].class);
             timeout.removeEventListener("animationend", callback);
             void indicator.offsetWidth;
-            indicator.classList.value = `indicator ${statusVal.idle.class}`;
+            indicator.classList.value = "indicator " + statusVal.idle.class;
             statusText.textContent = statusVal.idle.text;
         });
     }
@@ -458,7 +89,7 @@ function startQrScanner() {
     if (!videoEl) return;
     const idScanner = document.getElementById("id-scanner");
     idScanner.hidden = false;
-    QR_SCANNER = QR_SCANNER ?? new QrScanner(videoEl, async (result) => {
+    QR_SCANNER = QR_SCANNER || new QrScanner(videoEl, async (result) => {
         showQrScannerStatus("processing");
         const statusCode = await storeAttendance(result.data);
         switch (statusCode) {
@@ -479,10 +110,13 @@ function stopQrScanner() {
     const idScanner = document.getElementById("id-scanner");
     if (!idScanner) return;
     idScanner.hidden = true;
-    QR_SCANNER?.stop();
+    if (QR_SCANNER) {
+        QR_SCANNER.stop();
+    }
 }
 
 function activateAttendanceRecorder() {
+    let mainEl;
     const mainPage = document.querySelector(".main-content.attendance "
         + ".article");
     if (!mainPage) return;
@@ -496,8 +130,9 @@ function activateAttendanceRecorder() {
     const mainElTemp = document.querySelector('.attendance #scanner-feature');
     if (!mainElTemp) {
         return;
+    } else {
+        mainEl = mainElTemp.content.cloneNode(1);
     }
-    const mainEl = mainElTemp?.content.cloneNode(1);
     const idScanner = mainEl.getElementById("id-scanner");
     if (idScanner) {
         idScanner.hidden = true;
@@ -516,13 +151,6 @@ function activateAttendanceRecorder() {
     startQrScanner();
 }
 
+setTimezone();
+activateAttendanceRecorder();
 
-/*
-addMenuButton();
-addCloseMenuButton();
-activateExpander(".menu-button", ".main-header");
-activateCollapser(".close-menu-button", ".main-header");
-quaggajs();
-activateEditButton('event-date', 'gspoa-event');
-activateDeleteButton('event-date', 'gspoa-event');
-*/
