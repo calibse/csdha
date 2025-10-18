@@ -3,6 +3,8 @@
 @use "../color";
 @use "../size";
 
+$window-width: 21rem;
+
 .front-body {
 
 }
@@ -13,17 +15,16 @@
 	background-color: color.$header-bg;
 	width: 100%;
 	min-height: 100vh;
-	padding: 1rem 0;
 
 	.content-block {
+		position: relative;
 		margin: 0 auto;
 		border-radius: size.$corner-roundness;
 		padding: 0 1rem;
 		padding-bottom: 2.5rem;
 		background-color: color.$header-bg;
 		color: color.$header-fg;
-		height: 100%;
-		width: 21rem;
+		height: 100vh;
 		max-width: 100%;
 		padding-top: 1rem;
 	}
@@ -42,6 +43,7 @@
 	.logo, .name {
 		display: inline-block;
 		vertical-align: middle;
+		margin-bottom: .5rem;
 	}
 
 	.logo {
@@ -74,6 +76,8 @@
 }
 
 .front-content {
+	margin-top: 2rem;
+
 	input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="time"]),
 	select,
 	textarea,
@@ -105,6 +109,7 @@
 
 		.line {
 			width: 42%;
+			max-width: calc(50% - 1.5rem);
 			border-top: solid .1rem color.$icon-dark;
 		}
 	}
@@ -112,10 +117,31 @@
 	.sign-in-with {
 		margin: 1rem 0;
 	}
+
+	.alert {
+		color: color.$foreground;
+		width: 100%;
+	}
+
+	.signin-link {
+		width: 100%;
+
+		&:hover, &:focus {
+			border-color: color.$header-fg;
+		}
+	}
 }
 
-.alert {
-	color: color.$foreground;
+@media (min-width: $window-width + 2rem) {
+	.front-main {
+		padding: 1rem 0;
+	}
+
+	.front-main .content-block {
+		border-radius: size.$corner-roundness;
+		width: $window-width;
+		height: auto;
+	}
 }
 
 @media (min-width: 40rem) {

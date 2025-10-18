@@ -1,4 +1,4 @@
-<x-layout.user form class="profile form" :$backRoute title="Edit Profile">
+<x-layout.user form class="profile form" :$backRoute title="Edit Account">
 	<article class="article">
 		<x-alert/>
 		<form method="POST" action="{{ $formAction }}" enctype="multipart/form-data">
@@ -14,7 +14,7 @@
 			</p>
 			<p>
 				<label>Google Account</label>
-			@if (!auth()->user()->email_verified_at)
+			@if (auth()->user()->google && !auth->user()->email_verified_at)
 				Connected (Add an email to be able to remove this account)
 			@elseif (auth()->user()->google)
 				<a href="{{ $googleRoute }}">Remove</a>

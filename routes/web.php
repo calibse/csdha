@@ -39,6 +39,7 @@ use App\Http\Controllers\GpoaActivityPartnershipTypeController;
 use App\Http\Controllers\GpoaActivityTypeController;
 use App\Http\Controllers\GpoaActivityFundSourceController;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\PasswordResetController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -200,7 +201,7 @@ return $text . 'hello';
         });
     });
 
-Route::domain(config('custom.admin_domain'))->group(function () {
+Route::domain(config('app.admin_domain'))->group(function () {
 
     Route::name('admin.')->group(function () {
 
@@ -215,7 +216,7 @@ Route::domain(config('custom.admin_domain'))->group(function () {
 
 });
 
-Route::domain(config('custom.admin_domain'))->middleware('auth')
+Route::domain(config('app.admin_domain'))->middleware('auth')
         ->group(function () {
 
     Route::get('/home.html', [HomeController::class , 'adminIndex'])
@@ -270,14 +271,19 @@ Route::domain(config('custom.admin_domain'))->middleware('auth')
             ->name('index');
     });
 
+    Route::controller(AuditTrailController::class)->name('audit.')
+        ->group(function () {
+
+        Route::get('/audit.html', 'index')->name('index');
+
+        Route::get('/audit-{audit}.html', 'show')->name('show');
+    });
+
     Route::get('/analytics', [AnalyticController::class, 'index'])
         ->name('analytics.index');
-
-    Route::resource('audit', AuditTrailController::class)
-        ->only(['index', 'show']);
 });
 
-Route::name('profile.')->controller(ProfileController::class)
+Route::name('profile.')->controller(PasswordResetController::class)
     ->group(function () {
 
     Route::get('/reset-password.html', 'createPasswordReset')
@@ -298,7 +304,7 @@ Route::name('profile.')->controller(ProfileController::class)
     });
 });
 
-Route::domain(config('custom.user_domain'))->group(function () {
+Route::domain(config('app.user_domain'))->group(function () {
 
     Route::prefix('event-register-{event}')->name('events.registrations.')
         ->middleware(['can:register,event'])
@@ -415,7 +421,7 @@ Route::domain(config('custom.user_domain'))->group(function () {
         ->name('verify-email');
 });
 
-Route::domain(config('custom.user_domain'))->middleware('auth')
+Route::domain(config('app.user_domain'))->middleware('auth')
     ->group(function () {
 
     Route::get('/home.html', [HomeController::class, 'index'])
@@ -785,7 +791,7 @@ Route::domain(config('custom.user_domain'))->middleware('auth')
     Route::resource('positions', PositionController::class);
     */
 
-    Route::prefix('profile')->name('profile.')
+    Route::prefix('account')->name('profile.')
             ->controller(ProfileController::class)->group(function () {
 
         Route::get('/', 'index')->name('index');

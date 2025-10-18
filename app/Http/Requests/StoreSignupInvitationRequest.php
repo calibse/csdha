@@ -17,8 +17,8 @@ class StoreSignupInvitationRequest extends FormRequest
             ->withoutTrashed();
         $uniqueFromInvitations = Rule::unique(SignupInvitation::class, 'email');
         return [
-            'position' => ['required', 'integer', new Exists(Position::open(), 
-                'id', [0])],
+            'position' => ['required', 'numeric', 'integer', 
+                new Exists(Position::open(), 'id', [0])],
             'email' => ['required', 'email', $uniqueFromUsers, 
                 $uniqueFromInvitations]
         ];

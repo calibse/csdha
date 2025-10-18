@@ -23,13 +23,13 @@ use App\Models\GoogleAccount;
 
 class ProfileController extends Controller
 {
-    private bool $hasPassword;
+    private static bool $hasPassword;
 
     public function __construct()
     {
-	$this->hasPassword = true;
+	self::$hasPassword = true;
         if (!auth()->user()->password && auth()->user()->google) {
-		$this->hasPassword = false;
+		self::$hasPassword = false;
 	}
     }
 
@@ -56,7 +56,7 @@ class ProfileController extends Controller
             'passwordRoute' => $passwordRoute,
             'emailRoute' => $emailRoute,
             'formAction' => $formAction,
-            'hasPassword' => $this->hasPassword,
+            'hasPassword' => self::$hasPassword,
             'googleRoute' => $googleRoute
         ]);
     }
@@ -79,12 +79,12 @@ class ProfileController extends Controller
         	$user->avatar_filepath = $imageFile;
         }
         $user->save();
-        return redirect()->back()->with('status', 'Profile updated.');
+        return redirect()->back()->with('status', 'Account updated.');
     }
 
     public function editEmail()
     {
-        if (!$this->hasPassword) abort(403);
+        if (!self::$hasPassword) abort(403);
         $backRoute = route('profile.edit');
         return view('profile.edit-email', [
             'backRoute' => $backRoute,
@@ -96,7 +96,7 @@ class ProfileController extends Controller
 
     public function updateEmail(UpdateEmailRequest $request)
     {
-        if (!$this->hasPassword) abort(403);
+        if (!self::$hasPassword) abort(403);
         $user = auth()->user();
         $status = 'Email updated.';
         if ($user->email !== $request->email || !$request->email) {
@@ -113,7 +113,7 @@ class ProfileController extends Controller
 
     public function resendEmailVerify()
     {
-        if (!$this->hasPassword) abort(403);
+        if (!self::$hasPassword) abort(403);
         $user = auth()->user();
         if ($user->email && $user->email_verified_at) {
             return view('message', [
@@ -131,7 +131,7 @@ class ProfileController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        if (!$this->hasPassword) abort(403);
+        if (!self::$hasPassword) abort(403);
         if (!$request->hasValidSignature()) {
             return 'Hello';
             abort(401);
@@ -158,7 +158,7 @@ class ProfileController extends Controller
         $backRoute = route('profile.edit');
         return view('profile.edit-password', [
             'backRoute' => $backRoute,
-            'hasPassword' => $this->hasPassword,
+            'hasPassword' => self::$hasPassword,
             'formAction' => route('profile.password.update')
         ]);
     }
@@ -218,7 +218,7 @@ class ProfileController extends Controller
         }
         self::storeOrUpdateSocial($provider, $socialUser);
         return redirect()->route('profile.edit')->with('status',
-            'Profile updated.');
+            'Account updated.');
     }
 
     public function deleteSocial(string $provider)
@@ -234,7 +234,7 @@ class ProfileController extends Controller
             break;
         }
         return redirect()->route('profile.edit')->with('status',
-            'Profile updated.');
+            'Account updated.');
     }
 
     public function createPasswordReset()

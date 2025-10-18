@@ -1,13 +1,16 @@
 <x-layout.user index class="accounts index" title="Accounts">
     <x-slot:toolbar>
         <a href="{{ route('accounts.create-signup-invite') }}">
-            <span class="icon"><x-phosphor-plus-circle/></span> 
+		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
             <span class="text">Create Sign-up Invite</span>
         </a>
     </x-slot:toolbar>
-    <article class="table-block">
+    <div class="article">
         <x-alert/>
-        <table>
+        <table class="table-4">
+            <colgroup>
+                <col span="4" style="width: 25%">
+            </colgroup>
             <thead>
                 <tr>
                     <th>Name</th>
@@ -28,5 +31,5 @@
             </tbody>
         </table> 
         {{ $accounts->links('paginator.simple') }}
-    </article>
+    </div>
 </x-layout.user>

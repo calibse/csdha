@@ -34,7 +34,7 @@
 				<div class="main-account-link">
 						<a href="{{ route('profile.edit') }}">
 							<img class="icon" src="{{ asset('icon/dark/user-circle-duotone.png') }}">
-							<span class="text">Profile</span>
+							<span class="text">Account</span>
 						</a>
 				</div>
 			</div>
@@ -61,7 +61,7 @@
 					<p class="main-action">
 						<a href="{{ route('profile.edit') }}">
 							<img class="icon" src="{{ asset('icon/dark/pencil-simple-duotone.png') }}">
-							<span class="text">Edit profile</span>
+							<span class="text">Edit account</span>
 						</a>
 					</p>
 				@endif

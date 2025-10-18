@@ -14,10 +14,14 @@ class CheckPasswordResetToken
     public function handle(Request $request, Closure $next): Response
     {
         $duration = config('auth.passwords.users.expire');
-        $hashedToken = $request->email ? DB::table('password_reset_tokens')
-            ->where('email', $request->email)->first() : null;
+        $query = DB::table('password_reset_tokens')->where('email', 
+            $request->email);
+        $hashedToken = $request->email ? $query->first() : null;
         $expired = $hashedToken ? Carbon::parse($hashedToken->created_at)
             ->addMinutes($duration)->isPast() : null;
+        if ($expired) {
+            $query->delete();
+        }
         $tokenValid = $hashedToken && !$expired && $request->token 
             ? Hash::check($request->token, $hashedToken->token) : null;
         if (!$tokenValid) {

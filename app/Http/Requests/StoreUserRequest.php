@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class StoreUserRequest extends FormRequest
             'middle_name' => ['max:50'],
             'last_name' => ['required', 'max:50'],
             'suffix_name' => ['max:50'],
-            'email' => ['required', 'email', 'max:255', 
+            'email' => ['email', 'max:255', 
                 Rule::unique('App\Models\User', 'email')->withoutTrashed()
             ],
             'username' => ['required', 'max:30', 

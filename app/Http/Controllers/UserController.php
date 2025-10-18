@@ -45,6 +45,7 @@ class UserController extends Controller
         $user->last_name = $request->input('last_name');
 		$user->suffix_name = $request->input('suffix_name');
         $user->email = $signupInvite->email;
+        $user->email_verified_at = now();
         $user->username = $request->input('username');
         $user->password = Hash::make($request->input('password'));
         if ($signupInvite?->position) {

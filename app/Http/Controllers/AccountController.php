@@ -66,8 +66,6 @@ class AccountController extends Controller implements HasMiddleware
         $account->middle_name = $request->middle_name;
         $account->last_name = $request->last_name;
         $account->suffix_name = $request->suffix_name;
-        // $account->email = $request->email;
-        // $account->username = $request->username;
         $account->save();
         return redirect()->route('accounts.show', [
             'account' => $account->public_id

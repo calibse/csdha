@@ -12,6 +12,8 @@ use App\Http\Middleware\AuthorizeEvent;
 use App\Http\Middleware\AuthorizeAccomReport;
 use App\Http\Middleware\AuthorizeIndex;
 use App\Http\Middleware\AuthorizeSetting;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -44,5 +46,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->respond(function (Response $response) {
+            if ($response->getStatusCode() === 419) {
+                return redirect('/');
+            }
+            return $response;
+        });
     })->create();

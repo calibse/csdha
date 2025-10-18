@@ -52,23 +52,29 @@
 
 	.item {
 		margin: 1rem 0;
-		display: flex;
-		gap: .5rem;
+		white-space: nowrap;
+	}
 
-		.content {
-			flex: 1 1 auto;
+	.content, .context-menu {
+		display: inline-block;
+		white-space: wrap;
+		vertical-align: top;
+	}
+
+	.content {
+		width: 70%;
+	}
+
+	.context-menu {
+		width: 30%;
+		text-align: right;
+
+		form {
+			display: inline;
 		}
 
-		.context-menu {
-			flex: 0 0 auto;
-
-			form {
-				display: inline;
-			}
-
-			button {
-				margin-left: .5rem;
-			}
+		button {
+			margin-left: .5rem;
 		}
 	}
 }

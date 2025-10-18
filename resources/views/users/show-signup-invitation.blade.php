@@ -4,23 +4,17 @@
         <x-alert/>
         <div class="login-button-container">
             <p>
-                <button form="form-email" class="login-button">
-                    <x-phosphor-envelope-simple/>
-                    Sign up with email
-                </button>
+                <a class="signin-link" href="{{ $emailRoute }}">
+			<img class="icon" src="{{ asset('icon/light/envelope-simple-duotone.png') }}">
+			<span class="text">Sign up with email</span>
+                </a>
             </p>
             <p>
-                <button form="form-google" class="login-button">
-                    <img src="{{ Vite::asset('resources/images/google.webp') }}">
-                    Sign up with Google
-                </button>
+                <a class="signin-link" href="{{ $googleRoute }}">
+			<img class="icon" src="{{ asset('icon/light/google-logo-duotone.png') }}">
+			<span class="text">Sign up with Google</span>
+                </a>
             </p>
         </div>
-        <form id="form-email" action="{{ $emailRoute }}">
-            <input hidden name="invite_code" value="{{ $inviteCode }}">
-        </form>
-        <form id="form-google" action="{{ $googleRoute }}">
-            <input hidden name="invite_code" value="{{ $inviteCode }}">
-        </form>
     </article>
 </x-layout.text-only>

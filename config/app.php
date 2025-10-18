@@ -125,6 +125,6 @@ return [
 
     // Custom config start here:
     'date_format' => 'j M Y h:i A',
-	'admin_domain' => env('ADMIN_DOMAIN'),
-	'user_domain' => env('USER_DOMAIN'),
+    'admin_domain' => env('ADMIN_DOMAIN'),
+    'user_domain' => env('USER_DOMAIN'),
 ];

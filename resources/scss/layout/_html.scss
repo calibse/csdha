@@ -49,7 +49,8 @@ a:focus > .text {
 
 .signin-link {
 	border: solid size.$line-width color.$icon-dark;
-	width: 100%;
+	width: 17rem;
+	max-width: 100%;
 	display: block;
 	text-align: center;
 	text-decoration: none;
@@ -59,9 +60,5 @@ a:focus > .text {
 
 	&:hover .text, &:focus .text {
 		text-decoration: none;
-	}
-
-	&:hover, &:focus {
-		border-color: color.$header-fg;
 	}
 }

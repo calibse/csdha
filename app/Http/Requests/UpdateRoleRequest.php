@@ -12,14 +12,16 @@ class UpdateRoleRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'roles.*.*' => 'admin',
         ];
     }
 
     public function rules(): array
     {
         return [
-            'roles.*.*' => ['required', 'integer', Rule::exists(User::class, 'public_id')]
+            'admin' => ['array'],
+            'admin.*' => ['numeric', 'integer', 
+                Rule::exists(User::class, 'public_id')
+            ]
         ];
     }
 }

@@ -185,20 +185,20 @@
 
 .close-menu-button {
 	display: none;
-    position: fixed;
-    top: 0;
-    left: var(--sidebar-width);
-    border: 0;
-    background-color: transparent;
-    height: 100%;
+	position: fixed;
+	top: 0;
+        left: 80%;
+	border: 0;
+	background-color: transparent;
+	height: 100%;
 	width: 100%;
 
-    .text {
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        display: inline-block;
-    }
+	.text {
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		display: inline-block;
+	}
 }
 
 .main-main {
@@ -310,7 +310,6 @@
 	background-image: linear-gradient(to bottom, #d3d3d3, #cccccc);
 	padding: 0 size.$page-margin;
 	border-bottom: solid size.$line-width color.$toolbar-border;
-	//max-width: calc(var(--page-width) - (var(--page-padding) * 2));
 
 	a, button {
 		display: inline-block;
@@ -361,7 +360,6 @@
 
 @mixin main-header {
 	width: 80%;
-	margin-right: 1rem;
 	height: 100%;
 	position: fixed;
 	overflow-y: auto;
@@ -437,6 +435,10 @@
 	@media (min-width: size.$sidebar-width + 4rem) {
 		.main-header {
 			width: size.$sidebar-width;
+		}
+
+		.close-menu-button {
+			left: size.$sidebar-width;
 		}
 
 		.main-header-info {

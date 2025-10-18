@@ -58,19 +58,27 @@ table {
 
     tr {
         display: block;
+	margin-bottom: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    thead ~ tbody tr {
         border-bottom: solid size.$line-width color.$table-divider;
         margin-bottom: 1rem;
         padding-bottom: 1rem;
     }
+
+	thead th {
+		font-weight: normal;
+	}
 
     tbody tr:first-child {
         margin-top: 1rem;
     }
 }
 
-@media (min-width: 31rem) {
-    table.table-2 {
-        table-layout: fixed;
+@mixin table-wide {
+	table-layout: fixed;
         display: table;
 
         tbody {
@@ -92,11 +100,7 @@ table {
             opacity: unset;
 
             tr {
-                border-color: color.$table-header-divider;
-            }
-
-            tr th {
-                font-weight: normal;
+		border-bottom: solid size.$line-width color.$table-header-divider;
             }
         }
 
@@ -105,15 +109,30 @@ table {
             list-style: unset;
             padding: 1rem 1rem 1rem 0;
             vertical-align: top;
-            font-weight: normal;
         }
 
         tr {
             display: table-row;
             margin-bottom: unset;
             padding-bottom: unset;
-        }
+	}
+}
 
-    }
+@media (min-width: 31rem) {
+	table.table-2 {
+		@include table-wide;
+	}
+}
+
+@media (min-width: 68rem) {
+	table.table-4 {
+		@include table-wide;
+	}
+}
+
+@media (min-width: 70rem) {
+	table.table-6 {
+		@include table-wide;
+	}
 }
 

@@ -15,6 +15,9 @@ use App\Models\GoogleAccount;
 class LoginController extends Controller
 {
     public function login(Request $request) {
+        if (auth()->check()) {
+            return redirect('home.html');
+        }
         $inviteCode = $request->invite_code;
         return view('users.login', [
             'type' => 'user',
@@ -80,6 +83,9 @@ class LoginController extends Controller
 
     public function adminLogin(Request $request)
     {
+        if (auth()->check()) {
+            return redirect('home.html');
+        }
         return view('users.login', [
             'type' => 'admin',
             'homeRoute' => route('admin.home'),
@@ -87,6 +93,7 @@ class LoginController extends Controller
                 'provider' => 'google'
             ]),
             'signinRoute' => route('admin.auth'),
+            'passwordResetRoute' => route('profile.password-reset.create'),
         ]);
     }
 
@@ -195,8 +202,13 @@ class LoginController extends Controller
         if (!$inviteCode) abort(404);
         return view('users.show-signup-invitation', [
             'inviteCode' => $inviteCode,
-            'emailRoute' => route('users.create'),
-            'googleRoute' => route('signup.redirect', ['provider' => 'google'])
+            'emailRoute' => route('users.create', [
+                'invite_code' => $inviteCode,
+            ]),
+            'googleRoute' => route('signup.redirect', [
+                'provider' => 'google',
+                'invite_code' => $inviteCode,
+            ])
         ]);
     }
 

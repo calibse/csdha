@@ -163,4 +163,14 @@ class Format
         }
         return null;
     }
+
+    public static function date(Carbon $date)
+    {
+        if (config('timezone') === 'UTC') {
+            return $date->timezone(config('timezone'))
+                ->format(config('app.date_format')) . ' UTC';
+        }
+        return $date->timezone(config('timezone'))
+            ->format(config('app.date_format'));
+    }
 }
