@@ -78,7 +78,7 @@
 	}
 }
 
-.multi-step-form .section:not(.main):not(.intro) {
+.multi-step-form .section.content {
     white-space: nowrap;
 
     .title, .status {

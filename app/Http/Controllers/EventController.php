@@ -24,6 +24,7 @@ use App\Http\Requests\SaveEventDateRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Requests\SaveAttendeeRequest;
 use App\Http\Requests\UpdateCommentsRequest;
+use App\Http\Requests\UpdateEventNarrativeRequest;
 use App\Services\Format;
 use App\Mail\EventEvaluation as EventEvaluationMail;
 use Illuminate\Support\Facades\Hash;
@@ -111,7 +112,6 @@ class EventController extends Controller implements HasMiddleware
         $event->participants = $request->participants;
         $event->objective = $request->objective;
         $event->description = $request->description;
-        $event->narrative = $request->narrative;
 
         $event->letter_of_intent = $request->letter
             ?->storeAs('events/letter_of_intents',
@@ -187,6 +187,9 @@ class EventController extends Controller implements HasMiddleware
             'formAction' => route('events.update', [
                 'event' => $event->public_id
             ]),
+            'narrativeRoute' => route('events.narrative.edit', [
+                'event' => $event->public_id
+            ]),
             'dateRoute' => route('events.dates.index', [
                 'event' => $event->public_id
             ]),
@@ -245,6 +248,27 @@ class EventController extends Controller implements HasMiddleware
         return redirect()->route('events.show', [
             'event' => $event->public_id
         ]);
+    }
+
+    public function editNarrative(Event $event)
+    {
+        return view('events.edit-narrative', [
+            'formAction' => route('events.narrative.update', [
+                 'event' => $event->public_id
+             ]),
+            'backRoute' => route('events.edit', [
+                 'event' => $event->public_id
+             ]),
+             'narrative' => $event->narrative
+        ]);
+    }
+
+    public function updateNarrative(UpdateEventNarrativeRequest $request, 
+        Event $event)
+    {
+        $event->narrative = $request->narrative;
+        $event->save();
+        return back()->with('status', 'Event narrative updated.');
     }
 
     private static function sendEvaluationForm(Event $event): void
@@ -413,6 +437,8 @@ class EventController extends Controller implements HasMiddleware
     public function dateIndex(Event $event)
     {
         return view('events.edit-dates',[
+            'dates' => $event->dates()->orderBy('date', 'asc')
+                ->orderBy('start_time', 'asc')->get(),
             'event' => $event
         ]);
     }

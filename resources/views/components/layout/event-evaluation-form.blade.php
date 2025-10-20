@@ -49,7 +49,7 @@
         {{ $slot }}
     </main>
     @else
-    <section class="section">
+    <section class="section content">
         <h2 class="title"><a
             @if ($thisStep <= $completeSteps)
             href="{{ $routes[$thisStep] }}"

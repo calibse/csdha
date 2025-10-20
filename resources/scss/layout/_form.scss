@@ -8,12 +8,17 @@ form {
 		margin-bottom: .5em;
 	}
 
-	input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="time"]),
-	select,
-	textarea,
-	fieldset {
+	input, select, textarea, fieldset {
 		max-width: 100%;
 		width: size.$text-width;
+	}
+
+	input[type="checkbox"], 
+	input[type="radio"], 
+	input[type="date"],
+	input[type="time"] {
+		max-width: none;
+		width: auto;
 	}
 
 	.datetime-range {

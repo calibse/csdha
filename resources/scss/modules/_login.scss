@@ -29,7 +29,7 @@ $window-width: 21em;
 	}
 
 	a {
-		color: inherit;
+		color: color.$header-fg;
 	}
 }
 
@@ -54,7 +54,7 @@ $window-width: 21em;
 	}
 
 	.name {
-		max-width: 15em;
+		width: 13em;
 		white-space: normal;
 	}
 
@@ -76,15 +76,10 @@ $window-width: 21em;
 .front-content {
 	margin-top: 2em;
 
-	input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="time"]),
-	select,
-	textarea,
-	fieldset {
-		width: 100%;
-	}
-
-	form p {
-		width: 100%;
+	form {
+		input, p {
+			width: 100%;
+		}
 	}
 
 	.title {

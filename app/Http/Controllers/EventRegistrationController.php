@@ -52,7 +52,7 @@ class EventRegistrationController extends Controller
         $step = 1;
         return view('event-registration.identity', [
             'step' => $step,
-            'programs' => Course::all(),
+            'programs' => $event->courses,
             'yearLevels' => $event->participants,
             'previousStepRoute' => route('events.registrations.consent.edit', [
                 'event' => $event->public_id

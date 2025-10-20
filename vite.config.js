@@ -24,6 +24,10 @@ export default defineConfig({
     server: {
         cors: {
             origin: '*'
+        },
+        proxy: {
+            '/font': 'http://127.0.0.1:8000',
+            '/images': 'http://127.0.0.1:8000',
         }
     }
 });

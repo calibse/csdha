@@ -12,7 +12,7 @@
 	<article class="article">
 		<x-alert/>
 		<ul class="item-list">
-		@foreach ($event->dates as $date)
+		@foreach ($dates as $date)
 			<li class="item event-date">
 				<time class="content">{{ $date->full_date }}</time>
 				<span class="context-menu">

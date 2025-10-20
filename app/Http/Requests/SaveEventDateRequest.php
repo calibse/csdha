@@ -11,15 +11,15 @@ class SaveEventDateRequest extends FormRequest
         return [
             'date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i'],
-            'end_time' => ['required', 'date_format:H:i']
+            'end_time' => ['required', 'date_format:H:i', 'after:start_time']
         ];
     }
 
     public function messages(): array
     {
         return [
-            'start_time' => 'The start time field must match the 24-hour format.', 
-            'end_time' => 'The end time field must match the 24-hour format.', 
+            'start_time.date_format' => 'The start time field must match the 24-hour format.', 
+            'end_time.date_format' => 'The end time field must match the 24-hour format.', 
         ];
     }
 }

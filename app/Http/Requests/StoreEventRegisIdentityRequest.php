@@ -18,8 +18,10 @@ class StoreEventRegisIdentityRequest extends MultiStepFormRequest
             'suffix_name' => ['max:10'],
             'student_id' => ['required', 'max:20',
                 'regex:/^([A-Z0-9]+)-([A-Z0-9]+)-([A-Z0-9]+)-([A-Z0-9]+)$/'],
-            'program' => ['required', 'integer', 'exists:courses,id'],
-            'year_level' => ['required', 'integer',
+            'program' => ['required', 'numeric', 'integer', 
+                new Exists($event->courses()
+                    ->getQuery(), 'id', [])],
+            'year_level' => ['required', 'numeric', 'integer',
                 new Exists($event->participants()
                     ->getQuery(), 'id', [])],
             'section' => ['required', 'exists:student_sections,section']

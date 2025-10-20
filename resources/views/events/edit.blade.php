@@ -103,7 +103,7 @@
 		</p>
 		<p>
 			<label>Narrative</label>
-			<textarea name="narrative">{{ $errors->any() ? old('narrative') : $event->narrative }}</textarea>
+			<a href="{{ $narrativeRoute }}">Edit here</a>
 		</p>
 		<p>
 			<label>Dates</label>

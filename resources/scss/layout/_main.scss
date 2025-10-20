@@ -152,15 +152,15 @@
 	ul {
 		margin: 0;
 		list-style: none;
-		padding: 0 1rem;
+		padding: 0 1em;
 		white-space: nowrap;
 		overflow-x: auto;
 	}
 
 	li {
 		display: inline-block;
-		margin-top: .5rem;
-		margin-right: 1rem;
+		margin-top: .5em;
+		margin-right: 1em;
 	}
 
 	a {
@@ -310,23 +310,33 @@
 		margin-right: 1em;
 		background-color: transparent;
 		border: 0;
-		text-decoration: none;
 		color: inherit;
 		width: auto;
 	}
 
-	a:not([href]) {
-		color: color.$toolbar-disabled-link;
+	a[href] {
+		color: inherit;
+		&:hover .text, &:focus .text {
+			text-decoration: underline;
+		}
 
 		.icon {
-			opacity: .5;
+			opacity: 1;
 		}
+	}
+
+	a {
+		color: color.$toolbar-disabled-link;
+		text-decoration: none;
 
 		&:hover .text, &:focus .text {
 			text-decoration: none;
 		}
-	}
 
+		.icon {
+			opacity: .5;
+		}
+	}
 }
 
 .main-action {

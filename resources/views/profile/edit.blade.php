@@ -14,7 +14,7 @@
 			</p>
 			<p>
 				<label>Google Account</label>
-			@if (auth()->user()->google && !auth->user()->email_verified_at)
+			@if (auth()->user()->google && !auth()->user()->email_verified_at)
 				Connected (Add an email to be able to remove this account)
 			@elseif (auth()->user()->google)
 				<a href="{{ $googleRoute }}">Remove</a>

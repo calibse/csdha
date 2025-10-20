@@ -11,9 +11,9 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         $uniqueEmail = Rule::unique(User::class, 'email')
-            ->ignore(auth()->user()->id);
+            ->ignore(auth()->user()->id)->withoutTrashed();
         $uniqueUsername = Rule::unique(User::class, 'username')
-            ->ignore(auth()->user()->id);
+            ->ignore(auth()->user()->id)->withoutTrashed();
         return [
             'avatar' => ['mimetypes:image/jpeg,image/png'],
             'remove_avatar' => ['nullable', 'integer'],

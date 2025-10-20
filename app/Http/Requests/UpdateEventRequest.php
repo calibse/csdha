@@ -45,7 +45,6 @@ class UpdateEventRequest extends FormRequest
                 'required', 'min:0', 'max:168',
             ],
             'description' => [new MaxText],
-            'narrative' => [new MaxText]
         ];
     }
 }

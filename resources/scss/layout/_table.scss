@@ -62,7 +62,7 @@ table {
         padding-bottom: .5em;
     }
 
-    thead ~ tbody tr {
+    thead + tbody tr {
         border-bottom: solid size.$line-width color.$table-divider;
         margin-bottom: 1em;
         padding-bottom: 1em;

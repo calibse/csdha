@@ -546,6 +546,15 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/update.php', 'update')->name('update');
 
+                Route::name('narrative.')->group(function () {
+
+                    Route::get('/narrative.html', 'editNarrative')
+                        ->name('edit');
+
+                    Route::put('/narrative.php', 'updateNarrative')
+                        ->name('update');
+                });
+
                 Route::name('dates.')->group(function () {
 
                     Route::get('/date-create.html', 'createDate')
@@ -559,10 +568,10 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                         /*
                         Route::get('/edit.html', 'editDate')->name('edit');
-                        */
 
                         Route::put('/update.php', 'updateDate')
                             ->name('update');
+                        */
 
                         Route::get('/confirm-delete.html',
                             'confirmDestroyDate')->name('confirmDestroy');

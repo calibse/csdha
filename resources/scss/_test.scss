@@ -8,21 +8,21 @@ $my-color: #000000;
 
 .textbox {
 	background-color: yellow;
-	height: 30rem;
-	width: 5rem;
+	height: 30em;
+	width: 5em;
 	float: left;
 }
 
 .box {
-	margin-left: 5rem;
+	margin-left: 5em;
 	background-color: yellow;
-	height: 30rem;
+	height: 30em;
 	display: block;
 
 	.divo, .diva {
 		background-color: $my-color;
-		width: 10rem;
-		height: 10rem;
+		width: 10em;
+		height: 10em;
 		display: inline-block;
 	}
 
@@ -36,7 +36,7 @@ $my-color: #000000;
 	}
 }
 
-@media (min-width: 30rem) {
+@media (min-width: 30em) {
 	.box {
 		background-color: green;
 	}

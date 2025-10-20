@@ -47,6 +47,13 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response) {
+            $domain = parse_url(config('app.url'), PHP_URL_HOST);
+            $route = '';
+            if ($domain === config('app.user_domain')) {
+                $route = 'user.login';
+            } elseif ($domain === config('app.admin_domain')) {
+                $route = 'admin.login';
+            }
             if ($response->getStatusCode() === 419) {
                 return redirect('/');
             }

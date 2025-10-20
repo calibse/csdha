@@ -7,7 +7,7 @@
 	@vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-	<p class="textbox"><a href="#box">Box</a> Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello  Hello Hello Hello Hello Hello Hello</p>
+	<p class="textbox"><a href="">Box</a> Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello  Hello Hello Hello Hello Hello Hello</p>
 	<a id="box" class="box">
 		<span class="divo"><img></span>
 		<span class="diva"></span>

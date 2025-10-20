@@ -41,7 +41,7 @@
                 <td>{{ $event->venue }}</td>
             </tr>
             <tr>
-                <th>Participants/Beneficiaries</th>
+                <th>Participants / Beneficiaries</th>
                 <td>{{ $activity->participants }}</td>
             </tr>
             <tr>

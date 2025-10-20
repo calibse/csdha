@@ -13,6 +13,12 @@
     }
 }
 
+.events.form {
+	textarea[name="narrative"] {
+		height: 16em;
+	}
+}
+
 .events.evaluations {
 	form {
 		.checkbox-field {
