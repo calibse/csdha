@@ -4,7 +4,7 @@
 @use "../size";
 
 .table-block {
-	margin: 1rem;
+	margin: 1em;
 	margin-top: 0;
 }
 
@@ -31,7 +31,7 @@ table {
 
         th {
             display: block;
-            padding: .25rem 0;
+            padding: .25em 0;
         }
     }
 
@@ -43,7 +43,7 @@ table {
     td {
         display: list-item;
         list-style: none;
-        padding: .25rem 0;
+        padding: .25em 0;
         hyphens: auto;
 
         pre, ul {
@@ -51,21 +51,21 @@ table {
         }
 
         ul {
-            padding-left: unset;
+            padding-left: 0;
             list-style: none;
         }
     }
 
     tr {
         display: block;
-	margin-bottom: .5rem;
-        padding-bottom: .5rem;
+	margin-bottom: .5em;
+        padding-bottom: .5em;
     }
 
     thead ~ tbody tr {
         border-bottom: solid size.$line-width color.$table-divider;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
+        margin-bottom: 1em;
+        padding-bottom: 1em;
     }
 
 	thead th {
@@ -73,7 +73,7 @@ table {
 	}
 
     tbody tr:first-child {
-        margin-top: 1rem;
+        margin-top: 1em;
     }
 }
 
@@ -82,7 +82,7 @@ table {
         display: table;
 
         tbody {
-            width: unset;
+            width: auto;
             display: table-row-group;
 
             th {
@@ -93,11 +93,11 @@ table {
 
         thead {
             display: table-header-group;
-            width: unset;
-            height: unset;
-            overflow: unset;
+            width: auto;
+            height: auto;
+            overflow: visible;
             text-align: left;
-            opacity: unset;
+            opacity: 1;
 
             tr {
 		border-bottom: solid size.$line-width color.$table-header-divider;
@@ -106,8 +106,7 @@ table {
 
         td, th {
             display: table-cell;
-            list-style: unset;
-            padding: 1rem 1rem 1rem 0;
+            padding: 1em 1em 1em 0;
             vertical-align: top;
         }
 
@@ -118,19 +117,19 @@ table {
 	}
 }
 
-@media (min-width: 31rem) {
+@media (min-width: 31em) {
 	table.table-2 {
 		@include table-wide;
 	}
 }
 
-@media (min-width: 68rem) {
+@media (min-width: 68em) {
 	table.table-4 {
 		@include table-wide;
 	}
 }
 
-@media (min-width: 70rem) {
+@media (min-width: 70em) {
 	table.table-6 {
 		@include table-wide;
 	}

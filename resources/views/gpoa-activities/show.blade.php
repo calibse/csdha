@@ -62,7 +62,7 @@
         </a>
     @endif
     </x-slot>
-    <article class="article document">
+    <div class="article document">
         <aside>
             <p>Status: {{ $activity->full_status }}</p>
         @if ($activity->comments)
@@ -135,6 +135,6 @@
             </tr>
             @endif
         </table>
-    </article>
+    </div>
 </x-layout.user>
 

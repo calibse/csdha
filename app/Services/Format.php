@@ -173,4 +173,46 @@ class Format
         return $date->timezone(config('timezone'))
             ->format(config('app.date_format'));
     }
+
+/*
+    public static function legacyScriptTag($entry)
+    {
+        $manifestPath = public_path('build/manifest.json');
+        $filename = '';
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+            $entry = trim($entry, "'\"");
+            if (isset($manifest[$entry])) {
+                $filename = $manifest[$entry]['file'];
+            }
+        }
+        if (true || $filename) {
+            return '<script nomodule defer src="' . asset('build/' . $filename)                 . '"></script>';
+        }
+        return '';
+    }
+*/
+
+    public static function legacyScriptTag($entry)
+    {
+        $manifestPath = public_path('build/manifest.json');
+        if (!file_exists($manifestPath)) {
+            return '';
+        }
+        $manifest = json_decode(file_get_contents($manifestPath), true);
+        $entry = trim($entry, "'\"");
+        $tags = [];
+        if (isset($manifest['vite/legacy-polyfills-legacy'])) {
+            $polyfillFile = $manifest['vite/legacy-polyfills-legacy']['file'];
+            $tags[] = '<script nomodule src="' . asset('build/' . 
+                $polyfillFile) . '"></script>';
+        }
+        if (isset($manifest[$entry])) {
+            $filename = $manifest[$entry]['file'];
+            $tags[] = '<script nomodule defer src="' . asset('build/' . 
+                $filename) . '"></script>';
+        }
+        return implode("\n", $tags);
+    }
+
 }

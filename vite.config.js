@@ -14,12 +14,12 @@ export default defineConfig({
             refresh: true,
         }),
         legacy({
-            targets: ['defaults', 'ie >= 11'],
+            targets: ['defaults', 'firefox < 4'],
         }),
     ],
     build: {
         minify: false,
-        cssMinify: true
+        cssMinify: false
     },
     server: {
         cors: {

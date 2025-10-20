@@ -1,14 +1,17 @@
 /* _attendance.scss */
 
+@use "../color";
+@use "../size";
+
 #id-scanner {
 	max-width: 100%;
 
 	.video {
-		height: calc(100vh - 11rem);
+		height: calc(100vh - 11em);
 		background-color: #000000;
 		position: relative;
-		border-bottom-left-radius: 1rem;
-		border-bottom-right-radius: 1rem;
+		border-bottom-left-radius: 1em;
+		border-bottom-right-radius: 1em;
 		overflow: hidden;
 		width: 100%;
 		object-fit: cover;
@@ -22,15 +25,15 @@
 	}
 
 	.indicator {
-		border-top-left-radius: 1rem;
-		border-top-right-radius: 1rem;
+		border-top-left-radius: 1em;
+		border-top-right-radius: 1em;
 		overflow: hidden;
 		margin-bottom: 0;
 		max-width: 100%;
-		border: solid .05rem var(--line-color);
-		background-color: var(--bg-color);
+		border: solid .05em color.$line;
+		background-color: color.$background;
 		position: relative;
-		height: 3rem;
+		height: 3em;
 
 		@keyframes progress {
 			from {
@@ -52,51 +55,51 @@
 
 		&.success {
 			.signal {
-				background-color: var(--success-color);
+				background-color: color.$success;
 				animation: glow 3s forwards;
 			}
 
 			.timeout {
-				background-color: var(--color-4);
+				background-color: color.$primary;
 				animation: progress 4s linear 3s forwards;
 			}
 
 			.status .icon {
-				color: var(--success-color);
+				color: color.$success;
 			}
 		}
 
 		&.failure {
 			.signal {
-				background-color: var(--failure-color);
+				background-color: color.$failure;
 				animation: glow 3s forwards;
 			}
 
 			.timeout {
-				background-color: var(--color-4);
+				background-color: color.$primary;
 				animation: progress 4s linear 3s forwards;
 			}
 
 			.status .icon {
-				color: var(--failure-color);
+				color: color.$failure;
 			}
 
 		}
 
 		&.processing {
 			.signal {
-				background-color: var(--color-4);
+				background-color: color.$primary;
 			}
 			
 			.status {
 				animation: none;
 
 				.text {
-					color: var(--bg-color);
+					color: color.$background;
 				}
 
 				.icon {
-					color: var(--color-1);
+					color: color.$accent;
 				}
 			}
 		}
@@ -113,7 +116,7 @@
 		.timeout {
 			position: absolute;	
 			display: block;
-			height: .2rem;
+			height: .2em;
 			width: 100%;
 		}
 
@@ -129,7 +132,7 @@
 		.status {
 			position: absolute;	
 			display: block;
-			padding: .9rem;
+			padding: .9em;
 			text-align: center;
 			width: 100%;
 			animation: fade-in 2.5s;
@@ -139,26 +142,26 @@
 			}
 
 			.icon {
-				margin-right: .5rem;
+				margin-right: .5em;
 			}
 
 
 			&.success .icon {
-				color: var(--success-color);
+				color: color.$success;
 			}
 
 			&.failure .icon {
-				color: var(--failure-color);
+				color: color.$failure;
 			}
 
 			&.idle .icon {
-				color: var(--color-4);
+				color: color.$primary;
 			}
 
 			&.processing {
 				animation: none;
 				.icon {
-					color: var(--color-1);
+					color: color.$accent;
 				}
 			}
 		}

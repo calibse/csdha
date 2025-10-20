@@ -15,7 +15,6 @@
 @use "modules/login";
 @use "modules/events";
 @use "modules/gpoa";
-@use "modules/funds";
 @use "modules/attendance";
 @use "modules/signup-invitation";
 @use "modules/event-registration";
@@ -32,6 +31,7 @@
 @use "modules/partnerships";
 */
 
+/*
 :root {
 	--page-width: 72rem;
     --page-padding: 1rem;
@@ -58,12 +58,9 @@
     --color-2: #00bbe3;
     --color-3: #01a5d9;
     --color-4: #1F497D;
-    /*
-    --color-4: #20355a;
-    --color-5: #1c2d4b;
-    */
     --color-5: #20355a;
 }
+*/
 
 /*
 @media (prefers-color-scheme: dark) {
@@ -74,12 +71,12 @@
 
 @font-face {
     font-family: "MuseoModerno";
-    src: url("/resources/fonts/MuseoModerno.ttf");
+    src: url("/font/MuseoModerno.ttf");
 }
 
 @font-face {
     font-family: "Oxanium";
-    src: url("/resources/fonts/Oxanium.ttf");
+    src: url("/font/Oxanium.ttf");
 }
 
 @source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";

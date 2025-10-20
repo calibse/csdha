@@ -38,7 +38,7 @@
 			<span class="text">Browse Closed GPOAs</span>
 		</a>
 	</x-slot:toolbar>
-	<article class="article">
+	<div class="article">
 	@if (session('status') === 'returned')
 		<x-alert>
 			Activity returned to the {{ session('position') }}.
@@ -103,5 +103,5 @@
 			<p>No one has added anything yet.</p>
 		@endswitch
 	@endif
-	</article>
+	</div>
 </x-layout.user>

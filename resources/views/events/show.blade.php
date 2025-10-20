@@ -18,7 +18,7 @@
             <span class="text">{{ $event->accomReport?->approved_at ? 'View' : 'Submit' }} AR</span>
         </a>
     </x-slot:toolbar>
-    <article class="article document">
+    <div class="article document">
         <x-alert/>
 
         <h2>{{ $activity->name }}</h2>
@@ -164,5 +164,5 @@
         </p>
         @endcan
         --}}
-    </article>
+    </div>
 </x-layout.user>

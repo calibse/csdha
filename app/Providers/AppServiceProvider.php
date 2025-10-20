@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Vite;
+use App\Services\Format;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,23 +25,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::directive('scriptLegacy', function ($entry) {
-            if (!app()->environment('production')) {
+            if (Vite::isRunningHot()) {
                 return '';
             }
-            $manifestPath = public_path('build/manifest.json');
-            $filename = '';
-
-            if (file_exists($manifestPath)) {
-                $manifest = json_decode(file_get_contents($manifestPath), true);
-                $entry = trim($entry, "'\""); 
-                if (isset($manifest[$entry])) {
-                    $filename = $manifest[$entry]['file'];
-                }
-            }
-            if (true || $filename) {
-                return '<script nomodule defer src="' . asset('build/' . $filename) . '"></script>';
-            }
-            return '';
+            return Format::legacyScriptTag($entry);
         });
 
         /*
@@ -47,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
         */
+
         if ($this->app->runningInConsole()) return;
         if (request()->getHost() === config('app.user_domain')) {
             View::share('siteContext', 'user');

@@ -27,4 +27,6 @@ Thumbs.db
 .env.admin
 .env.production.admin
 /public/icon
+/public/font
+/public/images
 

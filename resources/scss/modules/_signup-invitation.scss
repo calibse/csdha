@@ -1,14 +1,17 @@
-/* sign-up-invitation.css */
+/* _signup-invitation.css */
+
+@use "../size";
+@use "../color";
 
 .signup-invitation {
 	margin: 0 auto;
-	padding: .01rem 1rem;
-	padding-bottom: 1rem;
-	max-width: var(--page-width);
+	padding: .01em 1em;
+	padding-bottom: 1em;
+	max-width: size.$page-width;
 	background-color: #ffffff;
 
 	.title {
-		font-size: 1.2rem;
+		font-size: 1.2em;
 	}
 
 

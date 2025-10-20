@@ -30,17 +30,17 @@
 
 .alert.alert-info {
 	background-color: color.$success;
-	margin: .3rem 0rem;
+	margin: .3em 0em;
 	animation: collapse .001s 5s forwards;
-	padding: .5rem 1rem;
+	padding: .5em 1em;
 }
 
 .alert.alert-error {
 	background-color: color.$failure;
-	padding: 1rem;
-	margin: 1rem 0;
+	padding: 1em;
+	margin: 1em 0;
 	max-width: size.$text-width;
-	width: max-content;
+	width: auto;
 
 	p {
 		width: auto;

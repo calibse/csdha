@@ -1,7 +1,7 @@
 @php
 $routeParams = ['gspoa' => $gspoa->id]
 @endphp
-<x-layout.user  title="Edit GSPOA" class="gspoas form" route="gspoas.show" :$routeParams>
+<x-layout.user form title="Edit GSPOA" class="gspoas form" route="gspoas.show" :$routeParams>
     <article class="article">
         <form method="POST" action="{{ route('gspoas.update', ['gspoa' => $gspoa->id]) }}">
             @method('PUT')

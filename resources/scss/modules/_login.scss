@@ -3,30 +3,29 @@
 @use "../color";
 @use "../size";
 
-$window-width: 21rem;
+$window-width: 21em;
 
 .front-body {
-
+	background-color: color.$header-bg;
 }
 
 .front-main {
-	background-image: url("/resources/images/app-cover.jpg");
+	background-image: url("/images/app-cover.jpg");
 	background-size: cover;
-	background-color: color.$header-bg;
+	background-color: color.$secondary;
 	width: 100%;
 	min-height: 100vh;
 
 	.content-block {
 		position: relative;
-		margin: 0 auto;
-		border-radius: size.$corner-roundness;
-		padding: 0 1rem;
-		padding-bottom: 2.5rem;
+		padding: 0 1em;
+		padding-bottom: 2.5em;
 		background-color: color.$header-bg;
 		color: color.$header-fg;
 		height: 100vh;
+		width: $window-width;
 		max-width: 100%;
-		padding-top: 1rem;
+		padding-top: 1em;
 	}
 
 	a {
@@ -43,12 +42,11 @@ $window-width: 21rem;
 	.logo, .name {
 		display: inline-block;
 		vertical-align: middle;
-		margin-bottom: .5rem;
+		margin-bottom: .5em;
 	}
 
 	.logo {
-		width: 5rem;
-		max-width: 100%;
+		width: 5em;
 
 		img {
 			width: 100%;
@@ -56,27 +54,27 @@ $window-width: 21rem;
 	}
 
 	.name {
-		max-width: 13.7rem;
-		white-space: wrap;
+		max-width: 15em;
+		white-space: normal;
 	}
 
 	.org-name {
-		white-space: wrap;
+		white-space: normal;
 		display: block;
 		font-family: 'MuseoModerno';
-		font-size: 1.1rem;
+		font-size: 1.1em;
 	}
 
 	.app-name {
-		white-space: wrap;
+		white-space: normal;
 		display: block;
 		font-family: 'Oxanium';
-		font-size: 1.4rem;
+		font-size: 1.4em;
 	}
 }
 
 .front-content {
-	margin-top: 2rem;
+	margin-top: 2em;
 
 	input:not([type="checkbox"]):not([type="radio"]):not([type="date"]):not([type="time"]),
 	select,
@@ -90,41 +88,41 @@ $window-width: 21rem;
 	}
 
 	.title {
-		font-size: 1.2rem;
+		font-size: 1.2em;
 	}
 
 	.sign-in-separator {
 		white-space: nowrap;
 
 		.text, .line {
-			display: inline-block;
+			display: block;
 			vertical-align: middle;
 		}
 
 		.text {
-			width: 2.5rem;
-			padding: 0 .5rem;
+			text-align: center;
+			padding: 0 .5em;
 			margin: 0;
+			width: auto;
 		}
 
 		.line {
 			width: 42%;
-			max-width: calc(50% - 1.5rem);
-			border-top: solid .1rem color.$icon-dark;
+			max-width: calc(50% - 1.5em);
+			border-top: solid .1em color.$icon-dark;
 		}
 	}
 
 	.sign-in-with {
-		margin: 1rem 0;
+		margin: 1em 0;
 	}
 
 	.alert {
 		color: color.$foreground;
-		width: 100%;
 	}
 
 	.signin-link {
-		width: 100%;
+		width: auto;
 
 		&:hover, &:focus {
 			border-color: color.$header-fg;
@@ -132,19 +130,28 @@ $window-width: 21rem;
 	}
 }
 
-@media (min-width: $window-width + 2rem) {
+@media (min-width: 0em) {
+	.front-main .content-block {
+		width: 100%;
+		height: 100vh;
+	}
+}
+
+@media (min-width: #{($window-width + 4em)}) {
 	.front-main {
-		padding: 1rem 0;
+		padding: 1em 0;
 	}
 
 	.front-main .content-block {
 		border-radius: size.$corner-roundness;
 		width: $window-width;
+		border-radius: size.$corner-roundness;
 		height: auto;
+		margin: 0 auto;
 	}
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 40em) {
 	.front-main {
 		padding: 0;
 	}

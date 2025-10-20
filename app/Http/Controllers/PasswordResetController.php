@@ -20,8 +20,7 @@ class PasswordResetController extends Controller
     public function __construct()
     {
         $domain = request()->getHost();
-        self::$siteContext = $domain === config('app.user_domain') ||
-            $domain === '127.0.0.1' ? 'user' : 'admin';
+        self::$siteContext = $domain === config('app.user_domain') ? 'user' : 'admin';
     }
 
     public function createPasswordReset()

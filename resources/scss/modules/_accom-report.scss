@@ -2,16 +2,11 @@
 
 .accom-report.generate {
 	.article {
-		display: flex;
-		flex-direction: column;
-		height: calc(100vh - 5.5rem);
 	}
 
 	.pdf-control {
 	}
 
 	.pdf-document {
-		flex: 1 1 auto;
-		height: calc(100vh - 13rem);
 	}	
 }

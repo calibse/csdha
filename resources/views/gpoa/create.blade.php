@@ -1,4 +1,4 @@
-<x-layout.user route="gpoa.index" title="{{ $update ? 'Edit' : 'Create' }} GPOA" class="gpoa form">
+<x-layout.user form route="gpoa.index" title="{{ $update ? 'Edit' : 'Create' }} GPOA" class="gpoa form">
     <article class="article">
         <x-alert type="error"/>
         <form method="post" action="{{ $update ? route('gpoa.update') : route('gpoa.store') }}">

@@ -1,5 +1,5 @@
 <x-layout.user form class="profile form" :$backRoute title="Edit Account">
-	<article class="article">
+	<div class="article">
 		<x-alert/>
 		<form method="POST" action="{{ $formAction }}" enctype="multipart/form-data">
 		@csrf
@@ -48,5 +48,5 @@
 				<button type="submit">Update profile</button>
 			</p>
 		</form>
-	</article>
+	</div>
 </x-layout.editing>
