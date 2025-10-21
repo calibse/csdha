@@ -121,6 +121,5 @@ function activateAttendanceRecorder() {
     startQrScanner();
 }
 
-setTimezone();
 activateAttendanceRecorder();
 
