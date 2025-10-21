@@ -12,12 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('gpoas', function (Blueprint $table) {
-/*
             $table->dropUnique(['active']);
             $table->dropColumn('active');
             $table->tinyInteger('active')
                 ->storedAs('if(closed_at is null, 1, null)');
-*/
             $table->unique('active');
         });
     }
