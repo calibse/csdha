@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('gpoa_activity_modes', function (Blueprint $table) {
-            //$table->softDeletes();
+/*
+            $table->softDeletes();
             $table->tinyInteger('unarchived')
                 ->storedAs('if(deleted_at is null, 1, null)');
+*/
             $table->unique(['name', 'unarchived']);
         });
     }
