@@ -8,16 +8,16 @@
             @csrf
             <fieldset>
                 <legend>Layout</legend>
-                <p class="checkbox-field">
-                    <input id="full-width" name="full_width" type="checkbox" {{ $attachment->full_width ? 'checked' : null }}>
+                <p class="checkbox">
+                    <input id="full-width" name="full_width" type="checkbox" {{ $attachment->full_width ? 'checked' : null }} {{ $attachment->orientation === 'landscape' ? 'disabled' : null }}>
                     <label for="full-width">Full width</label>
                 </p>
-                <p class="checkbox-field">
-                    <input id="standalone" name="standalone" type="checkbox" {{ $attachment->standalone ? 'checked' : null }}>
+                <p class="checkbox">
+                    <input id="standalone" name="standalone" type="checkbox" {{ $attachment->standalone ? 'checked' : null }} {{ $attachment->orientation === 'landscape' ? 'disabled' : null }}>
                     <label for="standalone">Standalone</label>
                 </p>
             </fieldset>
-            <p class="submit-buttons">
+            <p class="form-submit">
                 <button>Update</button>
                 <button form="delete-form">Delete attachment</button>
             </p>

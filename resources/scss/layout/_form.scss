@@ -1,6 +1,7 @@
 /* _form.scss */
 
 @use "../size";
+@use "../color";
 
 form {
 	label {
@@ -35,7 +36,6 @@ form {
 	}
 
     .checkbox {
-        white-space: nowrap;
 
         input[type="checkbox"], input[type="radio"] {
             display: inline-block;
@@ -57,8 +57,12 @@ form {
 		margin-right: .5em;
 
 		+ label {
-            display: inline;
+			display: inline;
 			margin-bottom: auto;
+		}
+
+		&[disabled] + label {
+			color: color.$disabled-field;
 		}
 	}
 
@@ -122,7 +126,8 @@ form {
 }
 
 .submit-buttons, .submit-button {
-	max-width: size.$text-width;
+	width: size.$text-width;
+	max-width: 100%;
 	text-align: right;
 
 	button {

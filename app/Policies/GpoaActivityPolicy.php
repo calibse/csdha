@@ -18,8 +18,9 @@ class GpoaActivityPolicy
 
     public function view(User $user, GpoaActivity $activity): Response
     {
+        $gpoaActive = $activity?->gpoa->active;
         $canView = $user->hasPerm('general-plan-of-activities.view');
-        if (!$canView) {
+        if (!$canView || !$gpoaActive) {
             return Response::deny();
         }
         $currentStep = $activity->current_step;

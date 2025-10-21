@@ -7,10 +7,10 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 @switch ($siteContext)
 @case ('user')
-	<title>{{ $title }} | CSDHA</title>
+	<title>{{ $title }} - CSDHA</title>
 	@break
 @case ('admin')
-	<title>{{ $title }} | CSDHA Admin</title>
+	<title>{{ $title }} - CSDHA Admin</title>
 	@break
 @endswitch
 	{{--

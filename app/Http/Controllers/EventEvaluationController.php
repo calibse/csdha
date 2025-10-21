@@ -168,6 +168,7 @@ class EventEvaluationController extends Controller
             'formTitle' => 'Evaluation',
             'eventName' => $event->gpoaActivity->name,
             'event' => $event,
+            'form' => $event->evalForm,
             'completeSteps' => count($inputs),
             'routes' => $routes
         ];

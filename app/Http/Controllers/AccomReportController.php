@@ -17,6 +17,7 @@ use App\Models\Gpoa;
 use App\Services\Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateAccomReportBackgroundRequest;
+use App\Http\Requests\GenerateAccomReportRequest;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -242,14 +243,14 @@ class AccomReportController extends Controller implements HasMiddleware
             'Accomplishment report approved.');
     }
 
-    public function generate(Request $request)
+    public function generate(GenerateAccomReportRequest $request)
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         $start = false;
         $empty = true;
         $fileRoute = null;
-        if ($startDate && $endDate) {
+        if ($startDate) {
             $start = true;
             $events = Event::active()->approved($startDate, $endDate)->exists();
             $fileRoute = $events ? route('accom-reports.stream', [
@@ -257,6 +258,9 @@ class AccomReportController extends Controller implements HasMiddleware
                 'end_date' => $endDate
             ]) : null;
             $empty = $events ? false : true;
+        } elseif (session('errors')?->any()) {
+	    $empty = false;
+	    $start = true;
         } elseif (Event::active()->approved()->exists()) {
             $empty = false;
             $start = true;
@@ -279,7 +283,7 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        if (!($startDate && $endDate)) abort(404);
+        if (!$startDate) abort(404);
         $allEvents = Event::active()->approved($startDate, $endDate)->get();
         if (!$allEvents) abort(404);
         foreach ($allEvents as $event) {

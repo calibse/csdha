@@ -6,11 +6,11 @@
                 <div class="inline">
                     <p>
                         <label>Start date</label>
-                        <input type="date" name="start_date" value="{{ $startDate }}">
+                        <input type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
                     </p>
                     <p>
                         <label>End date</label>
-                        <input type="date" name="end_date" value="{{ $endDate }}">
+                        <input type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
                     </p>
                     <p>
                         <button>Generate</button>

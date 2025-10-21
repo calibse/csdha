@@ -57,6 +57,9 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($response->getStatusCode() === 419) {
                 return redirect('/');
             }
+            if ($response->getStatusCode() === 404) {
+                return response('', 404);
+            }
             return $response;
         });
     })->create();

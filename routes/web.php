@@ -50,6 +50,8 @@ use App\Http\Middleware\CheckEventRegisStep;
 use App\Http\Middleware\CheckEventEvalStep;
 use App\Http\Middleware\CheckEventEvalForm;
 use App\Http\Middleware\CheckPasswordResetToken;
+use App\Http\Middleware\CheckActiveGpoa;;
+use App\Http\Middleware\EnsureGpoaIsActive;;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
@@ -307,7 +309,7 @@ Route::name('profile.')->controller(PasswordResetController::class)
 Route::domain(config('app.user_domain'))->group(function () {
 
     Route::prefix('event-register-{event}')->name('events.registrations.')
-        ->middleware(['can:register,event'])
+        ->middleware([EnsureGpoaIsActive::class, 'can:register,event'])
         ->controller(EventRegistrationController::class)->group(function () {
 
         Route::get('/index.html', 'editConsentStep')->name('consent.edit');
@@ -338,7 +340,8 @@ Route::domain(config('app.user_domain'))->group(function () {
     })->where('slash', '\/');
 
     Route::prefix('event-eval-form-{event}')->name('events.evaluations.')
-        ->middleware(['can:evaluate,event', CheckEventEvalForm::class])
+        ->middleware([EnsureGpoaIsActive::class, 'can:evaluate,event', 
+        CheckEventEvalForm::class])
         ->controller(EventEvaluationController::class)->group(function () {
 
         Route::get('/index.html', 'editConsentStep')->name('consent.edit');
@@ -447,7 +450,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
     });
 
     Route::name('gpoa.')->middleware(CheckGpoaActivity::class)
-            ->group(function () {
+        ->group(function () {
 
         Route::get('/gpoa.html', [GpoaController::class, 'index'])
             ->name('index');
@@ -455,6 +458,14 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         Route::prefix('gpoa')->group(function () {
 
             Route::controller(GpoaController::class)->group(function () {
+
+                Route::get('/create.html', 'create')->name('create');
+
+                Route::post('/store.php', 'store')->name('store');
+            });
+
+            Route::controller(GpoaController::class)
+                ->middleware(CheckActiveGpoa::class)->group(function () {
 
                 Route::get('/gen-pdf/gpoa_report.pdf', 'streamPdf')
                     ->name('genPdf');
@@ -466,10 +477,6 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/close.php', 'close')->name('close');
 
-                Route::get('/create.html', 'create')->name('create');
-
-                Route::post('/store.php', 'store')->name('store');
-
                 Route::get('/edit.html', 'edit')->name('edit');
 
                 Route::put('/update.php', 'update')->name('update');
@@ -477,6 +484,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
             });
 
             Route::controller(GpoaActivityController::class)
+                    ->middleware(CheckActiveGpoa::class)
                     ->name('activities.')->group(function () {
 
                 Route::get('/create-activity.html', 'create')->name('create');
@@ -528,13 +536,12 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         });
     });
 
-    Route::name('events.')->group(function () {
 
-        Route::controller(EventController::class)->group(function () {
+    Route::get('/events.html', [EventController::class, 'index'])
+        ->name('events.index');
 
-            Route::get('/events.html', 'index')->name('index');
-
-        });
+    Route::name('events.')->middleware(CheckActiveGpoa::class)
+        ->group(function () {
 
         Route::prefix('event-{event}')->group(function () {
 
@@ -678,10 +685,12 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         })->where('slash', '\/');
     });
 
-    Route::controller(AccomReportController::class)->name('accom-reports.')
-            ->group(function () {
+    Route::get('/accom-reports.html', [AccomReportController::class, 'index'])
+        ->name('accom-reports.index');
 
-        Route::get('/accom-reports.html', 'index')->name('index');
+    Route::controller(AccomReportController::class)
+            ->middleware(CheckActiveGpoa::class)->name('accom-reports.')
+            ->group(function () {
 
         Route::get('/accom-reports/change-background.html', 
             'editBackground')->name('background.edit');

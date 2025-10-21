@@ -33,5 +33,8 @@ class AccomReportPolicy
         Response::allow();
     }
 
-
+    public function generate(User $user): Response
+    {
+        Response::allow();
+    }
 }

@@ -21,7 +21,7 @@
 		object {
 			width: 100%;
 			height: 11cm;
-			max-height: calc(100vh - 8em);
+			max-height: calc(100vh - 10em);
 
 			p {
 				margin-left: 1em;
@@ -34,7 +34,8 @@
 .image-file {
 	margin-left: 0;	
 	margin-right: 0;	
-	max-width: size.$text-width;
+	width: size.$text-width;
+	max-width: 100%;
 
 	img {
 		width: 100%;

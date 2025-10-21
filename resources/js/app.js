@@ -96,6 +96,9 @@ function startQrScanner() {
         case 200:
             showQrScannerStatus("success");
             break;
+        case 403:
+            showQrScannerStatus("forbidden");
+            break;
         case 404:
             showQrScannerStatus("failure");
             break;

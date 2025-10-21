@@ -341,7 +341,12 @@ class Event extends Model
     {
         $query->withAggregate('dates', 'date')
             ->whereRelation('accomReport', 'status', 'approved');
-        if ($startDate && $endDate) {
+        if ($startDate && !$endDate) {
+            $query->whereHas('dates', function ($query)
+                    use ($startDate) {
+                $query->where('date', '>=', $startDate);
+            });
+        } elseif ($startDate && $endDate) {
             $query->whereHas('dates', function ($query)
                     use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);

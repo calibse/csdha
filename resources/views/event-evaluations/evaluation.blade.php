@@ -3,7 +3,7 @@
     <form id="current-form" method="post" action="{{ $submitRoute }}">
         @csrf
         <fieldset>
-            <legend>Overall Satisfaction</legend>
+            <legend>{{ $form?->overall_satisfaction ?? 'Overall Satisfaction' }}</legend>
             <p class="checkbox">
                 <input id="overall-satisfaction-1" name="overall_satisfaction" type="radio" value="1" {{ (old('overall_satisfaction') ?? ($inputs['overall_satisfaction'] ?? null)) === '1' ? 'checked' : null }}>
                 <label for="overall-satisfaction-1">Very Satisfied</label>
@@ -26,7 +26,7 @@
             </p>
         </fieldset>
         <fieldset>
-            <legend>Content Relevance</legend>
+            <legend>{{ $form?->content_relevance ?? 'Content Relevance' }}</legend>
             <p class="checkbox">
                 <input id="content-relevance-1" name="content_relevance" type="radio" value="1" {{ (old('content_relevance') ?? ($inputs['content_relevance'] ?? null)) === '1' ? 'checked' : null }}>
                 <label for="content-relevance-1">Highly Relevant</label>
@@ -49,7 +49,7 @@
             </p>
         </fieldset>
         <fieldset>
-            <legend>Speaker Effectiveness</legend>
+            <legend>{{ $form?->speaker_effectiveness ?? 'Speaker Effectiveness' }}</legend>
             <p class="checkbox">
                 <input id="speaker-effectiveness-1" name="speaker_effectiveness" type="radio" value="1" {{ (old('speaker_effectiveness') ?? ($inputs['speaker_effectiveness'] ?? null)) === '1' ? 'checked' : null }}>
                 <label for="speaker-effectiveness-1">Excellent</label>
@@ -72,7 +72,7 @@
             </p>
         </fieldset>
         <fieldset>
-            <legend>Engagement Level</legend>
+            <legend>{{ $form?->engagement_level ?? 'Engagement Level' }}</legend>
             <p class="checkbox">
                 <input id="engagement-level-1" name="engagement_level" type="radio" value="1" {{ (old('engagement_level') ?? ($inputs['engagement_level'] ?? null)) === '1' ? 'checked' : null }}>
                 <label for="engagement-level-1">Extremely Engaging</label>
@@ -95,7 +95,7 @@
             </p>
         </fieldset>
         <fieldset>
-            <legend>Duration</legend>
+            <legend>{{ $form?->duration ?? 'Duration' }}</legend>
             <p class="checkbox">
                 <input id="duration-1" name="duration" type="radio" value="1" {{ (old('duration') ?? ($inputs['duration'] ?? null)) === '1' ? 'checked' : null }}>
                 <label for="duration-1">Too Short</label>
@@ -110,24 +110,24 @@
             </p>
         </fieldset>
         <p>
-            <label>Topics Covered</label>
-            <textarea name="topics_covered">{{ old('topics_covered') ?? ($inputs['topics_covered'] ?? null) }}</textarea>
+            <label>{{ $form?->topics_covered ?? 'Topics Covered' }}</label>
+            <textarea name="topics_covered">{{ $errors->any() ? old('topics_covered') : ($inputs['topics_covered'] ?? null) }}</textarea>
         </p>
         <p>
-            <label>Suggestions for Improvement</label>
-            <textarea name="suggestions_for_improvement">{{ old('suggestions_for_improvement') ?? ($inputs['suggestions_for_improvement'] ?? null) }}</textarea>
+            <label>{{ $form?->suggestions_for_improvement ?? 'Suggestions for Improvement' }}</label>
+            <textarea name="suggestions_for_improvement">{{ $errors->any() ? old('suggestions_for_improvement') : ($inputs['suggestions_for_improvement'] ?? null) }}</textarea>
         </p>
         <p>
-            <label>Future Topics</label>
-            <textarea name="future_topics">{{ old('future_topics') ?? ($inputs['future_topics'] ?? null) }}</textarea>
+            <label>{{ $form?->future_topics ?? 'Future Topics' }}</label>
+            <textarea name="future_topics">{{ $errors->any() ? old('future_topics') : ($inputs['future_topics'] ?? null) }}</textarea>
         </p>
         <p>
-            <label>Overall Experience</label>
-            <textarea name="overall_experience">{{ old('overall_experience') ?? ($inputs['overall_experience'] ?? null) }}</textarea>
+            <label>{{ $form?->overall_experience ?? 'Overall Experience' }}</label>
+            <textarea name="overall_experience">{{ $errors->any() ? old('overall_experience') : ($inputs['overall_experience'] ?? null) }}</textarea>
         </p>
         <p>
-            <label>Additional Comments (optional)</label>
-            <textarea name="additional_comments">{{ old('additional_comments') ?? ($inputs['additional_comments'] ?? null) }}</textarea>
+            <label>{{ $form?->additional_comments ?? 'Additional Comments' }} (optional)</label>
+            <textarea name="additional_comments">{{ $errors->any() ? old('additional_comments') : ($inputs['additional_comments'] ?? null) }}</textarea>
         </p>
         <p class="form-submit">
             <button>Next</button>

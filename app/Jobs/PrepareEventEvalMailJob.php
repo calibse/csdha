@@ -34,9 +34,9 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
             "{$eventDate->date->format('Y-m-d')} {$eventDate->end_time}",
             $event->timezone);
         $delayHours = $event->evaluation_delay_hours;
-        $delayDate = $date->addHours($delayHours);
-        $eventPassed = $date->diffInHours(now($event->timezone), false) >=
-            $delayHours;
+        $delayDate = $date->copy()->addHours($delayHours);
+        $eventPassed = $date->copy()->diffInHours(now($event->timezone), 
+            false) >= $delayHours;
         $jobs = [];
         // $eventPassed = true;
         foreach ($eventDate->attendees()->wherePivot('eval_mail_sent', 0)

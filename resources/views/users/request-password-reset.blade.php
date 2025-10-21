@@ -1,4 +1,4 @@
-<x-layout.user class="password-reset form" :$backRoute title="Reset Password">
+<x-layout.user form class="password-reset form" :$backRoute title="Reset Password">
 	<div class="article">
 		<form method="post" action="{{ $formAction }}">
 		@csrf

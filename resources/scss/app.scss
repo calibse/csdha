@@ -22,6 +22,7 @@
 @use "modules/positions";
 @use "modules/settings";
 @use "test";
+@use "font";
 
 /*
 @use "modules/ui-controls";
@@ -69,12 +70,12 @@
 */
 
 @font-face {
-    font-family: "MuseoModerno";
+    font-family: MuseoModerno;
     src: url("/font/MuseoModerno.ttf");
 }
 
 @font-face {
-    font-family: "Oxanium";
+    font-family: Oxanium;
     src: url("/font/Oxanium.ttf");
 }
 
@@ -86,4 +87,12 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+	font-family: font.$font;
 }

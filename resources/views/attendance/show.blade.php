@@ -27,11 +27,15 @@
 {
     "success": {
         "class": "success",
-        "text": "ID Checked In"
+        "text": "ID checked in"
+    },
+    "forbidden": {
+        "class": "failure",
+        "text": "Event has ended"
     },
     "failure": {
         "class": "failure",
-        "text": "ID Not Found"
+        "text": "ID not found"
     },
     "idle": {
         "class": "idle",

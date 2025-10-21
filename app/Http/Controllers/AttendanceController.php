@@ -36,11 +36,19 @@ class AttendanceController extends Controller implements HasMiddleware
     {
         $regis = EventRegistration::where('token', $request->token)
             ->whereBelongsTo($eventDate->event)->first();
+        $event = $eventDate->event;
+        $start = Carbon::parse("{$eventDate->date->format('Y-m-d')} " .
+            "{$eventDate->start_time}");
+        $end = Carbon::parse("{$eventDate->date->format('Y-m-d')} " .
+            "{$eventDate->end_time}");
+        $ongoing = Carbon::now($event->timezone)->between($start, $end);
+        if (!$ongoing) {
+            return response([], 403);
+        }
         if (!$regis) {
             return response([], 404);
         }
         $student = $regis->student;
-        $event = $eventDate->event;
         if ($event->dates()->whereAttachedTo($student, 'attendees')
                 ->exists()) {
             return response([], 200);

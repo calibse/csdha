@@ -2,6 +2,7 @@
 
 @use "../color";
 @use "../size";
+@use "../font";
 
 $window-width: 21em;
 
@@ -61,14 +62,14 @@ $window-width: 21em;
 	.org-name {
 		white-space: normal;
 		display: block;
-		font-family: 'MuseoModerno';
+		font-family: MuseoModerno, font.$font;
 		font-size: 1.1em;
 	}
 
 	.app-name {
 		white-space: normal;
 		display: block;
-		font-family: 'Oxanium';
+		font-family: Oxanium, font.$font;
 		font-size: 1.4em;
 	}
 }

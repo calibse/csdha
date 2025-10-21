@@ -24,7 +24,7 @@
         <h2>{{ $activity->name }}</h2>
         <table class="table-2">
             <colgroup>
-                <col style="width: 9rem;">
+                <col style="width: 12em;">
             </colgroup>
             <tr>
                 <th>Date</th>

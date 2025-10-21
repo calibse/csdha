@@ -55,9 +55,10 @@ class Image
         $image = IImage::read($this->image);
         $width = $image->width();
         $height = $image->height();
-        if ($width > $height) {
+        $portraitThreshold = 1.25 * $height;
+        if ($width > $height && $width > $portraitThreshold) {
             $orientation = 'landscape';
-        } elseif ($width < $height) {
+        } elseif ($width < $height || $width <= $portraitThreshold) {
             $orientation = 'portrait';
         } else {
             $orientation = 'square';

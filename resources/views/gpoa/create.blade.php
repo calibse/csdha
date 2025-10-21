@@ -34,19 +34,19 @@
             --}}
             <p>
                 <label>Academic start date</label>
-                <input type="date" name="start_date" value="{{ old('start_date') ?? $gpoa?->academicPeriod->start_date }}">
+                <input type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $gpoa?->academicPeriod->start_date }}">
             </p>
             <p>
                 <label>End date</label>
-                <input type="date" name="end_date" value="{{ old('end_date') ?? $gpoa?->academicPeriod->end_date }}">
+                <input type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $gpoa?->academicPeriod->end_date }}">
             </p>
             <p>
                 <label>Head of Student Services</label>
-                <input name="head_of_student_services" value="{{ old('head_of_student_services') ?? $gpoa?->academicPeriod->head_of_student_services }}">
+                <input name="head_of_student_services" value="{{ $errors->any() ? old('head_of_student_services') : $gpoa?->academicPeriod->head_of_student_services }}">
             </p>
             <p>
                 <label>Branch Director</label>
-                <input name="branch_director" value="{{ old('branch_director') ?? $gpoa?->academicPeriod->branch_director }}">
+                <input name="branch_director" value="{{ $errors->any() ? old('branch_director') : $gpoa?->academicPeriod->branch_director }}">
             </p>
             <p class="form-submit">
                 <button>{{ $update ? 'Update' : 'Create' }}</button>

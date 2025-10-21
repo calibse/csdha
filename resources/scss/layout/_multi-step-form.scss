@@ -2,6 +2,7 @@
 
 @use "../size";
 @use "../color";
+@use "../font";
 
 .multi-step-form {
 	.qr-code {
@@ -34,7 +35,7 @@
     padding: 1em 0;
 
     .name {
-        font-family: MuseoModerno;
+        font-family: MuseoModerno, font.$font;
         font-weight: 600;
     }
 }

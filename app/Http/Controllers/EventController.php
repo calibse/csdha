@@ -212,7 +212,6 @@ class EventController extends Controller implements HasMiddleware
     {
         $event->venue = $request->venue;
         $event->description = $request->description;
-        $event->narrative = $request->narrative;
         $event->tag = $request->tag;
         $event->timezone = $request->timezone;
         $event->evaluation_delay_hours = $request->evaluation_delay_hours ?? 0;

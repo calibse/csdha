@@ -10,8 +10,8 @@
 		height: calc(100vh - 11em);
 		background-color: #000000;
 		position: relative;
-		border-bottom-left-radius: 1em;
-		border-bottom-right-radius: 1em;
+		border-bottom-left-radius: size.$corner-roundness;
+		border-bottom-right-radius: size.$corner-roundness;
 		overflow: hidden;
 		width: 100%;
 		object-fit: cover;
@@ -25,8 +25,8 @@
 	}
 
 	.indicator {
-		border-top-left-radius: 1em;
-		border-top-right-radius: 1em;
+		border-top-left-radius: size.$corner-roundness;
+		border-top-right-radius: size.$corner-roundness;
 		overflow: hidden;
 		margin-bottom: 0;
 		width: 100%;
