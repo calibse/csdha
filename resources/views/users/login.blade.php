@@ -4,7 +4,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>CSDHA {{ $type === 'admin' ? 'Admin' : null }}</title>
-	<link rel="icon" href="/favicon.ico?id={{ cache('website_logo_id') }}" />
+	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
+
 	@vite(['resources/scss/app.scss'])
 </head>
 <body class="front-body">

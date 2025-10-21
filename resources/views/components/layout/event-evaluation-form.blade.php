@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>CS Event Evaluation Form</title>
-	<link rel="icon" href="/favicon.ico?id={{ cache('website_logo_id') }}" />
+	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
+
     @vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>

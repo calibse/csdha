@@ -13,13 +13,12 @@
 	<title>{{ $title }} - CSDHA Admin</title>
 	@break
 @endswitch
-	<link rel="icon" href="/favicon.ico?id={{ cache('website_logo_id') }}" />
-
+	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
+	<script defer src="{{ asset('js/main.js') . '?v=1.0' }}"></script>
 	{{--
 	@vite(['resources/scss/app.scss']) 
 	--}}
 	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
-        @scriptLegacy('resources/js/app-legacy.js')
 </head>
 <body class="main-body {{ $index ? 'index' : null }} {{ $form ? 'form' : null }}">
 @if ($index)

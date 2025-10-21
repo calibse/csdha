@@ -13,9 +13,11 @@ export default defineConfig({
             ],
             refresh: true,
         }),
+	/*
         legacy({
             targets: ['defaults', 'firefox < 4'],
         }),
+	*/
     ],
     build: {
         minify: false,
