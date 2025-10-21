@@ -4,6 +4,7 @@ RUN apk add --no-cache weasyprint
 RUN apk add --no-cache libqrencode-tools
 RUN apk add --no-cache imagemagick 
 RUN apk add --no-cache font-cantarell 
+RUN apk add --no-cache rsvg-convert
 
 WORKDIR /var/www/app
 COPY . .

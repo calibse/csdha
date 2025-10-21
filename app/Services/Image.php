@@ -41,11 +41,18 @@ class Image
             $image = IImage::read($this->image);
             return $image->toPng();
         }
+/*
         $file = file_get_contents($this->image->getRealPath());
         $imagick = new Imagick();
         $imagick->setBackgroundColor(new ImagickPixel('transparent'));
         $imagick->readImageBlob($file);
         $imagick->setImageFormat('png32');
+*/
+        $svgPath = $this->image->getRealPath();
+        $pngData = shell_exec("rsvg-convert -f png " . escapeshellarg($svgPath));
+        $imagick = new Imagick();
+        $imagick->readImageBlob($pngData);
+        $imagick->setImageFormat('png32'); 
         $image = IImage::read($imagick);
         return $image->toPng();
     }
