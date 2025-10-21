@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>CS Event Registration Form</title>
+	<link rel="icon" href="/favicon.ico?id={{ cache('website_logo_id') }}" />
+
     @vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
     <header>
         <hgroup>
             <p class="main-brand org-name">
-			<img class="logo" src="{{ asset('storage/organization-logo.png') }}">
+			<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
+
                 <span class="name">Computer Society</span>
             </p>
             <h1 class="title of-form">Event Registration</h1>

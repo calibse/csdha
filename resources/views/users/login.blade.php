@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>CSDHA {{ $type === 'admin' ? 'Admin' : null }}</title>
+	<link rel="icon" href="/favicon.ico?id={{ cache('website_logo_id') }}" />
 	@vite(['resources/scss/app.scss'])
 </head>
 <body class="front-body">
@@ -12,7 +13,7 @@
 			<div class="front-header">
 				<header>
 					<h1 class="title">
-							<img class="logo"src="{{ asset('storage/website-logo.png') }}">
+						<img class="logo" src="{{ asset('storage/website-logo.png') . '?id=' . cache('website_logo_id') }}">
 
 							<span class="name">
 								<span class="org-name">COMPUTER SOCIETY</span>

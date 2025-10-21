@@ -13,6 +13,8 @@
 	<title>{{ $title }} - CSDHA Admin</title>
 	@break
 @endswitch
+	<link rel="icon" href="/favicon.ico?id={{ cache('website_logo_id') }}" />
+
 	{{--
 	@vite(['resources/scss/app.scss']) 
 	--}}
@@ -29,7 +31,8 @@
 			<div class="content-block">
 				<div class="main-header-title">
 					<div class="main-brand">
-						<img class="logo" src="{{ asset('storage/website-logo.png') }}">
+						<img class="logo" src="{{ asset('storage/website-logo.png') . '?id=' . cache('website_logo_id') }}">
+
 						<span class="name">CSDHA</span>
 					</div>
 					<div class="main-account-link">

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UpdateLogoRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Image;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 use Imagick;
 
 class AssetController extends Controller
@@ -24,6 +26,7 @@ class AssetController extends Controller
             $image = new Image($request->file('website'));
             $filepath = 'website-logo.png';
             Storage::disk('public')->put($filepath, $image->toPng());
+            Cache::put('website_logo_id', Str::random(8));
             if (app()->environment('production')) {
                 self::updateFavicon(public_path('storage/' . $filepath));
             }
@@ -32,11 +35,13 @@ class AssetController extends Controller
             $image = new Image($request->file('organization'));
             $filepath = 'organization-logo.png';
             Storage::disk('public')->put($filepath, $image->toPng());
+            Cache::put('organization_logo_id', Str::random(8));
         }
         if ($request->has('university')) {
             $image = new Image($request->file('university'));
             $filepath = 'university-logo.png';
             Storage::disk('public')->put($filepath, $image->toPng());
+            Cache::put('university_logo_id', Str::random(8));
         }
         return redirect()->route('settings.logos.edit')
             ->with('status', 'Logos updated.');

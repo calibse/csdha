@@ -12,6 +12,7 @@ fi
 php artisan optimize:clear 
 php artisan optimize 
 php artisan storage:link --silent
+chmod 666 public/favicon.ico
 chown -R apache:apache bootstrap/cache storage 
 php-fpm83 
 httpd -DFOREGROUND 
