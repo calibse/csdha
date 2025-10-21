@@ -11,9 +11,12 @@ usage() {
 
 push_assets() {
 	npm run build
-	rsync -avz --delete public/build/ $SSH_SERVER:csdha/public/build/
 	rsync -avz --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
 	rsync -avz --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
+	rsync -avz --delete public/build/ $SSH_SERVER:csdha/public/build/
+	rsync -avz --delete public/icon/ $SSH_SERVER:csdha/public/icon/
+	rsync -avz --delete public/font/ $SSH_SERVER:csdha/public/font/
+	rsync -avz --delete public/images/ $SSH_SERVER:csdha/public/images/
 	rsync -avz k8s/secret.yaml $SSH_SERVER:csdha/k8s/secret.yaml
 	rsync -avz .env.production $SSH_SERVER:csdha/.env
 	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
