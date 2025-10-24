@@ -17,6 +17,7 @@ use App\Http\Requests\SaveGpoaRequest;
 use WeasyPrint\Facade as WeasyPrint;
 use App\Services\PagedView;
 use Illuminate\Support\Facades\Storage;
+use App\Events\GpoaStatusChanged;
 
 class GpoaController extends Controller implements HasMiddleware
 {
@@ -62,7 +63,7 @@ class GpoaController extends Controller implements HasMiddleware
         return view('gpoa.index', [
             'gpoa' => $gpoa,
             'activities' => $activities->orderBy('updated_at', 'desc')
-                ->paginate(3)
+                ->paginate(7)
         ]);
     }
 
@@ -88,6 +89,7 @@ class GpoaController extends Controller implements HasMiddleware
     public function store(SaveGpoaRequest $request)
     {
         self::storeOrUpdate($request);
+        GpoaStatusChanged::dispatch();
         return redirect()->route('gpoa.index');
     }
 
@@ -120,8 +122,8 @@ class GpoaController extends Controller implements HasMiddleware
             'accomReportRoute' => route('gpoas.accom-report.show', [
                 'gpoa' => $gpoa->public_id
             ]),
-            'createdBy' => $gpoa->creator->full_name,
-            'closedBy' => $gpoa->closer->full_name,
+            'createdBy' => $gpoa->creator?->full_name,
+            'closedBy' => $gpoa->closer?->full_name,
             'academicPeriod' => $gpoa->full_academic_period,
             'activityCount' => $gpoa->activities()->count(),
             'accomReportCount' => $gpoa->events()->approved()->count(),
@@ -217,6 +219,7 @@ class GpoaController extends Controller implements HasMiddleware
         $status = 'GPOA closed.';
         if (!$gpoa->has_approved_activity) {
             self::destroyGpoa();
+            GpoaStatusChanged::dispatch();
             return redirect()->route('gpoa.index')->with('status', $status);
         }
         $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
@@ -239,13 +242,14 @@ class GpoaController extends Controller implements HasMiddleware
         $gpoa->accom_report_filepath = $accomReportFile;
         $gpoa->save();
         self::closeGpoa();
+        GpoaStatusChanged::dispatch();
         return redirect()->route('gpoa.index')->with('status', $status);
     }
 
     private static function destroyGpoa(): void
     {
         $gpoa = self::$gpoa;
-        $gpoa->activities->delete();
+        $gpoa->activities()?->delete();
         $gpoa->delete();
     }
 

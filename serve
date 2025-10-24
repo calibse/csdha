@@ -48,6 +48,20 @@ start_db() {
     fi
 }
 
+start_cache() {
+    container="csdha-cache-pod-cache"
+    k8s_db_files="cache.yaml"
+    container_name=$(podman ps --filter "name=$container" \
+        --format "{{.Names}}")
+    if [ -z "$(podman ps -q -f name="$container")" ]
+    then
+        for yaml_file in $k8s_db_files
+        do
+            podman kube play --replace k8s/$yaml_file
+        done
+    fi
+}
+
 reload_web() {
     podman build -f container/base/Dockerfile -t alpine-laravel:1.0 .
     podman build -f container/web/Dockerfile -t laravel-web:1.0 .

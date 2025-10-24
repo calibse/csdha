@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import legacy from '@vitejs/plugin-legacy';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
     plugins: [
@@ -13,11 +14,14 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-	/*
-        legacy({
-            targets: ['defaults', 'firefox < 4'],
+        viteStaticCopy({
+            targets: [
+                {
+                    src: 'node_modules/qr-scanner/qr-scanner.legacy.min.js',
+                    dest: 'legacy',
+                },
+            ]
         }),
-	*/
     ],
     build: {
         minify: false,

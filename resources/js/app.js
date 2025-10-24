@@ -1,25 +1,35 @@
 // app.js
 
 import "./bootstrap";
-import QrScanner from "qr-scanner";
-
 import.meta.glob([
     "../images/**",
     "../fonts/**",
 ]);
 
+//import QrScanner from "qr-scanner";
+//import "qr-scanner/qr-scanner.legacy.min.js";
+
 let CURRENT_REQUEST = null;
 let QR_SCANNER = null;
 
+function getCookie(name) {
+	return document.cookie.split('; ')
+		.find(row => row.startsWith(name + '='))?.split('=')[1];
+}
+
 async function storeAttendance(token) {
+	var timezone
     if (CURRENT_REQUEST) {
         const apiResponse = await CURRENT_REQUEST;
         return apiResponse.status;
     }
     const eventField = document.querySelector("#event");
     try {
+	timezone = getCookie('timezone');
+	if (!timezone) timezone = 'UTC';
         CURRENT_REQUEST = axios.post("/api/attendance/" + eventField.value, {
-            token: token
+            token: token,
+            timezone: timezone
         });
         const apiResponse =  await CURRENT_REQUEST;
         return apiResponse.status;
@@ -56,7 +66,7 @@ function startQrScanner() {
     if (!videoEl) return;
     const idScanner = document.getElementById("id-scanner");
     idScanner.hidden = false;
-    QR_SCANNER = QR_SCANNER || new QrScanner(videoEl, async (result) => {
+    QR_SCANNER = QR_SCANNER || new window.QrScanner(videoEl, async (result) => {
         showQrScannerStatus("processing");
         const statusCode = await storeAttendance(result.data);
         switch (statusCode) {
@@ -122,4 +132,3 @@ function activateAttendanceRecorder() {
 }
 
 activateAttendanceRecorder();
-

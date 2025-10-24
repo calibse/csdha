@@ -15,9 +15,7 @@
 @endswitch
 	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
 	<script defer src="{{ asset('js/main.js') . '?v=1.0' }}"></script>
-	{{--
-	@vite(['resources/scss/app.scss']) 
-	--}}
+	<script defer src="{{ asset('build/legacy/qr-scanner.legacy.min.js') . '?v=1.0' }}"></script>
 	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
 </head>
 <body class="main-body {{ $index ? 'index' : null }} {{ $form ? 'form' : null }}">

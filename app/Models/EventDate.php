@@ -97,6 +97,19 @@ class EventDate extends Model
         );
     }
 
+    public function isOngoing(): Attribute
+    {
+        $timezone = $this->event->timezone;
+        $start = Carbon::parse("{$this->date->format('Y-m-d')} " .
+            "{$this->start_time}", $timezone)->setTimezone(config('timezone'));
+        $end = Carbon::parse("{$this->date->format('Y-m-d')} " .
+            "{$this->end_time}", $timezone)->setTimezone(config('timezone'));
+        $ongoing = Carbon::now(config('timezone'))->between($end, $start);
+        return Attribute::make(
+            get: fn () => $ongoing
+        );
+    }
+
     #[Scope]
     protected function ongoing(Builder $query): void
     {

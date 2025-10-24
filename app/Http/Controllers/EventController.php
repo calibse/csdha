@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use DateTimeZone;
 use App\Events\EventUpdated;
+use App\Events\EventDatesChanged;
 use App\Models\Gpoa;
 use Illuminate\Support\Carbon;
 
@@ -82,7 +83,7 @@ class EventController extends Controller implements HasMiddleware
 
     public function index(Request $request)
     {
-		$events = Event::active()->orderBy("updated_at", "desc")->paginate("7");
+	$events = Event::active()->orderBy("updated_at", "desc")->paginate("7");
         $gpoa = Gpoa::active()->exists();
         return view('events.index', [
             'gpoa' => $gpoa,
@@ -478,6 +479,7 @@ class EventController extends Controller implements HasMiddleware
     public function storeDate(SaveEventDateRequest $request, Event $event)
     {
         self::storeOrUpdateDate($request, $event);
+        EventDatesChanged::dispatch($event);
         EventUpdated::dispatch($event);
         return redirect()->route('events.dates.index', [
             'event' => $event->public_id
@@ -497,6 +499,7 @@ class EventController extends Controller implements HasMiddleware
     {
         $date->attendees()->detach();
         $date->delete();
+        EventDatesChanged::dispatch($event);
         return redirect()->route('events.dates.index', [
             'event' => $event->public_id
         ])->with('status', 'Date deleted.');

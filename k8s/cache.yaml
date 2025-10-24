@@ -1,0 +1,13 @@
+# cache.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-cache
+spec:
+  template:
+    spec:
+      containers:
+      - name: cache
+        image: localhost/laravel-cache:1.0
+

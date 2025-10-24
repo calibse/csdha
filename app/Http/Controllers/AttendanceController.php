@@ -34,15 +34,12 @@ class AttendanceController extends Controller implements HasMiddleware
     public function store(StoreAttendanceRequest $request,
             EventDate $eventDate)
     {
+        $timezone = $request->timezone ?? 'UTC';
+        config(['timezone' => $timezone]);
         $regis = EventRegistration::where('token', $request->token)
             ->whereBelongsTo($eventDate->event)->first();
         $event = $eventDate->event;
-        $start = Carbon::parse("{$eventDate->date->format('Y-m-d')} " .
-            "{$eventDate->start_time}");
-        $end = Carbon::parse("{$eventDate->date->format('Y-m-d')} " .
-            "{$eventDate->end_time}");
-        $ongoing = Carbon::now($event->timezone)->between($start, $end);
-        if (!$ongoing) {
+        if (!$eventDate->is_ongoing) {
             return response([], 403);
         }
         if (!$regis) {

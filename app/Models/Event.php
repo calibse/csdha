@@ -355,4 +355,19 @@ class Event extends Model
         $query->orderBy('dates_date', 'asc');
     }
 
+    #[Scope]
+    protected function upcoming(Builder $query): void
+    {
+        $nextDays = 5;
+	$timezone = config('timezone');
+        $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
+            ->select('events.*')
+            ->distinct()
+            ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
+                ?) > convert_tz(now(), @@session.time_zone, ?)", 
+                [$timezone, $timezone])
+            ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
+                ?) <= convert_tz(now(), @@session.time_zone, ?) + 
+                interval {$nextDays} day", [$timezone, $timezone]);
+    }
 }

@@ -49,7 +49,8 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
             $jobs[] = (new SendEventEvalMailJob($attendee, $eventDate, $url))
                 ->delay($eventPassed ? 0 : $delayDate);
         }
-        $batchName = "event_eval_mail_{$event->id}_{$eventDate->date}";
+        $batchName = "event_eval_mail_{$event->id}_{$eventDate->date}_" .
+            "{$eventDate->start_time}_{$eventDate->end_time}";
         $batch = self::findBatch($batchName);
         if ($batch && $jobs) {
             $batch->add($jobs);
