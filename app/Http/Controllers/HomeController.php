@@ -21,6 +21,9 @@ class HomeController extends Controller
                 'pendingAccomReportCount' => 0,
                 'pendingGpoaActivityCount' => 0,
                 'upcomingEventCount' => 0,
+                'gpoaRoute' => route('gpoa.index'),
+                'eventsRoute' => route('events.index'),
+                'accomReportsRoute' => route('accom-reports.index'),
             ]);
         }
         return view('home.user', [
@@ -29,7 +32,10 @@ class HomeController extends Controller
                 ->where('status', 'pending')->count(),
             'pendingGpoaActivityCount' => $gpoa->activities()
                 ->where('status', 'pending')->count(),
-            'upcomingEventCount' => Event::active()->upcoming()->count()
+            'upcomingEventCount' => Event::active()->upcoming()->count(),
+            'gpoaRoute' => route('gpoa.index'),
+            'eventsRoute' => route('events.index'),
+            'accomReportsRoute' => route('accom-reports.index'),
         ]);
     }
 

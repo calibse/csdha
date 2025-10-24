@@ -2,14 +2,16 @@
 	<div class="article">
 		<x-alert/>
 	@if ($events->isNotEmpty())
-        <table class="table-2">
+        <table class="table-3">
             <colgroup>
                 <col style="width: 30%">
-                <col style="width: 70%">
+                <col style="width: 20%">
+                <col style="width: 50%">
             </colgroup>
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Status</th>
                     <th>Description</th>
                 </tr>
             </thead>
@@ -21,6 +23,7 @@
                             {{ $event->gpoaActivity->name }}
                         </a>
                     </td>
+			<td>{{ $event->status }}</td>
                     <td>
                     @if ($event->description)
                         {{ $event->description }}

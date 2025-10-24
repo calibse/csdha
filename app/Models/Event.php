@@ -222,6 +222,7 @@ class Event extends Model
             'attendanceView' => $attendanceView,
             'activity' => $this->gpoaActivity,
             'comments' => $this->comments(),
+            'ratings' => $this->ratings()
         ];
     }
 
@@ -277,14 +278,41 @@ class Event extends Model
         return $newDates;
     }
 
-    /*
+    public function ratings(): array
+    {
+        $all = [];
+        $all[] = $os = $this->evaluations()->pluck('overall_satisfaction')->avg();
+        $all[] = $cr = $this->evaluations()->pluck('content_relevance')->avg();
+        $all[] = $se = $this->evaluations()->pluck('speaker_effectiveness')->avg();
+        $all[] = $el = $this->evaluations()->pluck('engagement_level')->avg();
+        $all[] = $du = $this->evaluations()->pluck('duration')->avg();
+        $overall = collect($all)->avg();
+        return [
+            'os' => $os,
+            'cr' => $cr,
+            'se' => $se,
+            'el' => $el,
+            'du' => $du,
+            'overall' => $overall
+        ];
+    } 
+
+    public function status(): Attribute
+    {
+        $status = '';
+	if ($this->is_ongoing) $status = 'Ongoing';
+	elseif ($this->is_upcoming) $status = 'Upcoming';
+	elseif ($this->is_completed) $status = 'Completed';
+        return Attribute::make(
+            get: fn () => $status,
+        );
+    }
+
     public function isUpcoming(): Attribute
     {
-        $isUpcoming = $this->dates()->where(function ($query) {
-            $query->whereRaw('? between date_sub(date, interval 5 day) and date'
-                , [Carbon::today(config('timezone'))
-                    ->setTimezone($this->timezone)]->toDateString());
-        })->exists();
+        $isUpcoming = $this->dates()->whereRaw('timestamp(date, 
+            start_time) > ?',
+            [now(config('timezone'))])->exists();
         return Attribute::make(
             get: fn () => $isUpcoming,
         );
@@ -292,23 +320,26 @@ class Event extends Model
 
     public function isOngoing(): Attribute
     {
-        $isOngoing = $this->dates()->where(function ($query) {
-            $query->where('date', Carbon::now(config('timezone'))
-                    ->setTimezone($this->timezone)->toDateString())
-                ->where('start_time', null)->where('end_time', null);
-        })->orWhere(function ($query) {
-            $query->where('date', Carbon::now(config('timezone'))
-                    ->setTimezone($this->timezone)->toDateString())
-                ->where('start_time', '<=', Carbon::now(config('timezone'))
-                    ->setTimezone($this->timezone)->toTimeString())
-                ->where('end_time', '>=', Carbon::now(config('timezone'))
-                    ->setTimezone($this->timezone)->toTimeString());
-        })->exists();
+        $isOngoing = $this->dates()->whereRaw('? between timestamp(date, 
+            start_time) and timestamp(date, end_time)', 
+            [now(config('timezone'))])->exists();
         return Attribute::make(
             get: fn () => $isOngoing,
         );
     }
-    */
+
+    public function isCompleted(): Attribute
+    {
+        $nextDays = 5;
+        $isCompleted = !$this->dates()->whereRaw('? between timestamp(date, 
+            start_time) and timestamp(date, end_time)', 
+            [now(config('timezone'))])
+            ->orWhereRaw('timestamp(date, 
+            start_time) > ?', [now(config('timezone'))])->exists();
+        return Attribute::make(
+            get: fn () => $isCompleted,
+        );
+    }
 
     public function officerAttendees()
     {
@@ -365,9 +396,11 @@ class Event extends Model
             ->distinct()
             ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
                 ?) > convert_tz(now(), @@session.time_zone, ?)", 
-                [$timezone, $timezone])
+                [$timezone, $timezone]);
+            /*
             ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
                 ?) <= convert_tz(now(), @@session.time_zone, ?) + 
                 interval {$nextDays} day", [$timezone, $timezone]);
+            */
     }
 }

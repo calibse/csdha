@@ -206,6 +206,15 @@
     @if ($event['event']->accept_evaluation)
         <section>
             <h3>{{ Format::roman(++$i) }}. EVALUATION</h3>
+		<div class="list-section">
+			<p>Scale:</p>
+			<p>5 - Excellent | 4 - Good | 3 - Average | 2 - Fair | 1 - Poor</p>
+			<ul>
+				<li>Overall rating of the event</li>
+				<li>The objectives of the presentation were clear</li>
+				<li>Overall experience</li>
+			</ul>
+		</div>
         @if ($event['comments']->isNotEmpty())
             <div class="list-section">
                 <p>What are your comments, feedback, or suggestions?</p>
@@ -217,37 +226,35 @@
             </div>
         @endif
         </section>
-        {{--
         <section>
             <h3>{{ Format::roman(++$i) }}.  INTERPRETATION OF THE EVALUATION</h3>
             <table class="evaluation-summary">
                 <tr>
                     <th>Overall Satisfaction: </td>
-                    <td></td>
+                    <td>{{ $event['ratings']['os'] }}</td>
                 </tr>
                 <tr>
                     <th>Content Relevance:</th>
-                    <td></td>
+                    <td>{{ $event['ratings']['cr'] }}</td>
                 </tr>
                 <tr>
                     <th>Speaker Effectiveness: </th>
-                    <td></td>
+                    <td>{{ $event['ratings']['se'] }}</td>
                 </tr>
                 <tr>
                     <th>Engagement Level: </th>
-                    <td></td>
+                    <td>{{ $event['ratings']['el'] }}</td>
                 </tr>
                 <tr>
                     <th>Duration:</th>
-                    <td></td>
+                    <td>{{ $event['ratings']['du'] }}</td>
                 </tr>
                 <tr class="overall-score">
                     <th>Overall:</th>
-                    <td></td>
+                    <td>{{ $event['ratings']['overall'] }}</td>
                 </tr>
             </table>
         </section>
-        --}}
     @endif
     @if ($event['event']->attachmentSets()->exists())
         <section class="attachment-section">

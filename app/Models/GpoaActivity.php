@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use App\Traits\HasPublicId;
 use App\Services\Format;
+use App\Events\EventUpdated;
+use App\Events\EventDatesChanged;
 
 class GpoaActivity extends Model
 {
@@ -330,6 +332,8 @@ class GpoaActivity extends Model
         $date->end_time = '23:59';
         $date->event()->associate($this->event);
         $date->save();
+        EventUpdated::dispatch($event);
+        EventDatesChanged::dispatch($event);
     }
 
     private static function getTimezone(): string

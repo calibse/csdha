@@ -4,15 +4,21 @@
 @use "../color";
 
 .main-content.home .infos {
-	* {
-		//outline: solid .1rem black;
-	}
-
 	.infobox {
 		border-radius: size.$corner-roundness;
 		background-color: #ffffff;
-		padding: .5em;
 		border-bottom: solid size.$line-width color.$line;
+		
+		a {
+			padding: .5em;
+			display: block;
+			color: color.$foreground;
+			text-decoration: none;
+		}
+
+		a:focus .legend, a:hover .legend {
+			text-decoration: underline;
+		}
 	}
 
 	.legend, .value {
@@ -39,7 +45,10 @@
 			height: auto;
 			min-height: 7em;
 			vertical-align: top;
-			padding: .8rem;
+
+			a {
+				padding: .8em;
+			}
 		}
 
 		.legend, .value {

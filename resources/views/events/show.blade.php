@@ -36,6 +36,16 @@
                     </ul>
                 </td>
             </tr>
+            @can ('register', $event)
+            <tr>
+                <th>Registration Form</th>
+                <td>
+                    <a href="{{ $regisRoute }}">
+                        {{ $regisRoute }}
+                    </a>
+                </td>
+            </tr>
+            @endcan
             <tr>
                 <th>Venue</th>
                 <td>{{ $event->venue }}</td>
@@ -82,16 +92,6 @@
                 </td>
             </tr>
             @endif
-            @can ('register', $event)
-            <tr>
-                <th>Registration Form</th>
-                <td>
-                    <a href="{{ $regisRoute }}">
-                        {{ $regisRoute }}
-                    </a>
-                </td>
-            </tr>
-            @endcan
             @can ('recordAttendance', $event)
             <tr>
                 <th>Attendance</th>

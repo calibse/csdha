@@ -10,15 +10,15 @@ class StoreEventEvalRequest extends MultiStepFormRequest
     public function rules(): array
     {
         return [
-            'overall_satisfaction' => ['required', 'integer', 'min:1',
+            'overall_satisfaction' => ['required', 'numeric', 'integer', 
+                'min:1', 'max:5'],
+            'content_relevance' => ['required', 'numeric', 'integer', 'min:1',
                 'max:5'],
-            'content_relevance' => ['required', 'integer', 'min:1',
+            'speaker_effectiveness' => ['required', 'numeric', 'integer', 
+                'min:1', 'max:5'],
+            'engagement_level' => ['required', 'numeric', 'integer', 'min:1',
                 'max:5'],
-            'speaker_effectiveness' => ['required', 'integer', 'min:1',
-                'max:5'],
-            'engagement_level' => ['required', 'integer', 'min:1',
-                'max:5'],
-            'duration' => ['required', 'integer', 'min:1', 'max:3'],
+            'duration' => ['required', 'numeric', 'integer', 'in:1,3,5'],
             'topics_covered' => ['required', new MaxText],
             'suggestions_for_improvement' => ['required', new MaxText],
             'future_topics' => ['required', new MaxText],

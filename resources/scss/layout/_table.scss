@@ -123,6 +123,12 @@ table {
 	}
 }
 
+@media (min-width: 57em) {
+	table.table-3 {
+		@include table-wide;
+	}
+}
+
 @media (min-width: 68em) {
 	table.table-4 {
 		@include table-wide;
