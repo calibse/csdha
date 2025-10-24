@@ -84,5 +84,6 @@ done
 
 restart_queue
 start_db
+start_cache
 reload_web
 
