@@ -89,7 +89,7 @@ class LoginController extends Controller
         return view('users.login', [
             'type' => 'admin',
             'homeRoute' => route('admin.home'),
-            'googleSigninRoute' => route('auth.redirect', [
+            'googleSigninRoute' => route('admin-auth.redirect', [
                 'provider' => 'google'
             ]),
             'signinRoute' => route('admin.auth'),
@@ -109,6 +109,20 @@ class LoginController extends Controller
             return Socialite::driver('google')->with([
                 'access_type' => 'offline',
                 'prompt' => 'consent'
+            ])->redirect();
+        }
+    }
+
+    public function redirectAdminSignin(Request $request, string $provider)
+    {
+        switch ($provider) {
+        case 'google':
+            config(['services.google.redirect' => route(
+                'admin-auth.callback', [
+                'provider' => 'google'
+            ])]);
+            return Socialite::driver('google')->with([
+                'access_type' => 'offline',
             ])->redirect();
         }
     }

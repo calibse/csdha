@@ -214,7 +214,10 @@ Route::domain(config('app.admin_domain'))->group(function () {
     });
 
     Route::get('/auth/{provider}/callback', [LoginController::class,
-        'adminAuthWith']);
+        'adminAuthWith'])->name('admin-auth.callback');
+
+    Route::get('/auth/{provider}/redirect.php', [LoginController::class,
+        'redirectAdminSignin'])->name('admin-auth.redirect');
 
 });
 
