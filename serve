@@ -57,6 +57,7 @@ start_cache() {
     then
         for yaml_file in $k8s_db_files
         do
+            podman build -f container/base/Dockerfile -t alpine-memcached:1.0 .
             podman kube play --replace k8s/$yaml_file
         done
     fi

@@ -9,5 +9,5 @@ spec:
     spec:
       containers:
       - name: cache
-        image: localhost/laravel-cache:1.0
+        image: localhost/alpine-memcached:1.0
 
