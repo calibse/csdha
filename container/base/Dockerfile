@@ -6,5 +6,5 @@ RUN apk add --no-cache php83-pdo_mysql php83-gd php83-zip php83-session php83-fi
 
 WORKDIR /var/www/app
 COPY composer.json composer.lock . 
-RUN composer install --no-dev --no-scripts --no-autoloader --no-progress -n && composer clear-cache
+RUN composer install --prefer-dist --no-dev --no-scripts --no-autoloader --no-progress -n && composer clear-cache
 

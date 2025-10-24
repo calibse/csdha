@@ -8,7 +8,7 @@ RUN apk add --no-cache rsvg-convert
 
 WORKDIR /var/www/app
 COPY . .
-RUN composer install --no-dev --no-progress -n && composer clear-cache
+RUN composer install --optimize-autoloader --prefer-dist --no-dev --no-progress -n && composer clear-cache
 
 COPY container/config/apache/main-site.conf /etc/apache2/conf.d/main-site.conf
 COPY container/config/php-fpm/www-overrides.conf /etc/php83/php-fpm.d/z-www-overrides.conf
