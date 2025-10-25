@@ -27,12 +27,12 @@ class AuditTrailController extends Controller
             'requestId' => $audit->request_id,
             'requestUrl' => $audit->request_url,
             'requestMethod' => $audit->request_method,
-            'requestTime' => Format::date($audit->request_time),
+            'requestTime' => $audit->request_time ? Format::date($audit->request_time) : null,
             'userId' => $audit->user_id,
             'userAgent' => $audit->user_agent,
             'sessionId' => $audit->session_id,
-            'createdAt' => Format::date($audit->created_at),
-            'updatedAt' => Format::date($audit->updated_at),
+            'createdAt' => $audit->created_at ? Format::date($audit->created_at)                : null,
+            'updatedAt' => $audit->updated_at ? Format::date($audit->updated_at)                : null,
         ]);
     }
 
