@@ -44,7 +44,11 @@
 						<div class="info">
 							<div class="avatar">
 							@if (auth()->user()->avatar_filepath)
+								@if ($siteContext === 'user')
 								<img src="{{ route('profile.showAvatar', ['avatar' => basename(auth()->user()->avatar_filepath)]) }}">
+								@elseif ($siteContext === 'admin')
+								<img src="{{ route('admin-profile.showAvatar', ['avatar' => basename(auth()->user()->avatar_filepath)]) }}">
+								@endif
 							@else
 								<img src="{{ asset('icon/user.png') }}">
 							@endif

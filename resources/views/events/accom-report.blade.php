@@ -203,7 +203,7 @@
             @endswitch
         </section>
         @endif
-    @if ($event['event']->accept_evaluation)
+    @if ($event['event']->accept_evaluation && $event['event']->evaluations()->exists())
         <section>
             <h3>{{ Format::roman(++$i) }}. EVALUATION</h3>
 		<div class="list-section">

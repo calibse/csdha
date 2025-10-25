@@ -286,6 +286,9 @@ Route::domain(config('app.admin_domain'))->middleware('auth')
 
     Route::get('/analytics', [AnalyticController::class, 'index'])
         ->name('analytics.index');
+
+    Route::get('/avatar_{avatar}', [ProfileController::class, 'showAvatar'])
+        ->name('admin-profile.showAvatar');
 });
 
 Route::name('profile.')->controller(PasswordResetController::class)
