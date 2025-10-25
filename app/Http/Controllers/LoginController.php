@@ -202,7 +202,7 @@ class LoginController extends Controller
         $user = $socialUser ? self::findSocialUser($provider,
             $socialUser->id) : null;
         if (!$user || !$user->isAdmin()) {
-            return redirect()->route('user.login')->withErrors([
+            return redirect()->route('admin.login')->withErrors([
                 'signin' => 'The provided credentials do not match our records.'
             ]);
         }
