@@ -1,6 +1,6 @@
-FROM alpine:3.22
+FROM alpine-laravel:1.0
 
-RUN apk add --no-cache git
-WORKDIR /root
-CMD ["git", "clone", "https://github.com/calibse/csdha.git"]
+COPY .env.production /root/
+COPY .env.production-admin /root/
+CMD ["container/bin/init"]
 

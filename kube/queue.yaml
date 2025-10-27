@@ -13,7 +13,6 @@ spec:
         volumeMounts:
         - name: web-app
           mountPath: /var/www/app
-        volumeMounts:
         - name: web-storage
           mountPath: /var/www/app/storage/app
       volumes:
