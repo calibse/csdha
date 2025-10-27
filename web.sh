@@ -40,9 +40,9 @@ init() {
 }
 
 restart_queue() {
-	podman exec {$app}-queue-pod-queue php artisan queue:restart
+	podman exec ${app}-queue-pod-queue php artisan queue:restart
 	set +e
-	podman wait {$app}-queue-pod-queue
+	podman wait ${app}-queue-pod-queue
 	set -e
 }
 
@@ -82,7 +82,7 @@ install() {
 
 update() {
 	restart_queue
-	podman start {$app}-queue-pod-queue
+	podman start ${app}-queue-pod-queue
 	podman start ${app}-sync-pod-sync
 }
 

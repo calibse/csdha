@@ -9,5 +9,5 @@ chmod 666 public/favicon.ico
 addgroup csdha
 adduser -h /var/www/app -g csdha -G csdha -S -D -H csdha
 chown -R csdha:csdha bootstrap/cache storage 
-php-fpm83 -F
+exec php-fpm83 -F
 

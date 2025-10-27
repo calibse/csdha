@@ -1,12 +1,13 @@
 # init.yaml
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: csdha-init
 spec:
   template:
     spec:
+      restartPolicy: Never
       volumes:
       - name: web-app
         persistentVolumeClaim:

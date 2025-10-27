@@ -2,5 +2,5 @@
 
 set -e
 
-php artisan queue:work
+exec php artisan queue:work
 

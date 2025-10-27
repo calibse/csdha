@@ -1,20 +1,21 @@
 # sync.yaml
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: csdha-sync
 spec:
   template:
     spec:
+      restartPolicy: Never
+      volumes:
+      - name: web-app
+        persistentVolumeClaim:
+          claimName: csdha-web-app
       containers:
       - name: sync
         image: localhost/laravel-sync:1.0
         volumeMounts:
         - name: web-app
           mountPath: /var/www/app
-      volumes:
-      - name: web-app
-        persistentVolumeClaim:
-          claimName: csdha-web-app
 

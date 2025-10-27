@@ -7,6 +7,19 @@ metadata:
 spec:
   template:
     spec:
+      volumes:
+      - name: web-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-storage
+      - name: web-app-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-user-storage
+      - name: web-app-cache 
+        persistentVolumeClaim:
+          claimName: csdha-web-user-cache
+      - name: web-app 
+        persistentVolumeClaim:
+          claimName: csdha-web-app
       containers:
       - name: web-user
         image: localhost/laravel-web:1.0
@@ -22,17 +35,4 @@ spec:
           mountPath: /var/www/app/storage/app
         - name: web-app-cache 
           mountPath: /var/www/app/bootstrap/cache
-      volumes:
-      - name: web-storage 
-        persistentVolumeClaim:
-          claimName: csdha-web-storage
-      - name: web-app-storage 
-        persistentVolumeClaim:
-          claimName: csdha-web-user-storage
-      - name: web-app-cache 
-        persistentVolumeClaim:
-          claimName: csdha-web-user-cache
-      - name: web-app 
-        persistentVolumeClaim:
-          claimName: csdha-web-app
 
