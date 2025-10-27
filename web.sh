@@ -39,7 +39,15 @@ init() {
 	done
 }
 
+restart_queue() {
+	podman exec {$app}-queue-pod-queue php artisan queue:restart
+	set +e
+	podman wait {$app}-queue-pod-queue
+	set -e
+}
+
 uninstall() {
+	restart_queue
 	for kube in $install_kube
 	do
 		podman kube down kube/${kube}
@@ -56,6 +64,7 @@ uninstall() {
 }
 
 reinstall() {
+	restart_queue
 	for kube in $install_kube
 	do
 		podman kube play --replace kube/${kube}
@@ -71,15 +80,9 @@ install() {
 	podman kube play --start=false kube/${update_kube}
 }
 
-restart_queue() {
-	podman exec {$app}-queue-pod-queue php artisan queue:restart
-	set +e
-	podman wait {$app}-queue-pod-queue
-	set -e
-}
-
 update() {
 	restart_queue
+	podman start {$app}-queue-pod-queue
 	podman start ${app}-sync-pod-sync
 }
 

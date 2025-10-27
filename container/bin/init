@@ -21,4 +21,4 @@ composer install --optimize-autoloader --prefer-dist --no-dev --no-progress \
 php artisan migrate --force
 php artisan db:audit-triggers
 rm lock
-
+container/bin/sync_assets
