@@ -3,5 +3,6 @@
 set -e
 
 container/bin/check_db
+container/bin/deploy
 exec "$@" 
 

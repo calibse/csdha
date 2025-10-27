@@ -3,10 +3,6 @@
 set -e
 
 git pull
-php artisan optimize:clear
-php artisan migrate --force
-php artisan db:audit-triggers
-php artisan optimize
-chown -R csdha:csdha bootstrap/cache storage
+container/bin/deploy
 container/bin/sync_assets
 

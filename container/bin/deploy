@@ -3,11 +3,8 @@
 set -e
 
 php artisan optimize:clear 
+php artisan migrate --force
+php artisan db:audit-triggers
 php artisan optimize 
-php artisan storage:link --silent
-chmod 666 public/favicon.ico
-addgroup csdha
-adduser -h /var/www/app -g csdha -G csdha -S -D -H csdha
 chown -R csdha:csdha bootstrap/cache storage 
-exec php-fpm83 -F
 

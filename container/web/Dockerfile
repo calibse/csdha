@@ -9,5 +9,5 @@ COPY container/config/php-fpm/www-overrides.conf /etc/php83/php-fpm.d/z-www-over
 COPY container/bin/check_dir /root/
 COPY container/web/entrypoint /root/
 ENTRYPOINT ["/root/check_dir"]
-CMD ["container/bin/deploy"]
+CMD ["php-fpm83", "-F"]
 
