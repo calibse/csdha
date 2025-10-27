@@ -11,6 +11,7 @@ cp -r ${dir}/. .
 rm -rf ${dir}
 mkdir ${dir}
 cp /root/.env* .
+cp .env.production .env
 cp -r storage/. /root/user_storage
 cp -r storage/. /root/admin_storage
 cp -r bootstrap/cache/. /root/user_cache
