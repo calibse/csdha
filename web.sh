@@ -33,12 +33,10 @@ build() {
 }
 
 init() {
-	set +e
 	for kube in $init_kube
 	do
 		podman kube play kube/${kube}
 	done
-	set -e
 }
 
 uninstall() {
@@ -66,13 +64,11 @@ reinstall() {
 }
 
 install() {
-	set +e
 	for kube in $install_kube
 	do
 		podman kube play kube/${kube}
 	done
 	podman kube play --start=false kube/${update_kube}
-	set -e
 }
 
 restart_queue() {
