@@ -4,4 +4,4 @@ set -e
 
 mkdir -p storage/logs/apache
 chown apache:apache storage/logs/apache
-
+exec "$@"
