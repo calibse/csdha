@@ -16,11 +16,11 @@ cp -r storage/. /root/user_storage
 cp -r storage/. /root/admin_storage
 cp -r bootstrap/cache/. /root/user_cache
 cp -r bootstrap/cache/. /root/admin_cache
-container/bin/check_db_conn
 composer install --optimize-autoloader --prefer-dist --no-dev --no-progress \
 	-n && composer clear-cache
 php artisan storage:link --silent
 chmod 666 public/favicon.ico
+container/bin/check_db_conn
 container/bin/deploy
 rm lock
 container/bin/sync_assets

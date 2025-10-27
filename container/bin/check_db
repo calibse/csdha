@@ -2,27 +2,10 @@
 
 set -e
 
-max_retries=10
-delay=5
-retries=0
-
-while [ $retries -lt $max_retries ] 
+while ! php artisan migrate:status > /dev/null 2>&1 && \
+	php artisan migrate:status | grep -q "No" 
 do
-	if php artisan migrate:status > /dev/null 2>&1 && \
-		! php artisan migrate:status | grep -q "No" 
-
-	then
-		break
-	else
-		retries=$((retries+1))
-		echo "Database not ready. Retry $retries/$max_retries in $delay seconds..."
-		sleep $delay
-	fi
+	echo "Database not ready." 
+	sleep 2
 done
-
-if [ $retries -ge $max_retries ]
-then
-	echo "Database not ready after $max_retries retries. Exiting."
-	exit 1
-fi
 

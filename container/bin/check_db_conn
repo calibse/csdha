@@ -2,25 +2,9 @@
 
 set -e
 
-max_retries=10
-delay=5
-retries=0
-
-while [ $retries -lt $max_retries ] 
+while ! php artisan migrate:status > /dev/null 2>&1 
 do
-	if php artisan migrate:status > /dev/null 2>&1 
-	then
-		break
-	else
-		retries=$((retries+1))
-		echo "Database unreachable. Retry $retries/$max_retries in $delay seconds..."
-		sleep $delay
-	fi
+	echo "Database unreachable." 
+	sleep 2
 done
-
-if [ $retries -ge $max_retries ]
-then
-	echo "Database unreachable after $max_retries retries. Exiting."
-	exit 1
-fi
 
