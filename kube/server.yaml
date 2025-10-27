@@ -1,0 +1,24 @@
+# server.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-server
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        image: localhost/alpine-apache:1.0
+        ports:
+        - containerPort: 80
+          hostPort: 8001
+        env:
+        volumeMounts:
+        - name: web-app 
+          mountPath: /var/www/app
+      volumes:
+      - name: web-app 
+        persistentVolumeClaim:
+          claimName: csdha-web-app
+

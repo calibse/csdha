@@ -11,10 +11,16 @@ spec:
       - name: queue
         image: localhost/laravel-queue:1.0
         volumeMounts:
+        - name: web-app
+          mountPath: /var/www/app
+        volumeMounts:
         - name: web-storage
           mountPath: /var/www/app/storage/app
       volumes:
       - name: web-storage 
         persistentVolumeClaim:
           claimName: csdha-web-storage
+      - name: web-app 
+        persistentVolumeClaim:
+          claimName: csdha-web-app
 

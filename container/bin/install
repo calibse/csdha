@@ -1,0 +1,9 @@
+#! /bin/sh
+
+set -e
+
+composer install --optimize-autoloader --prefer-dist --no-dev --no-progress /
+	-n && composer clear-cache
+php artisan migrate --force
+php artisan db:audit-triggers
+

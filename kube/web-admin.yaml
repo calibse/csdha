@@ -1,0 +1,41 @@
+# web-admin.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-web-admin
+spec:
+  template:
+    spec:
+      containers:
+      - name: web-admin
+        image: localhost/laravel-web:1.0
+        env:
+        - name: APP_ENV
+          value: production-admin
+        volumeMounts:
+        - name: web-app 
+          mountPath: /var/www/app
+        volumeMounts:
+        - name: web-app-storage 
+          mountPath: /var/www/app/storage
+        volumeMounts:
+        - name: web-storage 
+          mountPath: /var/www/app/storage/app
+        volumeMounts:
+        - name: web-app-cache 
+          mountPath: /var/www/app/bootstrap/cache
+      volumes:
+      - name: web-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-storage
+      - name: web-app-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-admin-storage
+      - name: web-app-cache 
+        persistentVolumeClaim:
+          claimName: csdha-web-admin-cache
+      - name: web-app 
+        persistentVolumeClaim:
+          claimName: csdha-web-app
+

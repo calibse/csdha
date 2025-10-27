@@ -2,18 +2,11 @@
 
 set -e
 
-cd /var/www/app
-
-if [ "$WEB_TYPE" = "admin" ]
-then
-	cp .env.admin .env
-fi
-
 php artisan optimize:clear 
 php artisan optimize 
 php artisan storage:link --silent
 chmod 666 public/favicon.ico
-chown -R apache:apache bootstrap/cache storage 
-php-fpm83 
-httpd -DFOREGROUND 
+adduser -h /var/www/app -g csdha -S -D -H csdha
+chown -R csdha:csdha bootstrap/cache storage 
+php-fpm83 -F
 

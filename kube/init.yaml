@@ -1,0 +1,20 @@
+# init.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-init
+spec:
+  template:
+    spec:
+      containers:
+      - name: init
+        image: localhost/laravel-init:1.0
+        volumeMounts:
+        - name: web-app
+          mountPath: /root/csdha
+      volumes:
+      - name: web-app
+        persistentVolumeClaim:
+          claimName: csdha-web-app
+

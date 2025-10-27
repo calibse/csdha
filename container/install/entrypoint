@@ -2,7 +2,6 @@
 
 set -e
 
-cd /var/www/app
 container/bin/check_db_conn
 exec "$@" 
 

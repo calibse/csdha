@@ -2,8 +2,6 @@
 
 set -e
 
-cd /var/www/app
-
 max_retries=10
 delay=5
 retries=0

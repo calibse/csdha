@@ -1,0 +1,49 @@
+# pvc.yaml
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-database-data 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-web-storage 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-web-user-storage 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-web-admin-storage 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-web-user-cache 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-web-admin-cache 
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: csdha-web-app 
+

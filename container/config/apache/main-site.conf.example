@@ -1,0 +1,50 @@
+# main-site.conf
+
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+
+DirectoryIndex index.php index.html
+AddDefaultCharset UTF-8
+
+LoadModule rewrite_module modules/mod_rewrite.so
+
+<VirtualHost *:80>
+	# ServerName 
+	DocumentRoot "/var/www/app/public"
+	<Directory "/var/www/app/public">
+		Options Indexes FollowSymLinks
+		AllowOverride All
+		Require all granted
+		ErrorDocument 404 /index.php
+		<FilesMatch "^\.((?!well-known).)*$">
+			Require all denied
+		</FilesMatch>
+		<FilesMatch "^index\.php$">
+			SetHandler "proxy:fcgi://csdha-web-user-pod:9000/"
+			Header unset X-Powered-By
+		</FilesMatch>
+		ErrorLog /var/www/app/storage/logs/apache/error.log
+		CustomLog /var/www/app/storage/logs/apache/access.log combined
+	</Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+	# ServerName 
+	DocumentRoot "/var/www/app/public"
+	<Directory "/var/www/app/public">
+		Options Indexes FollowSymLinks
+		AllowOverride All
+		Require all granted
+		ErrorDocument 404 /index.php
+		<FilesMatch "^\.((?!well-known).)*$">
+			Require all denied
+		</FilesMatch>
+		<FilesMatch "^index\.php$">
+			SetHandler "proxy:fcgi://csdha-web-admin-pod:9000/"
+			Header unset X-Powered-By
+		</FilesMatch>
+		ErrorLog /var/www/app/storage/logs/apache/error.log
+		CustomLog /var/www/app/storage/logs/apache/access.log combined
+	</Directory>
+</VirtualHost>
+

@@ -1,0 +1,20 @@
+# sync.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csdha-sync
+spec:
+  template:
+    spec:
+      containers:
+      - name: sync
+        image: localhost/laravel-sync:1.0
+        volumeMounts:
+        - name: web-app
+          mountPath: /var/www/app
+      volumes:
+      - name: web-app
+        persistentVolumeClaim:
+          claimName: csdha-web-app
+

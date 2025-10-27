@@ -9,27 +9,30 @@ usage() {
 	exit 1
 }
 
-push_assets() {
+push_files() {
 	npm run build
-	rsync -avz --delete resources/pdf/images/ $SSH_SERVER:csdha/resources/pdf/images/
-	rsync -avz --delete resources/pdf/fonts/ $SSH_SERVER:csdha/resources/pdf/fonts/
-	rsync -avz --delete public/build/ $SSH_SERVER:csdha/public/build/
-	rsync -avz --delete public/icon/ $SSH_SERVER:csdha/public/icon/
-	rsync -avz --delete public/font/ $SSH_SERVER:csdha/public/font/
-	rsync -avz --delete public/images/ $SSH_SERVER:csdha/public/images/
-	rsync -avz k8s/secret.yaml $SSH_SERVER:csdha/k8s/secret.yaml
-	rsync -avz .env.production $SSH_SERVER:csdha/.env
-	rsync -avz .env.production.admin $SSH_SERVER:csdha/.env.admin
-}
+	rclone sync resources/pdf/images dropbox:csdha_assets/resources/pdf/images
+	rclone sync resources/pdf/fonts dropbox:csdha_assets/resources/pdf/fonts
+	rclone sync public/build dropbox:csdha_assets/public/build
+	rclone sync public/icon dropbox:csdha_assets/public/icon
+	rclone sync public/font dropbox:csdha_assets/public/font
+	rclone sync public/images dropbox:csdha_assets/public/images
 
-ssh $SSH_SERVER 'cd csdha && git pull'
+	rsync -avz k8s/secret.yaml $SSH_SERVER:csdha/k8s/secret.yaml
+	rsync -avz .env.production $SSH_SERVER:csdha/.env.production
+	rsync -avz .env.production-admin $SSH_SERVER:csdha/.env.production-admin
+
+	rsync -avz k8s/ $SSH_SERVER:csdha/k8s/
+	rsync -avz container/ $SSH_SERVER:csdha/container/
+}
 
 while getopts "b" opt; do
 	case $opt in
-		b) push_assets ;;
+		b) push_files ;;
 		*) usage ;;
 	esac
 done
 
+rsync -avz serve $SSH_SERVER:csdha/serve
 ssh $SSH_SERVER 'cd csdha && ./serve'
 
