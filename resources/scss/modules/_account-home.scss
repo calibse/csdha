@@ -7,7 +7,7 @@
 	.infobox {
 		border-radius: size.$corner-roundness;
 		background-color: #ffffff;
-		border-bottom: solid size.$line-width color.$line;
+		border: solid size.$line-width color.$line;
 		
 		a {
 			padding: .5em;

@@ -1,4 +1,4 @@
-<x-layout.user index id="home-content" class="home index" title="Home">
+<x-layout.user index form id="home-content" class="home form index" title="Home">
 <div class="article">
 @if ($gpoaActive)
 	<div class="infos" id="home-content_infos">

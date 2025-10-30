@@ -200,18 +200,18 @@
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
-								<img class="icon" src="{{ asset('icon/dark/list-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/light/list-duotone.png') }}">
 								<span class="text">Menu</span>
 							</a>
 						@elseif ($backRoute)
 							<a class="main-back-link" href="{{ $backRoute }}" >
-								<img class="icon" src="{{ asset('icon/dark/arrow-left-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
 
 								<span class="text">Back to previous page</span>
 							</a>
 						@else
 							<a class="main-back-link" href="{{ route($route, $routeParams) }}" >
-								<img class="icon" src="{{ asset('icon/dark/arrow-left-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
 								<span class="text">Back to previous page</span>
 							</a>
 						@endif

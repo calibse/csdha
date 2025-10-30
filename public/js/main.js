@@ -56,8 +56,8 @@ function updatePendingAccomReportCount(e) {
 }
 
 function streamHomeInfos() {
-	var event, i, el;
-	for (i = 0; i < HOME_STREAM_ELEMENTS.length; i++) {
+	var event, el;
+	for (var i = 0; i < HOME_STREAM_ELEMENTS.length; i++) {
 		el = document.getElementById(HOME_STREAM_ELEMENTS[i]);
 		if (!el) return;
 	}
@@ -93,7 +93,7 @@ function updateHomeContent(e) {
 	}
 	infosEl.style.display = "none";
 	noGpoaEl.style.display = "block";
-	for (i = 0; i < HOME_STREAM_ELEMENTS.length; i++) {
+	for (var i = 0; i < HOME_STREAM_ELEMENTS.length; i++) {
 		el = document.getElementById(HOME_STREAM_ELEMENTS[i]);
 		if (!el) return;
 		el.textContent = "0";
@@ -109,22 +109,74 @@ function streamHome() {
 	HOME_STREAM.addEventListener("gpoaStatusChanged", updateHomeContent);
 }
 
-if (
-	typeof Intl !== "undefined" &&
-	typeof Intl.DateTimeFormat().resolvedOptions().timeZone !== "undefined"
-) {
-	setTimezoneFromIntl();
-} else if (
-	typeof Date !== "undefined"
-) {
-	setTimezoneFromDate();
+function runTimezoneAction(actionDeps) {
+	var date, intl, satisfied;
+	
+	satisfied = true;
+	intl = actionDeps[0];
+	date = actionDeps[1];
+	for (var i = 0; i < intl.depends.length; i++) {
+		if (window[intl.depends[i]] === "undefined") {
+			satisfied = false;
+			break;
+		}
+	}
+	if (satisfied) {
+		intl.action();
+		return;
+	}
+	for (var i = 0; i < date.depends.length; i++) {
+		if (window[date.depends[i]] === "undefined") {
+			satisfied = false;
+			break;
+		}
+	}
+	if (satisfied) {
+		date.action();
+	}
 }
 
-if (
-	typeof EventSource !== "undefined" &&
-	typeof JSON !== "undefined"
-) {
-	streamHome();
-	streamHomeInfos();
+function runActions(actionDeps) {
+	var actions, depends, action, depend, satisfied;
+
+	for (var i = 0; i < actionDeps.length; i++) {
+		satisfied = true;
+		action = actionDeps[i];
+		for (var j = 0; j < action.depends.length; j++) {
+			if (window[action.depends[j]] === "undefined") {
+				satisfied = false;
+				break;
+			}
+		}
+		if (!satisfied) continue;
+		for (var k = 0; k < action.actions.length; k++) {
+			action.actions[k]();
+		}
+	} 
 }
+
+function main() {
+	var actionDependencies, timezoneActions;
+
+	actionDependencies = [
+		{
+			actions: [ streamHome, streamHomeInfos ],
+			depends: [ 'EventSource', 'JSON' ]
+		}
+	];
+	timezoneActions = [
+		{
+			action: setTimezoneFromIntl,
+			depends: [ 'Intl' ]
+		},
+		{
+			action: setTimezoneFromDate,
+			depends: [ 'Date' ]
+		}
+	];
+	runTimezoneAction(timezoneActions);
+	runActions(actionDependencies);
+}
+
+main();
 
