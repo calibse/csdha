@@ -82,9 +82,8 @@ install() {
 }
 
 update() {
-	restart_queue
-	podman start ${app}-queue-pod-queue
 	podman start ${app}-sync-pod-sync
+	restart_queue
 }
 
 if [ $# -ge 1 ]
