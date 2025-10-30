@@ -78,6 +78,7 @@ install() {
 		podman kube play kube/${kube}
 	done
 	podman kube play --start=false kube/${update_kube}
+	podman image prune -f
 }
 
 update() {

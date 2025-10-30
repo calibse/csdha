@@ -7,4 +7,8 @@ php artisan migrate --force
 php artisan db:audit-triggers
 php artisan optimize 
 chown -R csdha:csdha bootstrap/cache storage 
+cp -r storage/. /root/user_storage
+cp -r storage/. /root/admin_storage
+cp -r bootstrap/cache/. /root/user_cache
+cp -r bootstrap/cache/. /root/admin_cache
 
