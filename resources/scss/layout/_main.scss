@@ -208,7 +208,6 @@
 .main-content-header {
 	color: color.$title-fg;
 	background-color: color.$title-bg;
-	//border-bottom: solid color.$line size.$line-width;
 	overflow: hidden;
 
 	.content-block {
@@ -268,7 +267,7 @@
 
 @mixin main-toolbar-with-content-block {
 	height: calc(100vh - 5.8em);
-	border-top: none;
+	border-top: 0;
 }
 
 .main-content {
@@ -541,7 +540,7 @@
 		#menu:not(:target) + .main-main .main-content,
 		.main-content {
 			.content-block {
-				border-top: none;
+				border-top: 0;
 			}
 
 			.main-toolbar + .content-block {
@@ -559,7 +558,7 @@
 		}
 
 		.content-block {
-			border-top: none;
+			border-top: 0;
 		}
 
 	}
