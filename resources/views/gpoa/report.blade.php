@@ -80,7 +80,7 @@ $actCount = 0;
                 <td>
                     <ul>
                     @foreach ($activity->eventHeadsOnly as $eventHead)
-                        <li>{{ $eventHead->full_name }}</li>
+                        <li>{{ $eventHead?->full_name }}</li>
                     @endforeach
                     </ul>
                 @php
@@ -90,7 +90,7 @@ $coheads = $activity->coheads
                     <p>Co-head:</p>
                     <ul>
                     @foreach ($coheads as $cohead)
-                        <li>{{ $cohead->full_name }}</li>
+                        <li>{{ $cohead?->full_name }}</li>
                     @endforeach
                     </ul>
                 @endif
@@ -105,8 +105,8 @@ $coheads = $activity->coheads
             <ul class="person-list">
                 <li>
                     <div class="signature"></div>
-                    <p class="name">{{ auth()->user()->full_name }}</p>
-                    <p class="position">{{ auth()->user()->position?->name }},
+                    <p class="name">{{ $adviser?->full_name }}</p>
+                    <p class="position">{{ $adviser?->position?->name }},
                         PUP-Taguig Computer Society
                     </p>
                 </li>

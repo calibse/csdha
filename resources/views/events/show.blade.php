@@ -5,9 +5,9 @@
             href="{{ $editRoute }}"
             @endcan
         >
-            <img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
+            <img class="icon" src="{{ asset('icon/light/wrench-duotone.png') }}">
 
-            <span class="text">Edit</span>
+            <span class="text">Settings</span>
         </a>
         <a
             @can ('viewAccomReport', $event)
@@ -27,7 +27,7 @@
                 <col style="width: 12em;">
             </colgroup>
             <tr>
-                <th>Date</th>
+                <th>Date <span class="edit-link">[<a>Edit</a>]</span></th>
                 <td>
                     <ul>
                     @foreach ($event->compactDates() as $date)
@@ -38,7 +38,7 @@
             </tr>
             @can ('register', $event)
             <tr>
-                <th>Registration Form</th>
+                <th>Registration Form <span class="edit-link">[<a>Edit</a>]</span></th>
                 <td>
                     <a href="{{ $regisRoute }}">
                         {{ $regisRoute }}
@@ -47,9 +47,37 @@
             </tr>
             @endcan
             <tr>
-                <th>Venue</th>
+                <th>Description <span class="edit-link">[<a>Edit</a>]</span></th>
+                <td><pre>{{ $event->description }}</pre></td>
+            </tr>
+            <tr>
+                <th>Narrative <span class="edit-link">[<a>Edit</a>]</span></th>
+                <td><pre>{{ $event->narrative }}</pre></td>
+            </tr>
+            <tr>
+                <th>Venue <span class="edit-link">[<a>Edit</a>]</span></th>
                 <td>{{ $event->venue }}</td>
             </tr>
+		@can ('evaluate', $event)
+            <tr>
+                <th>Evaluation Form <span class="edit-link">[<a>Edit</a>]</span></th>
+                <td><a>Show preview</a></td>
+            </tr>
+            <tr>
+                <th>Evaluation Result <span class="edit-link">[<a>Edit</a>]</span></th>
+                <td>0 comments selected</td>
+            </tr>
+		@endcan
+            <tr>
+                <th>Attachments</th>
+                <td><a>Show</a></td>
+            </tr>
+            @can ('recordAttendance', $event)
+            <tr>
+                <th>Attendance</th>
+                <td><a href="{{ $attendanceRoute }}">Show</a></td>
+            </tr>
+            @endcan
             <tr>
                 <th>Participants / Beneficiaries</th>
                 <td>{{ $activity->participants }}</td>
@@ -61,14 +89,6 @@
             <tr>
                 <th>Objectives</th>
                 <td><pre>{{ $activity->objectives }}</pre></td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td><pre>{{ $event->description }}</pre></td>
-            </tr>
-            <tr>
-                <th>Narrative</th>
-                <td><pre>{{ $event->narrative }}</pre></td>
             </tr>
             <tr>
                 <th>Event Head</th>
@@ -92,12 +112,6 @@
                 </td>
             </tr>
             @endif
-            @can ('recordAttendance', $event)
-            <tr>
-                <th>Attendance</th>
-                <td><a href="{{ $attendanceRoute }}">Attendance</a></td>
-            </tr>
-            @endcan
         </table>
 
 

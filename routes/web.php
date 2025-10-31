@@ -473,10 +473,10 @@ Route::domain(config('app.user_domain'))->middleware('auth')
             Route::controller(GpoaController::class)
                 ->middleware(CheckActiveGpoa::class)->group(function () {
 
-                Route::get('/gen-pdf/gpoa_report.pdf', 'streamPdf')
+                Route::get('/gpoa_report.pdf', 'streamPdf')
                     ->name('genPdf');
 
-                Route::get('/gen-pdf.html', 'genPdf')->name('showGenPdf');
+                Route::get('/report.html', 'genPdf')->name('showGenPdf');
 
                 Route::get('/confirm-close.html', 'confirmClose')
                     ->name('confirmClose');

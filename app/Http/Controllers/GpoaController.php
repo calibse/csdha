@@ -18,6 +18,7 @@ use WeasyPrint\Facade as WeasyPrint;
 use App\Services\PagedView;
 use Illuminate\Support\Facades\Storage;
 use App\Events\GpoaStatusChanged;
+use App\Events\GpoaUpdated;
 
 class GpoaController extends Controller implements HasMiddleware
 {
@@ -183,6 +184,7 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = self::$gpoa;
         self::storeOrUpdate($request, $gpoa);
+        GpoaUpdated::dispatch($gpoa);
         return redirect()->route('gpoa.index');
     }
 
@@ -190,21 +192,32 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = self::$gpoa;
         $fileRoute = null;
+        $empty = true;
         if ($gpoa->activities()->where('status', 'approved')->exists()) {
+            $empty = false;
+        }
+        if ($gpoa->report_filepath) {
             $fileRoute = route('gpoa.genPdf');
         }
         return view('gpoa.show-gpoa-report', [
             'gpoa' => $gpoa,
             'fileRoute' => $fileRoute,
             'backRoute' => route('gpoa.index'),
+            'updated' => $gpoa->report_file_updated,
+            'empty' => $empty
         ]);
     }
 
     public function streamPdf(Request $request)
     {
         $gpoa = self::$gpoa;
+        $file = $gpoa->report_filepath;
+        if (!$file) abort(404);
+        return response()->file(Storage::path($file));
+        /*
         return WeasyPrint::prepareSource(new PagedView('gpoa.report',
             $gpoa->reportViewData()))->inline('gpoa_report.pdf');
+        */
     }
 
     public function confirmClose(Request $request)
@@ -226,18 +239,8 @@ class GpoaController extends Controller implements HasMiddleware
         $accomReportFile = "gpoas/gpoa_{$gpoa->id}/accom_report.pdf";
         WeasyPrint::prepareSource(new PagedView('gpoa.report',
             $gpoa->reportViewData()))->putFile($reportFile);
-        $allEvents = $gpoa->events()->approved()->get();
-        $events = [];
-        foreach ($allEvents as $event) {
-            $events[] = $event->accomReportViewData();
-        }
-        WeasyPrint::prepareSource(new PagedView('events.accom-report', [
-            'events' => $events,
-            'editors' => User::withPerm('accomplishment-reports.edit')
-                ->notOfPosition('adviser')->get(),
-            'approved' => true,
-            'president' => User::ofPosition('president')->first()
-        ]))->putFile($accomReportFile);
+        WeasyPrint::prepareSource(new PagedView('events.accom-report', 
+            $gpoa->accomReportViewData()))->putFile($accomReportFile);
         $gpoa->report_filepath = $reportFile;
         $gpoa->accom_report_filepath = $accomReportFile;
         $gpoa->save();

@@ -18,6 +18,7 @@ use App\Http\Requests\SaveGpoaActivityRequest;
 use App\Http\Requests\SaveGpoaActivityCommentsRequest;
 use App\Services\Format;
 use App\Events\GpoaActivityStatusChanged;
+use App\Events\GpoaUpdated;
 
 class GpoaActivityController extends Controller implements HasMiddleware
 {
@@ -427,6 +428,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $activity->status = 'approved';
         $activity->adviser_approved_at = now();
         $activity->save();
+        GpoaUpdated::dispatch($gpoa);
         GpoaActivityStatusChanged::dispatch($activity);
         return redirect()->route('gpoa.index')->with('status',
             'Activity approved.');

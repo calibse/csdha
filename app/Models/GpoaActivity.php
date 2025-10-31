@@ -319,19 +319,24 @@ class GpoaActivity extends Model
         if (Event::whereBelongsTo($this)->first()) {
             return;
         }
-        $event = new Event();
+        $event = new Event;
         $event->timezone = self::getTimezone();
         $event->venue = $this->venue;
         $event->automatic_attendance = false;
         $event->accept_evaluation = false;
         $event->gpoaActivity()->associate($this);
         $event->save();
-        $date = new EventDate();
+        $date = new EventDate;
         $date->date = $this->start_date;
         $date->start_time = '00:00';
         $date->end_time = '23:59';
         $date->event()->associate($this->event);
         $date->save();
+	$accomReport = new AccomReport;
+        $accomReport->event()->associate($event);
+        $accomReport->status = 'draft';
+        $accomReport->current_step = 'officers';
+        $accomReport->save();
         EventUpdated::dispatch($event);
         EventDatesChanged::dispatch($event);
     }

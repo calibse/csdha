@@ -308,7 +308,7 @@
 	overflow-x: auto;
 	background-color: color.$toolbar-bg;
 	padding: 0 size.$page-margin;
-	border-bottom: solid size.$line-width color.$toolbar-border;
+	border-bottom: solid size.$line-width color.$line;
 
 	a, button {
 		display: inline-block;
@@ -519,7 +519,9 @@
 
 		.main-content, 
 		.main-toolbar {
+			/*
 			border-top-left-radius: size.$corner-roundness;
+			*/
 		}
 
 	}

@@ -22,7 +22,7 @@
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.showGenPdf') }}">
 			<img class="icon" src="{{ asset('icon/light/file-plus-duotone.png') }}">
-			<span class="text">Gen. PDF</span>
+			<span class="text">View Report</span>
 		</a>
 		@endcan
 	@else

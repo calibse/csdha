@@ -26,6 +26,23 @@ class Gpoa extends Model
         ];
     }
 
+    public function accomReportViewData($startDate = null, 
+        $endDate = null): array
+    {
+        $events = [];
+        $allEvents = $this->events()->approved($startDate, $endDate)->get();
+        foreach ($allEvents as $event) {
+            $events[] = $event->eventData();
+        }
+        return [
+            'events' => $events,
+            'editors' => User::withPerm('accomplishment-reports.edit')
+                ->notOfPosition('adviser')->get(),
+            'approved' => true,
+            'president' => User::ofPosition('president')->first()
+        ];
+    }
+
     public function events(): HasManyThrough
     {
         return $this->hasManyThrough(Event::class, GpoaActivity::class);
@@ -79,7 +96,7 @@ class Gpoa extends Model
             'activities' => $activities,
             'president' => $president,
             'adviser' => $adviser,
-            'academicPeriod' => $this->academicPeriod
+            'academicPeriod' => $this->academicPeriod,
         ];
     }
 

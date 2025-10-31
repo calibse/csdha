@@ -56,7 +56,7 @@ class AccomReportController extends Controller implements HasMiddleware
         }
         switch ($position) {
         case 'officers':
-            $accomReports = AccomReport::query();
+            $accomReports = AccomReport::whereNot('status', 'pending');
             break;
         case 'president':
             $accomReports = AccomReport::forPresident();
@@ -79,9 +79,11 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         $accomReport = $event->accomReport;
         $date = null;
+        $fileRoute = null;
         if ($accomReport) {
             $status = $accomReport->status;
             $date = match ($status) {
+                'draft' => $accomReport->created_at,
                 'pending' => $accomReport->submitted_at,
                 'returned' => $accomReport->returned_at,
                 'approved' => $accomReport->approved_at
@@ -114,15 +116,18 @@ class AccomReportController extends Controller implements HasMiddleware
         $backRoute = $request->from === 'events'
             ? route('events.show', ['event' => $event->public_id])
             : route('accom-reports.index');
+        if ($accomReport->filepath) {
+            $fileRoute = route('events.accom-report.stream', [
+                'event' => $event->public_id
+            ]);
+        }
         return view('accom-reports.show', [
             'actions' => $actions,
             'accomReport' => $accomReport,
             'event' => $event,
             'date' => $date,
             'backRoute' => $backRoute,
-            'fileRoute' => route('events.accom-report.stream', [
-                'event' => $event->public_id
-            ]),
+            'fileRoute' => $fileRoute,
             'submitRoute' => route('accom-reports.prepareForSubmit', [
                 'event' => $event->public_id
             ]),
@@ -281,21 +286,15 @@ class AccomReportController extends Controller implements HasMiddleware
 
     public function stream(Request $request)
     {
+        $gpoa = Gpoa::active()->get();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         if (!$startDate) abort(404);
-        $allEvents = Event::active()->approved($startDate, $endDate)->get();
+        $allEvents = $gpoa->events()->approved($startDate, $endDate)->exists();
         if (!$allEvents) abort(404);
-        foreach ($allEvents as $event) {
-            $events[] = $event->accomReportViewData();
-        }
-        return WeasyPrint::prepareSource(new PagedView('events.accom-report', [
-            'events' => $events,
-            'editors' => User::withPerm('accomplishment-reports.edit')
-                ->notOfPosition('adviser')->get(),
-            'approved' => true,
-            'president' => User::ofPosition('president')->first()
-        ]))->stream('accom_report_set.pdf');
+        return WeasyPrint::prepareSource(new PagedView('events.accom-report', 
+            $gpoa->accomReportViewData($startDate, $endDate)))
+            ->stream('accom_report_set.pdf');
     }
 
     public function editBackground(Request $request)

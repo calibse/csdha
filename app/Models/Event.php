@@ -163,7 +163,7 @@ class Event extends Model
         return true;
     }
 
-    public function accomReportViewData()
+    public function eventData()
     {
         $members = [
             'BSIT' => ['1', '2', '3', '4'],
@@ -215,7 +215,7 @@ class Event extends Model
             $attendance = $this->officerAttendees();
             break;
         }
-        return [
+        $eventData = [
             'event' => $this,
             'attendance' => $attendance,
             'attendanceTotal' => $attendanceTotal,
@@ -223,6 +223,18 @@ class Event extends Model
             'activity' => $this->gpoaActivity,
             'comments' => $this->comments(),
             'ratings' => $this->ratings()
+        ];
+        return $eventData;
+    }
+
+    public function accomReportViewData()
+    {
+        return [
+            'events' => [$this->eventData()],
+            'editors' => User::withPerm('accomplishment-reports.edit')
+                ->notOfPosition('adviser')->get(),
+            'approved' => $this->accomReport?->status === 'approved',
+            'president' => User::ofPosition('president')->first()
         ];
     }
 

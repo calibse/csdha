@@ -322,21 +322,11 @@ class EventController extends Controller implements HasMiddleware
         $events[] = $event->accomReportViewData();
         $format = 'pdf';
         return match ($format) {
-            'html' => view('events.accom-report', [
-                'events' => $events,
-                'editors' => User::withPerm('accomplishment-reports.edit')
-                    ->notOfPosition('adviser')->get(),
-                'approved' => $event->accomReport?->status === 'approved',
-                'president' => User::ofPosition('president')->first()
-            ]),
+            'html' => view('events.accom-report', $event
+                 ->accomReportViewData()),
             'pdf' => WeasyPrint::prepareSource(new PagedView(
-                'events.accom-report', [
-                    'events' => $events,
-                    'editors' => User::withPerm('accomplishment-reports.edit')
-                        ->notOfPosition('adviser')->get(),
-                    'approved' => $event->accomReport?->status === 'approved',
-                    'president' => User::ofPosition('president')->first()
-            ]))->stream('accom_report.pdf')
+                'events.accom-report', $event->accomReportViewData()))
+                ->stream('accom_report.pdf')
         };
     }
 
