@@ -20,7 +20,7 @@ class EventAttachmentController extends Controller
         return view('events.attachments-index', [
             'event' => $event,
             'attachmentSets' => $attachmentSets,
-            'backRoute' => route('events.edit', [
+            'backRoute' => route('events.show', [
                 'event' => $event
             ]),
             'createRoute' => route('events.attachments.create', [

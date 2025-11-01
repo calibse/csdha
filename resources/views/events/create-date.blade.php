@@ -1,15 +1,6 @@
-@php
-$routeParams = ['event' => $event->public_id];
-$formAction = $update 
-    ? route('events.dates.update', [
-        'event' => $event->public_id, 
-        'date' => $date->public_id
-    ])
-    : route('events.dates.store', ['event' => $event->public_id]);
-@endphp
-<x-layout.user route="events.dates.index" :$routeParams class="events form" title="{{ $update ? 'Edit' : 'Add' }} Date">
+<x-layout.user :$backRoute class="events form" title="{{ $update ? 'Edit' : 'Add' }} Date">
     <article class="article">
-        <x-alert/>
+        <x-alert errorBag="event-date_create" />
         <form method="POST" action="{{ $formAction }}">
         @if ($update)
             @method('PUT')

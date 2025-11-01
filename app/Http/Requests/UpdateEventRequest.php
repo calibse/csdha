@@ -37,14 +37,12 @@ class UpdateEventRequest extends FormRequest
             'automatic_attendance' => ['boolean'],
             'accept_evaluation' => ['boolean'],
             'tag' => ['max:15'],
-            'venue' => ['max:255'],
             'timezone' => ['required', Rule::in($timezones)],
             'evaluation_delay_hours' => [
                 Rule::excludeIf(array_intersect($this->record_attendance ?? [], 
                     ['0', '-1']) ? true : false),
                 'required', 'min:0', 'max:168',
             ],
-            'description' => [new MaxText],
         ];
     }
 }

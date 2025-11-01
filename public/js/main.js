@@ -1,6 +1,7 @@
 // main.js
 
-var HOME_STREAM;
+var WINDOW_DRAGGED, WINDOW_OFFSET_X, WINDOW_OFFSET_Y, 
+	HOME_STREAM;
 var HOME_STREAM_EVENTS = {
 	pendingActivityCountChanged: updatePendingActivityCount,
 	upcomingEventCountChanged: updateUpcomingEventCount,
@@ -24,13 +25,13 @@ function setCookie(name, value) {
 function setTimezoneFromDate() {
 	var timezone;
 	timezone = new Date().getTimezoneOffset();
-	setCookie('timezone', timezone);
+	setCookie("timezone", timezone);
 }
 
 function setTimezoneFromIntl() {
 	var timezone;
 	timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	setCookie('timezone', timezone);
+	setCookie("timezone", timezone);
 }
 
 function updateHomeInfosCount(id, data) {
@@ -155,27 +156,271 @@ function runActions(actionDeps) {
 	} 
 }
 
+function setOpenedWindowId(id) {
+	var key, elementId;
+
+	key = "opened_window";
+	sessionStorage.setItem(key, id);
+}
+
+function getOpenedWindowId() {
+	var key, elementId;
+
+	key = "opened_window";
+	elementId = sessionStorage.getItem(key);
+	return elementId;
+}
+
+function forgetOpenedWindowId() {
+	var key, elementId;
+
+	key = "opened_window";
+	sessionStorage.removeItem(key);
+}
+
+function openEditWindow(window) {
+	var field, valueEl, fieldEl;
+
+	for (var i = 0; i < window.fields.length; i++) {
+		field = window.fields[i];
+		fieldEl = document.getElementById(field.field);
+		valueEl = document.getElementById(field.value);
+		fieldEl.value = valueEl.textContent;
+	}
+	setOpenedWindowId(window.element);
+	openWindow(true);
+}
+
+function isThereOpenWindow() {
+	var id, el;
+
+	id = getOpenedWindowId();
+	if (!id) {
+		return false;
+	}
+	el = document.getElementById(id);
+	if (!el || el.style.display === "none") {
+		forgetOpenedWindowId(id);
+		return false;
+	}
+	return true;
+}
+
+function createEventDate(e) {
+	var el, id;
+
+	e.preventDefault();
+	if (isThereOpenWindow()) {
+		return;
+	}
+	id = "event-date_create";
+	el = document.getElementById(id);
+	if (!el) return;
+	setOpenedWindowId(id);
+	openWindow(true);
+}
+
+function editEventVenue(e) {
+	var window;
+
+	e.preventDefault();
+	if (isThereOpenWindow()) {
+		return;
+	}
+	window = {
+		element: "event-venue_edit",
+		fields: [
+			{
+				field: "event-venue_field",
+				value: "event-venue"
+			},
+		]
+	};
+	openEditWindow(window)
+}
+
+function editEventNarrative(e) {
+	var window;
+
+	e.preventDefault();
+	if (isThereOpenWindow()) {
+		return;
+	}
+	window = {
+		element: "event-narrative_edit",
+		fields: [
+			{
+				field: "event-narrative_field",
+				value: "event-narrative"
+			},
+		]
+	};
+	openEditWindow(window)
+}
+
+function editEventDescription(e) {
+	var window;
+
+	e.preventDefault();
+	if (isThereOpenWindow()) {
+		return;
+	}
+	window = {
+		element: "event-description_edit",
+		fields: [
+			{
+				field: "event-description_field",
+				value: "event-description"
+			},
+		]
+	};
+	openEditWindow(window)
+}
+
+function closeWindow() {
+	var elementId, el, errorEl;
+
+	elementId = getOpenedWindowId();
+	if (!elementId) return;
+	el = document.getElementById(elementId);
+	if (!el) return;
+	errorEl = document.getElementById("window-form-error");
+	if (errorEl) {
+		errorEl.style.display = "none";
+	}
+	el.style.display = "none";
+	el.style.removeProperty("top");
+	el.style.removeProperty("left"); 
+	el.style.removeProperty("margin-left");
+	forgetOpenedWindowId();
+}
+
+function setWindowDragging(e) {
+	var elementId, el, marginLeft, parentWidth, leftPercent, 
+		realLeft, elWidth;
+
+	e.preventDefault();
+	elementId = getOpenedWindowId();
+	el = document.getElementById(elementId);
+	if (!WINDOW_DRAGGED) {
+		parentWidth = el.offsetParent.offsetWidth;
+		elWidth = el.offsetWidth;
+		realLeft = parentWidth / 2 - elWidth / 2;
+		el.style.left = realLeft + "px";
+		el.style.marginLeft = "0";
+		WINDOW_DRAGGED = true;
+	}
+	e.target.style.cursor = "grab";
+	WINDOW_OFFSET_X = e.clientX - el.offsetLeft;
+	WINDOW_OFFSET_Y = e.clientY - el.offsetTop;
+	document.addEventListener("mousemove", startWindowDragging);
+	document.addEventListener("mouseup", stopWindowDragging);
+}
+
+function startWindowDragging(e) {
+	var elementId, el;
+
+	e.preventDefault();
+	elementId = getOpenedWindowId();
+	el = document.getElementById(elementId);
+	el.style.left = (e.clientX - WINDOW_OFFSET_X) + "px";
+	el.style.top = (e.clientY - WINDOW_OFFSET_Y) + "px";
+}
+
+function stopWindowDragging(e) {
+	var elementId, el;
+
+	elementId = getOpenedWindowId();
+	titleEl = document.getElementById(elementId + "_title-bar");
+	titleEl.style.removeProperty("cursor");
+	document.removeEventListener("mousemove", startWindowDragging);
+	document.removeEventListener("mouseup", stopWindowDragging);
+}
+
+function openWindow(force) {
+	var elementId, el, offsetX, offsetY, marginLeft, dragging, 
+		parentWidth, leftPercent, realLeft, elWidth, dragged, 
+		titleEl, closeEl;
+
+	force = (typeof force !== "undefined") ? force : false;
+	elementId = getOpenedWindowId();
+	if (!elementId) {
+		return;
+	}
+	errorEl = document.getElementById("window-form-error");
+	if (!errorEl && !force) {
+		closeWindow();
+		return;
+	}
+	el = document.getElementById(elementId);
+	if (!el) return;
+	titleEl = document.getElementById(elementId + "_title-bar");
+	closeEl = document.getElementById(elementId + "_close");
+	WINDOW_DRAGGED = false;
+	titleEl.removeEventListener("mousedown", setWindowDragging);
+	closeEl.removeEventListener("click", closeWindow); 
+	titleEl.addEventListener("mousedown", setWindowDragging);
+	closeEl.addEventListener("click", closeWindow); 
+	el.style.display = "block";
+}
+
+function setEvents() {
+	var elementActions, element, currentEl;
+
+	elementActions = [
+		{
+			element: "event-description_edit-button",
+			event: "click",
+			action: editEventDescription
+		},
+		{
+			element: "event-narrative_edit-button",
+			event: "click",
+			action: editEventNarrative
+		},
+		{
+			element: "event-venue_edit-button",
+			event: "click",
+			action: editEventVenue
+		},
+		{
+			element: "event-date_create-button",
+			event: "click",
+			action: createEventDate
+		},
+	];
+
+	for (var i = 0; i < elementActions.length; i++) {
+		element = elementActions[i];
+		currentEl = document.getElementById(element.element);
+		if (!currentEl) continue;
+		currentEl.addEventListener(element.event, element.action);
+	}
+}
+
 function main() {
 	var actionDependencies, timezoneActions;
 
 	actionDependencies = [
 		{
 			actions: [ streamHome, streamHomeInfos ],
-			depends: [ 'EventSource', 'JSON' ]
+			depends: [ "EventSource", "JSON" ]
 		}
 	];
 	timezoneActions = [
 		{
 			action: setTimezoneFromIntl,
-			depends: [ 'Intl' ]
+			depends: [ "Intl" ]
 		},
 		{
 			action: setTimezoneFromDate,
-			depends: [ 'Date' ]
+			depends: [ "Date" ]
 		}
 	];
 	runTimezoneAction(timezoneActions);
 	runActions(actionDependencies);
+	setEvents();
+	openWindow();
 }
 
 main();

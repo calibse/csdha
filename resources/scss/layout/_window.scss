@@ -1,0 +1,49 @@
+/* _window.scss */
+
+@use "../size";
+@use "../color";
+@use "sass:math";
+
+$window-width: size.$text-width + 2em;
+
+.window {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: solid size.$line-width color.$window-border;
+	border-top-left-radius: size.$corner-roundness;
+	border-top-right-radius: size.$corner-roundness;
+	overflow: hidden;
+	width: 100%;
+
+	&.form .window-content {
+		background-color: color.$form-bg;
+	}
+}
+
+.window-title {
+	border-bottom: solid size.$line-width color.$line;
+	background-color: color.$title-bg;
+	color: color.$title-fg;
+	padding: 1rem;
+
+	.text {
+		font-size: 1.2em;
+	}
+}
+
+.window-content {
+	padding: size.$edge-padding size.$page-margin;
+	background-color: color.$background;
+	color: color.$foreground;
+}
+
+@media (min-width: $window-width) {
+	.window {
+		top: 4rem;
+		left: 50%;
+		margin-right: 0;
+		margin-left: math.div($window-width, 2) * -1;
+		width: $window-width;
+	}
+}

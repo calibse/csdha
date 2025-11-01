@@ -8,7 +8,7 @@
 	margin: 0;
 	background-color: color.$background;
 
-	a {
+	a[href] {
 		color: color.$link;
 	}
 }
@@ -100,7 +100,7 @@
 			margin: 0;
 			width: 100%;
 
-			a {
+			a[href] {
 				color: color.$header-fg;
 			}
 
@@ -167,7 +167,7 @@
 		margin-right: 1em;
 	}
 
-	a {
+	a[href] {
 		text-decoration: none;
 		color: color.$header-fg;
 		

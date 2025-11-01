@@ -559,6 +559,24 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/update.php', 'update')->name('update');
 
+                Route::name('venue.')->group(function () {
+
+                    Route::get('/venue.html', 'editVenue')
+                        ->name('edit');
+
+                    Route::put('/venue.php', 'updateVenue')
+                        ->name('update');
+                });
+
+                Route::name('description.')->group(function () {
+
+                    Route::get('/description.html', 'editDescription')
+                        ->name('edit');
+
+                    Route::put('/description.php', 'updateDescription')
+                        ->name('update');
+                });
+
                 Route::name('narrative.')->group(function () {
 
                     Route::get('/narrative.html', 'editNarrative')

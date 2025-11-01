@@ -27,7 +27,7 @@
                 <col style="width: 12em;">
             </colgroup>
             <tr>
-                <th>Date <span class="edit-link">[<a>Edit</a>]</span></th>
+                <th>Date <span class="edit-link">[<a href="{{ $dateRoute }}">Edit</a>]</span></th>
                 <td>
                     <ul>
                     @foreach ($event->compactDates() as $date)
@@ -47,16 +47,16 @@
             </tr>
             @endcan
             <tr>
-                <th>Description <span class="edit-link">[<a>Edit</a>]</span></th>
-                <td><pre>{{ $event->description }}</pre></td>
+                <th>Description <span class="edit-link">[<a id="event-description_edit-button" href="{{ $descriptionRoute }}">Edit</a>]</span></th>
+                <td id="event-description"><pre>{{ $event->description }}</pre></td>
             </tr>
             <tr>
-                <th>Narrative <span class="edit-link">[<a>Edit</a>]</span></th>
-                <td><pre>{{ $event->narrative }}</pre></td>
+                <th>Narrative <span class="edit-link">[<a id="event-narrative_edit-button" href="{{ $narrativeRoute }}">Edit</a>]</span></th>
+                <td id="event-narrative"><pre>{{ $event->narrative }}</pre></td>
             </tr>
             <tr>
-                <th>Venue <span class="edit-link">[<a>Edit</a>]</span></th>
-                <td>{{ $event->venue }}</td>
+                <th>Venue <span class="edit-link">[<a id="event-venue_edit-button" href="{{ $venueRoute }}">Edit</a>]</span></th>
+                <td id="event-venue">{{ $event->venue }}</td>
             </tr>
 		@can ('evaluate', $event)
             <tr>
@@ -70,7 +70,7 @@
 		@endcan
             <tr>
                 <th>Attachments</th>
-                <td><a>Show</a></td>
+                <td><a href="{{ $attachmentRoute }}">Show</a></td>
             </tr>
             @can ('recordAttendance', $event)
             <tr>
@@ -179,4 +179,45 @@
         @endcan
         --}}
     </div>
+<x-window class="form" id="event-description_edit" title="Edit event description">
+        <form method="post" action="{{ $descriptionFormAction }}">
+        @csrf
+        @method('PUT')
+                <p>
+                        <label for="event-description_field">Description</label>
+                        <textarea id="event-description_field" name="description">{{ old('description') }}</textarea>
+                </p>
+                <p class="form-submit">
+                        <button type="button" id="event-description_edit_close">Cancel</button>
+                        <button>Update</button>
+                </p>
+        </form>
+</x-window>
+<x-window class="form" id="event-narrative_edit" title="Edit event narrative">
+        <form method="post" action="{{ $narrativeFormAction }}">
+        @csrf
+        @method('PUT')
+                <p>
+                        <label for="event-narrative_field">Narrative</label>
+                        <textarea id="event-narrative_field" name="narrative">{{ old('narrative') }}</textarea> </p>
+                <p class="form-submit">
+                        <button type="button" id="event-narrative_edit_close">Cancel</button>
+                        <button>Update</button>
+                </p>
+        </form>
+</x-window>
+<x-window class="form" id="event-venue_edit" title="Edit event venue">
+        <form method="post" action="{{ $venueFormAction }}">
+        @csrf
+        @method('PUT')
+                <p>
+                        <label for="event-venue_field">Venue</label>
+                        <input id="event-venue_field" name="venue" value="{{ old('venue') }}">
+                </p>
+                <p class="form-submit">
+                        <button type="button" id="event-venue_edit_close">Cancel</button>
+                        <button>Update</button>
+                </p>
+        </form>
+</x-window>
 </x-layout.user>

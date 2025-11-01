@@ -71,12 +71,8 @@
 			<label for="accept-eval">Accept Evaluation <small>(for students only)</small></label>
 		</p>
 		<p>
-			<label>Tag <small>(for QR code label)</small></label>
+			<label>QR code label <small>(if applicable)</small></label>
 			<input name="tag" value="{{ $errors->any() ? old('tag') : $event->tag }}">
-		</p>
-		<p>
-			<label>Venue</label>
-			<input name="venue" value="{{ $errors->any() ? old('venue') : $event->venue }}">
 		</p>
 		<p>
 			<label>Time Zone</label>
@@ -96,22 +92,6 @@
 		<p>
 			<label>Evaluation Delay in Hours</label>
 			<input type="number" name="evaluation_delay_hours" value="{{ $errors->any() ? old('evaluation_delay_hours') : $event->evaluation_delay_hours }}">
-		</p>
-		<p>
-			<label>Description</label>
-			<textarea name="description">{{ $errors->any() ? old('description') : $event->description }}</textarea>
-		</p>
-		<p>
-			<label>Narrative</label>
-			<a href="{{ $narrativeRoute }}">Edit here</a>
-		</p>
-		<p>
-			<label>Dates</label>
-			<a href="{{ $dateRoute }}">Edit here</a>
-		</p>
-		<p>
-			<label>Attachments</label>
-			<a href="{{ $attachmentRoute }}">Edit here</a>
 		</p>
 		<p>
 			<label>Registration form</label>

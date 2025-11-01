@@ -5,14 +5,14 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MaxText;
 
-class UpdateEventNarrativeRequest extends FormRequest
+class UpdateEventDescriptionRequest extends FormRequest
 {
-    protected $errorBag = 'event-narrative_edit';
+    protected $errorBag = 'event-description_edit';
 
     public function rules(): array
     {
         return [
-            'narrative' => [new MaxText]
+           'description' => [new MaxText]
         ];
     }
 }

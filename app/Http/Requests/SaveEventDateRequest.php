@@ -7,6 +7,8 @@ use Illuminate\Validation\Rule;
 
 class SaveEventDateRequest extends FormRequest
 {
+    protected $errorBag = "event-date_create";
+
     public function rules(): array
     {
         $event = $this->route('event');

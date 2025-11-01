@@ -1,9 +1,6 @@
-@php
-	$routeParams = ['event' => $event->public_id]
-@endphp
-<x-layout.user route="events.edit" :$routeParams class="events" title="Edit Dates">
+<x-layout.user :$backRoute class="events" title="Edit event dates">
 	<x-slot:toolbar>
-		<a href="{{ route('events.dates.create', ['event' => $event->public_id]) }}">
+		<a id="event-date_create-button" href="{{ route('events.dates.create', ['event' => $event->public_id]) }}">
 			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 
 			<span class="text">Add Date</span>
@@ -33,4 +30,27 @@
 		@endforeach
 		</ul>
 	</article>
+<x-window class="form" id="event-date_create" title="Add event date">
+        <form method="POST" action="{{ $addDateFormAction }}">
+        @csrf
+            <div class="inline">
+                <p>
+                    <label>Date</label>
+                    <input type="date" name="date" value="{{ old('date') }}">
+                </p>
+                <p>
+                    <label>Start time</label>
+                    <input type="time" name="start_time" value="{{ old('start_time') }}">
+                </p>
+                <p>
+                    <label>End time</label>
+                    <input type="time" name="end_time" value="{{ old('end_time') }}">
+                </p>
+            </div>
+            <p>
+                <button id="event-date_create_close" type="button">Cancel</button>
+                <button type="submit">Save</button>
+            </p>
+        </form>
+</x-window>
 </x-layout.user>

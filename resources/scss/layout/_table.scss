@@ -17,7 +17,7 @@ table {
 		font-weight: normal;
 	}
 
-    a {
+    a[href] {
         color: color.$link;
     }
 

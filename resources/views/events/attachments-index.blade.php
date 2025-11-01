@@ -1,4 +1,4 @@
-<x-layout.user class="events attachments" :$backRoute title="Attachments">
+<x-layout.user class="events attachments" :$backRoute title="Event Attachments">
 <x-slot:toolbar>
 	<a href="{{ $createRoute }}">
 		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">

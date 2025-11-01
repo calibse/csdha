@@ -25,6 +25,8 @@ use App\Http\Requests\UpdateEventRequest;
 use App\Http\Requests\SaveAttendeeRequest;
 use App\Http\Requests\UpdateCommentsRequest;
 use App\Http\Requests\UpdateEventNarrativeRequest;
+use App\Http\Requests\UpdateEventDescriptionRequest;
+use App\Http\Requests\UpdateEventVenueRequest;
 use App\Services\Format;
 use App\Mail\EventEvaluation as EventEvaluationMail;
 use Illuminate\Support\Facades\Hash;
@@ -147,6 +149,30 @@ class EventController extends Controller implements HasMiddleware
                 'event' => $event->public_id,
                 'from' => 'events'
             ]),
+            'dateRoute' => route('events.dates.index', [
+                'event' => $event->public_id
+            ]),
+            'descriptionRoute' => route('events.description.edit', [
+                'event' => $event->public_id
+            ]),
+            'venueRoute' => route('events.venue.edit', [
+                'event' => $event->public_id
+            ]),
+            'narrativeRoute' => route('events.narrative.edit', [
+                'event' => $event->public_id
+            ]),
+            'attachmentRoute' => route('events.attachments.index', [
+                'event' => $event->public_id
+            ]),
+            'descriptionFormAction' => route('events.description.update', [
+                 'event' => $event->public_id
+             ]),
+            'narrativeFormAction' => route('events.narrative.update', [
+                 'event' => $event->public_id
+             ]),
+            'venueFormAction' => route('events.venue.update', [
+                 'event' => $event->public_id
+             ]),
         ]);
     }
 
@@ -188,19 +214,10 @@ class EventController extends Controller implements HasMiddleware
             'formAction' => route('events.update', [
                 'event' => $event->public_id
             ]),
-            'narrativeRoute' => route('events.narrative.edit', [
-                'event' => $event->public_id
-            ]),
-            'dateRoute' => route('events.dates.index', [
-                'event' => $event->public_id
-            ]),
             'evalRoute' => route('events.eval-form.edit-questions', [
                 'event' => $event->public_id
             ]),
             'regisRoute' => route('events.regis-form.edit', [
-                'event' => $event->public_id
-            ]),
-            'attachmentRoute' => route('events.attachments.index', [
                 'event' => $event->public_id
             ]),
             'commentsRoute' => route('events.evaluations.comments.edit', [
@@ -211,8 +228,6 @@ class EventController extends Controller implements HasMiddleware
 
     public function update(UpdateEventRequest $request, Event $event)
     {
-        $event->venue = $request->venue;
-        $event->description = $request->description;
         $event->tag = $request->tag;
         $event->timezone = $request->timezone;
         $event->evaluation_delay_hours = $request->evaluation_delay_hours ?? 0;
@@ -241,13 +256,55 @@ class EventController extends Controller implements HasMiddleware
             $event->accept_evaluation = false;
         }
         $event->save();
-        if ($event->accept_evaluation) {
-            // self::sendEvaluationForm($event);
-        }
         EventUpdated::dispatch($event);
         return redirect()->route('events.show', [
             'event' => $event->public_id
         ]);
+    }
+
+    public function editVenue(Event $event)
+    {
+        return view('events.edit-venue', [
+            'formAction' => route('events.venue.update', [
+                 'event' => $event->public_id
+             ]),
+            'backRoute' => route('events.show', [
+                 'event' => $event->public_id
+             ]),
+             'venue' => $event->venue
+        ]);
+    }
+
+    public function updateVenue(UpdateEventVenueRequest $request, Event $event)
+    {
+        $event->venue = $request->venue;
+        $event->save();
+        return redirect()->route('events.show', [
+                 'event' => $event->public_id
+        ])->with('status', 'Event venue updated.');
+    }
+
+    public function editDescription(Event $event)
+    {
+        return view('events.edit-description', [
+            'formAction' => route('events.description.update', [
+                 'event' => $event->public_id
+             ]),
+            'backRoute' => route('events.show', [
+                 'event' => $event->public_id
+             ]),
+             'description' => $event->description
+        ]);
+    }
+
+    public function updateDescription(UpdateEventDescriptionRequest $request, 
+        Event $event)
+    {
+        $event->description = $request->description;
+        $event->save();
+        return redirect()->route('events.show', [
+                 'event' => $event->public_id
+        ])->with('status', 'Event description updated.');
     }
 
     public function editNarrative(Event $event)
@@ -256,7 +313,7 @@ class EventController extends Controller implements HasMiddleware
             'formAction' => route('events.narrative.update', [
                  'event' => $event->public_id
              ]),
-            'backRoute' => route('events.edit', [
+            'backRoute' => route('events.show', [
                  'event' => $event->public_id
              ]),
              'narrative' => $event->narrative
@@ -268,7 +325,9 @@ class EventController extends Controller implements HasMiddleware
     {
         $event->narrative = $request->narrative;
         $event->save();
-        return back()->with('status', 'Event narrative updated.');
+        return redirect()->route('events.show', [
+                 'event' => $event->public_id
+        ])->with('status', 'Event narrative updated.');
     }
 
     private static function sendEvaluationForm(Event $event): void
@@ -369,7 +428,7 @@ class EventController extends Controller implements HasMiddleware
                 'submitRoute' => route('events.attendance.store', [
                     'event' => $event->public_id
                 ]),
-                'programs' => Course::all(),
+                'programs' => $event->courses,
                 'yearLevels' => $event->participants
             ]),
             'officers' => view('events.add-attendee-officer', [
@@ -429,7 +488,13 @@ class EventController extends Controller implements HasMiddleware
         return view('events.edit-dates',[
             'dates' => $event->dates()->orderBy('date', 'asc')
                 ->orderBy('start_time', 'asc')->get(),
-            'event' => $event
+            'event' => $event,
+            'backRoute' => route('events.show', [
+                'event' => $event->public_id
+            ]),
+            'addDateFormAction' => route('events.dates.store', [
+                'event' => $event->public_id
+            ]),
         ]);
     }
 
@@ -437,7 +502,13 @@ class EventController extends Controller implements HasMiddleware
         return view('events.create-date', [
             'update' => false,
             'event' => $event,
-            'date' => null
+            'date' => null,
+            'formAction' => route('events.dates.store', [
+                'event' => $event->public_id
+            ]),
+            'backRoute' => route('events.dates.index', [
+                'event' => $event->public_id
+            ]),
         ]);
     }
 
