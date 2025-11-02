@@ -195,21 +195,16 @@ class Format
 
     public static function legacyScriptTag($entry)
     {
-        $manifestPath = public_path('build/manifest.json');
+        $manifestPath = public_path('build-legacy/manifest.json');
         if (!file_exists($manifestPath)) {
             return '';
         }
         $manifest = json_decode(file_get_contents($manifestPath), true);
         $entry = trim($entry, "'\"");
         $tags = [];
-        if (isset($manifest['vite/legacy-polyfills-legacy'])) {
-            $polyfillFile = $manifest['vite/legacy-polyfills-legacy']['file'];
-            $tags[] = '<script nomodule src="' . asset('build/' . 
-                $polyfillFile) . '"></script>';
-        }
         if (isset($manifest[$entry])) {
             $filename = $manifest[$entry]['file'];
-            $tags[] = '<script nomodule defer src="' . asset('build/' . 
+            $tags[] = '<script defer src="' . asset('build-legacy/' . 
                 $filename) . '"></script>';
         }
         return implode("\n", $tags);

@@ -28,6 +28,7 @@ Thumbs.db
 /k8s/secret.yaml
 .env.admin
 .env.production-admin
+/public/build-legacy
 /public/icon
 /public/font
 /public/images

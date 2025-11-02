@@ -24,11 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Blade::directive('scriptLegacy', function ($entry) {
-            if (Vite::isRunningHot()) {
-                return '';
-            }
-            return Format::legacyScriptTag($entry);
+        Blade::directive('vite_legacy', function ($entry) {
+            return "<?php echo \\App\\Services\\Format::legacyScriptTag($entry); ?>";
         });
 
         /*

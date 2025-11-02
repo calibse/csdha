@@ -1,13 +1,13 @@
 // app.js
 
+
+
 import "./bootstrap";
+import QrScanner from "qr-scanner/qr-scanner.legacy.min.js";
 import.meta.glob([
     "../images/**",
     "../fonts/**",
 ]);
-
-//import QrScanner from "qr-scanner";
-//import "qr-scanner/qr-scanner.legacy.min.js";
 
 let CURRENT_REQUEST = null;
 let QR_SCANNER = null;
@@ -66,7 +66,7 @@ function startQrScanner() {
     if (!videoEl) return;
     const idScanner = document.getElementById("id-scanner");
     idScanner.hidden = false;
-    QR_SCANNER = QR_SCANNER || new window.QrScanner(videoEl, async (result) => {
+    QR_SCANNER = QR_SCANNER || new QrScanner(videoEl, async (result) => {
         showQrScannerStatus("processing");
         const statusCode = await storeAttendance(result.data);
         switch (statusCode) {
@@ -132,3 +132,4 @@ function activateAttendanceRecorder() {
 }
 
 activateAttendanceRecorder();
+
