@@ -139,13 +139,16 @@ export function openWindow(force) {
 	el.style.display = "block";
 }
 
-export function openDeleteWindow(e) {
-        var windowId, formId, actionLink, formEl, content, contentId, contentEl;
+export function openDeleteItemWindow(e, replace) {
+        var windowId, formId, actionLink, formEl, content, contentId, 
+		contentEl, windowEl, baseId;
 
         e.preventDefault();
-        if (isThereOpenWindow()) {
+        if (!replace && isThereOpenWindow()) {
                 return;
-        }
+        } else if (replace) {
+		closeWindow();
+	}
         contentId = e.target.id.replace("_delete-button", "");
 	baseId = contentId.replace(/-\d+/g, "");
         windowId = baseId + "_delete";
@@ -158,5 +161,48 @@ export function openDeleteWindow(e) {
 	contentEl.textContent = content;
 	setOpenedWindowId(windowId);
 	openWindow(true);
+}
+
+export function forceOpenDeleteItemWindow(e) {
+	openDeleteItemWindow(e, true);
+}
+
+export function openDeleteWindowOnWindow(e) {
+        var windowId, formId, actionLink, formEl, content, contentId, 
+		contentEl, windowEl, baseId;
+
+        e.preventDefault();
+	closeWindow();
+        contentId = e.target.id.replace("_delete-button", "");
+	baseId = contentId.replace(/-\d+/g, "");
+        windowId = baseId + "_delete";
+	actionLink = document.getElementById(contentId + "_delete-link").value;
+	windowEl = document.getElementById(windowId);
+	formEl = windowEl.getElementsByTagName("form")[0];
+	formEl.action = actionLink;
+	content = document.getElementById(contentId).textContent;
+	contentEl = document.getElementById(baseId + "_delete-content");
+	contentEl.textContent = content;
+	setOpenedWindowId(windowId);
+	openWindow(true);
+}
+
+export function openEditItemWindow(windowEl) {
+        var actionLink, formId, formEl, element, deleteEl, baseId;
+
+	actionLink = document.getElementById(windowEl.item + "_update-link")
+		.value;
+	element = document.getElementById(windowEl.element);
+	formEl = element.getElementsByTagName("form")[0];
+	formEl.action = actionLink;
+	if (!windowEl.hasDelete) {
+		openEditWindow(windowEl);
+		return;
+	}
+	baseId = windowEl.item.replace(/-\d+/g, "");
+	deleteEl = document.getElementById(baseId + "_delete-button");
+	deleteEl.removeEventListener("click", forceOpenDeleteItemWindow);
+	deleteEl.addEventListener("click", forceOpenDeleteItemWindow);
+	openEditWindow(windowEl);
 }
 

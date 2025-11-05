@@ -140,15 +140,41 @@ function setEvents() {
 		{
 			element: "event-date-*_delete-button",
 			event: "click",
-			action: window.openDeleteWindow 
+			action: window.openDeleteItemWindow 
 		},
 		{
-			element: "event-date-watten*_delete-button",
+			element: "event-date-watten-*_delete-button",
 			event: "click",
-			action: window.openDeleteWindow 
+			action: window.openDeleteItemWindow 
+		},
+		{
+			element: "event-attachment-set_create-button",
+			event: "click",
+			action: events.createEventAttachmentSet
+		},
+		{
+			element: "event-attachment-set-*_edit-button",
+			event: "click",
+			action: events.editEventAttachmentSet
+		},
+		{
+			element: "main-back-link",
+			event: "click",
+			action: setBackLink
 		},
 	];
 	addEvents(elementActions);
+}
+
+function setBackLink(e) {
+	var href, ref;
+
+	href = e.currentTarget.href;
+	ref = document.referrer;
+	if (ref && ref.indexOf(href) === 0) {
+		e.preventDefault();
+		history.back();
+	}
 }
 
 setTimezoneActions();

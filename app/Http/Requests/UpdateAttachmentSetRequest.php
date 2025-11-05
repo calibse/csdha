@@ -4,9 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveAttachmentSetRequest extends FormRequest
+class UpdateAttachmentSetRequest extends FormRequest
 {
-    protected $errorBag = "event-attachment-set_create";
+    protected $errorBag = "event-attachment-set_edit";
 
     public function rules(): array
     {

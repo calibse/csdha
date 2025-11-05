@@ -206,13 +206,13 @@
 								<span class="text">Menu</span>
 							</a>
 						@elseif ($backRoute)
-							<a class="main-back-link" href="{{ $backRoute }}" >
+							<a id="main-back-link" class="main-back-link" href="{{ $backRoute }}" >
 								<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
 
 								<span class="text">Back to previous page</span>
 							</a>
 						@else
-							<a class="main-back-link" href="{{ route($route, $routeParams) }}" >
+							<a id="main-back-link" class="main-back-link" href="{{ route($route, $routeParams) }}" >
 								<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
 								<span class="text">Back to previous page</span>
 							</a>

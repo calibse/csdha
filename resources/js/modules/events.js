@@ -11,7 +11,6 @@ export function createEventDate(e) {
 	}
 	id = "event-date_create";
 	el = document.getElementById(id);
-	if (!el) return;
 	window.setOpenedWindowId(id);
 	window.openWindow(true);
 }
@@ -71,5 +70,40 @@ export function editEventDescription(e) {
 		]
 	};
 	window.openEditWindow(windowEl)
+}
+
+export function createEventAttachmentSet(e) {
+	var el, id;
+
+	e.preventDefault();
+	if (window.isThereOpenWindow()) {
+		return;
+	}
+	id = "event-attachment-set_create";
+	el = document.getElementById(id);
+	window.setOpenedWindowId(id);
+	window.openWindow(true);
+}
+
+export function editEventAttachmentSet(e) {
+	var windowEl, contentId, deleteEl;
+
+	e.preventDefault();
+	if (window.isThereOpenWindow()) {
+		return;
+	}
+	contentId = e.currentTarget.id.replace("_edit-button", "");
+	windowEl = {
+		item: contentId,
+		hasDelete: true,
+		element: "event-attachment-set_edit",
+		fields: [
+			{
+				field: "event-attachment-set-caption_field",
+				value: contentId
+			},
+		]
+	};
+	window.openEditItemWindow(windowEl)
 }
 

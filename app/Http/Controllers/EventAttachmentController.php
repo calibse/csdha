@@ -10,6 +10,7 @@ use App\Models\EventAttachment;
 use App\Models\EventAttachmentSet;
 use App\Services\Image;
 use App\Http\Requests\SaveAttachmentSetRequest;
+use App\Http\Requests\UpdateAttachmentSetRequest;
 
 class EventAttachmentController extends Controller
 {
@@ -25,7 +26,10 @@ class EventAttachmentController extends Controller
             ]),
             'createRoute' => route('events.attachments.create', [
                 'event' => $event
-            ])
+            ]),
+            'createFormAction' => route('events.attachments.store', [
+                'event' => $event
+            ]),
         ]);
     }
 
@@ -107,7 +111,7 @@ class EventAttachmentController extends Controller
         ]);
     }
 
-    public function update(SaveAttachmentSetRequest $request, Event $event, 
+    public function update(UpdateAttachmentSetRequest $request, Event $event, 
             EventAttachmentSet $attachmentSet)
     {
         self::storeOrUpdate($request, $event, $attachmentSet);
