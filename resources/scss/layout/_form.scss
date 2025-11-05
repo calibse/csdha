@@ -94,17 +94,6 @@ form {
 		}
 	}
 
-	button {
-		padding: .25em;
-		margin-right: .5em;
-		margin-bottom: .5em;
-
-		&:last-of-type {
-			margin-right: 0;
-			margin-bottom: 0;
-		}
-	}
-
 	.button, .form-submit {
 		text-align: right;
 	}
@@ -126,17 +115,26 @@ form {
 	}
 }
 
+.main-content button {
+	padding: .25em;
+	margin-right: .5em;
+	margin-bottom: .5em;
+
+	&:last-child {
+		margin-right: 0;
+		margin-bottom: 0;
+	}
+}
+
 .submit-buttons, .submit-button {
 	width: size.$text-width;
 	max-width: 100%;
 	text-align: right;
+	margin: 1rem 0;
 
 	button {
 		margin-right: .5em;
 
-		&:last-child {
-			margin-right: 0;
-		}
 	}
 
 	form {
@@ -144,9 +142,11 @@ form {
 		margin-right: .5em;
 		margin-bottom: .5em;
 
-		&:last-child {
-			margin-right: 0;
-			margin-bottom: 0;
-		}
+	}
+
+	button:last-child,
+	form:last-child {
+		margin-right: 0;
+		margin-bottom: 0;
 	}
 }

@@ -3,7 +3,7 @@
 import * as timezone from "./modules/timezone";
 import * as events from "./modules/events";
 import * as home from "./modules/home";
-import * as dialog from "./modules/window";
+import * as window from "./modules/window";
 
 function runTimezoneAction(actionDeps) {
 	var date, intl, satisfied;
@@ -51,9 +51,34 @@ function runActions(actionDeps) {
 	} 
 }
 
+function addEventToMatchingIds(element) {
+	var elements, currentEl, idParts, id, pattern, containerEl, containerId;
+
+	pattern = element.element;
+	containerId = pattern.substring(0, pattern.indexOf("-*")) + "-items";
+	containerEl = document.getElementById(containerId);
+	if (!containerEl) return;
+	elements = containerEl.getElementsByTagName("*"); 
+	idParts = pattern.split("*"); 
+	for (var i = 0; i < elements.length; i++) {
+		currentEl = elements[i];
+		id = currentEl.id;
+		if (!(id && id.indexOf(idParts[0]) === 0 && 
+			id.lastIndexOf(idParts[1]) === 
+			(id.length - idParts[1].length))) continue;
+		currentEl.addEventListener(element.event, element.action);
+	}
+}
+
 function addEvents(elementActions) {
+	var element, currentEl;
+
 	for (var i = 0; i < elementActions.length; i++) {
 		element = elementActions[i];
+		if (element.element.indexOf("*") !== -1) {
+			addEventToMatchingIds(element);
+			continue;
+		}
 		currentEl = document.getElementById(element.element);
 		if (!currentEl) continue;
 		currentEl.addEventListener(element.event, element.action);
@@ -112,6 +137,16 @@ function setEvents() {
 			event: "click",
 			action: events.createEventDate
 		},
+		{
+			element: "event-date-*_delete-button",
+			event: "click",
+			action: window.openDeleteWindow 
+		},
+		{
+			element: "event-date-watten*_delete-button",
+			event: "click",
+			action: window.openDeleteWindow 
+		},
 	];
 	addEvents(elementActions);
 }
@@ -119,5 +154,5 @@ function setEvents() {
 setTimezoneActions();
 setActions();
 setEvents();
-dialog.openWindow();
+window.openWindow();
 

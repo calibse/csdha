@@ -570,7 +570,14 @@ class EventController extends Controller implements HasMiddleware
     {
         return view('events.delete-date', [
             'event' => $event,
-            'date' => $date
+            'date' => $date,
+            'formAction' => route('events.dates.destroy', [
+                'event' => $event->public_id,
+                'date' => $date->public_id
+            ]),
+            'backRoute' => route('events.dates.index', [
+                'event' => $event->public_id
+            ]),
         ]);
     }
 

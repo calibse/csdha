@@ -139,3 +139,24 @@ export function openWindow(force) {
 	el.style.display = "block";
 }
 
+export function openDeleteWindow(e) {
+        var windowId, formId, actionLink, formEl, content, contentId, contentEl;
+
+        e.preventDefault();
+        if (isThereOpenWindow()) {
+                return;
+        }
+        contentId = e.target.id.replace("_delete-button", "");
+	baseId = contentId.replace(/-\d+/g, "");
+        windowId = baseId + "_delete";
+        actionLink = document.getElementById(contentId + "_delete-link").value;
+	windowEl = document.getElementById(windowId);
+	formEl = windowEl.getElementsByTagName("form")[0];
+	formEl.action = actionLink;
+	content = document.getElementById(contentId).textContent;
+	contentEl = document.getElementById(baseId + "_delete-content");
+	contentEl.textContent = content;
+	setOpenedWindowId(windowId);
+	openWindow(true);
+}
+
