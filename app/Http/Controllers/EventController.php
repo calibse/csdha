@@ -285,6 +285,7 @@ class EventController extends Controller implements HasMiddleware
     {
         $event->venue = $request->venue;
         $event->save();
+        EventUpdated::dispatch($event);
         return redirect()->route('events.show', [
                  'event' => $event->public_id
         ])->with('status', 'Event venue updated.');
@@ -308,6 +309,7 @@ class EventController extends Controller implements HasMiddleware
     {
         $event->description = $request->description;
         $event->save();
+        EventUpdated::dispatch($event);
         return redirect()->route('events.show', [
                  'event' => $event->public_id
         ])->with('status', 'Event description updated.');
@@ -331,6 +333,7 @@ class EventController extends Controller implements HasMiddleware
     {
         $event->narrative = $request->narrative;
         $event->save();
+        EventUpdated::dispatch($event);
         return redirect()->route('events.show', [
                  'event' => $event->public_id
         ])->with('status', 'Event narrative updated.');
@@ -384,6 +387,10 @@ class EventController extends Controller implements HasMiddleware
 
     public function streamAccomReport(Request $request, Event $event)
     {
+        $file = $event->accom_report->filepath;
+        if (!$file) abort(404);
+        return response()->file(Storage::path($file));
+/*
         $events[] = $event->accomReportViewData();
         $format = 'pdf';
         return match ($format) {
@@ -393,6 +400,7 @@ class EventController extends Controller implements HasMiddleware
                 'events.accom-report', $event->accomReportViewData()))
                 ->stream('accom_report.pdf')
         };
+*/
     }
 
     public function showAttendance(Event $event)
@@ -484,6 +492,7 @@ class EventController extends Controller implements HasMiddleware
                 $request->officers ?? [])->get());
             $date->save();
         }
+        EventUpdated::dispatch($event);
         return redirect()->route('events.attendance.show', [
             'event' => $event->public_id
         ])->with('status', 'Attendee added.');
@@ -567,6 +576,7 @@ class EventController extends Controller implements HasMiddleware
         $date->attendees()->detach();
         $date->delete();
         EventDatesChanged::dispatch($event);
+        EventUpdated::dispatch($event);
         return redirect()->route('events.dates.index', [
             'event' => $event->public_id
         ])->with('status', 'Date deleted.');
@@ -756,6 +766,7 @@ class EventController extends Controller implements HasMiddleware
             }
             break;
         }
+        EventUpdated::dispatch($event);
         return redirect()->back()->with('status',
             'Evaluation comments updated.');
     }

@@ -20,6 +20,13 @@ class Event extends Model
 {
     use HasPublicId;
 
+    public function lastDate()
+    {
+        return $this->dates()->orderBy('date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->orderBy('end_time', 'desc')->first();
+    }
+
     public function gpoa()
     {
         return $this->gpoaActivity->gpoa;
@@ -342,7 +349,6 @@ class Event extends Model
 
     public function isCompleted(): Attribute
     {
-        $nextDays = 5;
         $isCompleted = !$this->dates()->whereRaw('? between timestamp(date, 
             start_time) and timestamp(date, end_time)', 
             [now(config('timezone'))])

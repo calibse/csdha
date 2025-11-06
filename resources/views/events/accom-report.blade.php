@@ -3,7 +3,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>Test</title>
+    <title>Accomplishment Report</title>
     {{--
     @vite(['resources/scss/accom-report.scss'])
     --}}

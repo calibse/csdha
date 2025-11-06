@@ -6,19 +6,19 @@
                 <div class="inline">
                     <p>
                         <label>Start date</label>
-                        <input type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
+                        <input {{ $hasLastJob && !$jobDone ? 'disabled' : null }} type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
                     </p>
                     <p>
                         <label>End date</label>
-                        <input type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
+                        <input {{ $hasLastJob && !$jobDone ? 'disabled' : null }} type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
                     </p>
                     <p>
-                        <button>Generate</button>
+                        <button {{ $hasLastJob && !$jobDone ? 'disabled' : null }}>Generate</button>
                     </p>
                 </div>
             </form>
         </div>
-    @if (!$errors->any() && $fileRoute)
+   @if ($fileRoute)
         <figure class="pdf-document">
             <div class="pdf-file">
                 <object data="{{ $fileRoute }}" type="application/pdf">
@@ -30,10 +30,12 @@
             </div>
             <figcaption class="caption">Accomplishment Report</figcaption>
         </figure>
-    @elseif (!$start)
-        <p>There are no approved accomplishment reports yet.</p>
-    @elseif ($start && $empty)
+    @elseif ($hasLastJob && !$jobDone)
+        <p>{{ $progressMessage }}</p>
+    @elseif (!$errors->any() && $hasApproved && $hasInput)
         <p>No records available to generate.</p>
+    @elseif (!$hasApproved)
+        <p>There are no approved accomplishment reports yet.</p>
     @endif
     </article>
 </x-layout.user>

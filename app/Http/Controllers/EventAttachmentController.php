@@ -13,6 +13,7 @@ use App\Http\Requests\SaveAttachmentSetRequest;
 use App\Http\Requests\UpdateAttachmentSetRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use App\Events\EventUpdated;
 
 class EventAttachmentController extends Controller implements HasMiddleware
 {
@@ -68,6 +69,7 @@ class EventAttachmentController extends Controller implements HasMiddleware
     public function store(SaveAttachmentSetRequest $request, Event $event)
     {
         self::storeOrUpdate($request, $event);
+        EventUpdated::dispatch($event);
         return redirect()->route('events.attachments.index', [
             'event' => $event
         ]);
@@ -140,6 +142,7 @@ class EventAttachmentController extends Controller implements HasMiddleware
             EventAttachmentSet $attachmentSet)
     {
         self::storeOrUpdate($request, $event, $attachmentSet);
+        EventUpdated::dispatch($event);
         return redirect()->route('events.attachments.index', [
             'event' => $event
         ]);
@@ -151,6 +154,7 @@ class EventAttachmentController extends Controller implements HasMiddleware
         $attachment->standalone = $request->boolean('standalone', false);
         $attachment->full_width = $request->boolean('full_width', false);
         $attachment->save();
+        EventUpdated::dispatch($event);
         return redirect()->route('events.attachments.index', [
             'event' => $event
         ]);
@@ -176,6 +180,7 @@ class EventAttachmentController extends Controller implements HasMiddleware
     {
         $attachmentSet->attachments()->delete();
         $attachmentSet->delete();
+        EventUpdated::dispatch($event);
         return redirect()->route('events.attachments.index', [
             'event' => $event
         ]);
@@ -203,6 +208,7 @@ class EventAttachmentController extends Controller implements HasMiddleware
             EventAttachment $attachment)
     {
         $attachment->delete();
+        EventUpdated::dispatch($event);
         return redirect()->route('events.attachments.index', [
             'event' => $event
         ]);

@@ -85,7 +85,7 @@ export function setWindowDragging(e) {
 		el.style.marginLeft = "0";
 		WINDOW_DRAGGED = true;
 	}
-	e.target.style.cursor = "grab";
+	e.currentTarget.style.cursor = "grab";
 	WINDOW_OFFSET_X = e.clientX - el.offsetLeft;
 	WINDOW_OFFSET_Y = e.clientY - el.offsetTop;
 	document.addEventListener("mousemove", startWindowDragging);
@@ -147,7 +147,7 @@ export function openDeleteItemWindow(e) {
         if (isThereOpenWindow()) {
                 return;
         } 
-        contentId = e.target.id.replace("_delete-button", "");
+        contentId = e.currentTarget.id.replace("_delete-button", "");
 	baseId = contentId.replace(/-\d+/g, "");
         windowId = baseId + "_delete";
         actionLink = document.getElementById(contentId + "_delete-link").value;
@@ -167,7 +167,7 @@ export function openDeleteWindowOnWindow(e) {
 
         e.preventDefault();
 	closeWindow();
-        contentId = e.target.id.replace("_delete-button", "");
+        contentId = e.currentTarget.id.replace("_delete-button", "");
 	itemId = document.getElementById(contentId + "_id").value;
 	contentId = contentId + "-" + itemId;
 	baseId = contentId.replace(/-\d+/g, "");

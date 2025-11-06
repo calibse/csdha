@@ -18,6 +18,10 @@ use App\Services\Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateAccomReportBackgroundRequest;
 use App\Http\Requests\GenerateAccomReportRequest;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
+use App\Jobs\GenerateAccomReport;
+use App\Jobs\MakeAccomReport;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -121,6 +125,8 @@ class AccomReportController extends Controller implements HasMiddleware
                 'event' => $event->public_id
             ]);
         }
+        if ($accomReport->status === 'draft')
+            MakeAccomReport::dispatch($event);
         return view('accom-reports.show', [
             'actions' => $actions,
             'accomReport' => $accomReport,
@@ -252,40 +258,97 @@ class AccomReportController extends Controller implements HasMiddleware
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        $start = false;
-        $empty = true;
+        $hasInput = false;
         $fileRoute = null;
-        if ($startDate) {
-            $start = true;
-            $events = Event::active()->approved($startDate, $endDate)->exists();
-            $fileRoute = $events ? route('accom-reports.stream', [
-                'start_date' => $startDate,
-                'end_date' => $endDate
-            ]) : null;
-            $empty = $events ? false : true;
-        } elseif (session('errors')?->any()) {
-	    $empty = false;
-	    $start = true;
-        } elseif (Event::active()->approved()->exists()) {
-            $empty = false;
-            $start = true;
+        $jobCache = 'gen_accom_reports';
+        $jobs = Cache::get($jobCache, []);
+        $hasLastJob = $userJob = $jobs[auth()->user()->id] ?? [];
+        $jobDone = $hasLastJob ? $hasLastJob['finished'] : false;
+        $hasApproved = Event::active()->approved()->exists();
+        if ($hasLastJob && $jobDone) {
+            $startDate = $userJob['start_date'];
+            $endDate = $userJob['end_date'];
+            Cache::lock($jobCache . '_lock', 2)->block(1, function () 
+                use ($jobCache) {
+                $jobs = Cache::get($jobCache, []);
+                unset($jobs[auth()->user()->id]);
+                Cache::put($jobCache, $jobs);
+            });
+            $fileRoute = route('accom-reports.stream');
+        } elseif ($hasLastJob && !$jobDone) {
+            $startDate = $userJob['start_date'];
+            $endDate = $userJob['end_date'];
+        } elseif (!$startDate) {
             $startDate = $startDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'asc')->value('date')->toDateString();
             $endDate = $endDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'desc')->value('date')->toDateString();
-        }
-        return view('accom-reports.gen-accom-report', [
+	} elseif ((!$hasLastJob || $jobDone) && $hasApproved) {
+            $hasInput = true;
+            $events = Event::active()->approved($startDate, $endDate)->exists();
+            $userJob = [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'finished' => false,
+            ];
+            if ($events) {
+                Cache::lock($jobCache . '_lock', 2)->block(1, function () 
+                    use ($jobCache, $userJob) {
+                    $jobs = Cache::get($jobCache, []);
+                    $jobs[auth()->user()->id] = $userJob;
+                    Cache::put($jobCache, $jobs);
+                });
+                GenerateAccomReport::dispatch(auth()->user(), $startDate, 
+                    $endDate)->onQueue('pdf');
+                $hasLastJob = true;
+                $jobDone = false;
+            }
+/*
+            $fileRoute = $events ? route('accom-reports.stream', [
+                'start_date' => $startDate,
+                'end_date' => $endDate
+            ]) : null;
+*/
+        } 
+        $messages = [
+            'Document generation in progress...',
+            'Working on your document...',
+            'Setting up document data...',
+            'Processing request for document...',
+            'Preparing file contents...',
+            'Compiling information for document...'
+        ];
+        $progressMessage = $messages[array_rand($messages)] . 
+            ' Page will auto-refresh.';
+        $response = response()->view('accom-reports.gen-accom-report', [
             'backRoute' => route('accom-reports.index'),
             'fileRoute' => $fileRoute,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'start' => $start,
-            'empty' => $empty
+            'hasApproved' => $hasApproved,
+            'hasInput' => $hasInput,
+            'hasLastJob' => $hasLastJob,
+            'jobDone' => $jobDone,
+            'progressMessage' => $progressMessage,
         ]);
+
+        if (!$hasLastJob || $jobDone) {
+            return $response;
+        }
+        return $response->header('Refresh', '5');
     }
 
     public function stream(Request $request)
     {
+        $jobCache = 'gen_accom_reports';
+        $jobs = Cache::get($jobCache, []);
+        $hasLastJob = $jobs[auth()->user()->id] ?? [];
+        $jobDone = $hasLastJob ? $hasLastJob['finished'] : false;
+        if ($hasLastJob && !$jobDone) abort(404);
+        $user = auth()->user();
+        $file = "gen_accom_reports/accom_report_{$user->id}.pdf";
+        return response()->file(Storage::path($file));
+        /*
         $gpoa = Gpoa::active()->first();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
@@ -295,6 +358,7 @@ class AccomReportController extends Controller implements HasMiddleware
         return WeasyPrint::prepareSource(new PagedView('events.accom-report', 
             $gpoa->accomReportViewData($startDate, $endDate)))
             ->stream('accom_report_set.pdf');
+        */
     }
 
     public function editBackground(Request $request)

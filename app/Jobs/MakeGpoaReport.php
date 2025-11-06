@@ -26,6 +26,7 @@ class MakeGpoaReport implements ShouldQueue
             return;
         }
         $gpoa->report_file_updated = false;
+        $gpoa->save();
         $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
         WeasyPrint::prepareSource(new PagedView('gpoa.report',
             $gpoa->reportViewData() + [
