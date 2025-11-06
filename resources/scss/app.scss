@@ -2,8 +2,8 @@
 
 @use "modern-normalize/modern-normalize";
 @use "layout/html";
-@use "layout/main";
 @use "layout/form";
+@use "layout/main";
 @use "layout/list";
 @use "layout/table";
 @use "layout/document";
@@ -23,7 +23,6 @@
 @use "modules/positions";
 @use "modules/settings";
 @use "test";
-@use "font";
 
 /*
 @use "modules/ui-controls";
@@ -90,11 +89,3 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-button,
-input,
-optgroup,
-select,
-textarea {
-	font-family: font.$font;
-	padding: .25em 0;
-}

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>CS Event Registration Form</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="only light">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<title>CS Event Registration Form</title>
 	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
-    @vite(['resources/scss/app.scss'])
+	@vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
     <header>

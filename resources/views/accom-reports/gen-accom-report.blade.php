@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute title="Generate Accomplishment Report" class="accom-report generate">
+<x-layout.user form :$backRoute title="Generate Accomplishment Report" class="accom-report generate form">
     <article class="article">
         <div class="pdf-control">
             <x-alert/>
@@ -18,7 +18,7 @@
                 </div>
             </form>
         </div>
-    @if ($fileRoute)
+    @if (!$errors->any() && $fileRoute)
         <figure class="pdf-document">
             <div class="pdf-file">
                 <object data="{{ $fileRoute }}" type="application/pdf">

@@ -2,6 +2,32 @@
 
 @use "../size";
 @use "../color";
+@use "../font";
+
+input,
+optgroup,
+select,
+button,
+textarea {
+        font-family: font.$font;
+        padding: .25em 0;
+        background-color: color.$background;
+        color: color.$foreground;
+        border-radius: size.$corner-roundness;
+        border: solid color.$line size.$line-width;
+
+        &:disabled {
+                background-color: color.$disabled-bg;
+                color: color.$disabled-fg;
+        }
+
+}
+
+button {
+	&:active {
+		background-color: color.$pressed;
+	}
+}
 
 form {
 	label {

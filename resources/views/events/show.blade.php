@@ -27,7 +27,11 @@
                 <col style="width: 12em;">
             </colgroup>
             <tr>
-                <th>Date <span class="edit-link">[<a href="{{ $dateRoute }}">Edit</a>]</span></th>
+                <th>Date 
+		@can ('update', $event)
+			<span class="edit-link">[<a href="{{ $dateRoute }}">Edit</a>]</span>
+		@endcan
+		</th>
                 <td>
                     <ul>
                     @foreach ($event->compactDates() as $date)
@@ -38,7 +42,14 @@
             </tr>
             @can ('register', $event)
             <tr>
-                <th>Registration Form <span class="edit-link">[<a>Edit</a>]</span></th>
+{{--
+                <th>Registration Form 
+		@can ('update', $event)
+			<span class="edit-link">[<a>Edit</a>]</span>
+		@endcan
+		</th>
+--}}
+                <th>Registration Form</th> 
                 <td>
                     <a href="{{ $regisRoute }}">
                         {{ $regisRoute }}
@@ -47,27 +58,49 @@
             </tr>
             @endcan
             <tr>
-                <th>Description <span class="edit-link">[<a id="event-description_edit-button" href="{{ $descriptionRoute }}">Edit</a>]</span></th>
+                <th>Description 
+		@can ('update', $event)
+			<span class="edit-link">[<a id="event-description_edit-button" href="{{ $descriptionRoute }}">Edit</a>]</span>
+		@endcan
+		</th>
                 <td id="event-description"><pre>{{ $event->description }}</pre></td>
             </tr>
             <tr>
-                <th>Narrative <span class="edit-link">[<a id="event-narrative_edit-button" href="{{ $narrativeRoute }}">Edit</a>]</span></th>
+                <th>Narrative 
+		@can ('update', $event)
+			<span class="edit-link">[<a id="event-narrative_edit-button" href="{{ $narrativeRoute }}">Edit</a>]</span>
+		@endcan
+		</th>
                 <td id="event-narrative"><pre>{{ $event->narrative }}</pre></td>
             </tr>
             <tr>
-                <th>Venue <span class="edit-link">[<a id="event-venue_edit-button" href="{{ $venueRoute }}">Edit</a>]</span></th>
+                <th>Venue 
+		@can ('update', $event)
+			<span class="edit-link">[<a id="event-venue_edit-button" href="{{ $venueRoute }}">Edit</a>]</span>
+		@endcan
+		</th>
                 <td id="event-venue">{{ $event->venue }}</td>
             </tr>
+{{--
 		@can ('evaluate', $event)
             <tr>
-                <th>Evaluation Form <span class="edit-link">[<a>Edit</a>]</span></th>
+                <th>Evaluation Form 
+		@can ('update', $event)
+			<span class="edit-link">[<a>Edit</a>]</span>
+		@endcan
+		</th>
                 <td><a>Show preview</a></td>
             </tr>
             <tr>
-                <th>Evaluation Result <span class="edit-link">[<a>Edit</a>]</span></th>
+                <th>Evaluation Result 
+		@can ('update', $event)
+			<span class="edit-link">[<a>Edit</a>]</span>
+		@endcan
+		</th>
                 <td>0 comments selected</td>
             </tr>
 		@endcan
+--}}
             <tr>
                 <th>Attachments</th>
                 <td><a href="{{ $attachmentRoute }}">Show</a></td>

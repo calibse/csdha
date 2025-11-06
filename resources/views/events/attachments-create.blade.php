@@ -15,10 +15,10 @@
 			<input id="images-input" name="images[]" type="file" accept="image/jpeg, image/png" multiple>
 		</p>
 		<p class="form-submit">
-			<button>{{ $set ? 'Update' : 'Create' }}</button>
 		@if ($set)
 			<button form="delete-form">Delete Set</button>
 		@endif
+			<button>{{ $set ? 'Update' : 'Create' }}</button>
 		</p>
 	</form>
 @if ($set)

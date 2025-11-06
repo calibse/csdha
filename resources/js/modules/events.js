@@ -102,8 +102,25 @@ export function editEventAttachmentSet(e) {
 				field: "event-attachment-set-caption_field",
 				value: contentId
 			},
+			{
+				field: "event-attachment-set_id",
+				value: contentId + "_id"
+			},
 		]
 	};
 	window.openEditItemWindow(windowEl)
+}
+
+export function deleteEventAttachment(e) {
+	var el, id;
+
+	e.preventDefault();
+	if (window.isThereOpenWindow()) {
+		return;
+	}
+	id = "event-attachment_delete";
+	el = document.getElementById(id);
+	window.setOpenedWindowId(id);
+	window.openWindow(true);
 }
 

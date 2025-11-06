@@ -286,7 +286,7 @@ class AccomReportController extends Controller implements HasMiddleware
 
     public function stream(Request $request)
     {
-        $gpoa = Gpoa::active()->get();
+        $gpoa = Gpoa::active()->first();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         if (!$startDate) abort(404);

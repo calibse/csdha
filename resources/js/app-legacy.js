@@ -162,6 +162,11 @@ function setEvents() {
 			event: "click",
 			action: setBackLink
 		},
+		{
+			element: "event-attachment_delete-button",
+			event: "click",
+			action: events.deleteEventAttachment
+		},
 	];
 	addEvents(elementActions);
 }
@@ -171,7 +176,7 @@ function setBackLink(e) {
 
 	href = e.currentTarget.href;
 	ref = document.referrer;
-	if (ref && ref.indexOf(href) === 0) {
+	if (ref && ref.indexOf(href) === 0 && history.length > 1) {
 		e.preventDefault();
 		history.back();
 	}

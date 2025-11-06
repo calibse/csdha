@@ -66,7 +66,13 @@ class EventController extends Controller implements HasMiddleware
                 'createAttendee',
                 'storeAttendee',
                 'editComments',
-                'updateComments'
+                'updateComments',
+                'editNarrative',
+                'updateNarrative',
+                'editDescription',
+                'updateDescription',
+                'editVenue',
+                'updateVenue',
             ]),
             new Middleware('auth.event:delete,event', only: ['destroy']),
             new Middleware('auth.event:update,date', only: [

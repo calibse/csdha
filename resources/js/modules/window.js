@@ -139,16 +139,14 @@ export function openWindow(force) {
 	el.style.display = "block";
 }
 
-export function openDeleteItemWindow(e, replace) {
+export function openDeleteItemWindow(e) {
         var windowId, formId, actionLink, formEl, content, contentId, 
 		contentEl, windowEl, baseId;
 
         e.preventDefault();
-        if (!replace && isThereOpenWindow()) {
+        if (isThereOpenWindow()) {
                 return;
-        } else if (replace) {
-		closeWindow();
-	}
+        } 
         contentId = e.target.id.replace("_delete-button", "");
 	baseId = contentId.replace(/-\d+/g, "");
         windowId = baseId + "_delete";
@@ -163,17 +161,15 @@ export function openDeleteItemWindow(e, replace) {
 	openWindow(true);
 }
 
-export function forceOpenDeleteItemWindow(e) {
-	openDeleteItemWindow(e, true);
-}
-
 export function openDeleteWindowOnWindow(e) {
         var windowId, formId, actionLink, formEl, content, contentId, 
-		contentEl, windowEl, baseId;
+		contentEl, windowEl, baseId, itemId;
 
         e.preventDefault();
 	closeWindow();
         contentId = e.target.id.replace("_delete-button", "");
+	itemId = document.getElementById(contentId + "_id").value;
+	contentId = contentId + "-" + itemId;
 	baseId = contentId.replace(/-\d+/g, "");
         windowId = baseId + "_delete";
 	actionLink = document.getElementById(contentId + "_delete-link").value;
@@ -201,8 +197,8 @@ export function openEditItemWindow(windowEl) {
 	}
 	baseId = windowEl.item.replace(/-\d+/g, "");
 	deleteEl = document.getElementById(baseId + "_delete-button");
-	deleteEl.removeEventListener("click", forceOpenDeleteItemWindow);
-	deleteEl.addEventListener("click", forceOpenDeleteItemWindow);
+	deleteEl.removeEventListener("click", openDeleteWindowOnWindow);
+	deleteEl.addEventListener("click", openDeleteWindowOnWindow);
 	openEditWindow(windowEl);
 }
 

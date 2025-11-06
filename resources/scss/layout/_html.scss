@@ -4,6 +4,10 @@
 @use "../color";
 @use "../font";
 
+:root, html {
+	color-scheme: only light; 
+}
+
 h1, h2, h3, h4, h5, h6, th {
 	&.title {
 	    font-weight: normal;

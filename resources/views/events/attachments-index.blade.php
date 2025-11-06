@@ -1,6 +1,11 @@
 <x-layout.user class="events attachments" :$backRoute title="Event Attachments">
 <x-slot:toolbar>
-	<a id="event-attachment-set_create-button" href="{{ $createRoute }}">
+	<a 
+	@can ('update', $event)
+		id="event-attachment-set_create-button" 
+		href="{{ $createRoute }}"
+	@endcan
+	>
 		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
 		<span class="text">Create Set</span>
 	</a>
@@ -9,7 +14,12 @@
 @foreach ($attachmentSets as $set)
 	@if ($set->attachments->isNotEmpty())
 	<figure class="attachment-set">
-		<figcaption class="caption"><a id="event-attachment-set-{{ $set->id }}_edit-button" href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}"><span id="event-attachment-set-{{ $set->id }}">{{ $set->caption }}</span></a></figcaption>
+		<figcaption class="caption"><a 
+		@can ('update', $event)
+			id="event-attachment-set-{{ $set->id }}_edit-button" 
+			href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}"
+		@endcan
+		><span id="event-attachment-set-{{ $set->id }}">{{ $set->caption }}</span></a></figcaption>
 		<span class="attachments">
 		@foreach ($set->attachments()->orderBy('created_at', 'asc')->get() as $attachment)
 			<a href="{{ route('events.attachments.show', ['event' => $event->public_id, 'attachment_set' => $set->id, 'attachment' => $attachment->id]) }}">
@@ -20,12 +30,18 @@
 	</figure>
 	@else
 	<p>
-		<a id="event-attachment-set-{{ $set->id }}_edit-button" href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}"><span id="event-attachment-set-{{ $set->id }}">{{ $set->caption }}</span></a>
+		<a 
+		@can ('update', $event)
+			id="event-attachment-set-{{ $set->id }}_edit-button" 
+			href="{{ route('events.attachments.edit', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}"
+		@endcan
+		><span id="event-attachment-set-{{ $set->id }}">{{ $set->caption }}</span></a>
 (Empty)
 	</p>
 	@endif
 	<input type="hidden" id="event-attachment-set-{{ $set->id }}_update-link" value="{{ route('events.attachments.update', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">
 	<input type="hidden" id="event-attachment-set-{{ $set->id }}_delete-link" value="{{ route('events.attachments.destroySet', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">
+	<span style="display: none;" id="event-attachment-set-{{ $set->id }}_id">{{ $set->id }}</span>
 @endforeach
 </div>
 <x-window class="form" id="event-attachment-set_create" title="Create attachment set">
@@ -57,11 +73,11 @@
 			<label>Add Images</label>
 			<input id="images-input" name="images[]" type="file" accept="image/jpeg, image/png" multiple>
 		</p>
-		<input id="event-attachment-set">
+		<input type="hidden" id="event-attachment-set_id">
 		<p class="form-submit">
 			<button type="button" id="event-attachment-set_edit_close">Cancel</button>
-			<button>Update</button>
 			<button id="event-attachment-set_delete-button" form="delete-form">Delete Set</button>
+			<button>Update</button>
 		</p>
 	</form>
 	<form id="delete-form"></form>

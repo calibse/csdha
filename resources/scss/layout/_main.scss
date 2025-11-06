@@ -7,6 +7,7 @@
 .main-body {
 	margin: 0;
 	background-color: color.$background;
+	color: color.$foreground;
 
 	a[href] {
 		color: color.$link;

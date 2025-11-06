@@ -11,9 +11,28 @@ use App\Models\EventAttachmentSet;
 use App\Services\Image;
 use App\Http\Requests\SaveAttachmentSetRequest;
 use App\Http\Requests\UpdateAttachmentSetRequest;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EventAttachmentController extends Controller
+class EventAttachmentController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.event:update,event', only: [
+                'create',
+                'store',
+                'edit',
+                'update',
+                'updateAttachment',
+                'confirmDestroy',
+                'destroy',
+                'confirmDestroySet',
+                'destroySet',
+            ]),
+        ];
+    }
+
     public function index(Event $event)
     {
         $attachmentSets = $event->attachmentSets()->orderBy('created_at', 'asc')
@@ -71,6 +90,7 @@ class EventAttachmentController extends Controller
             EventAttachment $attachment)
     {
         return view('events.attachments-show', [
+            'event' => $event,
             'attachment' => $attachment,
             'backRoute' => route('events.attachments.index', [
                 'event' => $event
@@ -89,7 +109,12 @@ class EventAttachmentController extends Controller
                 'event' => $event,
                 'attachment_set' => $attachmentSet->id,
                 'attachment' => $attachment->id
-            ])
+            ]),
+            'deleteFormAction' => route('events.attachments.destroy', [
+                'event' => $event,
+                'attachment_set' => $attachmentSet->id,
+                'attachment' => $attachment
+            ]),
         ]);
     }
 
@@ -156,8 +181,8 @@ class EventAttachmentController extends Controller
         ]);
     }
 
-    public function confirmDestroy(Event $event, EventAttachmentSet $attachmentSet, 
-            EventAttachment $attachment)
+    public function confirmDestroy(Event $event, EventAttachmentSet 
+            $attachmentSet, EventAttachment $attachment)
     {
         return view('events.attachments-delete', [
             'attachment' => $attachment,
