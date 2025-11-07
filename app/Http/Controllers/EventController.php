@@ -153,7 +153,6 @@ class EventController extends Controller implements HasMiddleware
             'backRoute' => route('events.index'),
             'genArRoute' => route('accom-reports.show', [
                 'event' => $event->public_id,
-                'from' => 'events'
             ]),
             'dateRoute' => route('events.dates.index', [
                 'event' => $event->public_id
@@ -199,14 +198,9 @@ class EventController extends Controller implements HasMiddleware
                 $query->where('events.id', $event->id);
             })->get();
         }
-        $backRoute = $request->from === 'accom-reports'
-            ? route('accom-reports.show', [
-                'event' => $event->public_id,
-                'from' => $request->accom_reports_from,
-            ])
-            : route('events.show', [
-                'event' => $event->public_id
-            ]);
+        $backRoute = route('events.show', [
+            'event' => $event->public_id
+        ]);
         $timezones = DateTimeZone::listIdentifiers();
         return view("events.edit", [
             'timezones' => $timezones,
@@ -387,7 +381,7 @@ class EventController extends Controller implements HasMiddleware
 
     public function streamAccomReport(Request $request, Event $event)
     {
-        $file = $event->accom_report->filepath;
+        $file = $event->accomReport->filepath;
         if (!$file) abort(404);
         return response()->file(Storage::path($file));
 /*

@@ -16,6 +16,7 @@ class AccomReport extends Model
             'submitted_at' => 'datetime',
             'returned_at' => 'datetime',
             'approved_at' => 'datetime',
+            'file_updated_at' => 'datetime',
         ];
     }
 
@@ -38,6 +39,9 @@ class AccomReport extends Model
             break;
         case 'pending_president':
             $fullStatus = 'Pending President Approval';
+            break;
+        case 'draft_officers':
+            $fullStatus = 'Draft';
             break;
         default:
             $fullStatus = 'Unknown';

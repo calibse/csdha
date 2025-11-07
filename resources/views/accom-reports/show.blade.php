@@ -1,22 +1,5 @@
 <x-layout.user :$backRoute title="Accomplishment Report" class="event">
 <x-slot:toolbar>
-	<a
-	@can ('update', $event)
-		href="{{ $editRoute }}"
-	@endcan
-	>
-		<img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
-
-		<span class="text">Edit</span>
-	</a>
-	<a
-	@can ('viewAnyAccomReport', 'App\Models\Event')
-		href="{{ $changeBgRoute }}"
-	@endcan
-	>
-		<img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
-		<span class="text">Change Background</span>
-	</a>
 @if ($actions['submit'])
 	<a
 	@can('submitAccomReport', $event)
@@ -47,6 +30,11 @@
 		<span class="text">Approve</span>
 	</a>
 @endif
+	<a href="{{ $eventRoute }}">
+		<img class="icon" src="{{ asset('icon/light/calendar-duotone.png') }}">
+
+		<span class="text">View event</span>
+	</a>
 </x-slot:toolbar>
 <article class="article">
 	<x-alert/>
@@ -59,23 +47,28 @@
 @if ($date)
 	<p>{{ $date }}</p>
 @endif
-@if ($fileRoute)
+@if (!$updated && auth()->user()->can('makeAccomReport', $event))
+	<p>
+		{{ $updateMessage }}
+	</p>
+@elseif ($fileRoute)
 	@if (!$updated)
-        <p>You’re viewing an outdated copy. The updated document is being processed.</p>
+	<p>This document copy is outdated.</p>
 	@endif
 	<figure class="pdf-document">
 		<div class="pdf-file">
 			<object data="{{ $fileRoute }}" type="application/pdf">
 			<p>
-				Preview of this file is unsupported. You may download
-				this file <a href="{{ $fileRoute }}">here</a>.
+				Preview of this file is unsupported. 
+				You may download this file 
+				<a href="{{ $fileRoute }}">here</a>.
 			</p>
 			</object>
 		</div>
 		<figcaption class="caption">Accomplishment Report</figcaption>
 	</figure>
 @else
-        <p>The document is currently being generated. Please check back shortly.</p>
+        <p>{{ $progressMessage }}</p>
 @endif
 </article>
 </x-layout.user>

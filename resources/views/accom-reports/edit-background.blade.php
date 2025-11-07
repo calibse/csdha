@@ -4,9 +4,6 @@
 		<form method="post" action="{{ $formAction }}" enctype="multipart/form-data">
 		@csrf
 		@method('PUT')
-		@if ($from)
-                        <input hidden name="from" value="{{ $from }}">
-		@endif
 			<p>
 				<label>Background file</label>
 				<input id="background-file" name="background_file" type="file" accept="image/jpeg, image/png, image/webp, image/avif">

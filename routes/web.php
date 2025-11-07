@@ -627,7 +627,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                     ->name('accom-report.show');
                 */
 
-                Route::get('/accom-report.pdf', 'streamAccomReport')
+                Route::get('/accom-report-{id}.pdf', 'streamAccomReport')
                     ->name('accom-report.stream');
 
                 Route::get('/evaluation.html', 'editComments')

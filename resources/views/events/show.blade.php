@@ -14,8 +14,8 @@
             href="{{ $genArRoute }}"
             @endcan
         >
-            <img class="icon" src="{{ asset('icon/light/file-plus-duotone.png') }}">
-            <span class="text">{{ $event->accomReport?->approved_at ? 'View' : 'Submit' }} AR</span>
+            <img class="icon" src="{{ asset('icon/light/file-text-duotone.png') }}">
+            <span class="text">View accom. report</span>
         </a>
     </x-slot:toolbar>
     <div class="article document">

@@ -6,6 +6,15 @@
 
             <span class="text">Gen. PDF</span>
         </a>
+        <a
+        @can ('updateAccomReportBG', 'App\Models\Event')
+                href="{{ $changeBgRoute }}"
+        @endcan
+        >
+                <img class="icon" src="{{ asset('icon/light/pencil-simple-duoton
+e.png') }}">
+                <span class="text">Change Background</span>
+        </a>
     @endif
     </x-slot:toolbar>
     <article class="article">

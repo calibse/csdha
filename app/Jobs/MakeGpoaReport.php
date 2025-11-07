@@ -34,6 +34,7 @@ class MakeGpoaReport implements ShouldQueue
             ]))->putFile($reportFile);
         $gpoa->report_filepath = $reportFile;
         $gpoa->report_file_updated = true;
+        $gpoa->report_file_updated_at = now();
         $gpoa->save();
     }
 }

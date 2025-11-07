@@ -8,20 +8,14 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class MarkOutdatedAccomReport
 {
-    /**
-     * Create the event listener.
-     */
     public function __construct()
     {
         //
     }
 
-    /**
-     * Handle the event.
-     */
     public function handle(EventUpdated $event): void
     {
-        $accomReport = $event->event->accom_report;
+        $accomReport = $event->event->accomReport;
         $accomReport->file_updated = false;
         $accomReport->save();
     }

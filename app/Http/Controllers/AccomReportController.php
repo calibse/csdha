@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use App\Jobs\GenerateAccomReport;
 use App\Jobs\MakeAccomReport;
+use App\Events\EventUpdated;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -50,6 +51,10 @@ class AccomReportController extends Controller implements HasMiddleware
                 only: [
                 'generate', 'stream'
             ]),
+            new Middleware('auth.index:updateAccomReportBG,' . Event::class, 
+                only: [
+                'editBackground', 'updateBackground'
+            ]),
         ];
     }
     public function index()
@@ -60,7 +65,7 @@ class AccomReportController extends Controller implements HasMiddleware
         }
         switch ($position) {
         case 'officers':
-            $accomReports = AccomReport::whereNot('status', 'pending');
+            $accomReports = AccomReport::query();
             break;
         case 'president':
             $accomReports = AccomReport::forPresident();
@@ -75,24 +80,32 @@ class AccomReportController extends Controller implements HasMiddleware
         return view('accom-reports.index', [
             'gpoa' => $gpoa,
             'accomReports' => $accomReports,
-            'genRoute' => route('accom-reports.generate')
+            'genRoute' => route('accom-reports.generate'),
+            'changeBgRoute' => route('accom-reports.background.edit'),
         ]);
     }
 
     public function show(Request $request, Event $event)
     {
         $accomReport = $event->accomReport;
+        if (!$accomReport) {
+            $accomReport = new AccomReport;
+            $accomReport->event()->associate($event);
+            $accomReport->status = 'draft';
+            $accomReport->current_step = 'officers';
+            $accomReport->save();
+        }
         $date = null;
         $fileRoute = null;
         if ($accomReport) {
             $status = $accomReport->status;
             $date = match ($status) {
-                'draft' => $accomReport->created_at,
+                'draft' => null,
                 'pending' => $accomReport->submitted_at,
                 'returned' => $accomReport->returned_at,
                 'approved' => $accomReport->approved_at
             };
-            $date = $date->timezone(config('timezone'))
+            $date = $date?->timezone(config('timezone'))
                 ->format(config('app.date_format'));
         }
         switch(auth()->user()->position_name) {
@@ -117,17 +130,37 @@ class AccomReportController extends Controller implements HasMiddleware
                 'approve' => false,
             ];
         }
-        $backRoute = $request->from === 'events'
-            ? route('events.show', ['event' => $event->public_id])
-            : route('accom-reports.index');
+        $backRoute = route('accom-reports.index');
         if ($accomReport->filepath) {
+            $id = $accomReport->file_updated_at?->format('ymdHis') ?? 
+                $accomReport->updated_at->format('ymdHis');
             $fileRoute = route('events.accom-report.stream', [
-                'event' => $event->public_id
+                'event' => $event->public_id,
+                'id' => $id,
             ]);
         }
-        if ($accomReport->status === 'draft')
-            MakeAccomReport::dispatch($event);
-        return view('accom-reports.show', [
+        $messages = [
+            'Document generation in progress...',
+            'Working on your document...',
+            'Setting up document data...',
+            'Processing request for document...',
+            'Preparing file contents...',
+            'Compiling information for document...'
+        ];
+        $progressMessage = $messages[array_rand($messages)] . 
+            ' Page will auto-refresh.';
+        $updateMessages = [
+            'Document is being updated...',
+            'Processing document update...',
+            'Updating document content...',
+            'Compiling updated document data...',
+            'Preparing the updated version of the document...',
+            'Generating latest document updates...'
+        ];
+        $updateMessage = $updateMessages[array_rand($updateMessages)] . 
+            ' Page will auto-refresh.';
+        $updated = $accomReport->file_updated;
+        $response = response()->view('accom-reports.show', [
             'actions' => $actions,
             'accomReport' => $accomReport,
             'event' => $event,
@@ -143,15 +176,18 @@ class AccomReportController extends Controller implements HasMiddleware
             'approveRoute' => route('accom-reports.prepareForApprove', [
                 'event' => $event->public_id
             ]),
-            'editRoute' => route('events.edit', [
+            'eventRoute' => route('events.show', [
                 'event' => $event->public_id,
-                'from' => 'accom-reports',
-                'accom_reports_from' => $request->from
             ]),
-            'changeBgRoute' => route('accom-reports.background.edit', [
-                'from' => $event->public_id
-            ])
+            'updated' => $updated,
+            'updateMessage' => $updateMessage,
+            'progressMessage' => $progressMessage,
         ]);
+        if (!auth()->user()->can('makeAccomReport', $event)) {
+            return $response;
+        }
+        MakeAccomReport::dispatch($event)->onQueue('pdf');
+        return $response->header('Refresh', '5');
     }
 
     public function prepareForSubmit(Event $event)
@@ -363,38 +399,30 @@ class AccomReportController extends Controller implements HasMiddleware
 
     public function editBackground(Request $request)
     {
-        $backRoute = $request->from 
-            ? route('accom-reports.show', [
-                'event' => $request->from
-            ])
-            : route('accom-reports.index');
+        $backRoute = route('accom-reports.index');
         return view('accom-reports.edit-background', [
             'backRoute' => $backRoute,
             'formAction' => route('accom-reports.background.update'),
-            'from' => $request->from
         ]);
     }
 
     public function updateBackground(UpdateAccomReportBackgroundRequest 
         $request)
     {
+        $gpoa = Gpoa::active()->first();
         $imageFile = 'accom_reports/background.jpg';
         if ($request->boolean('remove_background')) {
             Storage::delete($imageFile);
-            if ($request->from) {
-                return redirect()->route('accom-reports.show', [
-                    'event' => $request->from
-                ]);
+            foreach ($gpoa->events as $event) {
+                EventUpdated::dispatch($event);
             }
             return redirect()->route('accom-reports.index')->with('status', 
                 'AR background changed.');
         }
         $image = new Image($request->file('background_file'));
         Storage::put($imageFile, (string)$image->get());
-        if ($request->from) {
-            return redirect()->route('accom-reports.show', [
-                'event' => $request->from
-            ]);
+        foreach ($gpoa->events as $event) {
+            EventUpdated::dispatch($event);
         }
         return redirect()->route('accom-reports.index')->with('status', 
             'AR background changed.');

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Event;
 use App\Models\User;
+use App\Models\AccomReport;
 use Illuminate\Auth\Access\Response;
 
 class EventPolicy
@@ -125,6 +126,8 @@ class EventPolicy
         if (!$canEdit || !$canView) {
             return Response::deny();
         }
+        $updated = $event->accomReport?->file_updated;
+        if (!$updated) return Response::deny();
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
             $position = 'officers';
@@ -132,10 +135,10 @@ class EventPolicy
         switch ($position) {
         case 'officers':
             $hasPerm = $user->hasPerm('accomplishment-reports.view');
-            $notSubmitted = $event->accomReport ? false : true;
+            $exists = $event->accomReport; 
             $returned = $event->accomReport?->status === 'returned';
             $currentStep = $event->accomReport?->current_step === 'officers';
-            if ($hasPerm && ($notSubmitted || ($returned && $currentStep))) {
+            if ($hasPerm && ($exists || ($returned && $currentStep))) {
                 return Response::allow();
             }
             break;
@@ -187,6 +190,24 @@ class EventPolicy
         return Response::deny();
     }
 
+    public function makeAccomReport(User $user, Event $event): Response
+    {
+        $accomReport = $event->accomReport;
+        $noFile = !$accomReport->filepath;
+        $outdated = !$accomReport->file_updated;
+        $officersStep = $accomReport->current_step === 'officers';
+        $completed = $event->is_completed;
+        $head = $event->gpoaActivity->eventHeads()->whereKey($user->id)
+            ->exists();
+        $canView = $user->hasPerm('accomplishment-reports.view');
+        $canEdit = $user->hasPerm('accomplishment-reports.edit');
+        $hasPerm = $canView && $canEdit;
+        $approved = $accomReport->status === 'approved';
+        return ($noFile || $outdated && $completed && 
+            ($head || $hasPerm || $approved)) 
+            ? Response::allow() : Response::deny();
+    }
+
     public function genAccomReport(User $user): Response
     {
         $hasPerm = $user->hasPerm('accomplishment-reports.view');
@@ -194,6 +215,17 @@ class EventPolicy
             return Response::allow();
         }
         return Response::deny();
+    }
+
+    public function updateAccomReportBG(User $user): Response
+    {
+        $canView = $user->hasPerm('accomplishment-reports.view');
+        $canEdit = $user->hasPerm('accomplishment-reports.edit');
+        $hasPerm = $canView && $canEdit;
+        $hasPending = AccomReport::active()->where('status', 'pending')
+            ->exists();
+        return (!$hasPending && $hasPerm) 
+            ? Response::allow() : Response::deny();
     }
 
     public function register(?User $user, Event $event): Response

@@ -22,7 +22,8 @@ class Gpoa extends Model
     protected function casts(): array
     {
         return [
-            'closed_at' => 'datetime'
+            'closed_at' => 'datetime',
+            'report_file_updated_at' => 'datetime',
         ];
     }
 

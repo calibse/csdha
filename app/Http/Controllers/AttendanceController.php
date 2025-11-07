@@ -11,6 +11,7 @@ use App\Models\EventAttendee;
 use App\Http\Requests\StoreAttendanceRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use App\Events\EventUpdated;
 
 class AttendanceController extends Controller implements HasMiddleware
 {
@@ -52,6 +53,7 @@ class AttendanceController extends Controller implements HasMiddleware
         }
         $eventDate->attendees()->attach($student);
         $eventDate->save();
+        EventUpdated::dispatch($event);
         return response([], 200);
     }
 }
