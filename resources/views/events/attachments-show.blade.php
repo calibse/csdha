@@ -21,6 +21,8 @@
 		<button 
 		@can ('update', $event)
 			id="event-attachment_delete-button" 
+		@else
+			disabled
 		@endcan
 			form="confirm-delete-form"
 		>Delete attachment</button>

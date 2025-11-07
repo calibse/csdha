@@ -473,8 +473,8 @@ Route::domain(config('app.user_domain'))->middleware('auth')
             Route::controller(GpoaController::class)
                 ->middleware(CheckActiveGpoa::class)->group(function () {
 
-                Route::get('/gpoa_report.pdf', 'streamPdf')
-                    ->name('genPdf');
+                Route::get('/gpoa_report_{id}.pdf', 'streamPdf')
+                    ->name('streamPdf');
 
                 Route::get('/report.html', 'genPdf')->name('showGenPdf');
 
@@ -725,7 +725,10 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         Route::get('/accom-reports/gen-pdf.html', 'generate')
             ->name('generate');
 
-        Route::get('/accom-reports/accom-report-set.pdf', 'stream')
+        Route::get('/accom-reports/cancel-gen-pdf.php', 'stopGenerating')
+            ->name('stop-generating');
+
+        Route::get('/accom-reports/accom_report_set_{id}.pdf', 'stream')
             ->name('stream');
 
         Route::prefix('accom-report-{event}')->group(function () {

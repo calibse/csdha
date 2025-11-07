@@ -68,7 +68,7 @@
 		<figcaption class="caption">Accomplishment Report</figcaption>
 	</figure>
 @else
-        <p>{{ $progressMessage }}</p>
+        <p>{{ $prepareMessage }}</p>
 @endif
 </article>
 </x-layout.user>

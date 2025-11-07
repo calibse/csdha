@@ -15,6 +15,7 @@ use App\Models\EventDate;
 use App\Events\AccomReportStatusChanged;
 use App\Models\Gpoa;
 use App\Services\Image;
+use App\Services\Format;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateAccomReportBackgroundRequest;
 use App\Http\Requests\GenerateAccomReportRequest;
@@ -139,26 +140,8 @@ class AccomReportController extends Controller implements HasMiddleware
                 'id' => $id,
             ]);
         }
-        $messages = [
-            'Document generation in progress...',
-            'Working on your document...',
-            'Setting up document data...',
-            'Processing request for document...',
-            'Preparing file contents...',
-            'Compiling information for document...'
-        ];
-        $progressMessage = $messages[array_rand($messages)] . 
-            ' Page will auto-refresh.';
-        $updateMessages = [
-            'Document is being updated...',
-            'Processing document update...',
-            'Updating document content...',
-            'Compiling updated document data...',
-            'Preparing the updated version of the document...',
-            'Generating latest document updates...'
-        ];
-        $updateMessage = $updateMessages[array_rand($updateMessages)] . 
-            ' Page will auto-refresh.';
+        $prepareMessage = Format::documentPrepareMessage();
+        $updateMessage = Format::documentUpdateMessage();
         $updated = $accomReport->file_updated;
         $response = response()->view('accom-reports.show', [
             'actions' => $actions,
@@ -181,12 +164,14 @@ class AccomReportController extends Controller implements HasMiddleware
             ]),
             'updated' => $updated,
             'updateMessage' => $updateMessage,
-            'progressMessage' => $progressMessage,
+            'prepareMessage' => $prepareMessage,
         ]);
         if (!auth()->user()->can('makeAccomReport', $event)) {
             return $response;
         }
-        MakeAccomReport::dispatch($event)->onQueue('pdf');
+        $gpoa = Gpoa::active()->first();
+        MakeAccomReport::dispatch($gpoa, $event, auth()->user())
+            ->onQueue('pdf');
         return $response->header('Refresh', '5');
     }
 
@@ -310,7 +295,9 @@ class AccomReportController extends Controller implements HasMiddleware
                 unset($jobs[auth()->user()->id]);
                 Cache::put($jobCache, $jobs);
             });
-            $fileRoute = route('accom-reports.stream');
+            $fileRoute = route('accom-reports.stream', [
+                'id' => now()->format('ymdHis')
+            ]);
         } elseif ($hasLastJob && !$jobDone) {
             $startDate = $userJob['start_date'];
             $endDate = $userJob['end_date'];
@@ -322,7 +309,9 @@ class AccomReportController extends Controller implements HasMiddleware
 	} elseif ((!$hasLastJob || $jobDone) && $hasApproved) {
             $hasInput = true;
             $events = Event::active()->approved($startDate, $endDate)->exists();
+            $requestId = Str::random(8);
             $userJob = [
+                'request_id' => $requestId,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'finished' => false,
@@ -334,8 +323,9 @@ class AccomReportController extends Controller implements HasMiddleware
                     $jobs[auth()->user()->id] = $userJob;
                     Cache::put($jobCache, $jobs);
                 });
-                GenerateAccomReport::dispatch(auth()->user(), $startDate, 
-                    $endDate)->onQueue('pdf');
+                $gpoa = Gpoa::active()->first();
+                GenerateAccomReport::dispatch($gpoa, auth()->user(), 
+                    $requestId, $startDate, $endDate)->onQueue('pdf');
                 $hasLastJob = true;
                 $jobDone = false;
             }
@@ -346,16 +336,7 @@ class AccomReportController extends Controller implements HasMiddleware
             ]) : null;
 */
         } 
-        $messages = [
-            'Document generation in progress...',
-            'Working on your document...',
-            'Setting up document data...',
-            'Processing request for document...',
-            'Preparing file contents...',
-            'Compiling information for document...'
-        ];
-        $progressMessage = $messages[array_rand($messages)] . 
-            ' Page will auto-refresh.';
+        $prepareMessage = Format::documentPrepareMessage();
         $response = response()->view('accom-reports.gen-accom-report', [
             'backRoute' => route('accom-reports.index'),
             'fileRoute' => $fileRoute,
@@ -365,13 +346,26 @@ class AccomReportController extends Controller implements HasMiddleware
             'hasInput' => $hasInput,
             'hasLastJob' => $hasLastJob,
             'jobDone' => $jobDone,
-            'progressMessage' => $progressMessage,
+            'prepareMessage' => $prepareMessage,
+            'cancelFormAction' => route('accom-reports.stop-generating'),
         ]);
 
         if (!$hasLastJob || $jobDone) {
             return $response;
         }
         return $response->header('Refresh', '5');
+    }
+
+    public function stopGenerating()
+    {
+        $jobCache = 'gen_accom_reports';
+        Cache::lock($jobCache . '_lock', 2)->block(1, function () 
+            use ($jobCache) {
+            $jobs = Cache::get($jobCache, []);
+            unset($jobs[auth()->user()->id]);
+            Cache::put($jobCache, $jobs);
+        });
+        return redirect()->route('accom-reports.generate');
     }
 
     public function stream(Request $request)

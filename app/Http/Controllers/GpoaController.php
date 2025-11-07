@@ -19,6 +19,7 @@ use App\Services\PagedView;
 use Illuminate\Support\Facades\Storage;
 use App\Events\GpoaStatusChanged;
 use App\Events\GpoaUpdated;
+use App\Jobs\MakeGpoaReport;
 
 class GpoaController extends Controller implements HasMiddleware
 {
@@ -192,20 +193,28 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = self::$gpoa;
         $fileRoute = null;
-        $empty = true;
-        if ($gpoa->activities()->where('status', 'approved')->exists()) {
-            $empty = false;
+        $hasApproved = $gpoa->has_approved_activity;
+        if ($gpoa->report_filepath && $gpoa->report_file_updated) {
+            $fileRoute = route('gpoa.streamPdf', [
+                'id' => $gpoa->report_file_updated_at->format('ymdHis')
+            ]);
         }
-        if ($gpoa->report_filepath) {
-            $fileRoute = route('gpoa.genPdf');
-        }
-        return view('gpoa.show-gpoa-report', [
+        $response = response()->view('gpoa.show-gpoa-report', [
             'gpoa' => $gpoa,
             'fileRoute' => $fileRoute,
             'backRoute' => route('gpoa.index'),
             'updated' => $gpoa->report_file_updated,
-            'empty' => $empty
+            'hasApproved' => $hasApproved,
+            'prepareMessage' => Format::documentPrepareMessage(),
+            'updateMessage' => Format::documentUpdateMessage(),
         ]);
+        if ($gpoa->report_file_updated) {
+            return $response;
+        }
+        if (!$gpoa->report_filepath) {
+            MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
+        }
+        return $response->header('Refresh', '5');
     }
 
     public function streamPdf(Request $request)

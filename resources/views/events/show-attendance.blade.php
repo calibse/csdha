@@ -5,7 +5,7 @@
             href="{{ $addRoute }}"
             @endcan
         >
-            <span class="icon"><x-phosphor-plus-circle/></span>
+		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
             <span class="text">Add Attendee</span>
         </a>
     </x-slot:toolbar>

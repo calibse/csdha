@@ -210,4 +210,29 @@ class Format
         return implode("\n", $tags);
     }
 
+    public static function documentPrepareMessage(): string
+    {
+        $messages = [
+            'Document generation in progress...',
+            'Working on your document...',
+            'Setting up document data...',
+            'Processing request for document...',
+            'Preparing file contents...',
+            'Compiling information for document...'
+        ];
+        return $messages[array_rand($messages)] . ' Page will auto-refresh.';
+    }
+
+    public static function documentUpdateMessage(): string
+    {
+        $messages = [
+            'Document is being updated...',
+            'Processing document update...',
+            'Updating document content...',
+            'Compiling updated document data...',
+            'Preparing the updated version of the document...',
+            'Generating latest document updates...'
+        ];
+        return $messages[array_rand($messages)] . ' Page will auto-refresh.';
+    }
 }

@@ -6,14 +6,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Gpoa;
 use App\Models\User;
+use App\Models\GpoaActivity;
 use WeasyPrint\Facade as WeasyPrint;
 use App\Services\PagedView;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class MakeGpoaReport implements ShouldQueue
+class MakeGpoaReport implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
 
-    public function __construct(public Gpoa $gpoa, public User $authUser)
+    public function __construct(public Gpoa $gpoa, public User $authUser,
+        public ?GpoaActivity $activity = null)
     {
         //
     }
@@ -21,8 +24,9 @@ class MakeGpoaReport implements ShouldQueue
     public function handle(): void
     {
         $gpoa = $this->gpoa;
-        if (!$gpoa && !$gpoa->activities()->where('status', 'approved')
-            ->exists()) {
+        $gpoaActive = $gpoa?->active;
+        if (!$this->authUser || !$gpoaActive || !$gpoa?->activities()
+            ->where('status', 'approved')->exists()) {
             return;
         }
         $gpoa->report_file_updated = false;
@@ -36,5 +40,11 @@ class MakeGpoaReport implements ShouldQueue
         $gpoa->report_file_updated = true;
         $gpoa->report_file_updated_at = now();
         $gpoa->save();
+    }
+
+    public function uniqueId(): string 
+    {
+        return $this->gpoa->id . '_' . $this->authUser->id . '_' . 
+            $this->activity?->id;
     }
 }

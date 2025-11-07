@@ -258,7 +258,8 @@ class EventPolicy
         if (!$active) return Response::deny();
         $recordsAttendance = $event->participant_type !== null;
         $manualAttendance = $event->automatic_attendance === 0;
-        return ($recordsAttendance && $manualAttendance)
+        $update = $this->update($user, $event)->allowed();
+        return ($update && $recordsAttendance && $manualAttendance)
             ? Response::allow() : Response::deny();
     }
 
