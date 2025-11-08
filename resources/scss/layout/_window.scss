@@ -11,10 +11,11 @@ $window-width: size.$text-width + 2em;
 	top: 0;
 	left: 0;
 	border: solid size.$line-width color.$window-border;
-	border-top-left-radius: size.$corner-roundness;
-	border-top-right-radius: size.$corner-roundness;
+	border-top-left-radius: .6em;
+	border-top-right-radius: .6em;
 	overflow: hidden;
 	width: 100%;
+	box-shadow: 0 0 .8em 0 #bfbfbf;
 
 	&.form .window-content {
 		background-color: color.$form-bg;
@@ -22,7 +23,7 @@ $window-width: size.$text-width + 2em;
 }
 
 .window-title {
-	border-bottom: solid size.$line-width color.$line;
+	border-bottom: solid size.$line-width color.$title-border;
 	background-color: color.$title-bg;
 	color: color.$title-fg;
 	padding: 1rem;

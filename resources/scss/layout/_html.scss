@@ -8,6 +8,22 @@
 	color-scheme: only light; 
 }
 
+html {
+	line-height: 1.5;
+}
+
+*, ::before, ::after {
+	box-sizing: content-box;
+}
+
+a {
+	text-underline-offset: .25em;
+
+	&:hover, &:active {
+		text-decoration-thickness: .1em;
+	}
+}
+
 h1, h2, h3, h4, h5, h6, th {
 	&.title {
 	    font-weight: normal;

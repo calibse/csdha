@@ -14,19 +14,39 @@ textarea {
         background-color: color.$background;
         color: color.$foreground;
         border-radius: size.$corner-roundness;
-        border: solid color.$line size.$line-width;
+        border: solid color.$form-border size.$line-width;
+	line-height: 1.5;
 
-        &:disabled {
+        &:disabled, &:disabled:active {
                 background-color: color.$disabled-bg;
                 color: color.$disabled-fg;
         }
 
 }
 
+input::file-selector-button,
 button {
+	padding: .4em;
+
 	&:active {
 		background-color: color.$pressed;
 	}
+}
+
+input::file-selector-button {
+        font-family: font.$font;
+        background-color: color.$background;
+        color: color.$foreground;
+	padding: .25em;
+	border: 0;
+	border-right: solid color.$form-border size.$line-width;
+	border-radius: 0;
+	height: 100%;
+}
+
+input[type="file"] {
+	padding: 0;
+	height: 2em;
 }
 
 form {
@@ -133,6 +153,16 @@ form {
 			width: auto;
 			margin-right: 1em;
 			margin-bottom: 0;
+			vertical-align: bottom;
+		}
+
+		button {
+			margin-bottom: 0;
+			margin-top: .5em;
+		}
+
+		button:first-child {
+			margin-top: 0;
 		}
 	}
 
@@ -142,7 +172,6 @@ form {
 }
 
 .main-content button {
-	padding: .25em;
 	margin-right: .5em;
 	margin-bottom: .5em;
 
@@ -156,7 +185,7 @@ form {
 	width: size.$text-width;
 	max-width: 100%;
 	text-align: right;
-	margin: 1rem 0;
+	margin: 1em 0;
 
 	button {
 		margin-right: .5em;

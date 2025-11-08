@@ -1,4 +1,4 @@
-<x-layout.user index title="Accomplishment Reports" class="gpoa index">
+<x-layout.user form index title="Accomplishment Reports" class="form gpoa index">
     <x-slot:toolbar>
     @if ($gpoa)
         <a href="{{ $genRoute }}">
@@ -20,7 +20,7 @@ e.png') }}">
     <article class="article">
         <x-alert/>
         @if ($accomReports->isNotEmpty())
-        <table class="table-2">
+        <table class="articles table-2">
             <colgroup>
                 <col style="width: 30%">
                 <col style="width: 70%">

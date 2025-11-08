@@ -3,6 +3,49 @@
 @use "../size";
 @use "../color";
 
+.article-list > * {
+	.title {
+		font-size: 1.2em;
+	}
+
+	border: solid color.$form-border size.$line-width;
+	border-radius: size.$corner-roundness;
+	margin-bottom: 1em;
+	background-color: color.$background;
+	padding: 0 1em;
+}
+
+.view-links  {
+	text-align: center;
+	margin: .5em 0; 
+
+	> .content-block {
+		display: inline-block;
+		white-space: nowrap;
+		border-radius: size.$corner-roundness;
+		border: solid color.$form-border size.$line-width;
+		width: auto;
+		overflow: hidden;
+	}
+}
+
+.view-links > .content-block > * {
+	display: inline-block;
+	width: auto;
+	background-color: color.$background;
+	padding: .5em;
+	margin: 0;
+	border-left: solid color.$form-border size.$line-width;
+
+	&:first-child {
+		border-left: 0;
+	}
+
+	&.current-view {
+		background-color: color.$pressed;
+	}
+}
+
 .content-list {
     list-style: none;
 

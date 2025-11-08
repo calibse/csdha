@@ -66,7 +66,7 @@ class AccomReportController extends Controller implements HasMiddleware
         }
         switch ($position) {
         case 'officers':
-            $accomReports = AccomReport::query();
+            $accomReports = AccomReport::whereNot('status', 'draft');
             break;
         case 'president':
             $accomReports = AccomReport::forPresident();
@@ -350,7 +350,7 @@ class AccomReportController extends Controller implements HasMiddleware
             'cancelFormAction' => route('accom-reports.stop-generating'),
         ]);
 
-        if (!$hasLastJob || $jobDone) {
+        if (session('errors')?->any() || !$hasLastJob || $jobDone) {
             return $response;
         }
         return $response->header('Refresh', '5');

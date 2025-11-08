@@ -1,4 +1,4 @@
-<x-layout.user index title="General Plan of Activities" class="gpoa index">
+<x-layout.user index form title="General Plan of Activities" class="form gpoa index">
 	<x-slot:toolbar>
 	@if ($gpoa)
 		@can ('create', 'App\Models\GpoaActivity')
@@ -49,7 +49,7 @@
 	@if (!$gpoa)
 		<p>There is no active GPOA right now.</p>
 	@elseif ($gpoa && $activities?->isNotEmpty())
-        <table class="table-2">
+        <table class="articles table-2">
             <colgroup>
                 <col style="width: 30%">
                 <col style="width: 70%">

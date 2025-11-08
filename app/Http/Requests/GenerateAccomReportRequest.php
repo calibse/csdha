@@ -6,6 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GenerateAccomReportRequest extends FormRequest
 {
+    protected function getRedirectUrl()
+    {
+        return $this->url(); 
+    }
+
     public function rules(): array
     {
         return [

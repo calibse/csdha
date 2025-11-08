@@ -24,11 +24,11 @@
 <body class="main-body {{ $index ? 'index' : null }} {{ $form ? 'form' : null }}">
 @if ($index)
 	<div class="main-header" id="menu">
-		<header> 
-			<a href="#" class="close-menu-button">
-				<span class="text">Close Menu</span>
-			</a>
-			<div class="content-block">
+		<a href="#" class="close-menu-button">
+			<span class="text">Close Menu</span>
+		</a>
+		<div class="content-block">
+			<header> 
 				<div class="main-header-title">
 					<div class="main-brand">
 						<img class="logo" src="{{ asset('storage/website-logo.png') . '?id=' . cache('website_logo_id') }}">
@@ -57,11 +57,11 @@
 							@endif
 							</div>
 							<div class="details">
-								<p>{{ auth()->user()->full_name }}</p>
+								<p class="name">{{ auth()->user()->full_name }}</p>
 							@if ($siteContext === 'admin')
-								<p>{{ ucwords(auth()->user()->role?->name) }}</p>
+								<p class="position">{{ ucwords(auth()->user()->role?->name) }}</p>
 							@elseif ($siteContext === 'user')
-								<p>{{ auth()->user()->position?->name }}</p>
+								<p class="position">{{ auth()->user()->position?->name }}</p>
 							@endif
 							</div>
 						</div>
@@ -77,7 +77,7 @@
 				</div>
 				<div class="main-header-menu">
 					<nav> 
-						<p class="title">Main Menu</p>
+						<p class="title">Menu</p>
 						<ul class="list">
 						@if ($siteContext === 'user')
 							<li>
@@ -191,15 +191,15 @@
 						</ul>
 					</nav>
 				</div>
-			</div>
-		</header>
+			</header>
+		</div>
 	</div>
 	@endif
 	<div class="main-main">
 		<main> 
 			<div class="main-content-header">
-				<header> 
-					<div class="content-block">
+				<div class="content-block">
+					<header> 
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
@@ -220,8 +220,8 @@
 						@endif
 						</div>
 						<h1 title="{{ $title }}" class="title">{{ $title ?? 'CSDHA' }}</h1>
-					</div>
-				</header>
+					</header>
+				</div>
 			</div>
 			<div {{ $attributes->merge(['class' => 'main-content']) }}>
 			@if (isset($toolbar) && $toolbar->hasActualContent())

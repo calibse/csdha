@@ -3,6 +3,9 @@
 @use "../color";
 @use "../size";
 
+$time-width: 13.8em;
+$event-item-width: $time-width + 2em; 
+
 .events.index {
     table {
         td {
@@ -11,6 +14,48 @@
             text-overflow: ellipsis;
         }
     }
+}
+
+.events.index .event-item {
+	.description {
+		height: 4.5em;
+		overflow: hidden;
+		vertical-align: top;
+	}
+}
+
+@media (min-width: #{(($event-item-width + 1em) * 2 + 6.7em)}) {
+	.events.index .event-item {
+		display: inline-block;
+		width: 41%;
+		margin-right: 1em;
+	}
+}
+
+@media (min-width: #{size.$wide-screen}) {
+	.events.index .event-item {
+		display: block;
+		width: auto;
+		margin-right: 0;
+	}
+}
+
+@media (min-width: #{(($event-item-width + 1em) * 2 + 6.7em + 
+	size.$sidebar-width)}) {
+	.events.index .event-item {
+		display: inline-block;
+		width: 41%;
+		margin-right: 1em;
+	}
+}
+
+@media (min-width: #{(($event-item-width + 1em) * 3 + 9.1em + 
+	size.$sidebar-width)}) {
+	.events.index .event-item {
+		display: inline-block;
+		width: 26%;
+		margin-right: 1em;
+	}
 }
 
 .events.form, .events .window {
