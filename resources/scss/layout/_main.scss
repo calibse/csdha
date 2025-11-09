@@ -4,6 +4,40 @@
 @use "../size";
 @use "../font";
 
+$one-d-table-width: 1em + 12em + size.$text-width;
+
+.item-full-content {
+	background-color: color.$background;
+	padding: size.$edge-padding 1em;
+}
+
+@media (min-width: #{($one-d-table-width + 4em)}) {
+	.main-content .article.has-item-full-content {
+		padding: 0 size.$page-margin;
+	}
+
+	.item-full-content {
+		margin: 1em auto;
+		width: $one-d-table-width;
+		border-radius: size.$corner-roundness;
+		border: solid size.$line-width color.$line;
+
+		hr {
+			display: none;
+		}
+	}
+}
+
+.main-content .main-status {
+	.title {
+		font-weight: bold;
+	}
+
+	> * {
+		white-space: nowrap;
+	}
+}
+
 .main-body {
 	margin: 0;
 	background-color: color.$background;
@@ -304,6 +338,10 @@
 		padding: 0 size.$page-margin;
 		max-width: size.$page-width;
 		min-height: 20em;
+	}
+
+	.article.has-item-full-content {
+		padding: 0;
 	}
 
 /*

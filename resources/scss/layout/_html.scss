@@ -47,16 +47,33 @@ p {
 	hyphens: auto;
 }
 
+.icon {
+	display: inline-block;
+	line-height: 0;
+	border: none;
+        vertical-align: top;
+	margin-top: .1em;
+	margin-right: 1em;
+}
+
+.icon + .text {
+	display: inline-block;
+        vertical-align: top;
+	margin: 0;
+	white-space: normal;
+}
+
 a, button {
     > .icon, > .text {
         display: inline-block;
         white-space: normal;
-        vertical-align: middle;
+        vertical-align: top;
     }
 
     > .icon {
         line-height: 0;
 	border: none;
+	margin: 0;
     }
 
     > .text {

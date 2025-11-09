@@ -39,7 +39,7 @@ e.png') }}">
                             {{ $accomReport->event->gpoaActivity->name }}
                         </a>
                     </td>
-                    <td>{{ $accomReport->full_status }}</td>
+                    <td class="last-row-cell">{{ $accomReport->full_status }}</td>
                 </tr>
             @endforeach
             </tbody>

@@ -68,7 +68,7 @@
                             {{ $activity->name }}
                         </a>
                     </td>
-                    <td>{{ $activity->full_status }}</td>
+                    <td class="last-row-cell">{{ $activity->full_status }}</td>
                 </tr>
             @endforeach
             </tbody>

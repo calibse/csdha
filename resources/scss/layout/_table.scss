@@ -91,6 +91,7 @@ table.articles {
 
 	}
 
+/*
 	tr td > :first-child {
 		padding-top: 0;
 	}
@@ -98,6 +99,7 @@ table.articles {
 	tr td > :last-child {
 		padding-bottom: 0;
 	}
+*/
 }
 
 @mixin table-wide {
@@ -129,7 +131,7 @@ table.articles {
 
 	td, th {
 		display: table-cell;
-		padding: 1em 1em 1em 0;
+		padding: 1em 0 1em 1em;
 		vertical-align: top;
 	}
 
@@ -137,6 +139,10 @@ table.articles {
 		display: table-row;
 		margin-bottom: unset;
 		padding-bottom: unset;
+	
+		:first-child {
+			padding-left: 0;
+		}
 	}
 }
 
@@ -156,23 +162,23 @@ table.articles {
 	td {
 		border-top: solid size.$line-width color.$line;
 		border-bottom: solid size.$line-width color.$line;
+		background-color: color.$background;
 	}
 
 	td:first-child {
 		border-left: solid size.$line-width color.$line;
-		background-color: color.$background;
 		border-top-left-radius: size.$corner-roundness;
 		border-bottom-left-radius: size.$corner-roundness;
 		padding-left: 1em;
 	}
 
-	td:last-child {
+	td.last-row-cell {
 		border-right: solid size.$line-width color.$line;
-		background-color: color.$background;
 		border-top-right-radius: size.$corner-roundness;
 		border-bottom-right-radius: size.$corner-roundness;
 	}
 
+/*
 	tr td > :first-child {
 		padding-top: 1em;
 	}
@@ -180,6 +186,7 @@ table.articles {
 	tr td > :last-child {
 		padding-bottom: 1em;
 	}
+*/
 
 /*
 	tr::before {

@@ -39,13 +39,15 @@
 <article class="article">
 	<x-alert/>
 @if ($accomReport)
-	<p>Status: {{ $accomReport->full_status }}</p>
-@endif
-@if ($accomReport?->comments)
-	<pre>"{{ $accomReport?->comments }}"</pre>
-@endif
-@if ($date)
-	<p>{{ $date }}</p>
+	<aside>
+		<p>Status: {{ $accomReport->full_status }}</p>
+	@if ($accomReport?->comments)
+		<pre>"{{ $accomReport?->comments }}"</pre>
+	@endif
+	@if ($date)
+		<p>{{ $date }}</p>
+	@endif
+	</aside>
 @endif
 @if (!$updated && auth()->user()->can('makeAccomReport', $event))
 	<p>
