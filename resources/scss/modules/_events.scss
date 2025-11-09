@@ -2,9 +2,15 @@
 
 @use "../color";
 @use "../size";
+@use "../common";
 
 $time-width: 13.8em;
 $event-item-width: $time-width + 2em; 
+$event-content-width: 1em + 12em + size.$text-width;
+
+.events.event {
+	@include common.item-full-content-wide($event-content-width);
+}
 
 .events.index {
     table {

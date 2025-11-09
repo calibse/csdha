@@ -4,14 +4,15 @@
 @use "../size";
 @use "../font";
 
-$one-d-table-width: 1em + 12em + size.$text-width;
+$one-d-table-width: 3em + 12em + size.$text-width;
 
 .item-full-content {
 	background-color: color.$background;
 	padding: size.$edge-padding 1em;
 }
 
-@media (min-width: #{($one-d-table-width + 4em)}) {
+/*
+@media (min-width: #{($one-d-table-width + 2em)}) {
 	.main-content .article.has-item-full-content {
 		padding: 0 size.$page-margin;
 	}
@@ -27,6 +28,7 @@ $one-d-table-width: 1em + 12em + size.$text-width;
 		}
 	}
 }
+*/
 
 .main-content .main-status {
 	.title {
@@ -594,7 +596,7 @@ $one-d-table-width: 1em + 12em + size.$text-width;
 	}
 }
 
-@media (min-width: #{(size.$page-width + .3em * 2 - 2em)}) {
+@media (min-width: #{(size.$page-width + .3em * 2 )}) {
 	.main-body.index {
 		.main-toolbar {
 			margin: 0 .3em;
@@ -652,7 +654,7 @@ $one-d-table-width: 1em + 12em + size.$text-width;
 	}
 }
 
-@media (min-width: #{(size.$page-width + (size.$content-only-left-margin * 2))}) {
+@media (min-width: #{(size.$page-width + (size.$content-only-left-margin * 2 + 2em))}) {
 	.main-toolbar {
 		margin-left: 1em + size.$content-only-left-margin;
 	}

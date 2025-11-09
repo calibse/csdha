@@ -1,0 +1,24 @@
+/* _common.scss */
+
+@use "color";
+@use "size";
+
+@mixin item-full-content-wide($width) {
+	@media (min-width: #{($width + 4em)}) {
+		.article.has-item-full-content {
+			padding: 0 size.$page-margin;
+		}
+
+		.item-full-content {
+			margin: 1em auto;
+			width: $width;
+			border-radius: size.$corner-roundness;
+			border: solid size.$line-width color.$line;
+
+			hr {
+				display: none;
+			}
+		}
+	}
+}
+
