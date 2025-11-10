@@ -27,6 +27,7 @@ textarea {
 input::file-selector-button,
 button {
 	padding: .4em;
+	min-width: 4.5em;
 
 	&:active {
 		background-color: color.$pressed;

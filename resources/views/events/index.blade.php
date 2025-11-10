@@ -2,8 +2,11 @@
 <div class="article">
 	<div class="view-links">
 		<div class="content-block">
-			<p class="current-view"><a>Upcoming</a></p><!--
-			--><p><a>Completed</a></p>
+			<p class="current-view">
+				<a href="{{ $upcomingRoute }}">Upcoming</a>
+			</p><!-- --><p>
+				<a href="{{ $completedRoute }}">Completed</a>
+			</p>
 		</div>
 	</div>
 	<x-alert/>

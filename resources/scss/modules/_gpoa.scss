@@ -1,5 +1,16 @@
 /* _gpoa.scss */
 
+@use "../size";
+@use "../common";
+
+$activity-content-width: 1em + 12em + size.$text-width;
+
+@media (min-width: #{($activity-content-width + 4em)}) {
+	.gpoa.activity .item-full-content {
+		width: $activity-content-width;
+	}
+}
+
 .main-content.gpoa {
     table {
         td.activity-name {

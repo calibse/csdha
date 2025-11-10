@@ -27,17 +27,26 @@
 		width: auto;
 		overflow: hidden;
 	}
-}
 
-.item-full-content > * {
+	a {
+		display: inline-block;
+		padding: .5em;
+	}
 
+	a:link, a:visited {
+		color: color.$foreground;
+		text-decoration: none;
+	}
+
+	a:active {
+		background-color: color.$pressed;
+	}
 }
 
 .view-links > .content-block > * {
 	display: inline-block;
 	width: auto;
 	background-color: color.$background;
-	padding: .5em;
 	margin: 0;
 	border-left: solid color.$form-border size.$line-width;
 

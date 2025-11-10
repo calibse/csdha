@@ -65,14 +65,14 @@ class GpoaController extends Controller implements HasMiddleware
         return view('gpoa.index', [
             'gpoa' => $gpoa,
             'activities' => $activities->orderBy('updated_at', 'desc')
-                ->paginate(7)
+                ->paginate(15)
         ]);
     }
 
     public function oldIndex()
     {
         $gpoas = Gpoa::closed()->withApprovedActivity()
-            ->orderBy('closed_at', 'desc')->paginate(7);
+            ->orderBy('closed_at', 'desc')->paginate(15);
         return view('gpoa.index-old', [
             'gpoas' => $gpoas,
             'backRoute' => route('gpoa.index'),

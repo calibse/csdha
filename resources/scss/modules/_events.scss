@@ -8,8 +8,10 @@ $time-width: 13.8em;
 $event-item-width: $time-width + 2em; 
 $event-content-width: 1em + 12em + size.$text-width;
 
-.events.event {
-	@include common.item-full-content-wide($event-content-width);
+@media (min-width: #{($event-content-width + 4em)}) {
+	.events.event .item-full-content {
+		width: $event-content-width;
+	}
 }
 
 .events.index {
@@ -34,6 +36,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 	.events.index .event-item {
 		display: inline-block;
 		width: 41%;
+		min-width: calc(50% - 3.5em);
 		margin-right: 1em;
 	}
 }
@@ -51,6 +54,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 	.events.index .event-item {
 		display: inline-block;
 		width: 41%;
+		min-width: calc(50% - 3.5em);
 		margin-right: 1em;
 	}
 }
@@ -60,6 +64,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 	.events.index .event-item {
 		display: inline-block;
 		width: 26%;
+		min-width: calc(33% - 3.5em);
 		margin-right: 1em;
 	}
 }

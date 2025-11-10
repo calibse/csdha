@@ -75,8 +75,8 @@ class AccomReportController extends Controller implements HasMiddleware
             $accomReports = AccomReport::forAdviser();
             break;
         }
-        $accomReports = $accomReports->active()->orderBy("updated_at", "desc")
-            ->paginate("7");
+        $accomReports = $accomReports->active()->orderBy('updated_at', 'desc')
+            ->paginate(15);
         $gpoa = Gpoa::active()->exists();
         return view('accom-reports.index', [
             'gpoa' => $gpoa,

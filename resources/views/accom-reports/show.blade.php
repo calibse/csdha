@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute title="Accomplishment Report" class="event">
+<x-layout.user form :$backRoute title="Accomplishment Report" class="accom-reports accom-report form">
 <x-slot:toolbar>
 @if ($actions['submit'])
 	<a
@@ -36,22 +36,40 @@
 		<span class="text">View event</span>
 	</a>
 </x-slot:toolbar>
-<article class="article">
+<article class="article has-item-full-content-wide">
 	<x-alert/>
 @if ($accomReport)
-	<aside>
-		<p>Status: {{ $accomReport->full_status }}</p>
+	<aside class="main-status item-full-content-wide">
+		<p class="title">Status</p>
+		<p>
+			<img class="icon" src="{{ asset('icon/small/light/circle-notch-fill.png') }}">
+			<span class="text">
+				{{ $accomReport->full_status }}
+			</span>
+		</p>
 	@if ($accomReport?->comments)
-		<pre>"{{ $accomReport?->comments }}"</pre>
+		<div>
+			<img class="icon" src="{{ asset('icon/small/light/chat-text-fill.png') }}">
+
+			<pre class="text">"{{ $accomReport?->comments }}"</pre>
+		</div>
 	@endif
 	@if ($date)
-		<p>{{ $date }}</p>
+		<p>
+			<img class="icon" src="{{ asset('icon/small/light/calendar-dots-fill.png') }}">
+			<span class="text">
+				{{ $date }}
+			</span>
+		</p>
 	@endif
 	</aside>
 @endif
 @if (!$updated && auth()->user()->can('makeAccomReport', $event))
-	<p>
-		{{ $updateMessage }}
+	<p class="has-icon">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+		<span class="text">
+			{{ $updateMessage }}
+		</span>
 	</p>
 @elseif ($fileRoute)
 	@if (!$updated)
@@ -70,7 +88,12 @@
 		<figcaption class="caption">Accomplishment Report</figcaption>
 	</figure>
 @else
-        <p>{{ $prepareMessage }}</p>
+        <p class="has-icon">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+		<span class="text">
+			{{ $prepareMessage }}
+		</span>
+	</p>
 @endif
 </article>
 </x-layout.user>

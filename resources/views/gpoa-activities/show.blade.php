@@ -1,4 +1,4 @@
-<x-layout.user form route="gpoa.index" class="gpoa form" title="GPOA Activity">
+<x-layout.user form route="gpoa.index" class="gpoa activity form" title="GPOA Activity">
 <x-slot:toolbar>
 @if ($actions['edit'])
 	<a

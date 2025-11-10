@@ -32,7 +32,12 @@
 		<figcaption class="caption">Accomplishment Report</figcaption>
 	</figure>
 @elseif ($hasLastJob && !$jobDone)
-	<p>{{ $prepareMessage }}</p>
+	<p class="has-icon">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+                <span class="text">
+			{{ $prepareMessage }}
+		</span>
+	</p>
 @elseif (!$errors->any() && $hasApproved && $hasInput)
 	<p>No records available to generate.</p>
 @elseif (!$hasApproved)

@@ -148,7 +148,7 @@ table.articles {
 
 @mixin articles-wide {
 	border-collapse: separate;
-	border-spacing: 0 1em;
+	border-spacing: 0 .5em;
 
 	th {
 		padding-top: 0;

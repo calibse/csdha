@@ -16,7 +16,7 @@
 		height: 100%;
 		background-color: color.$background;
 		margin-bottom: .5em;
-		border: solid .05em color.$line;
+		border: solid size.$line-width color.$line;
 
 		object {
 			width: 100%;

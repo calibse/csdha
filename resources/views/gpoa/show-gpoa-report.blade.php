@@ -3,7 +3,12 @@
 @if (!$hasApproved)
 	<p>There are no approved activities yet.</p>
 @elseif (!$updated)
-	<p>{{ $updateMessage }}</p>
+	<p class="has-icon">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+                <span class="text">
+			{{ $updateMessage }}
+		</span>
+	</p>
 @elseif ($fileRoute)
 	<figure class="pdf-document">
 		<div class="pdf-file">
@@ -17,7 +22,12 @@
 		<figcaption class="caption">GPOA Report</figcaption>
 	</figure>
 @else
-	<p>{{ $prepareMessage }}</p>
+	<p class="has-icon">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+                <span class="text">
+			{{ $prepareMessage }}
+		</span>
+	</p>
 @endif
 </div>
 </x-layout.user>

@@ -6,29 +6,53 @@
 
 $one-d-table-width: 3em + 12em + size.$text-width;
 
+.main-content .article.has-item-full-content {
+	padding: 0;
+}
+
 .item-full-content {
 	background-color: color.$background;
 	padding: size.$edge-padding 1em;
 }
 
-/*
-@media (min-width: #{($one-d-table-width + 2em)}) {
+@mixin item-full-content-wide {
+	background-color: color.$background;
+	padding: size.$edge-padding 1em;
+	margin: 1em auto;
+	border-radius: size.$corner-roundness;
+	border: solid size.$line-width color.$line;
+
+	hr {
+		display: none;
+	}
+
+	&:first-child {
+		margin-top: 2em;
+	}
+}
+
+.main-content .article.has-item-full-content {
+	padding: 0 1em;
+}
+
+.item-full-content-wide {
+	@include item-full-content-wide;
+}
+
+@media (min-width: #{(size.$wide-screen)}) {
 	.main-content .article.has-item-full-content {
 		padding: 0 size.$page-margin;
 	}
 
 	.item-full-content {
-		margin: 1em auto;
-		width: $one-d-table-width;
-		border-radius: size.$corner-roundness;
-		border: solid size.$line-width color.$line;
-
-		hr {
-			display: none;
-		}
+		@include item-full-content-wide;
 	}
+
+	.item-full-content-wide {
+		@include item-full-content-wide;
+	}
+
 }
-*/
 
 .main-content .main-status {
 	.title {
@@ -45,7 +69,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	background-color: color.$background;
 	color: color.$foreground;
 
-	a[href] {
+	a:link, a:visited {
 		color: color.$link;
 	}
 }
@@ -341,11 +365,6 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		max-width: size.$page-width;
 		min-height: 20em;
 	}
-
-	.article.has-item-full-content {
-		padding: 0;
-	}
-
 /*
 	&.index {
 		.main-toolbar,
