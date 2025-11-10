@@ -235,4 +235,19 @@ class Format
         ];
         return $messages[array_rand($messages)] . ' Page will auto-refresh.';
     }
+
+    public static function currentRoute(string $route): bool
+    {
+        $urlMatched = str_starts_with(url()->full(), $route);
+        $hasQuery = true;
+        parse_str(parse_url($route)['query'] ?? '', $query);
+        if (!$query && request()->query()) $hasQuery = false;
+        foreach ($query as $name => $value) {
+            if (request()->query($name) !== $value) {
+                $hasQuery = false;
+                break;
+            }
+        }
+        return ($urlMatched && $hasQuery) ? true : false;
+    }
 }

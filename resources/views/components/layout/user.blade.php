@@ -1,4 +1,20 @@
 @use('Illuminate\Support\Facades\Route')
+@use('App\Services\Format')
+@php
+$adminHomeRoute = route('admin.home'); 
+$userHomeRoute = route('user.home'); 
+$gpoaRoute = route('gpoa.index'); 
+$eventsRoute = route('events.index');
+$accomReportsRoute = route('accom-reports.index');
+$positionsRoute = route('positions.index');
+$attendanceRoute = route('attendance.create');
+$settingsRoute = route('settings.index');
+$userSignoutRoute = route('user.logout');
+$adminSignoutRoute = route('admin.logout');
+$rolesRoute = route('roles.index');
+$accountsRoute = route('accounts.index');
+$auditRoute = route('audit.index');
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -80,31 +96,31 @@
 						<p class="title">Menu</p>
 						<ul class="list">
 						@if ($siteContext === 'user')
-							<li>
-								<a href="{{ route('user.home') }}">
+							<li class="{{ Format::currentRoute($userHomeRoute) ? 'current-page' : null }}">
+								<a href="{{ $userHomeRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
 							@can ('viewAny', 'App\Models\Gpoa')
-							<li>
-								<a href="{{ route('gpoa.index') }}">
+							<li class="{{ Format::currentRoute($gpoaRoute) ? 'current-page' : null }}">
+								<a href="{{ $gpoaRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/blueprint-duotone.png') }}">
 									<span class="text">GPOA</span>
 								</a>
 							</li>
 							@endcan
 							@can ('viewAny', 'App\Models\Event')
-							<li>
-								<a href="{{ route('events.index') }}">
+							<li class="{{ Format::currentRoute($eventsRoute) ? 'current-page' : null }}">
+								<a href="{{ $eventsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/calendar-duotone.png') }}">
 									<span class="text">Events</span>
 								</a>
 							</li>
 							@endcan
 							@can ('viewAnyAccomReport', 'App\Models\Event')
-							<li>
-								<a href="{{ route('accom-reports.index') }}">
+							<li class="{{ Format::currentRoute($accomReportsRoute) ? 'current-page' : null }}">
+								<a href="{{ $accomReportsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/files-duotone.png') }}">
 									<span class="text">Accom. Reports</span>
 								</a>
@@ -121,42 +137,42 @@
 							@endcan
 							--}}
 							@can ('viewAny', 'App\Models\Position')
-							<li>
-								<a href="{{ route('positions.index') }}">
+							<li class="{{ Format::currentRoute($positionsRoute) ? 'current-page' : null }}">
+								<a href="{{ $positionsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/users-three-duotone.png') }}">
 									<span class="text">Central Body</span>
 								</a>
 							</li>
 							@endcan
 							@can ('viewAttendance', 'App\Models\Event')
-							<li>
-								<a href="{{ route('attendance.create') }}">
+							<li class="{{ Format::currentRoute($attendanceRoute) ? 'current-page' : null }}">
+								<a href="{{ $attendanceRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/user-check-duotone.png') }}">
 									<span class="text">Attendance</span>
 								</a>
 							</li>
 							@endcan
-							<li>
-								<a href="{{ route('settings.index') }}">
+							<li class="{{ Format::currentRoute($settingsRoute) ? 'current-page' : null }}">
+								<a href="{{ $settingsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/wrench-duotone.png') }}">
 									<span class="text">Settings</span>
 								</a>
 							</li>
-							<li>
-								<a href="{{ route('user.logout') }}">
+							<li class="{{ Format::currentRoute($userSignoutRoute) ? 'current-page' : null }}">
+								<a href="{{ $userSignoutRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 									<span class="text">Sign out</span>
 								</a>
 							</li>
 						@elseif ($siteContext === 'admin')
-							<li>
-								<a href="{{ route('admin.home') }}">
+							<li class="{{ Format::currentRoute($adminHomeRoute) ? 'current-page' : null }}">
+								<a href="{{ $adminHomeRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
-							<li>
-								<a href="{{ route('audit.index') }}">
+							<li class="{{ Format::currentRoute($auditRoute) ? 'current-page' : null }}">
+								<a href="{{ $auditRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/table-duotone.png') }}">
 									<span class="text">Audit Trail</span>
 								</a>
@@ -169,20 +185,20 @@
 								</a>
 							</li>
 							--}}
-							<li>
-								<a href="{{ route('accounts.index') }}">
+							<li class="{{ Format::currentRoute($accountsRoute) ? 'current-page' : null }}">
+								<a href="{{ $accountsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/user-square-duotone.png') }}">
 									<span class="text">Accounts</span>
 								</a>
 							</li>
-							<li>
-								<a href="{{ route('roles.index') }}">
+							<li class="{{ Format::currentRoute($rolesRoute) ? 'current-page' : null }}">
+								<a href="{{ $rolesRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/user-gear-duotone.png') }}">
 									<span class="text">Roles</span>
 								</a>
 							</li>
-							<li>
-								<a href="{{ route('admin.logout') }}">
+							<li class="{{ Format::currentRoute($adminSignoutRoute) ? 'current-page' : null }}">
+								<a href="{{ $adminSignoutRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 									<span class="text">Sign out</span>
 								</a>

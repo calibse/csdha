@@ -1,10 +1,11 @@
+@use('App\Services\Format')
 <x-layout.user index form title="Events" class="form events index">
 <div class="article">
 	<div class="view-links">
 		<div class="content-block">
-			<p class="current-view">
+			<p class="{{ Format::currentRoute($upcomingRoute) ? 'current-view' : null }}">
 				<a href="{{ $upcomingRoute }}">Upcoming</a>
-			</p><!-- --><p>
+			</p><!-- --><p class="{{ Format::currentRoute($completedRoute) ? 'current-view' : null }}">
 				<a href="{{ $completedRoute }}">Completed</a>
 			</p>
 		</div>

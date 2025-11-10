@@ -222,18 +222,15 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 }
 
 .main-header-menu {
-
 	.title {
-		font-weight: bold;
-		margin: 0;
-		color: color.$accent;
+		display: none;
 	}
 
 	ul {
 		margin: 0;
 		list-style: none;
-		padding: 0 1em;
 		white-space: nowrap;
+		padding: 0 1em;
 		overflow-x: auto;
 	}
 
@@ -243,12 +240,9 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		margin-right: 1em;
 	}
 
-	a[href] {
+	a:link, a:visited {
 		text-decoration: none;
 		color: color.$menu-fg;
-		
-		.text {
-		}
 	}
 }
 
@@ -458,7 +452,15 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 }
 
 @mixin main-header-menu {
-	padding: 0 1em;
+	.title {
+		display: block;
+		font-weight: bold;
+		margin: 0;
+		color: color.$accent;
+		padding: 0 1em;
+		margin-bottom: .5em;
+		width: auto;
+	}
 
 	ul {
 		padding: 0;
@@ -467,7 +469,26 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 	li {
 		display: block;
-		margin: 1em 0;
+		margin: 0;
+
+		&.current-page {
+			background-color: color.$selected-menu-bg;
+		}
+	}
+
+	li:hover, li:active {
+		background-color: color.$selected-menu-bg;
+	}
+
+	a {
+		display: inline-block;
+		height: 100%;
+		width: size.$sidebar-width - 2em;
+		padding: .5em 1em;
+	}
+
+	a:hover .text, a:focus .text {
+		text-decoration: none;
 	}
 }
 

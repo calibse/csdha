@@ -58,14 +58,7 @@ use App\Services\EvalFormStep;
 use App\Services\QrCode;
 
 Route::get('/test.html', function (Request $request) {
-    return view('test');
-    $cookies = $request->cookies->all();
-$lines = [];
-foreach ($cookies as $k => $v) {
-    $lines[] = "$k=$v";
-}
-$text = implode("\n", $lines);
-return $text . 'hello';
+     return url()->full();
 });
 
     Route::prefix('settings')->name('settings.')->group(function () {
