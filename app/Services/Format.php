@@ -236,6 +236,12 @@ class Format
         return $messages[array_rand($messages)] . ' Page will auto-refresh.';
     }
 
+    public static function currentIndex(string $route): bool
+    {
+        $urlMatched = str_starts_with(url()->full(), $route);
+        return $urlMatched;
+    }
+
     public static function currentRoute(string $route): bool
     {
         $urlMatched = str_starts_with(url()->full(), $route);

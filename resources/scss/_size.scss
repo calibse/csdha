@@ -2,12 +2,14 @@
 
 @use "sass:math";
 
-$page-margin: 1em;
+//$page-margin: 1em;
+$page-margin: 4%;
 $text-width: 40em;
 $page-width: 72em;
+$wide-page-margin: $page-width * .04;
 $corner-roundness: .3em;
 $sidebar-width: 17em;
 $line-width: .06em;
 $wide-screen: 48em;
 $edge-padding: .06em;
-$content-only-left-margin: math.div(($sidebar-width + $page-width - $page-width), 2);
+$content-only-left-margin: math.div($sidebar-width, 2);

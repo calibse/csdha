@@ -35,7 +35,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 @media (min-width: #{(($event-item-width + 1em) * 2 + 6.7em)}) {
 	.events.index .event-item {
 		display: inline-block;
-		width: 41%;
+		width: 40%;
 		min-width: calc(50% - 3.5em);
 		margin-right: 1em;
 	}
@@ -53,7 +53,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 	size.$sidebar-width)}) {
 	.events.index .event-item {
 		display: inline-block;
-		width: 41%;
+		width: 40%;
 		min-width: calc(50% - 3.5em);
 		margin-right: 1em;
 	}

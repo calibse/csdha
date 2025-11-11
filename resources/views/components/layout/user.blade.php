@@ -96,14 +96,14 @@ $auditRoute = route('audit.index');
 						<p class="title">Menu</p>
 						<ul class="list">
 						@if ($siteContext === 'user')
-							<li class="{{ Format::currentRoute($userHomeRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($userHomeRoute) ? 'current-page' : null }}">
 								<a href="{{ $userHomeRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
 							@can ('viewAny', 'App\Models\Gpoa')
-							<li class="{{ Format::currentRoute($gpoaRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($gpoaRoute) ? 'current-page' : null }}">
 								<a href="{{ $gpoaRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/blueprint-duotone.png') }}">
 									<span class="text">GPOA</span>
@@ -111,7 +111,7 @@ $auditRoute = route('audit.index');
 							</li>
 							@endcan
 							@can ('viewAny', 'App\Models\Event')
-							<li class="{{ Format::currentRoute($eventsRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($eventsRoute) ? 'current-page' : null }}">
 								<a href="{{ $eventsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/calendar-duotone.png') }}">
 									<span class="text">Events</span>
@@ -119,7 +119,7 @@ $auditRoute = route('audit.index');
 							</li>
 							@endcan
 							@can ('viewAnyAccomReport', 'App\Models\Event')
-							<li class="{{ Format::currentRoute($accomReportsRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($accomReportsRoute) ? 'current-page' : null }}">
 								<a href="{{ $accomReportsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/files-duotone.png') }}">
 									<span class="text">Accom. Reports</span>
@@ -137,7 +137,7 @@ $auditRoute = route('audit.index');
 							@endcan
 							--}}
 							@can ('viewAny', 'App\Models\Position')
-							<li class="{{ Format::currentRoute($positionsRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($positionsRoute) ? 'current-page' : null }}">
 								<a href="{{ $positionsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/users-three-duotone.png') }}">
 									<span class="text">Central Body</span>
@@ -145,33 +145,33 @@ $auditRoute = route('audit.index');
 							</li>
 							@endcan
 							@can ('viewAttendance', 'App\Models\Event')
-							<li class="{{ Format::currentRoute($attendanceRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($attendanceRoute) ? 'current-page' : null }}">
 								<a href="{{ $attendanceRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/user-check-duotone.png') }}">
 									<span class="text">Attendance</span>
 								</a>
 							</li>
 							@endcan
-							<li class="{{ Format::currentRoute($settingsRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($settingsRoute) ? 'current-page' : null }}">
 								<a href="{{ $settingsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/wrench-duotone.png') }}">
 									<span class="text">Settings</span>
 								</a>
 							</li>
-							<li class="{{ Format::currentRoute($userSignoutRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($userSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $userSignoutRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 									<span class="text">Sign out</span>
 								</a>
 							</li>
 						@elseif ($siteContext === 'admin')
-							<li class="{{ Format::currentRoute($adminHomeRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($adminHomeRoute) ? 'current-page' : null }}">
 								<a href="{{ $adminHomeRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
-							<li class="{{ Format::currentRoute($auditRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($auditRoute) ? 'current-page' : null }}">
 								<a href="{{ $auditRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/table-duotone.png') }}">
 									<span class="text">Audit Trail</span>
@@ -185,19 +185,19 @@ $auditRoute = route('audit.index');
 								</a>
 							</li>
 							--}}
-							<li class="{{ Format::currentRoute($accountsRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($accountsRoute) ? 'current-page' : null }}">
 								<a href="{{ $accountsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/user-square-duotone.png') }}">
 									<span class="text">Accounts</span>
 								</a>
 							</li>
-							<li class="{{ Format::currentRoute($rolesRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($rolesRoute) ? 'current-page' : null }}">
 								<a href="{{ $rolesRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/user-gear-duotone.png') }}">
 									<span class="text">Roles</span>
 								</a>
 							</li>
-							<li class="{{ Format::currentRoute($adminSignoutRoute) ? 'current-page' : null }}">
+							<li class="{{ Format::currentIndex($adminSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $adminSignoutRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
 									<span class="text">Sign out</span>
@@ -242,9 +242,11 @@ $auditRoute = route('audit.index');
 			<div {{ $attributes->merge(['class' => 'main-content']) }}>
 			@if (isset($toolbar) && $toolbar->hasActualContent())
 				<div class="main-toolbar">
-					<nav> 
-						{{ $toolbar }}
-					</nav>
+					<div class="content-block">
+						<nav> 
+							{{ $toolbar }}
+						</nav>
+					</div>
 				</div>
 			@endif
 				<div class="content-block">

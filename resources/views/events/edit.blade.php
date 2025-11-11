@@ -1,4 +1,4 @@
-<x-layout.user class="events form" :$backRoute title="Event Settings">
+<x-layout.user form class="events form" :$backRoute title="Event Settings">
 <div class="article">
 	<x-alert/>
 	<form method="post" action="{{ $formAction }}" enctype="multipart/form-data">
