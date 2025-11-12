@@ -7,6 +7,8 @@
 $featbox-width: size.$text-width + 2em;
 $dot-color: #dddddd;
 $selected-dot-color: #ffffff;
+$featbox-height: 18em;
+$featbox-y-margin: 2.3em;
 
 @mixin drift($slide2, $slide3) {
 	0%, 22%   { transform: translateX(0); }
@@ -32,7 +34,6 @@ $selected-dot-color: #ffffff;
 }
 
 /*
-
 @keyframes drift1 {
 	@include drift(-100%, -200%);
 	//@include drift(-1 * $featbox-width, -2 * $featbox-width);
@@ -83,7 +84,6 @@ $selected-dot-color: #ffffff;
 @keyframes featured3-dot3-drift {
 	@include featured-dot-drift1;
 }
-
 */
 
 .main-content.home .featbox {
@@ -94,7 +94,7 @@ $selected-dot-color: #ffffff;
 	overflow: hidden;
 	border: solid size.$line-width color.$line;
 	margin: 1em auto;
-	height: 18em;
+	height: $featbox-height;
 
 	.feat-controller {
 		position: absolute;
@@ -119,6 +119,7 @@ $selected-dot-color: #ffffff;
 
 	.content-nav-links .featured1-dot {
 		animation: featured1-dot1-drift 12s infinite;
+		background-color: $selected-dot-color; 
 	}
 
 	.content-nav-links .featured2-dot {
@@ -129,21 +130,33 @@ $selected-dot-color: #ffffff;
 		animation: featured1-dot3-drift 12s infinite;
 	}
 
+	> .content-block {
+		position: relative;
+		white-space: nowrap;
+		height: 100%;
+		left: 0;
+		transition: left 0.5s ease;
+
+		.featbox-contents {
+			height: 100%;
+			animation: drift1 12s infinite ease-in-out;
+		}
+	}
+
 	#featured-1:target {
 		~ .content-nav-links .featured1-dot {
 			background-color: $selected-dot-color; 
-		}
-
-		~ .content-nav-links .featured1-dot {
 			animation: featured1-dot1-drift 12s infinite;
 		}
 
 		~ .content-nav-links .featured2-dot {
 			animation: featured1-dot2-drift 12s infinite;
+			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured3-dot {
 			animation: featured1-dot3-drift 12s infinite;
+			background-color: $dot-color; 
 		}
 
 		~ .content-block {
@@ -156,20 +169,19 @@ $selected-dot-color: #ffffff;
 	}
 
 	#featured-2:target {
-		~ .content-nav-links .featured2-dot {
-			background-color: $selected-dot-color; 
-		}
-
 		~ .content-nav-links .featured1-dot {
 			animation: featured2-dot1-drift 12s infinite;
+			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured2-dot {
+			background-color: $selected-dot-color; 
 			animation: featured2-dot2-drift 12s infinite;
 		}
 
 		~ .content-nav-links .featured3-dot {
 			animation: featured2-dot3-drift 12s infinite;
+			background-color: $dot-color; 
 		}
 
 		~ .content-block {
@@ -182,20 +194,19 @@ $selected-dot-color: #ffffff;
 	}
 
 	#featured-3:target {
-		~ .content-nav-links .featured3-dot {
-			background-color: $selected-dot-color; 
-		}
-
 		~ .content-nav-links .featured1-dot {
 			animation: featured3-dot1-drift 12s infinite;
+			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured2-dot {
 			animation: featured3-dot2-drift 12s infinite;
+			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured3-dot {
 			animation: featured3-dot3-drift 12s infinite;
+			background-color: $selected-dot-color; 
 		}
 
 		~ .content-block {
@@ -207,19 +218,6 @@ $selected-dot-color: #ffffff;
 		}
 	}
 	
-	> .content-block {
-		position: relative;
-		white-space: nowrap;
-		height: 100%;
-		transition: left 0.5s ease;
-
-		.featbox-contents {
-			background-color: yellow;
-			height: 100%;
-			animation: drift1 12s infinite ease-in-out;
-		}
-	}
-
 	.content-nav-links {
 		position: absolute;
 		background-color: rgba(44, 44, 49, .1);
@@ -230,46 +228,13 @@ $selected-dot-color: #ffffff;
 		text-align: center;
 		border-radius: 100em;
 	}
-	
-	.featcontent {
-		position: relative;
-		height: 100%;
-		width: 100%;
-		vertical-align: top;
-		display: inline-block;
-		overflow: hidden;
 
-		> .content-block {
-			padding: 2em;
-		}
+	.content-siblings-links .next {
+		right: 0;
+	}
 
-		.visual {
-			display: inline-block;
-			height: 200px;
-			width: 30%;
-			background-color: red;
-			vertical-align: middle;
-		}
-
-		.info {
-			vertical-align: middle;
-			display: inline-block;
-			width: 70%;
-			background-color: green;
-		}
-
-		.subtitle {
-			white-space: wrap;
-			font-size: 1.2em;
-			margin: 0;
-		}
-
-		.title {
-			white-space: wrap;
-			font-weight: bold;
-			font-size: 1.6em;
-			margin: 0;
-		}
+	.content-siblings-links .prev {
+		left: 0;
 	}
 
 	.content-siblings-links > * {
@@ -286,13 +251,100 @@ $selected-dot-color: #ffffff;
 			height: 100%;
 		}
 	}
+	
+	.featcontent {
+		position: relative;
+		height: 100%;
+		width: 100%;
+		vertical-align: top;
+		display: inline-block;
+		overflow: hidden;
 
-	.content-siblings-links .next {
-		left: 0;
+		> .content-block {
+			padding: $featbox-y-margin 4%;
+			height: $featbox-height - ($featbox-y-margin * 2);
+		}
+
+		.visual, .info {
+			vertical-align: top;
+			display: inline-block;
+		}
+
+		.visual {
+			text-align: center;
+			height: 12.5em;
+			width: 40%;
+	
+			img {
+				display: inline-block;
+				width: 100%;
+			}
+		}
+
+		.info {
+			width: 60%;
+		}
+
+		.title, .subtitle {
+			white-space: wrap;
+			margin: 0;
+		}
+
+		.subtitle {
+			font-size: 1.2em;
+		}
+
+		.title {
+			font-weight: bold;
+			font-size: 1.4em;
+		}
 	}
 
-	.content-siblings-links .prev {
-		right: 0;
+	.featcontent .welcome {
+		text-align: center;
+		color: color.$background;
+		white-space: wrap;
+
+		.title {
+			font-weight: bold;
+			font-size: 1.6em;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.welcome-message {
+			font-size: 1.2em;
+			width: 35em;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+}
+
+@media (min-width: 22em) {
+	.main-content.home .featbox .featcontent {
+		.visual, .info {
+			vertical-align: middle;
+
+			.title {
+				font-size: 1.6em;
+			}
+		}
+	}
+}
+
+@media (min-width: 35em) {
+	.main-content.home .featbox .featcontent .visual {
+		vertical-align: middle;
+
+		img {
+			width: auto;
+			height: 100%;
+		}
+	}
+
+	.main-content.home .featbox .featcontent .welcome .title {
+		margin-top: 1.5em;
 	}
 }
 
@@ -303,9 +355,15 @@ $selected-dot-color: #ffffff;
 	padding: 0 1em;
 	margin: 1em 0;
 
+
 	.title {
 		font-weight: bold;
 		font-size: 1.2em;
+		margin-bottom: .5em;
+	}
+
+	.welcome-message {
+		margin-top: .5em;
 	}
 }
 

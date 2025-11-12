@@ -3,29 +3,15 @@
 	<div class="feat-controller" id="featured-2"></div>
 	<div class="feat-controller" id="featured-3"></div>
 	<div class="content-block">
-	<div class="featbox-contents">
-		<div style="background-color: lightblue;" class="featcontent">
-			<x-home-feat-event/>
-			<div class="content-siblings-links">
-				<div class="next"><a href="#featured-3"></a></div>
-				<div class="prev"><a href="#featured-2"></a></div>
-			</div>
-		</div><!-- --><div 
-			style="background-color: lightgreen;" class="featcontent">
-			<p>Hello2</p>
-			<div class="content-siblings-links">
-				<div class="next"><a href="#featured-1"></a></div>
-				<div class="prev"><a href="#featured-3"></a></div>
-			</div>
-		</div><!-- --><div 
-			style="background-color: lightblue;" class="featcontent">
-			<p>Hello3</p>
-			<div class="content-siblings-links">
-				<div class="next"><a href="#featured-2"></a></div>
-				<div class="prev"><a href="#featured-1"></a></div>
+		<div class="featbox-contents">
+			<div class="featcontent">
+				<x-home-feat-activity next="#featured-2" prev="#featured-3" />
+			</div><div class="featcontent">
+				<x-home-feat-ongoing-event next="#featured-3" prev="#featured-1" />
+			</div><div class="featcontent">
+				<x-home-feat-completed-event next="#featured-1" prev="#featured-2" />
 			</div>
 		</div>
-	</div>
 	</div>
 	<div class="content-nav-links featbox-indicator">
 		<a 
@@ -38,7 +24,7 @@
 
 <div class="introbox">
 	<p class="title">CSDHA is the platform for CS activities</p>
-	<p>Manage event planning, attendance, feedback, and accomplishment reports, in one place.</p>
+	<p class="welcome-message">Manage event planning, attendance, feedback, and accomplishment reports, in one place.</p>
 </div>
 
 <p class="infobox">

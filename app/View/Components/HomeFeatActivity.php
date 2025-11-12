@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class HomeFeatEvent extends Component
+class HomeFeatActivity extends Component
 {
     /**
      * Create a new component instance.
@@ -24,6 +24,6 @@ class HomeFeatEvent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.home-feat-event');
+        return view('components.home-feat-activity');
     }
 }
