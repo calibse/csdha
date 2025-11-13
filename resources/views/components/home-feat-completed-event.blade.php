@@ -4,7 +4,7 @@
 	</div>
 	<div class="info">
 		<p class="subtitle">Recent Event</p>
-		<p class="title">A New Event With Long Name</p>
+		<p class="title">{{ $model->gpoaActivity->name }}</p>
 	</div>
 </div>
 <x-home-feat-sib-links :$next :$prev/>

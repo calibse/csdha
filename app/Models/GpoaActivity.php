@@ -379,4 +379,11 @@ class GpoaActivity extends Model
             })->orWhereAttachedTo($user, 'eventHeads');
     }
 
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->whereHas('gpoa', function ($query) {
+            $query->where('active', 1);
+        });
+    }
 }

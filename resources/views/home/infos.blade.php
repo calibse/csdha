@@ -4,15 +4,31 @@
 	<div class="feat-controller" id="featured-3"></div>
 	<div class="content-block">
 		<div class="featbox-contents">
-			<div class="featcontent">
-				<x-home-feat-activity next="#featured-2" prev="#featured-3" />
-			</div><div class="featcontent">
-				<x-home-feat-ongoing-event next="#featured-3" prev="#featured-1" />
-			</div><div class="featcontent">
-				<x-home-feat-completed-event next="#featured-1" prev="#featured-2" />
+		@if ($featStatus === 'full')
+			<div> 	
+			@foreach ($featContents as $featContent)
+			</div><!-- --><div class="featcontent">
+				<x-dynamic-component :component="$featContent['view']" :model="$featContent['model']" :next="$featContent['next_link']" :prev="$featContent['prev_link']" />
+			@endforeach
 			</div>
+		@elseif ($featStatus === 'partial')
+			<div> 	
+			@foreach ($featContents as $featContent)
+			</div><!-- --><div class="featcontent">
+				<x-dynamic-component :component="$featContent['view']" :model="$featContent['model']" :next="$featContent['next_link']" :prev="$featContent['prev_link']" />
+			@endforeach
+			</div>
+			<div class="featcontent">
+				<x-home-feat-welcome next="#featured-2" prev="#featured-1" />
+			</div>
+		@else
+			<div class="featcontent">
+				<x-home-feat-welcome next="#featured-2" prev="#featured-1" />
+			</div>
+		@endif
 		</div>
 	</div>
+@if ($featStatus !== 'none')
 	<div class="content-nav-links featbox-indicator">
 		<a 
 			class="featured1-dot" href="#featured-1"></a><a 
@@ -20,6 +36,7 @@
 			class="featured3-dot" href="#featured-3"></a
 		>
 	</div>
+@endif
 </div>
 
 <div class="introbox">

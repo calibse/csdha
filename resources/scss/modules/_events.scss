@@ -8,7 +8,7 @@ $time-width: 13.8em;
 $event-item-width: $time-width + 2em; 
 $event-content-width: 1em + 12em + size.$text-width;
 
-@media (min-width: #{($event-content-width + 4em)}) {
+@media (min-width: #{($event-content-width + 7em)}) {
 	.events.event .item-full-content {
 		width: $event-content-width;
 	}

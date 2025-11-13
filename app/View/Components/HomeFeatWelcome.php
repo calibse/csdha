@@ -12,8 +12,8 @@ class HomeFeatWelcome extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $next,
-        public string $prev
+        public ?string $next = null,
+        public ?string $prev = null
     )
     {
         //

@@ -4,4 +4,6 @@
 		<p class="welcome-message">Manage event planning, attendance, feedback, and accomplishment reports, in one place.</p>
 	</div>
 </div>
+@if ($next && $prev)
 <x-home-feat-sib-links :$next :$prev/>
+@endif
