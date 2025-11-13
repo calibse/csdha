@@ -97,6 +97,16 @@ class EventDate extends Model
         );
     }
 
+    public function fullTime(): Attribute
+    {
+        $date = ($this->start_time ? ' '
+            . $this->start_time_fmt : null) . ($this->end_time_fmt ? ' - '
+            . $this->end_time_fmt : null);
+        return Attribute::make(
+            get: fn () => $date
+        );
+    }
+
     public function isOngoing(): Attribute
     {
         $timezone = $this->event->timezone;
@@ -113,6 +123,20 @@ class EventDate extends Model
     #[Scope]
     protected function ongoing(Builder $query): void
     {
+        $timezone = config('timezone');
+        $query->whereRaw('convert_tz(now(), @@session.time_zone, ?) between
+            convert_tz(timestamp(date, start_time), timezone, ?) and
+            convert_tz(timestamp(date, end_time), timezone, ?)',
+            [$timezone, $timezone, $timezone])
+            ->join('events', 'events.id', '=', 'event_dates.event_id')
+            ->select('event_dates.*')
+            ->where(function ($query) {
+                $query->whereHas('event.accomReport', function ($query) {
+                    $query->whereNotIn('status', ['pending', 'approved']);
+                })->orDoesntHave('event.accomReport');
+            });
+
+/*
         $timezone = config('timezone');
         $date = "date(convert_tz(date, timezone, '{$timezone}'))";
         $startTime = "time(convert_tz(start_time, timezone, '{$timezone}'))";
@@ -144,20 +168,13 @@ class EventDate extends Model
                 ->where($timeQuery);
         };
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
-            /*
-            ->join('gpoa_activities', 'events.gpoa_activity_id', '=',
-                'gpoa_activities.id')
-            ->join('gpoas', 'gpoa_activities.gpoa_id', '=', 'gpoas.id')
-            */
             ->select('event_dates.*')
-            /*
-            ->where('gpoas.active', 1)
-            */
             ->where($dateQuery)->where(function ($query) {
                 $query->whereHas('event.accomReport', function ($query) {
                     $query->whereNotIn('status', ['pending', 'approved']);
                 })->orDoesntHave('event.accomReport');
             });
+*/
     }
 
     #[Scope]

@@ -4,7 +4,11 @@
 	</div>
 	<div class="info">
 		<p class="subtitle">Upcoming Event</p>
-		<p class="title">A New Event With Long Name</p>
+		<p class="title">
+			<a href="{{ route('events.show', ['event' => $model->public_id]) }}">
+				{{ $model->gpoaActivity->name }}
+			</a>
+		</p>
 	</div>
 </div>
 <x-home-feat-sib-links :$next :$prev/>

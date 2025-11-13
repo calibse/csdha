@@ -92,12 +92,11 @@ class EventController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
 	if ($request->status === 'completed') {
-	    $events = Event::active()->completed()->orderBy('updated_at', 
-                'desc')->paginate(15)->withQueryString();
+	    $events = Event::active()->completed()->paginate(15)
+                ->withQueryString();
 	    $gpoa = Gpoa::active()->exists();
 	} else {
-	    $events = Event::active()->upcoming()->orderBy('updated_at', 'desc')
-                ->paginate(15);
+	    $events = Event::active()->ongoingAndUpcoming()->paginate(15);
 	    $gpoa = Gpoa::active()->exists();
 	}
         return view('events.index', [

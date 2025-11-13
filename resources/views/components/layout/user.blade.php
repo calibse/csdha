@@ -219,18 +219,18 @@ $auditRoute = route('audit.index');
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
-								<img class="icon" src="{{ asset('icon/light/list-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/light/list-bold.png') }}">
 								<span class="text">Menu</span>
 							</a>
 						@elseif ($backRoute)
 							<a id="main-back-link" class="main-back-link" href="{{ $backRoute }}" >
-								<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/light/caret-left-bold.png') }}">
 
 								<span class="text">Back to previous page</span>
 							</a>
 						@else
 							<a id="main-back-link" class="main-back-link" href="{{ route($route, $routeParams) }}" >
-								<img class="icon" src="{{ asset('icon/light/arrow-left-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/light/caret-left-bold.png') }}">
 								<span class="text">Back to previous page</span>
 							</a>
 						@endif

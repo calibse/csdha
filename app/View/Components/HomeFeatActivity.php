@@ -5,6 +5,7 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\GpoaActivity;
 
 class HomeFeatActivity extends Component
 {
@@ -13,7 +14,8 @@ class HomeFeatActivity extends Component
      */
     public function __construct(
         public string $next,
-        public string $prev
+        public string $prev,
+        public GpoaActivity $model
     )
     {
         //

@@ -27,7 +27,6 @@ class HomeController extends Controller
                 'accomReportsRoute' => route('accom-reports.index'),
             ]);
         }
-	//dd(self::featured());
         return view('home.user', [
             'gpoaActive' => true,
             'pendingAccomReportCount' => AccomReport::active()
@@ -64,11 +63,11 @@ class HomeController extends Controller
                     'names' => ['ongoing_event', 'upcoming_event', 
                         'recent_event'],
                      'next_link' => '#featured-2',
-                     'prev_link' => '#featured-1',
+                     'prev_link' => '#featured-3',
                 ],
                 [
-                    'names' => ['upcoming_event', 'recent_event', 
-                        'ongoing_event'],
+                    'names' => ['upcoming_event', 'ongoing_event', 
+                        'recent_event'],
                      'next_link' => '#featured-3',
                      'prev_link' => '#featured-1',
                 ],
@@ -79,17 +78,7 @@ class HomeController extends Controller
                      'prev_link' => '#featured-2',
                 ]
             ];
-            foreach ($candidates as $candidate) {
-                foreach ($candidate['names'] as $record) {
-                    if (self::getRecord($record, true)) {
-                        $contents[] = self::getRecord($record) + [
-                            'next_link' => $candidate['next_link'],
-                            'prev_link' => $candidate['prev_link']
-                        ];
-                        break;;
-                    }
-                }
-            }
+            $contents = self::getFeaturedContents($candidates);
         } elseif ($activityCount >= 2 && $eventCount >= 1) {
             $status = 'partial';
             $candidates = [
@@ -100,23 +89,13 @@ class HomeController extends Controller
                      'prev_link' => '#featured-2',
                 ],
                 [
-                    'names' => ['upcoming_event', 'recent_event', 
-                        'ongoing_event', 'new_activity'],
+                    'names' => ['upcoming_event', 'ongoing_event', 
+                        'recent_event', 'new_activity'],
                      'next_link' => '#featured-1',
                      'prev_link' => '#featured-3',
                 ],
             ];
-            foreach ($candidates as $candidate) {
-                foreach ($candidate['names'] as $record) {
-                    if (self::getRecord($record, true)) {
-                        $contents[] = self::getRecord($record) + [
-                            'next_link' => $candidate['next_link'],
-                            'prev_link' => $candidate['prev_link']
-                        ];
-                        break;;
-                    }
-                }
-            }
+            $contents = self::getFeaturedContents($candidates);
         } 
         return [
             'featStatus' => $status,
@@ -124,9 +103,41 @@ class HomeController extends Controller
         ];
     }
 
+    private static function getFeaturedContents(array $candidates): array
+    {
+        $contents = [];
+        $usedRecords = [];
+        foreach ($candidates as $candidate) {
+            $chosenRecord = null;
+            $names = $candidate['names'];
+            $lastName = array_pop($names);
+            foreach ($names as $record) {
+                if (!in_array($record, $usedRecords) && self::getRecord(
+                    $record, true)) {
+                    $chosenRecord = $record;
+                    break;;
+                }
+            }
+            if (!$chosenRecord) {
+                $chosenRecord = $lastName;
+            }
+
+            if ($chosenRecord) {
+                $usedRecords[] = $chosenRecord;
+                $contents[] = self::getRecord($chosenRecord) + [
+                    'next_link' => $candidate['next_link'],
+                    'prev_link' => $candidate['prev_link']
+                ];
+            }
+        }
+        return $contents;
+    }
+
     private static function getRecord(string $record, 
         bool $checkOnly = false)
     {
+        $model = null;
+        $view = null;
         switch ($record) {
         case 'ongoing_event':
             $model = Event::active()->ongoing();

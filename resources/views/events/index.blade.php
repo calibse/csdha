@@ -18,12 +18,41 @@
 			<h2 class="title">
 				<a href="{{ route('events.show', ['event' => $event->public_id]) }}">{{ $event->gpoaActivity->name }}</a>
 			</h2>
+		{{--
 			<p class="date">{{ $event->status }}</p>
+		--}}
+			<p class="date">
+				<img class="icon" src="{{ asset('icon/small/light/calendar-dots-fill.png') }}">
+				<span class="text">
+				@if ($event->is_ongoing)
+					{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+				@else
+					{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+				@endif
+				</span>
+			</p>
+			<p class="time">
+				<img class="icon" src="{{ asset('icon/small/light/clock-fill.png') }}">
+				<span class="text">
+				@if ($event->is_ongoing)
+					{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+				@else
+					{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+				@endif
+				</span>
+			</p>
 			<p class="description">
 			@if ($event->description)
+				@if ($event->is_ongoing)
+				(Ongoing)
+				@endif
 				{{ $event->description }}
 			@else
+				@if ($event->is_ongoing)
+				Ongoing
+				@else
 				<i>No description.</i>
+				@endif
 			@endif
 			</p>
 		</div>

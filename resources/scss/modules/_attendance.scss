@@ -4,10 +4,10 @@
 @use "../size";
 
 #id-scanner {
-	max-width: 100%;
+	width: 100%;
 
 	.video {
-		height: calc(100vh - 11em);
+		height: calc(100vh - 12em);
 		background-color: #000000;
 		position: relative;
 		border-bottom-left-radius: size.$corner-roundness;

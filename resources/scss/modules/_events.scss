@@ -24,11 +24,43 @@ $event-content-width: 1em + 12em + size.$text-width;
     }
 }
 
+@mixin faded-text-overflow {
+		content: "";
+		position: absolute;
+		box-shadow: 0 0 .8em 1em color.$background;
+}
+
 .events.index .event-item {
+	.title {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		position: relative;
+	}
+
+	.title::after {
+		@include faded-text-overflow;
+		right: 0;
+		top: 0;
+		height: 100%;
+	}
+
+	.date, .time {
+		white-space: nowrap;
+	}
+
 	.description {
-		height: 4.5em;
+		position: relative;
+		height: 5.8em;
 		overflow: hidden;
 		vertical-align: top;
+	}
+
+	.description::after {
+		@include faded-text-overflow;
+		left: 0;
+		bottom: 0;
+		width: 100%;
 	}
 }
 

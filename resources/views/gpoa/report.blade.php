@@ -101,6 +101,7 @@ $coheads = $activity->coheads
     </table>
     <section class="signatures-page">
         <div class="column">
+	{{--
             <p>Prepared by:</p>
             <ul class="person-list">
                 <li>
@@ -118,6 +119,7 @@ $coheads = $activity->coheads
                     </p>
                 </li>
             </ul>
+	--}}
             <p>Noted by:</p>
             <ul class="person-list">
                 <li>

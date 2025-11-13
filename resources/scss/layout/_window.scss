@@ -26,7 +26,7 @@ $window-width: size.$text-width + 2em;
 	border-bottom: solid size.$line-width color.$title-border;
 	background-color: color.$title-bg;
 	color: color.$title-fg;
-	padding: 1rem;
+	padding: .7em size.$page-margin;
 
 	.text {
 		font-size: 1.2em;
@@ -41,7 +41,7 @@ $window-width: size.$text-width + 2em;
 
 @media (min-width: $window-width) {
 	.window {
-		top: 4rem;
+		top: 4em;
 		left: 50%;
 		margin-right: 0;
 		margin-left: math.div($window-width, 2) * -1;

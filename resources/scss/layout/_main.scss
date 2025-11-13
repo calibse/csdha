@@ -282,7 +282,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	overflow: hidden;
 
 	> .content-block {
-		padding: 1em size.$page-margin;
+		padding: 0 size.$page-margin;
 		max-width: size.$page-width;
 		white-space: nowrap;
 	}
@@ -291,27 +291,35 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		vertical-align: middle;
 		margin: 0;
 		float: left;
+		padding: .4em 0;
+		height: 2.44em;
 	}
 
 	.title {
-		display: inline;
+		display: inline-block;
 		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		font-size: 1.2em;
-		padding: .1em 0;
+		padding: 0;
+		padding-top: .6em;
 	}
 }
 
 .main-menu-button,
 .main-back-link {
 	margin-right: 1em;
-	border: 0;
 	background-color: transparent;
-	padding: 0;
 	color: color.$header-fg;
 	text-decoration: none;
 	display: inline-block;
+	padding: .35em;
+	border: solid size.$line-width color.$title-bg;
+	border-radius: size.$corner-roundness;
+
+	.icon {
+		margin: 0;
+	}
 
 	.text {
 		position: absolute;
@@ -321,8 +329,9 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		display: inline-block;
 	}
 
-	&:hover, &:focus {
-		color: color.$header-button;
+	&:hover, &:active {
+		border: solid size.$line-width color.$title-button-border;
+		background-color: color.$line;
 	}
 }
 
