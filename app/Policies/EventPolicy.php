@@ -195,14 +195,14 @@ class EventPolicy
         $accomReport = $event->accomReport;
         $noFile = !$accomReport?->filepath;
         $outdated = !$accomReport?->file_updated;
-        $officersStep = $accomReport->current_step === 'officers';
+        $officersStep = $accomReport?->current_step === 'officers';
         $completed = $event->is_completed;
         $head = $event->gpoaActivity->eventHeads()->whereKey($user->id)
             ->exists();
         $canView = $user->hasPerm('accomplishment-reports.view');
         $canEdit = $user->hasPerm('accomplishment-reports.edit');
         $hasPerm = $canView && $canEdit;
-        $approved = $accomReport->status === 'approved';
+        $approved = $accomReport?->status === 'approved';
         return ($noFile || $outdated && $completed && 
             ($head || $hasPerm || $approved)) 
             ? Response::allow() : Response::deny();
