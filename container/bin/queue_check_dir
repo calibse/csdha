@@ -1,0 +1,12 @@
+#! /bin/sh
+
+set -e
+
+while [ -f "/var/www/app/lock" ]
+do
+	echo "Lock file exists."
+	sleep 2
+done
+/app/entrypoint
+exec "$@"
+

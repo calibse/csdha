@@ -43,11 +43,13 @@ init() {
 }
 
 restart_queue() {
-	if [ -z "$(podman ps -q -f name="${app}-queue-pod_queue")" ]
+	if [ -z "$(podman ps -q -f name="${app}-queue-pod-queue")" ]
 	then
-		return
+		podman exec ${app}-queue-pod-queue php artisan queue:restart
+	elif [ -z "$(podman ps -q -f name="${app}-queue-pdf-pod-queue-pdf")" ]
+	then
+		podman exec ${app}-queue-pdf-pod-queue-pdf php artisan queue:restart
 	fi
-	podman exec ${app}-queue-pod-queue php artisan queue:restart
 	set +e
 	podman wait ${app}-queue-pod-queue
 	podman wait ${app}-queue-pdf-pod-queue-pdf
