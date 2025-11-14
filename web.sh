@@ -3,9 +3,10 @@
 set -e
 
 app="csdha"
-containers="base:alpine-laravel cache:alpine-memcached server:alpine-apache init:laravel-init queue:laravel-queue sync:laravel-sync web:laravel-web"
+containers="base:alpine-laravel cache:alpine-memcached server:alpine-apache init:laravel-init queue:laravel-queue queue-pdf:laravel-queue-pdf sync:laravel-sync web:laravel-web"
 init_kube="pvc.yaml secret.yaml database.yaml cache.yaml init.yaml server.yaml"
-install_kube="queue.yaml web-admin.yaml web-user.yaml"
+install_kube="queue.yaml queue-pdf.yaml web-admin.yaml web-user.yaml"
+# install_kube="queue.yaml web-admin.yaml web-user.yaml"
 update_kube="sync.yaml"
 volumes="web-app web-user-storage web-user-cache web-admin-storage web-admin-cache"
 func=''
@@ -44,9 +45,22 @@ restart_queue() {
 	set +e
 	podman wait ${app}-queue-pod-queue
 	set -e
+	podman exec ${app}-queue-pdf-pod-queue-pdf php artisan queue:restart
+	set +e
+	podman wait ${app}-queue-pdf-pod-queue-pdf
+	set -e
 }
 
 uninstall() {
+	restart_queue
+	for kube in $install_kube
+	do
+		podman kube down kube/${kube}
+	done
+	podman kube down kube/${update_kube}
+}
+
+reset() {
 	restart_queue
 	for kube in $install_kube
 	do
@@ -70,6 +84,7 @@ reinstall() {
 		podman kube play --replace kube/${kube}
 	done
 	podman kube play --replace --start=false kube/${update_kube}
+	podman image prune -f
 }
 
 install() {

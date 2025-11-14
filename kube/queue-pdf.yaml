@@ -1,9 +1,9 @@
-# queue.yaml
+# queue-pdf.yaml
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: csdha-queue
+  name: csdha-queue-pdf
 spec:
   template:
     spec:
@@ -16,8 +16,8 @@ spec:
         persistentVolumeClaim:
           claimName: csdha-web-app
       containers:
-      - name: queue
-        image: localhost/laravel-queue:1.0
+      - name: queue-pdf
+        image: localhost/laravel-queue-pdf:1.0
         volumeMounts:
         - name: web-app
           mountPath: /var/www/app
