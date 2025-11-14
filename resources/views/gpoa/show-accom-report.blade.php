@@ -13,7 +13,7 @@
             <figcaption class="caption">Accomplishment Report</figcaption>
         </figure>
     @else
-        <p>There are no approved accomplishment reports yet.</p>
+        <p>{{ $prepareMessage }}</p>
     @endif
     </article>
 </x-layout.user>

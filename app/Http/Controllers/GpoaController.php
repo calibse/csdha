@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Events\GpoaStatusChanged;
 use App\Events\GpoaUpdated;
 use App\Jobs\MakeGpoaReport;
+use App\Jobs\MakeClosingGpoaReport;
+use App\Jobs\MakeClosingAccomReport;
 
 class GpoaController extends Controller implements HasMiddleware
 {
@@ -135,14 +137,28 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function showReport(Gpoa $gpoa)
     {
-        return view('gpoa.show-gpoa-report', [
-            'fileRoute' => route('gpoas.report-file.show', [
+        $fileRoute = null;
+        $updated = $gpoa->report_file_updated;
+        if ($updated) {
+            $fileRoute = route('gpoas.report-file.show', [
                 'gpoa' => $gpoa->public_id
-            ]),
+            ]);
+        }
+        $response = response()->view('gpoa.show-gpoa-report', [
+            'fileRoute' => $fileRoute,
             'backRoute' => route('gpoas.show', [
                 'gpoa' => $gpoa->public_id
             ]),
+            'hasApproved' => true,
+            'updated' => true,
+            'prepareMessage' => Format::documentPrepareMessage(),
+            'updateMessage' => Format::documentUpdateMessage(),
         ]);
+        if ($updated) {
+            return $response;
+        }
+        MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
+        return $response->header('Refresh', '5');
     }
 
     public function showReportFile(Gpoa $gpoa)
@@ -154,14 +170,25 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function showAccomReport(Gpoa $gpoa)
     {
-        return view('gpoa.show-accom-report', [
-            'fileRoute' => route('gpoas.accom-report-file.show', [
+        $fileRoute = null;
+        $hasFile = $gpoa->accom_report_filepath; 
+        if ($hasFile) {
+            $fileRoute = route('gpoas.accom-report-file.show', [
                 'gpoa' => $gpoa->public_id
-            ]),
+            ]);
+        }
+        $response = response()->view('gpoa.show-accom-report', [
+            'fileRoute' => $fileRoute,
             'backRoute' => route('gpoas.show', [
                 'gpoa' => $gpoa->public_id
             ]),
+            'prepareMessage' => Format::documentPrepareMessage(),
         ]);
+        if ($hasFile) {
+            return $response;
+        }
+        MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
+        return $response->header('Refresh', '5');
     }
 
     public function showAccomReportFile(Gpoa $gpoa)
@@ -193,7 +220,7 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = self::$gpoa;
         $fileRoute = null;
-        $hasApproved = $gpoa->has_approved_activity;
+        $hasApproved = $gpoa?->has_approved_activity;
         if ($gpoa->report_filepath && $gpoa->report_file_updated) {
             $fileRoute = route('gpoa.streamPdf', [
                 'id' => $gpoa->report_file_updated_at->format('ymdHis')
@@ -244,6 +271,10 @@ class GpoaController extends Controller implements HasMiddleware
             GpoaStatusChanged::dispatch();
             return redirect()->route('gpoa.index')->with('status', $status);
         }
+        $gpoa->report_file_updated = false;
+        MakeClosingGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
+        MakeClosingAccomReport::dispatch($gpoa)->onQueue('pdf');
+/*
         $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
         $accomReportFile = "gpoas/gpoa_{$gpoa->id}/accom_report.pdf";
         WeasyPrint::prepareSource(new PagedView('gpoa.report',
@@ -253,6 +284,7 @@ class GpoaController extends Controller implements HasMiddleware
         $gpoa->report_filepath = $reportFile;
         $gpoa->accom_report_filepath = $accomReportFile;
         $gpoa->save();
+*/
         self::closeGpoa();
         GpoaStatusChanged::dispatch();
         return redirect()->route('gpoa.index')->with('status', $status);

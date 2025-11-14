@@ -14,7 +14,7 @@
 $watten = $date->attendees->isNotEmpty();
 @endphp
 		<li class="item event-date">
-			<time id="event-date-{{ ($watten ? '-watten' : '') . $date->public_id }}" class="content">{{ $date->full_date }}</time>
+			<time id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}" class="content">{{ $date->full_date }}</time>
 			<span class="context-menu">
 				{{--
 				<form action="{{ route('events.dates.edit', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="edit-action">
@@ -26,8 +26,8 @@ $watten = $date->attendees->isNotEmpty();
 				</form>
 				--}}
 				<form action="{{ route('events.dates.confirmDestroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="delete-action">
-					<input id="event-date-{{ $date->public_id }}_delete-link" type="hidden" value="{{ route('events.dates.destroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}">
-					<button id="event-date-{{ ($watten ? '-watten' : '') . $date->public_id }}_delete-button" type="submit">Delete</button>
+					<input id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}_delete-link" type="hidden" value="{{ route('events.dates.destroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}">
+					<button id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}_delete-button" type="submit">Delete</button>
 				</form>
 			</span>
 		</li>

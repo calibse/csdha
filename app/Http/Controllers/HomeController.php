@@ -25,6 +25,8 @@ class HomeController extends Controller
                 'gpoaRoute' => route('gpoa.index'),
                 'eventsRoute' => route('events.index'),
                 'accomReportsRoute' => route('accom-reports.index'),
+                'featStatus' => null,
+                'featContents' => [],
             ]);
         }
         return view('home.user', [

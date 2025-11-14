@@ -64,6 +64,14 @@ class Gpoa extends Model
         return $this->belongsTo(User::class, 'closer_user_id');
     }
 
+    protected function hasApprovedAccomReport(): Attribute
+    {
+        $has = $this->events()->approved()->exists();
+        return Attribute::make(
+            get: fn () => $has
+        );
+    }
+
     protected function hasApprovedActivity(): Attribute
     {
         $has = $this->activities()->where('status', 'approved')->exists();
