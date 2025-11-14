@@ -4,7 +4,7 @@
 @use "../color";
 @use "sass:math";
 
-$window-width: size.$text-width + 2em;
+$window-width: size.$text-width + 1em;
 
 .window {
 	position: absolute;
@@ -14,7 +14,9 @@ $window-width: size.$text-width + 2em;
 	border-top-left-radius: .6em;
 	border-top-right-radius: .6em;
 	overflow: hidden;
-	width: 100%;
+	width: 96%;
+	margin-top: 1em;
+	margin-left: 2%;
 	box-shadow: 0 0 .8em 0 #bfbfbf;
 
 	&.form .window-content {
@@ -34,9 +36,20 @@ $window-width: size.$text-width + 2em;
 }
 
 .window-content {
-	padding: size.$edge-padding size.$page-margin;
+	padding: size.$edge-padding .5em;
 	background-color: color.$background;
 	color: color.$foreground;
+}
+
+.window-content .form-submit,
+.window-content .submit-button,
+.window-content .button-block,
+.window-content .submit-buttons {
+	margin-bottom: .5em;
+
+	button {
+		margin-bottom: 0;
+	}
 }
 
 @media (min-width: $window-width) {
@@ -45,6 +58,7 @@ $window-width: size.$text-width + 2em;
 		left: 50%;
 		margin-right: 0;
 		margin-left: math.div($window-width, 2) * -1;
+		margin-top: 0;
 		width: $window-width;
 	}
 }

@@ -85,14 +85,14 @@ class HomeController extends Controller
                 [
                     'names' => ['ongoing_event', 'upcoming_event', 
                         'recent_event'],
-                     'next_link' => '#featured-3',
-                     'prev_link' => '#featured-2',
+                     'next_link' => '#featured-2',
+                     'prev_link' => '#featured-3',
                 ],
                 [
                     'names' => ['upcoming_event', 'ongoing_event', 
                         'recent_event', 'new_activity'],
-                     'next_link' => '#featured-1',
-                     'prev_link' => '#featured-3',
+                     'next_link' => '#featured-3',
+                     'prev_link' => '#featured-1',
                 ],
             ];
             $contents = self::getFeaturedContents($candidates);

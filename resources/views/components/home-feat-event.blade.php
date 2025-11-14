@@ -9,6 +9,11 @@
 				{{ $model->gpoaActivity->name }}
 			</a>
 		</p>
+	@if ($model->dates()->exists())
+                <p class="details">
+                        {{ $model->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->full_date }}
+                </p>
+	@endif
 	</div>
 </div>
 <x-home-feat-sib-links :$next :$prev/>

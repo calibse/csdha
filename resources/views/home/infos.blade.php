@@ -3,7 +3,7 @@
 	<div class="feat-controller" id="featured-2"></div>
 	<div class="feat-controller" id="featured-3"></div>
 	<div class="content-block">
-		<div class="featbox-contents">
+		<div class="featbox-contents" style="{{ $featStatus === 'none' ? 'animation: none;' : null }}">
 		@if ($featStatus === 'full')
 			<div> 	
 			@foreach ($featContents as $featContent)
@@ -17,13 +17,13 @@
 			</div><!-- --><div class="featcontent">
 				<x-dynamic-component :component="$featContent['view']" :model="$featContent['model']" :next="$featContent['next_link']" :prev="$featContent['prev_link']" />
 			@endforeach
-			</div>
-			<div class="featcontent">
-				<x-home-feat-welcome next="#featured-2" prev="#featured-1" />
+			</div><!--
+			--><div class="featcontent">
+				<x-home-feat-welcome next="#featured-1" prev="#featured-2" />
 			</div>
 		@else
 			<div class="featcontent">
-				<x-home-feat-welcome next="#featured-2" prev="#featured-1" />
+				<x-home-feat-welcome />
 			</div>
 		@endif
 		</div>
@@ -39,10 +39,12 @@
 @endif
 </div>
 
+@if ($featStatus !== 'none')
 <div class="introbox">
 	<p class="title">CSDHA is the platform for CS activities</p>
 	<p class="welcome-message">Manage event planning, attendance, feedback, and accomplishment reports, in one place.</p>
 </div>
+@endif
 
 <p class="infobox">
 	<a href="{{ $gpoaRoute }}">

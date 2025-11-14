@@ -21,6 +21,7 @@
 		{{--
 			<p class="date">{{ $event->status }}</p>
 		--}}
+		@if ($event->dates()->exists())
 			<p class="date">
 				<img class="icon" src="{{ asset('icon/small/light/calendar-dots-fill.png') }}">
 				<span class="text">
@@ -41,6 +42,7 @@
 				@endif
 				</span>
 			</p>
+		@endif
 			<p class="description">
 			@if ($event->description)
 				@if ($event->is_ongoing)

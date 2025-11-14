@@ -105,7 +105,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 .main-header-title {
 	background-color: color.$header-bg;
 	white-space: nowrap;
-	padding: .76em 1em;
+	padding: 1em;
 	width: size.$page-width;
 	max-width: 100%;
 	text-align: justify;
@@ -495,9 +495,8 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 
 	a {
-		display: inline-block;
-		height: 100%;
-		width: size.$sidebar-width - 2em;
+		display: block;
+		//height: 100%;
 		padding: .5em 1em;
 	}
 

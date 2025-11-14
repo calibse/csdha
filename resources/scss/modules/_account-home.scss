@@ -33,7 +33,6 @@ $featbox-y-margin: 2.3em;
 	0%, 65.9%, 99%, 100% { background-color: $dot-color; }
 }
 
-/*
 @keyframes drift1 {
 	@include drift(-100%, -200%);
 	//@include drift(-1 * $featbox-width, -2 * $featbox-width);
@@ -84,7 +83,6 @@ $featbox-y-margin: 2.3em;
 @keyframes featured3-dot3-drift {
 	@include featured-dot-drift1;
 }
-*/
 
 .main-content.home .featbox {
 	position: relative;
@@ -297,6 +295,20 @@ $featbox-y-margin: 2.3em;
 		.title {
 			font-weight: bold;
 			font-size: 1.4em;
+		}
+
+		.title a:link, .title a:visited {
+			color: color.$foreground;
+			text-decoration: none;
+		}
+
+		.title a:hover, .title a:focus {
+			text-decoration: underline;
+		}
+
+		.details {
+			margin-top: .5em;
+			white-space: wrap;
 		}
 	}
 

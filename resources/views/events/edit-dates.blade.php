@@ -46,12 +46,12 @@ $watten = $date->attendees->isNotEmpty();
                     <label>Start time</label>
                     <input type="time" name="start_time" value="{{ old('start_time') }}">
                 </p>
-                <p>
+                <p class="last-block">
                     <label>End time</label>
                     <input type="time" name="end_time" value="{{ old('end_time') }}">
                 </p>
             </div>
-            <p>
+            <p class="button-block">
                 <button id="event-date_create_close" type="button">Cancel</button>
                 <button type="submit">Save</button>
             </p>
