@@ -303,9 +303,9 @@ class AccomReportController extends Controller implements HasMiddleware
             $endDate = $userJob['end_date'];
         } elseif (!$startDate) {
             $startDate = $startDate ?? EventDate::active()->approved()
-                ->orderBy('date', 'asc')->value('date')->toDateString();
+                ->orderBy('date', 'asc')->value('date')?->toDateString();
             $endDate = $endDate ?? EventDate::active()->approved()
-                ->orderBy('date', 'desc')->value('date')->toDateString();
+                ->orderBy('date', 'desc')->value('date')?->toDateString();
 	} elseif ((!$hasLastJob || $jobDone) && $hasApproved) {
             $hasInput = true;
             $events = Event::active()->approved($startDate, $endDate)->exists();
