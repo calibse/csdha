@@ -5,7 +5,7 @@ set -e
 dir="csdha"
 asset_dir="csdha_assets"
 files=".env.production .env.production-admin kube container web.sh" 
-assets="build icon font images"
+assets="build build-legacy icon font images"
 
 sync() {
 	for file in $files

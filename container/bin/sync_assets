@@ -3,6 +3,7 @@
 set -e
 
 rclone sync dropbox:csdha_assets/public/build public/build
+rclone sync dropbox:csdha_assets/public/build-legacy public/build-legacy
 rclone sync dropbox:csdha_assets/public/font public/font
 rclone sync dropbox:csdha_assets/public/icon public/icon
 rclone sync dropbox:csdha_assets/public/images public/images
