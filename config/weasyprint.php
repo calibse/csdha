@@ -3,7 +3,7 @@
 return (array) new \WeasyPrint\Objects\Config(
     binary: env('WEASYPRINT_BINARY'),
     cachePrefix: env('WEASYPRINT_CACHE_PREFIX', 'weasyprint_cache'),
-    timeout: (int) env('WEASYPRINT_TIMEOUT', '60'),
+    timeout: (int) env('WEASYPRINT_TIMEOUT', '10000'),
     inputEncoding: env('WEASYPRINT_INPUT_ENCODING', 'utf-8'),
     presentationalHints: env('WEASYPRINT_PRESENTATIONAL_HINTS', true),
     mediaType: env('WEASYPRINT_MEDIA_TYPE'),
