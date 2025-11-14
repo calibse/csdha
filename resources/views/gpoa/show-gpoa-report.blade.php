@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute title="GPOA Report" class="gpoa">
+<x-layout.user form :$backRoute title="GPOA Report" class="gpoa form">
 <div class="article">
 @if (!$hasApproved)
 	<p>There are no approved activities yet.</p>
