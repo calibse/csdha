@@ -194,7 +194,7 @@ class EventPolicy
     {
         $accomReport = $event->accomReport;
         $noFile = !$accomReport?->filepath;
-        $outdated = !$accomReport->file_updated;
+        $outdated = !$accomReport?->file_updated;
         $officersStep = $accomReport->current_step === 'officers';
         $completed = $event->is_completed;
         $head = $event->gpoaActivity->eventHeads()->whereKey($user->id)
