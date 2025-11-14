@@ -193,7 +193,7 @@ class EventPolicy
     public function makeAccomReport(User $user, Event $event): Response
     {
         $accomReport = $event->accomReport;
-        $noFile = !$accomReport->filepath;
+        $noFile = !$accomReport?->filepath;
         $outdated = !$accomReport->file_updated;
         $officersStep = $accomReport->current_step === 'officers';
         $completed = $event->is_completed;

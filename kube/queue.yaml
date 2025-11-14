@@ -1,13 +1,13 @@
 # queue.yaml
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: csdha-queue
 spec:
   template:
     spec:
-      # restartPolicy: OnFailure
+      restartPolicy: OnFailure
       volumes:
       - name: web-storage 
         persistentVolumeClaim:

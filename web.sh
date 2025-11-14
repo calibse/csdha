@@ -7,7 +7,9 @@ containers="base:alpine-laravel cache:alpine-memcached server:alpine-apache init
 init_kube="pvc.yaml secret.yaml database.yaml cache.yaml init.yaml server.yaml"
 install_kube="queue.yaml queue-pdf.yaml web-admin.yaml web-user.yaml"
 # install_kube="queue.yaml web-admin.yaml web-user.yaml"
+queue_kube="queue.yaml queue-pdf.yaml" 
 update_kube="sync.yaml"
+queues="queue queue-pdf" 
 volumes="web-app web-user-storage web-user-cache web-admin-storage web-admin-cache"
 func=''
 orig_ifs=''
@@ -44,11 +46,15 @@ restart_queue() {
 	podman exec ${app}-queue-pod-queue php artisan queue:restart
 	set +e
 	podman wait ${app}-queue-pod-queue
-	set -e
-	podman exec ${app}-queue-pdf-pod-queue-pdf php artisan queue:restart
-	set +e
 	podman wait ${app}-queue-pdf-pod-queue-pdf
 	set -e
+}
+
+uninstall_queue() {
+	for queue in $queues
+	do
+		podman pod rm ${app}-${queue}-pod
+	done
 }
 
 uninstall() {
@@ -77,6 +83,13 @@ reset() {
 	done
 }
 
+install_queue() {
+	for kube in $queue_kube
+	do
+		podman kube play kube/${kube}
+	done
+}
+
 reinstall() {
 	restart_queue
 	for kube in $install_kube
@@ -96,9 +109,17 @@ install() {
 	podman image prune -f
 }
 
+start_queue() {
+	for queue in $queues
+	do
+		podman start ${app}-${queue}-pod-${queue}
+	done
+}
+
 update() {
 	podman start ${app}-sync-pod-sync
 	restart_queue
+	start_queue
 }
 
 if [ $# -ge 1 ]
