@@ -29,7 +29,7 @@ class SaveGpoaActivityRequest extends FormRequest
         return [
             'name' => ['required', 'max:255'],
             'start_date' => ['required', 'date'],
-            'end_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after:start_date'],
             'objectives' => ['required', new MaxText],
             'participants_description' => ['required', 'max:100'],
             'type_of_activity' => ['required', 'max:255'],

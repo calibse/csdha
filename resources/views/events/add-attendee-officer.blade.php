@@ -1,4 +1,4 @@
-<x-layout.user title="Add Attendee" :$backRoute class="events" >
+<x-layout.user form title="Add Attendee" :$backRoute class="events form" >
     <article class="article">
         <x-alert/>
         <form id="current-form" method="post" action="{{ $submitRoute }}">

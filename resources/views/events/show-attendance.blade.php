@@ -9,7 +9,7 @@
             <span class="text">Add Attendee</span>
         </a>
     </x-slot:toolbar>
-    <article class="article">
+    <div class="article">
         <x-alert/>
     @foreach ($eventDates as $date)
         <h2 class="title">{{ $date->full_date }}</h2>
@@ -38,5 +38,5 @@
         <p>No attendees yet.</p>
         @endif
     @endforeach
-    </article>
+    </div>
 </x-layout.user>

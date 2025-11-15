@@ -16,7 +16,7 @@ class DispatchMakeGpoaReportJobForNewActivity
 
     public function handle(GpoaActivityStatusChanged $event): void
     {
-        $gpoa = $event->gpoa;
+        $gpoa = $event->activity->gpoa;
         $activity = $event->activity;
         if ($activity->status !== 'approved') return;
         $gpoa->report_file_updated = false;

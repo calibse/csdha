@@ -230,7 +230,9 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		list-style: none;
 		white-space: nowrap;
 		padding: 0 1em;
+	/*
 		overflow-x: auto;
+	*/
 	}
 
 	li {
@@ -291,9 +293,13 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
-		//float: left;
+	/*
+		float: left;
+	*/
 		padding: .4em 0;
-		//height: 2.44em;
+	/*
+		height: 2.44em;
+	*/
 	}
 
 	.title {
@@ -302,8 +308,10 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
+	/*
 		font-size: 1.2em;
-		padding: .8em 0;
+	*/
+		padding: .92em 0;
 		width: calc(96% - 2.8em);
 	}
 }
@@ -353,7 +361,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 }
 
 @mixin main-toolbar-with-content-block {
-	height: calc(100vh - 6.4em);
+	height: calc(100vh - 7.2em);
 	border-top: 0;
 }
 
@@ -391,33 +399,53 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 .main-toolbar {
 	white-space: nowrap;
-	overflow-x: auto;
 	border-bottom: solid size.$line-width color.$title-border;
 
 	.content-block {
 		background-color: color.$toolbar-bg;
 		padding: 0 size.$page-margin;
+		overflow: auto;
 	}
 
 	a, button {
 		display: inline-block;
 		white-space: nowrap;
-		margin: .3em 0;
 		display: inline-block;
-		margin-right: 1em;
+		margin-right: .4em;
+		margin-bottom: .4em;
 		background-color: transparent;
 		border: 0;
 		width: auto;
+		border: solid size.$line-width color.$title-bg;
+		border-radius: size.$corner-roundness;
+		padding: .4em;
+
+		.icon, .text {
+			white-space: nowrap;
+			vertical-align: middle
+		}
 	}
 
 	a[href] {
 		color: color.$foreground;
 		&:hover .text, &:focus .text {
+		/*
 			text-decoration: underline;
+		*/
 		}
 
 		.icon {
 			opacity: 1;
+		}
+
+		&:hover {
+			background-color: color.$background;
+			border: solid size.$line-width color.$line;
+		}
+
+		&:active {
+			background-color: color.$line;
+			border: solid size.$line-width color.$title-border;
 		}
 	}
 
@@ -427,10 +455,6 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 		&:hover .text, &:focus .text {
 			text-decoration: none;
-		}
-
-		.text {
-			white-space: nowrap;
 		}
 
 		.icon {
@@ -465,7 +489,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	height: 100%;
 	position: fixed;
 	z-index: 100;
-	overflow-y: auto;
+	overflow: auto;
 	border-right: solid color.$line size.$line-width;
         box-shadow: 0 0 .8em 0 #bfbfbf;
 }
@@ -503,7 +527,9 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 	a {
 		display: block;
-		//height: 100%;
+	/*
+		height: 100%;
+	*/
 		padding: .5em 1em;
 	}
 
@@ -512,11 +538,36 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 }
 
-//@ssupports (scroll-margin-top: 1px) {
+/*
+@ssupports (scroll-margin-top: 1px) {
+*/
 
 @mixin main-toolbar-with-content-block-wide {
-	height: calc(100vh - 6.9em);
+	height: calc(100vh - 7.5em);
 }
+
+@mixin main-toolbar-detached {
+	margin-top: .4em;
+	padding: 0 size.$page-margin;
+	border-bottom: 0;
+
+	.content-block {
+		border-radius: size.$corner-roundness;
+		border: solid size.$line-width color.$title-border;
+		padding: 0;
+	}
+
+	a {
+		border: 0;
+		border-radius: 0;
+		margin: 0;
+	}
+
+	a[href]:hover, a[href]:active {
+		border: 0;
+	}
+}
+
 
 @mixin main-header-target {
 	@include main-header;
@@ -569,7 +620,8 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 		.main-header-info {
 			.account .details {
-				width: 11em;
+				width: 10em;
+				max-width: calc(100% - 4.2em);
 			}
 		}
 	}
@@ -657,7 +709,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 }
 
-@media (min-width: #{size.$page-width}) {
+@media (min-width: #{(size.$page-width)}) {
 	.main-content-header > .content-block,
 	.main-content .article {
 		margin-left: auto;
@@ -668,20 +720,12 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 /*
 @media (min-width: #{(size.$page-width + .3em * 2 )}) {
 */
-@media (min-width: #{size.$page-width}) {
+@media (min-width: #{(size.$page-width)}) {
 	.main-body.index {
 		.main-toolbar {
 			margin: 0; 
-			margin-top: .3em;
-			padding: 0 size.$page-margin;
-			border-bottom: 0;
 			width: auto;
-
-			.content-block {
-				border-radius: size.$corner-roundness;
-				border: solid size.$line-width color.$title-border;
-				padding: 0 1em;
-			}
+			@include main-toolbar-detached;
 		}
 
 		#menu:target + .main-main .main-content,
@@ -712,18 +756,12 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 
 	.main-toolbar {
-		//max-width: size.$page-width - 2em;
-		margin-top: .3em;
+	/*
+		max-width: size.$page-width - 2em;
+	*/
 		margin-right: auto;
 		margin-left: auto;
-		padding: 0 size.$page-margin;
-		border-bottom: 0;
-
-		.content-block {
-			border-radius: size.$corner-roundness;
-			border: solid size.$line-width color.$title-border;
-			padding: 0 1em;
-		}
+		@include main-toolbar-detached;
 	}
 
 	.main-content-header {

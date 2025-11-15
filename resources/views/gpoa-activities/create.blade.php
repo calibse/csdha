@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute title="{{ $activity ? 'Update' : 'Add' }} GPOA Activity" class="gpoa form">
+<x-layout.user form :$backRoute title="{{ $activity ? 'Update' : 'Add' }} GPOA Activity" class="gpoa form">
 <div class="article">
 	<x-alert type="error"/>
 	<form method="post" action="{{ $formAction }}">
