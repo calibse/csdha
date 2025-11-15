@@ -135,10 +135,11 @@ class EventPolicy
         switch ($position) {
         case 'officers':
             $hasPerm = $user->hasPerm('accomplishment-reports.view');
-            $exists = $event->accomReport; 
+            //$exists = $event->accomReport; 
             $returned = $event->accomReport?->status === 'returned';
+            $draft = $event->accomReport?->status === 'draft';
             $currentStep = $event->accomReport?->current_step === 'officers';
-            if ($hasPerm && ($exists || ($returned && $currentStep))) {
+            if ($hasPerm && ($draft || $returned) && $currentStep) {
                 return Response::allow();
             }
             break;

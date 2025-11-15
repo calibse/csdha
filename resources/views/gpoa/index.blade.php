@@ -62,7 +62,7 @@
             </thead>
             <tbody>
             @foreach ($activities as $activity)
-                <tr>
+                <tr class="{{ $loop->last ? 'last-row' : null }}">
                     <td class="activity-name">
 						<a href="{{ route('gpoa.activities.show', ['activity' => $activity->public_id]) }}">
                             {{ $activity->name }}

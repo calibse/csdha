@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="gpoa" title="Old GPOA">
+<x-layout.user :$backRoute class="gpoa" title="Closed GPOA">
 	<div class="article">
 		<p><a href="{{ $reportRoute }}">GPOA Report</a></p>
 		<p><a href="{{ $accomReportRoute }}">Accomplishment Report</a></p>

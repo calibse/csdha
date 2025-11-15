@@ -10,7 +10,7 @@ select,
 button,
 textarea {
         font-family: font.$font;
-        padding: .25em 0;
+        padding: .3em 0;
         background-color: color.$background;
         color: color.$foreground;
         border-radius: size.$corner-roundness;
@@ -26,7 +26,7 @@ textarea {
 
 input::file-selector-button,
 button {
-	padding: .4em;
+	padding: .5em;
 	min-width: 4.5em;
 
 	&:active {
@@ -56,7 +56,7 @@ form {
 		margin-bottom: .5em;
 	}
 
-	input, select, textarea, fieldset {
+	input, select, textarea {
 		max-width: 100%;
 		width: size.$text-width;
 	}
@@ -134,6 +134,9 @@ form {
 	}
 
 	fieldset {
+		width: size.$text-width - 2em;
+		max-width: 100%;
+
 		margin: 1em 0;
 		
 		p {

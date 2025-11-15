@@ -148,34 +148,49 @@ table.articles {
 
 @mixin articles-wide {
 	border-collapse: separate;
-	border-spacing: 0 .5em;
+	border-spacing: 0 0;
 
 	th {
-		padding-top: 0;
-		padding-bottom: 0;
+		padding-top: .5em;
+		padding-bottom: .5em;
 	}
 
 	th:first-child {
 		padding-left: 1em;
 	}
 
-	td {
+	tbody :first-child td {
 		border-top: solid size.$line-width color.$line;
+	}
+
+	td {
 		border-bottom: solid size.$line-width color.$line;
 		background-color: color.$background;
 	}
 
+	tbody :first-child td:first-child {
+		border-top-left-radius: size.$corner-roundness;
+	}
+
 	td:first-child {
 		border-left: solid size.$line-width color.$line;
-		border-top-left-radius: size.$corner-roundness;
-		border-bottom-left-radius: size.$corner-roundness;
 		padding-left: 1em;
+	}
+
+	tbody :first-child td.last-row-cell {
+		border-top-right-radius: size.$corner-roundness;
+	}
+
+	tbody .last-row td:first-child {
+		border-bottom-left-radius: size.$corner-roundness;
+	}
+
+	tbody .last-row td.last-row-cell {
+		border-bottom-right-radius: size.$corner-roundness;
 	}
 
 	td.last-row-cell {
 		border-right: solid size.$line-width color.$line;
-		border-top-right-radius: size.$corner-roundness;
-		border-bottom-right-radius: size.$corner-roundness;
 	}
 
 /*

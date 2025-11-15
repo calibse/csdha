@@ -288,21 +288,23 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 
 	.nav-actions {
+		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
-		float: left;
+		//float: left;
 		padding: .4em 0;
-		height: 2.44em;
+		//height: 2.44em;
 	}
 
 	.title {
+		vertical-align: middle;
 		display: inline-block;
 		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		font-size: 1.2em;
-		padding: 0;
-		padding-top: .6em;
+		padding: .8em 0;
+		width: calc(96% - 2.8em);
 	}
 }
 
@@ -313,7 +315,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	color: color.$header-fg;
 	text-decoration: none;
 	display: inline-block;
-	padding: .35em;
+	padding: .4em;
 	border: solid size.$line-width color.$title-bg;
 	border-radius: size.$corner-roundness;
 
@@ -329,7 +331,12 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		display: inline-block;
 	}
 
-	&:hover, &:active {
+	&:hover {
+		border: solid size.$line-width color.$line;
+		background-color: color.$background;
+	}
+
+	&:active {
 		border: solid size.$line-width color.$title-button-border;
 		background-color: color.$line;
 	}

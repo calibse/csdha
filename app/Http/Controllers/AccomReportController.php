@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Jobs\GenerateAccomReport;
 use App\Jobs\MakeAccomReport;
 use App\Events\EventUpdated;
+use Illuminate\Support\Carbon;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -306,6 +307,9 @@ class AccomReportController extends Controller implements HasMiddleware
                 ->orderBy('date', 'asc')->value('date')?->toDateString();
             $endDate = $endDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'desc')->value('date')?->toDateString();
+            if ($startDate === $endDate) {
+                $endDate = Carbon::parse($endDate)?->addDay()->toDateString();
+            }
 	} elseif ((!$hasLastJob || $jobDone) && $hasApproved) {
             $hasInput = true;
             $events = Event::active()->approved($startDate, $endDate)->exists();

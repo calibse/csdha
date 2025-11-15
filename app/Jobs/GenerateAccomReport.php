@@ -20,7 +20,7 @@ class GenerateAccomReport implements ShouldQueue, ShouldBeUnique
 
     public function __construct(public Gpoa $gpoa, public User $user, 
         public string $requestId, public string $startDate, 
-        public string $endDate)
+        public ?string $endDate)
     {
     }
 
