@@ -30,8 +30,7 @@
     background-color: color.$header-bg;
     margin-top: 0;
     text-align: center;
-    width: 100%;
-	height: 100%;
+    width: auto;
     padding: 1em 0;
 
     .name {
@@ -41,42 +40,47 @@
 }
 
 .multi-step-form .title.of-form {
-    width: 100%;
+    width: auto;
     font-size: 1.5em;
     text-align: center;
 }
 
+.multi-step-form .sections {
+	padding: 0 size.$page-margin;
+}
+
 .multi-step-form .section {
-    max-width: size.$text-width + 2em;
-    padding: 0 1em;
-    margin: 1em auto;
-    background-color: color.$background;
-    border-radius: size.$corner-roundness;
-    border: solid .05em color.$line;
+	max-width: size.$text-width;
+	padding: 0 1em;
+	margin: 1em auto;
+	background-color: color.$background;
+	border-radius: size.$corner-roundness;
+	border: solid .05em color.$line;
 
-    .title:first-child, &.intro .title {
-        font-size: 1.2em;
-    }
+	.title:first-child, &.intro .title {
+		font-size: 1.2em;
+		width: auto;
+	}
 
-    &:target {
-        scroll-margin-top: 1em;
-    }
+	&:target {
+		scroll-margin-top: 1em;
+	}
 }
 .multi-step-form .intro.section h2 {
-	margin-top: 0;
 }
 
 .multi-step-form .main.section,
 .multi-step-form .intro.section {
+/*
 	padding: 1em;
-
-	:first-child {
+	> :first-child {
 		margin-top: 0;
 	}
 
-	:last-child {
+	> :last-child {
 		margin-bottom: 0;
 	}
+*/
 }
 
 .multi-step-form .section.content {

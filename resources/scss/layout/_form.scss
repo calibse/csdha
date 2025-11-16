@@ -90,23 +90,26 @@ form {
 		}
 	}
 
-    .checkbox {
+	.checkbox {
+		white-space: nowrap;
 
-        input[type="checkbox"], input[type="radio"] {
-            display: inline-block;
-            margin-right: .5em;
-            vertical-align: top;
-            margin-top: .2em;
+		input[type="checkbox"], input[type="radio"] {
+			display: inline-block;
+			margin-right: .5em;
+			vertical-align: top;
+			margin-top: .3em;
 
-            + label {
-                display: inline-block;
-                margin-bottom: auto;
-                max-width: 90%;
-                white-space: normal;
-            }
-        }
+			+ label {
+				white-space: normal;
+				display: inline-block;
+				vertical-align: top;
+				margin-bottom: auto;
+				max-width: calc(100% - 1.5em);
+				white-space: normal;
+			}
+		}
 
-    }
+	}
 
 	input[type="checkbox"], input[type="radio"] {
 		margin-right: .5em;
@@ -142,8 +145,10 @@ form {
 	}
 
 	fieldset {
-		width: size.$text-width - 2em;
-		max-width: 100%;
+		border: solid size.$line-width color.$line;
+		max-width: size.$text-width - 2em;
+		padding-left: 1em;
+		padding-right: 1em;
 
 		margin: 1em 0;
 		

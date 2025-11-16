@@ -1,4 +1,4 @@
-<x-layout.user title="Attendance" route='user.home' class="attendance form">
+<x-layout.user form title="Attendance" route='user.home' class="attendance form">
     <article class="article">
         <noscript>
 		<p>

@@ -10,21 +10,21 @@
 	@vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
-    <header>
-        <hgroup>
-            <p class="main-brand org-name">
-			<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
-
-                <span class="name">Computer Society</span>
-            </p>
-            <h1 class="title of-form">Event Registration</h1>
-        </hgroup>
-    </header>
-    <section class="intro section">
-        <img hidden>
-        <h2 class="title">Introduction</h2>
-        <pre>{{ $event->regisForm?->introduction }}</pre>
-    </section>
+	<header>
+		<hgroup>
+			<p class="main-brand org-name">
+				<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
+				<span class="name">Computer Society</span>
+			</p>
+			<h1 class="title of-form">Event Registration</h1>
+		</hgroup>
+	</header>
+	<div class="sections">
+		<section class="intro section">
+			<img hidden>
+			<h2 class="title">Introduction</h2>
+			<pre>{{ $event->regisForm?->introduction }}</pre>
+		</section>
 @php
     $steps = [
         [
@@ -41,24 +41,25 @@
         ],
     ];
 @endphp
-@foreach ($steps as $thisStep => $thisStepInfo)
-    @if ($step === $thisStep)
-    <main id="content" class="main section">
-        <h2 class="title">{{ $thisStepInfo['title'] }}</h2>
-        {{ $slot }}
-    </main>
-    @else
-    <section class="section content">
-        <h2 class="title"><a
-            @if ($thisStep <= $completeSteps)
-            href="{{ $routes[$thisStep] }}"
-            @endif
-        >{{ $thisStepInfo['title'] }}</a></h2>
-        @if ($thisStep !== (count($steps) - 1))
-        <p class="status">{{ ($thisStep < $completeSteps || $step === (count($steps) - 1)) ? 'Complete' : 'Incomplete' }}</p>
-        @endif
-    </section>
-    @endif
-@endforeach
+	@foreach ($steps as $thisStep => $thisStepInfo)
+		@if ($step === $thisStep)
+		<main id="content" class="main section">
+			<h2 class="title">{{ $thisStepInfo['title'] }}</h2>
+			{{ $slot }}
+		</main>
+		@else
+		<section class="section content">
+			<h2 class="title"><a
+			@if ($thisStep <= $completeSteps)
+				href="{{ $routes[$thisStep] }}"
+			@endif
+			>{{ $thisStepInfo['title'] }}</a></h2>
+		@if ($thisStep !== (count($steps) - 1))
+			<p class="status">{{ ($thisStep < $completeSteps || $step === (count($steps) - 1)) ? 'Complete' : 'Incomplete' }}</p>
+		@endif
+		</section>
+		@endif
+	@endforeach
+	</div>
 </body>
 </html>

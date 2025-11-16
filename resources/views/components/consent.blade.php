@@ -7,7 +7,7 @@
     copying, sharing, or forwarding this information are strictly
     forbidden.
 </p>
-<p>
+<p class="checkbox">
     <input type="checkbox" name="consent" id="consent-1" value="1" {{ $value === '1' ? 'checked' : null }}>
     <label for="consent-1">I agree</label>
 </p>

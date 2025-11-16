@@ -1,4 +1,4 @@
-<x-layout.user class="events form" :$backRoute title="Attachment">
+<x-layout.user form class="events form" :$backRoute title="Attachment">
 <div class="article">
 	<figure class="image-file">
 		<img src="{{ $fileRoute }}">

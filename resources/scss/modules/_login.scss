@@ -22,7 +22,7 @@ $window-width: 21em;
 		padding: 1em;
 		background-color: color.$header-bg;
 		color: color.$header-fg;
-		min-height: 100vh;
+		//min-height: 100vh;
 		//width: $window-width;
 		//max-width: 100%;
 	}
@@ -136,7 +136,8 @@ $window-width: 21em;
 
 @media (min-width: #{($window-width + 4em)}) {
 	.front-main {
-		padding: 1em 0;
+		padding: size.$edge-padding 0;
+		min-height: calc(100vh - size.$edge-padding * 2);
 	}
 
 	.front-main .content-block {
@@ -144,7 +145,7 @@ $window-width: 21em;
 		width: $window-width;
 		border-radius: size.$corner-roundness;
 		height: auto;
-		margin: 0 auto;
+		margin: 1em auto;
 	}
 }
 

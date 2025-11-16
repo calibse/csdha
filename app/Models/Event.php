@@ -195,7 +195,7 @@ class Event extends Model
                 $attendanceView = 'student';
                 $attendance = (clone $attendeesListQuery)
                     ->orderBy('last_name', 'asc')->get();
-            } elseif ($this->allMembersAttend()) {
+            } elseif ($this->members_only) {
                 $attendanceView = 'year';
                 foreach ($yearLevels as $yearLevel) {
                     $attendance[$yearLevel->label] = (clone $attendanceQuery)
@@ -318,6 +318,17 @@ class Event extends Model
             'overall' => $overall
         ];
     } 
+
+    public function membersOnly(): Attribute
+    {
+        $members = ['BSIT', 'DIT'];
+        $selectedCourses = array_map('strtoupper', $this->courses()
+            ->pluck('acronym')->toArray());
+        $membersOnly = $members === $selectedCourses; 
+        return Attribute::make(
+            get: fn () => $membersOnly,
+        );
+    }
 
     public function status(): Attribute
     {
