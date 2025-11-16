@@ -204,7 +204,7 @@ class EventPolicy
         $canEdit = $user->hasPerm('accomplishment-reports.edit');
         $hasPerm = $canView && $canEdit;
         $approved = $accomReport?->status === 'approved';
-        return ($noFile || $outdated && $completed && 
+        return ($noFile || $outdated && 
             ($head || $hasPerm || $approved)) 
             ? Response::allow() : Response::deny();
     }

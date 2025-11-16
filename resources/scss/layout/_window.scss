@@ -28,7 +28,7 @@ $window-width: size.$text-width + 1em;
 	border-bottom: solid size.$line-width color.$title-border;
 	background-color: color.$title-bg;
 	color: color.$title-fg;
-	padding: .9em size.$page-margin;
+	padding: .9em .5em;
 
 	.text {
 	}

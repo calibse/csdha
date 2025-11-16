@@ -11,7 +11,7 @@
 	<ul id="event-date-items" class="item-list">
 	@foreach ($dates as $date)
 @php
-$watten = $date->attendees->isNotEmpty();
+$watten = $date->has_attendees;
 @endphp
 		<li class="item event-date">
 			<time id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}" class="content">{{ $date->full_date }}</time>

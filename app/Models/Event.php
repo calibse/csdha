@@ -227,6 +227,9 @@ class Event extends Model
             'attendance' => $attendance,
             'attendanceTotal' => $attendanceTotal,
             'attendanceView' => $attendanceView,
+/*
+            'attendanceView' => 'program',
+*/
             'activity' => $this->gpoaActivity,
             'comments' => $this->comments(),
             'ratings' => $this->ratings()

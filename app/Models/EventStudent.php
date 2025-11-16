@@ -99,7 +99,7 @@ class EventStudent extends Model
     #[Scope]
     protected function attended(Builder $query, Event $event): void
     {
-        $query->whereHas('eventDate.event', function ($query) use ($event) {
+        $query->whereHas('eventDates.event', function ($query) use ($event) {
             $query->whereKey($event->id);
         });
     }

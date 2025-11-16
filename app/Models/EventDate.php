@@ -43,6 +43,22 @@ class EventDate extends Model
         return $this->belongsTo(Event::class);
     }
 
+    public function hasAttendees(): Attribute
+    {
+        $has = false;
+        switch ($this->event->participant_type) {
+        case 'students':
+            $has = $this->attendees()->exists();
+            break;
+        case 'officers':
+            $has = $this->officerAttendees()->exists();
+            break;
+        }
+        return Attribute::make(
+            get: fn () => $has,
+        );
+    }
+
     public function startTimeShort(): Attribute
     {
         $time = $this->start_time

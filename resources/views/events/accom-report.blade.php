@@ -114,6 +114,9 @@
             @switch ($event['event']->participant_type)
             @case ('students')
                 @switch ($event['attendanceView'])
+{{--
+                @switch ('year')
+--}}
                 @case ('student')
             <table>
                 <thead>

@@ -577,7 +577,14 @@ class EventController extends Controller implements HasMiddleware
 
     public function destroyDate(Event $event, EventDate $date)
     {
-        $date->attendees()->detach();
+        switch ($event->participant_type) {
+        case 'students':
+            $date->attendees()->detach();
+            break;
+        case 'officers':
+            $date->officerAttendees()->detach();
+            break;
+        }
         $date->delete();
         EventDatesChanged::dispatch($event);
         EventUpdated::dispatch($event);
@@ -591,6 +598,7 @@ class EventController extends Controller implements HasMiddleware
         return view('events.delete-date', [
             'event' => $event,
             'date' => $date,
+            'hasAttendees' => $event->has_attendees,
             'formAction' => route('events.dates.destroy', [
                 'event' => $event->public_id,
                 'date' => $date->public_id

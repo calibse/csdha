@@ -1,7 +1,7 @@
 <x-layout.user :$backRoute class="events form" title="Delete Date">
 <article class="article">
 	<p>
-	@if ($date->attendees->isNotEmpty())
+	@if ($date->has_attendees)
 		Attendance records in this date will be destroyed.
 	@endif
 		Are you sure you want to delete this date <strong><time>{{ $date->full_date }}</time></strong>?
