@@ -64,12 +64,12 @@ class PositionPolicy
             }
             break;
         default:
-            break;
             $edit = $permission->resourceActionType->name === 'edit';
             $centralBody = $permission->resourceType->name === 'central-body';
             if ($centralBody && $edit)  {
                 return Response::deny();
             }
+            break;
         }
         return Response::allow();
     }
