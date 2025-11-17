@@ -1,4 +1,4 @@
-<x-layout.user class="positions form" title="Create position" route="positions.index">
+<x-layout.user form class="positions form" title="Create position" route="positions.index">
 	<article class="article">
 		<x-alert/>
 		<form action="{{ route('positions.store') }}" method="POST">
@@ -14,7 +14,7 @@
 			<p>
 				<label>Officer</label>
 				<select name="officer">
-					<option value="">Select Member</option>
+					<option value="">-- Select --</option>
 					<option value="0" {{ old('officer') === "0" ? 'selected' : null }}>None</option>
 				@foreach ($users as $user)
 					<option value="{{ $user->public_id }}" {{ old('officer') === (string) $user->public_id ? 'selected' : null }}>{{ $user->fullName }}</option>

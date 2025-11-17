@@ -1,5 +1,5 @@
 @use('App\Models\Permission')
-<x-layout.user class="positions form" title="Edit position" route="positions.index">
+<x-layout.user form class="positions form" title="Edit position" route="positions.index">
 	<article class="article">
 		<x-alert/>
 		<form action="{{ route('positions.update', ['position' => $position->id ], false) }}" method="POST">
@@ -20,7 +20,7 @@
 			<p>
 				<label>Officer</label>
 				<select name="officer">
-					<option value="">Select Member</option>
+					<option value="">-- Select --</option>
 				@can('removeOfficer', $position)
 					<option value="0">None</option>
 				@endcan
@@ -40,8 +40,9 @@
 				<legend>
 					{{ ucwords(str_replace('-', ' ', $resource->name)) }}
 				</legend>
+				<div class="inline">
 				@foreach($resource->actions as $action)
-				<p class="checkbox-field">
+				<p class="checkbox">
 					<input id="perm-{{ $action->permission->id }}" name="permissions[]" type="checkbox" value="{{ $action->permission->id }}"
 						{{ $position->permissions()->whereKey($action->permission->id)->exists() ? 'checked' : '' }}
 						@cannot ('changePerm', [$position, $action->permission])
@@ -53,13 +54,16 @@
 					</label>
 				</p>
 				@endforeach
+				</div>
 			</fieldset>
 		@endforeach
 			<p class="form-submit">
+				<button form="delete-form">Delete</button>
 				<button>Update</button>
 			</p>
 		</form>
-		<form action="{{ route('positions.confirmDestroy', ['position' => $position->id]) }}">
+		<form style="display:none;" id="delete-form" action="{{ route('positions.confirmDestroy', ['position' => $position->id]) }}">
+			{{--
 			<p class="form-submit">
 				<button 
 				@cannot ('delete', $position)
@@ -67,23 +71,7 @@
 				@endcannot
 				>Delete position</button>
 			</p>
+			--}}
 		</form>
 	</article>
-	{{--
-	<dialog id="confirm-delete" popover>
-		<form method="POST" action="{{ route('positions.destroy', ['id' => $position->id], false) }}">
-			@method('DELETE')
-			@csrf
-			<p>Are you sure you want to delete the <strong>{{ $position->name }}</strong> position?</p>
-			<p class="form-submit">
-				<button popovertarget="confirm-delete" type="button">
-					Cancel
-				</button>
-				<button type="submit">
-					Delete
-				</button>
-			</div>
-		</form>
-	</dialog>
-	--}}
 </x-layout>

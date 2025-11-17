@@ -32,9 +32,11 @@ class PositionPolicy
 
     public function update(User $user, Position $position): Response
     {
+/*
         if (strtolower($position->name) === 'adviser'
                 && $user->position_name !== 'adviser')
             return Response::deny();
+*/
         return $user->hasPerm('central-body.edit')
             ? Response::allow()
             : Response::deny();
@@ -63,8 +65,9 @@ class PositionPolicy
             break;
         default:
             break;
+            $edit = $permission->resourceActionType->name === 'edit';
             $centralBody = $permission->resourceType->name === 'central-body';
-            if ($centralBody)  {
+            if ($centralBody && $edit)  {
                 return Response::deny();
             }
         }

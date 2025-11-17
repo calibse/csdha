@@ -380,6 +380,12 @@ class GpoaActivity extends Model
     }
 
     #[Scope]
+    protected function approved(Builder $query): void
+    {
+        $query->where('status', 'approved');
+    }
+
+    #[Scope]
     protected function active(Builder $query): void
     {
         $query->whereHas('gpoa', function ($query) {

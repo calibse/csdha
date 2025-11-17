@@ -85,40 +85,40 @@ class PositionController extends Controller implements HasMiddleware
 		]);
 	}
 	
-	public function update(UpdatePositionRequest $request, Position $position)
+	public function update(UpdatePositionRequest $request, 
+            Position $position)
 	{
-		if ($request->user()->can('rename', $position)) {
-			$position->name = $request->position_name;
-		}
-		if ($request->user()->can('removeOfficer', $position) 
-			&& $request->officer === "0") {
-            $position->user?->position()->dissociate()->save();
-        } else if ($request->officer >= "1") {
-            $user = User::findByPublic($request->officer);
-            if (!$user->is($position->user)) {
-	            $position->user?->position()->dissociate()->save();
-		    }
-            $user->position()->associate($position)->save();
+            if ($request->user()->can('rename', $position)) {
+                $position->name = $request->position_name;
+            }
+            if ($request->user()->can('removeOfficer', $position) && 
+                $request->officer === "0") {
+                $position->user?->position()->dissociate()->save();
+            } else if ($request->officer >= "1") {
+                $user = User::findByPublic($request->officer);
+                if (!$user->is($position->user)) {
+                    $position->user?->position()->dissociate()->save();
+                }
+                $user->position()->associate($position)->save();
+            }
+            $permissions = array_values(array_filter($request->permissions ?? 
+                [], function($value) use ($request, $position) {
+                    return $request->user()->can('changePerm', [$position, 
+                        Permission::find($value)]);	
+            }));
+            $defaultPerm = array_values(array_filter($position->permissions
+                ->pluck('id')->toArray() ?? [], function($value) 
+                use ($request, $position) {
+                    return $request->user()->cannot('changePerm', [$position, 
+                        Permission::find($value)]);	
+            }));
+            $permissions = array_values(array_unique(array_merge($permissions, 
+                $defaultPerm)));
+            $position->permissions()->sync($permissions);
+            $position->position_order = $request->position_order;
+            $position->save();
+            return redirect()->route('positions.index');
         }
-        $permissions = array_values(array_filter($request->permissions ?? [], 
-        	function($value) use ($request, $position) {
-        		return $request->user()->can('changePerm', [$position, 
-        			Permission::find($value)]);	
-        	}));
-        $defaultPerm = $position->permissions->pluck('id')->toArray();
-        $defaultPerm = array_values(array_filter($defaultPerm ?? [], 
-        	function($value) use ($request, $position) {
-        		return $request->user()->cannot('changePerm', [$position, 
-        			Permission::find($value)]);	
-        	}));
-        $permissions = array_values(array_unique(
-        	array_merge($permissions, $defaultPerm)));
-    	$position->permissions()->sync($permissions);
-		$position->position_order = $request->position_order;
-		$position->save();
-		
-		return redirect()->route('positions.index');
-	}
 	
 	public function confirmDestroy(Request $request, Position $position)
 	{

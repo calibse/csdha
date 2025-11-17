@@ -129,7 +129,7 @@ class GpoaController extends Controller implements HasMiddleware
             'createdBy' => $gpoa->creator?->full_name,
             'closedBy' => $gpoa->closer?->full_name,
             'academicPeriod' => $gpoa->full_academic_period,
-            'activityCount' => $gpoa->activities()->count(),
+            'activityCount' => $gpoa->activities()->approved()->count(),
             'accomReportCount' => $gpoa->events()->approved()->count(),
             'backRoute' => route('gpoas.old-index'),
         ]);
@@ -170,6 +170,8 @@ class GpoaController extends Controller implements HasMiddleware
 
     public function showAccomReport(Gpoa $gpoa)
     {
+        $hasApproved = $gpoa->has_approved_accom_report;
+        if (!$hasApproved) abort(404);
         $fileRoute = null;
         $hasFile = $gpoa->accom_report_filepath; 
         if ($hasFile) {

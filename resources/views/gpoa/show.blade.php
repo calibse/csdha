@@ -1,7 +1,9 @@
 <x-layout.user :$backRoute class="gpoa" title="Closed GPOA">
 	<div class="article">
 		<p><a href="{{ $reportRoute }}">GPOA Report</a></p>
+	@if ($accomReportCount)
 		<p><a href="{{ $accomReportRoute }}">Accomplishment Report</a></p>
+	@endif
 		<dl>
 			<dt>Created by</dt>
 			<dd>{{ $createdBy }}</dd>

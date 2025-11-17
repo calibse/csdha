@@ -318,6 +318,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 .main-menu-button,
 .main-back-link {
+	cursor: default;
 	margin-right: 1em;
 	background-color: transparent;
 	color: color.$header-fg;
@@ -572,7 +573,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 @mixin main-header-target {
 	@include main-header;
 	top: 0;
-	left: 200%;
+	left: -18em;
 
 	.main-header-title {
 		text-align: center;
@@ -630,6 +631,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 #menu:target {
 	@include main-header-target;
 	left: 0;
+	transition: left 300ms cubic-bezier(0.0, 0.0, 0.2, 1);
 
 	.close-menu-button {
 		display: block;
@@ -638,6 +640,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 #menu:not(:target) {
 	@include main-header-target;
+	transition: left 200ms cubic-bezier(0.4, 0.0, 1, 1);
 }
 
 @media (min-width: #{size.$wide-screen}) {
@@ -665,6 +668,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		z-index: 100;
 		width: size.$sidebar-width;
 		box-shadow: none;
+		transition: none;
 	}
 
 	.main-header-info {
