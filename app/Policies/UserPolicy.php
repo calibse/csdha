@@ -27,6 +27,20 @@ class UserPolicy
         return false;
     }
 
+    public function updatePassword(User $user): bool
+    {
+        $hasGoogle = $user->google;
+        $hasEmail = $user->email_verified_at;
+        return ($hasGoogle || $hasEmail);
+    }
+
+    public function updateEmail(User $user): bool
+    {
+        $hasGoogle = $user->google;
+        $hasPassword = !is_null($user->password);
+        return ($hasGoogle || $hasPassword);
+    }
+
     public function delete(User $user, User $model): Response
     {
         $userIsAdmin = strtolower($user->role?->name) === 'admin';

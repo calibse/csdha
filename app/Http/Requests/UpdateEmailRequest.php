@@ -12,9 +12,16 @@ class UpdateEmailRequest extends FormRequest
     {
         $uniqueEmail = Rule::unique(User::class, 'email')
             ->ignore(auth()->user()->id);
-        return [
-            'email' => ['required', 'email', 'max:255', $uniqueEmail],
-            'password' => ['required', 'current_password:web'],
-        ];
+        if (!is_null(auth()->user()->password)) {
+            return [
+                'email' => ['required', 'email', 'max:255', $uniqueEmail],
+                'password' => ['required', 'current_password:web'],
+            ];
+        } elseif (auth()->user()->google && is_null(auth()->user()->password)) {
+            return [
+                'email' => ['required', 'email', 'max:255', $uniqueEmail],
+            ];
+        }
+
     }
 }

@@ -20,9 +20,23 @@ use App\Mail\EmailVerify;
 use App\Mail\PasswordReset;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\GoogleAccount;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ProfileController extends Controller
+class ProfileController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.account-setting:updateEmail,' . User::class, 
+                only: ['editEmail', 'updateEmail', 'resendEmailVerify']),
+            new Middleware('auth.account-setting:updatePassword,' . 
+                User::class, only: [
+                    'editPassword', 'updatePassword'
+                ]),
+        ];
+    }
+
     private static bool $hasPassword;
 
     public function __construct()
@@ -84,9 +98,13 @@ class ProfileController extends Controller
 
     public function editEmail()
     {
-        if (!self::$hasPassword) abort(403);
+        if (!is_null(auth()->user()->password)) {
+            $view = 'profile.edit-email';
+        } elseif (auth()->user()->google && is_null(auth()->user()->password)) {
+            $view = 'profile.edit-email-without-password';
+        }
         $backRoute = route('profile.edit');
-        return view('profile.edit-email', [
+        return view($view, [
             'backRoute' => $backRoute,
             'user' => auth()->user(),
             'formAction' => route('profile.email.update'),
@@ -96,7 +114,6 @@ class ProfileController extends Controller
 
     public function updateEmail(UpdateEmailRequest $request)
     {
-        if (!self::$hasPassword) abort(403);
         $user = auth()->user();
         $status = 'Email updated.';
         if ($user->email !== $request->email || !$request->email) {
@@ -113,7 +130,6 @@ class ProfileController extends Controller
 
     public function resendEmailVerify()
     {
-        if (!self::$hasPassword) abort(403);
         $user = auth()->user();
         if ($user->email && $user->email_verified_at) {
             return view('message', [
@@ -131,9 +147,7 @@ class ProfileController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        if (!self::$hasPassword) abort(403);
         if (!$request->hasValidSignature()) {
-            return 'Hello';
             abort(401);
         }
         $user = User::where('public_id', $request->id)->where('email',

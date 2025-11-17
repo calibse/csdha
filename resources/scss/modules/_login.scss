@@ -14,17 +14,13 @@ $window-width: 21em;
 	background-image: url("/images/app-cover.jpg");
 	background-size: cover;
 	background-color: color.$secondary;
-	width: 100%;
-	min-height: 100vh;
 
 	.content-block {
 		position: relative;
 		padding: 1em;
 		background-color: color.$header-bg;
 		color: color.$header-fg;
-		//min-height: 100vh;
-		//width: $window-width;
-		//max-width: 100%;
+		min-height: 100vh;
 	}
 
 	a {
@@ -125,15 +121,6 @@ $window-width: 21em;
 	}
 }
 
-/*
-@media (min-width: 0em) {
-	.front-main .content-block {
-		width: 100%;
-		height: 100vh;
-	}
-}
-*/
-
 @media (min-width: #{($window-width + 4em)}) {
 	.front-main {
 		padding: size.$edge-padding 0;
@@ -146,6 +133,7 @@ $window-width: 21em;
 		border-radius: size.$corner-roundness;
 		height: auto;
 		margin: 1em auto;
+		min-height: 0;
 	}
 }
 

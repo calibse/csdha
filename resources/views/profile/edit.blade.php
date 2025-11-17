@@ -15,7 +15,7 @@
 			<p>
 				<label>Google Account</label>
 			@if (auth()->user()->google && !auth()->user()->email_verified_at)
-				Connected (Add an email to be able to remove this account)
+				Connected
 			@elseif (auth()->user()->google)
 				<a href="{{ $googleRoute }}">Remove</a>
 			@else
@@ -23,22 +23,30 @@
 			@endif
 			</p>
 			<p>
-				<label>Email</label>
-			@if ($hasPassword)
-				<a href="{{ $emailRoute }}">Change here</a>
+				<label>Email 
+				@can ('updateEmail', 'App\Models\User')
+					<span><a href="{{ $emailRoute }}">[Edit]</a></span>
+				@endcan
+				</label>
+			@can ('updateEmail', 'App\Models\User')
+				{{ (auth()->user()->email ?? 'No email') . ' ' . (!auth()->user()->email_verified_at ? '(Unverified)' : null) }}
 			@else
 				Set up a password first.
 			@endif
 			</p>
 			<p>
 				<label>Password</label>
+			@can ('updatePassword', 'App\Models\User')
 				<a href="{{ $passwordRoute }}">
-			@if ($hasPassword)
+				@if ($hasPassword)
 				Change here
-			@else
+				@else
 				Set up here
-			@endif
+				@endif
 				</a>
+			@else
+				Set up an email first.
+			@endcan
 			</p>
 			<p>
 				<label>Username</label>
