@@ -58,7 +58,11 @@
 			</fieldset>
 		@endforeach
 			<p class="form-submit">
-				<button form="delete-form">Delete</button>
+				<button form="delete-form"
+				@cannot ('delete', $position)
+					disabled
+				@endcannot
+				>Delete</button>
 				<button>Update</button>
 			</p>
 		</form>

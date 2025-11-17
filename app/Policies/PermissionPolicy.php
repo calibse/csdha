@@ -11,7 +11,8 @@ class PermissionPolicy
     public function addPerm(User $user, Permission $permission): Response
     {
         $centralBody = $permission->resourceType->name === 'central-body';
-        return ($centralBody)
+        $edit = $permission->resourceActionType->name === 'edit';
+        return ($centralBody && $edit)
             ? Response::deny()
             : Response::allow();
     }

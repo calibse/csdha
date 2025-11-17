@@ -27,16 +27,18 @@
 				<legend>
 					{{ ucwords(str_replace('-', ' ', $resource->name)) }}
 				</legend>
+				<div class="inline">
 			@foreach($resource->actions as $action)
-				<p class="checkbox-field">
-					<input name="permissions[]" type="checkbox" value="{{ $action->permission->id }}" {{ in_array($action->permission->id, (old('permissions') ?? [])) ? 'checked' : null }}
-						@cannot('addPerm', $action->permission)
-						disabled
-						@endcannot
-					>
-					<label>{{ ucwords(str_replace('-', ' ', $action->name)) }}</label>
-				</p>
+					<p class="checkbox">
+						<input id="perm-{{ $action->permission->id }}" name="permissions[]" type="checkbox" value="{{ $action->permission->id }}" {{ in_array($action->permission->id, (old('permissions') ?? [])) ? 'checked' : null }}
+							@cannot('addPerm', $action->permission)
+							disabled
+							@endcannot
+						>
+						<label for="perm-{{ $action->permission->id }}">{{ ucwords(str_replace('-', ' ', $action->name)) }}</label>
+					</p>
 			@endforeach
+				</div>
 			</fieldset>
 		@endforeach
 			<p class="form-submit">
