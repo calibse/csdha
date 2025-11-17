@@ -39,7 +39,7 @@
 	background-color: color.$failure;
 	padding: 1em;
 	margin: 1em 0;
-	max-width: size.$text-width;
+	max-width: size.$text-width - 2em;
 	width: auto;
 
 	p {

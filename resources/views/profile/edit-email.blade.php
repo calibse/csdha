@@ -1,4 +1,4 @@
-<x-layout.user class="profile form" :$backRoute title="Change Email">
+<x-layout.user form class="profile form" :$backRoute title="Change Email">
     <article class="article">
         <x-alert/>
     @if ($user->email && !$user->email_verified_at)

@@ -65,13 +65,19 @@ class ProfileController extends Controller implements HasMiddleware
             : route('profile.connect.redirect', [
                 'provider' => 'google'
             ]);
+        $email = auth()->user()->email;
+        $hasEmail = auth()->user()->email ? true : false;
+        $emailVerified = auth()->user()->email_verified_at ? true : false;
         return view('profile.edit', [
             'backRoute' => $backRoute,
             'passwordRoute' => $passwordRoute,
             'emailRoute' => $emailRoute,
             'formAction' => $formAction,
             'hasPassword' => self::$hasPassword,
-            'googleRoute' => $googleRoute
+            'googleRoute' => $googleRoute,
+            'email' => $email,
+            'emailVerified' => $emailVerified,
+            'hasEmail' => $hasEmail,
         ]);
     }
 

@@ -14,7 +14,7 @@
 			</p>
 			<p>
 				<label>Google Account</label>
-			@if (auth()->user()->google && !auth()->user()->email_verified_at)
+			@if (auth()->user()->google && !$emailVerified)
 				Connected
 			@elseif (auth()->user()->google)
 				<a href="{{ $googleRoute }}">Remove</a>
@@ -29,7 +29,8 @@
 				@endcan
 				</label>
 			@can ('updateEmail', 'App\Models\User')
-				{{ (auth()->user()->email ?? 'No email') . ' ' . (!auth()->user()->email_verified_at ? '(Unverified)' : null) }}
+				{{ ($hasEmail ? $email . ' ' . (!$emailVerified ? '(Unverified)' : null) : 'No email') 
+}}
 			@else
 				Set up a password first.
 			@endif
