@@ -1,4 +1,4 @@
-<x-layout.user class="events form" :$backRoute title="Edit Evaluation Form">
+<x-layout.user content-view class="events form" :$backRoute title="Edit Evaluation Form">
     <article class="article">
         <form method="post" action="{{ $formAction }}">
             @method('PUT')

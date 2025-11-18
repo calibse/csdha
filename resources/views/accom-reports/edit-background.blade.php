@@ -1,4 +1,4 @@
-<x-layout.user class="accom-reports form" :$backRoute title="Change AR Background">
+<x-layout.user content-view class="accom-reports form" :$backRoute title="Change AR Background">
 	<div class="article">
 		<x-alert/>
 		<form method="post" action="{{ $formAction }}" enctype="multipart/form-data">

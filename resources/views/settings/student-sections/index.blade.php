@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="settings" title="Edit Student Sections">
+<x-layout.user content-view :$backRoute class="settings" title="Edit Student Sections">
 	<x-slot:toolbar>
 		<a 
 		@can ('create', 'App\Models\StudentSection')

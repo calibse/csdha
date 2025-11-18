@@ -25,7 +25,7 @@
 			<p>
 				<label>Email 
 				@can ('updateEmail', 'App\Models\User')
-					<span><a href="{{ $emailRoute }}">[Edit]</a></span>
+					<span>[<a href="{{ $emailRoute }}">Edit</a>]</span>
 				@endcan
 				</label>
 			@can ('updateEmail', 'App\Models\User')

@@ -84,8 +84,8 @@
 
 	.item {
 		white-space: nowrap;
-		padding: 1em;
 		border-top: solid size.$line-width color.$line;
+		padding: 0 2%;
 
 		&:first-child {
 			border-top: 0;
@@ -99,12 +99,14 @@
 	}
 
 	.content {
-		width: 68%;
+		margin: 1em 0;
+		width: 58%;
 	}
 
 	.context-menu {
-		width: 28%;
+		width: 40%;
 		text-align: right;
+		margin: .40em 0;
 
 		form {
 			display: inline;

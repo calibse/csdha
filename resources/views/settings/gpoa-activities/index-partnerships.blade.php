@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="settings" title="Edit GPOA Partnerships">
+<x-layout.user content-view :$backRoute class="settings" title="Edit GPOA Partnerships">
 	<div class="article">
 		<x-alert/>
 		<ul class="item-list">

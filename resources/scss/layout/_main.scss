@@ -294,33 +294,49 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
-	/*
-		float: left;
-	*/
 		padding: .4em 0;
-	/*
-		height: 2.44em;
-	*/
+		width: 16%;
 	}
 
 	.title {
+		width: 81%;
 		vertical-align: middle;
 		display: inline-block;
 		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
-	/*
-		font-size: 1.2em;
-	*/
 		padding: .92em 0;
-		width: calc(96% - 2.8em);
+	}
+}
+
+$start-mq: 25em;
+$step-mq: 10em;
+$start-nav-actions-width: 14%;
+$start-title-width: 83%; 
+$step-element-width: 2%;
+$mq-count: 4;
+
+@for $i from 0 through $mq-count {
+	$mq: $start-mq + $step-mq * $i;
+	$nav: $start-nav-actions-width - $step-element-width * $i;
+	$title: $start-title-width + 1% + $step-element-width * $i;
+
+	@media (min-width: $mq) {
+		.main-content-header {
+			.nav-actions {
+				width: $nav;
+			}
+
+			.title {
+				width: $title;
+			}
+		}
 	}
 }
 
 .main-menu-button,
 .main-back-link {
 	cursor: default;
-	margin-right: 1em;
 	background-color: transparent;
 	color: color.$header-fg;
 	text-decoration: none;
@@ -702,9 +718,16 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 			*/
 		}
 
-	}
+		.main-content-header {
+			.nav-actions {
+				width: auto;
+			}
 
-	.main-body .main-main {
+			.title {
+				width: 98%;
+			}
+		}
+
 	}
 }
 

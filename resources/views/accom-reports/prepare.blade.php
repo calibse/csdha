@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute title="{{ $action }} Accom. Report" class="gpoa form">
+<x-layout.user content-view :$backRoute title="{{ $action }} Accom. Report" class="gpoa form">
     <article class="article">
         <x-alert/>
         <form method="post" action="{{ $formAction }}">

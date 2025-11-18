@@ -1,4 +1,4 @@
-<x-layout.user index title="Settings" class="settings index">
+<x-layout.user content-view index title="Settings" class="settings index">
 	<div class="article">
 		<section>
 			<h2 class="title"><a href="{{ $studentSectionsRoute }}">Student Sections</a></h2>

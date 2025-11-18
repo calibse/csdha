@@ -1,4 +1,4 @@
-<x-layout.user route="gpoa.index" class="gpoa form" title="Close GPOA">
+<x-layout.user content-view route="gpoa.index" class="gpoa form" title="Close GPOA">
     <article class="article">
         <p>Are you sure you want to close this GPOA for 
            {{ $gpoa->academicPeriod->term->label }} 
