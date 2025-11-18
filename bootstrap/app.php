@@ -12,6 +12,8 @@ use App\Http\Middleware\AuthorizeEvent;
 use App\Http\Middleware\AuthorizeAccomReport;
 use App\Http\Middleware\AuthorizeIndex;
 use App\Http\Middleware\AuthorizeSetting;
+use App\Http\Middleware\AuthorizeSettingEdit;
+use App\Http\Middleware\AuthorizeHome;
 use App\Http\Middleware\AuthorizeAccountSetting;
 use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +32,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.event' => AuthorizeEvent::class,
             'auth.accom-report' => AuthorizeAccomReport::class,
             'auth.setting' => AuthorizeSetting::class,
+            'auth.setting-edit' => AuthorizeSettingEdit::class,
+            'auth.home' => AuthorizeHome::class,
             'auth.account-setting' => AuthorizeAccountSetting::class,
         ]);
         $middleware->trustProxies(at: '*');

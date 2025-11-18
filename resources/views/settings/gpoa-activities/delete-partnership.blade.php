@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="settings form" title="Delete GPOA Partnership">
+<x-layout.user content-view :$backRoute class="settings form" title="Delete GPOA Partnership">
     <div class="article">
         <p>
             Are you sure you want to delete this GPOA partnership?

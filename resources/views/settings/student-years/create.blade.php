@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="settings form" title="Add Student Year Level">
+<x-layout.user content-view :$backRoute class="settings form" title="Add Student Year Level">
 	<div class="article">
 		<x-alert/>
 		<form method="post" action="{{ $formAction }}">

@@ -35,7 +35,8 @@ class EventDatePolicy
     {
         $canView = $user->hasPerm('attendance.view');
         $canEdit = $user->hasPerm('attendance.edit');
-        if (!($canView && $canEdit)) {
+        $gpoaActive = $eventDate->event->gpoa()->active;
+        if (!($canView && $canEdit && $gpoaActive)) {
             return Response::deny();
         }
         $event = $eventDate->event;

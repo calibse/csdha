@@ -149,12 +149,14 @@ $auditRoute = route('audit.index');
 								</a>
 							</li>
 							@endcan
+							@if (auth()->user()->hasPerm('settings.view'))
 							<li class="{{ Format::currentIndex($settingsRoute) ? 'current-page' : null }}">
 								<a href="{{ $settingsRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/wrench-duotone.png') }}">
 									<span class="text">Settings</span>
 								</a>
 							</li>
+							@endif
 							<li class="{{ Format::currentIndex($userSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $userSignoutRoute }}">
 									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">

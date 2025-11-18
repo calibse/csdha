@@ -17,12 +17,14 @@ class StudentSectionPolicy
     public function create(User $user): bool
     {
         $gpoaActive = Gpoa::active()->exists();
-        return ($gpoaActive) ? false : true;
+        $hasPerm = $user->hasPerm('settings.edit');
+        return ($gpoaActive || !$hasPerm) ? false : true;
     }
 
     public function delete(User $user, StudentSection $studentSection): bool
     {
         $gpoaActive = Gpoa::active()->exists();
-        return ($gpoaActive) ? false : true;
+        $hasPerm = $user->hasPerm('settings.edit');
+        return ($gpoaActive || !$hasPerm) ? false : true;
     }
 }

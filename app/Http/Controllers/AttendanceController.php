@@ -8,6 +8,7 @@ use App\Models\EventDate;
 use App\Models\EventRegistration;
 use App\Models\EventAttendance;
 use App\Models\EventAttendee;
+use App\Models\Gpoa;
 use App\Http\Requests\StoreAttendanceRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -28,7 +29,8 @@ class AttendanceController extends Controller implements HasMiddleware
     {
         $dates = EventDate::active()->ongoing()->get();
         return view('attendance.show', [
-            'dates' => $dates
+            'dates' => $dates,
+            'gpoaActive' => Gpoa::active()->exists(),
         ]);
     }
 

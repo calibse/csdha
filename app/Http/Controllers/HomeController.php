@@ -27,6 +27,7 @@ class HomeController extends Controller
                 'accomReportsRoute' => route('accom-reports.index'),
                 'featStatus' => 'none',
                 'featContents' => [],
+                'hasPerm' => auth()->user()->position ? true : false,
             ]);
         }
         return view('home.user', [
@@ -39,6 +40,7 @@ class HomeController extends Controller
             'gpoaRoute' => route('gpoa.index'),
             'eventsRoute' => route('events.index'),
             'accomReportsRoute' => route('accom-reports.index'),
+            'hasPerm' => auth()->user()->position ? true : false,
         ] + self::featured());
     }
 

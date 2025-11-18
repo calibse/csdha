@@ -17,6 +17,7 @@ class GpoaActivityModePolicy
     public function delete(User $user, GpoaActivityMode $gpoaActivityMode): bool
     {
         $gpoaActive = Gpoa::active()->exists();
-        return ($gpoaActive) ? false : true;
+        $hasPerm = $user->hasPerm('settings.edit');
+        return ($gpoaActive || !$hasPerm) ? false : true;
     }
 }

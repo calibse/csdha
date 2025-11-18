@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="settings form" title="Delete GPOA Mode">
+<x-layout.user content-view :$backRoute class="settings form" title="Delete GPOA Mode">
     <div class="article">
         <p>
             Are you sure you want to delete this GPOA mode?

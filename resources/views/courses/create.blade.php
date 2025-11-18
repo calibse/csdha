@@ -1,4 +1,4 @@
-<x-layout.user route="students.index" class="courses form" title="Add course">
+<x-layout.user content-view route="students.index" class="courses form" title="Add course">
     <article class="article">
         <form method="POST" action="{{ route('courses.store', [], false) }}" >
             @csrf

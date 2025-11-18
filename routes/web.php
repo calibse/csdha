@@ -61,141 +61,6 @@ Route::get('/test.html', function (Request $request) {
      return url()->full();
 });
 
-    Route::prefix('settings')->name('settings.')->group(function () {
-
-        Route::get('/index.html', [SettingController::class, 'index'])
-            ->name('index');
-
-	Route::controller(AssetController::class)->name('logos.')
-            ->group(function () {
-
-            Route::get('/logos.html', 'editLogo')->name('edit');  
-
-            Route::put('/logos.php', 'updateLogo')->name('update');  
-        });
-    
-        Route::controller(StudentSectionController::class)
-            ->name('students.sections.')->group(function () {
-    
-            Route::get('/student-sections.html', 'index')->name('index');
-    
-            Route::get('/add-student-sections.html', 'create')->name('create');
-    
-            Route::post('/add-student-sections.php', 'store')->name('store');
-        });
-    
-        Route::prefix('student-section-{section}')->name('students.sections.')
-            ->controller(StudentSectionController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    
-        Route::controller(StudentYearController::class)
-            ->name('students.years.')->group(function () {
-    
-            Route::get('/student-year-levels.html', 'index')->name('index');
-    
-            Route::get('/add-student-year-levels.html', 'create')
-                ->name('create');
-    
-            Route::post('/add-student-year-levels.php', 'store')
-                ->name('store');
-        });
-    
-        Route::prefix('student-year-level-{year}')->name('students.years.')
-            ->controller(StudentYearController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    
-        Route::controller(StudentCourseController::class)
-            ->name('students.courses.')->group(function () {
-    
-            Route::get('/student-courses.html', 'index')->name('index');
-    
-            Route::get('/add-student-course.html', 'create')
-                ->name('create');
-    
-            Route::post('/add-student-course.php', 'store')
-                ->name('store');
-        });
-    
-        Route::prefix('student-course-{course}')->name('students.courses.')
-            ->controller(StudentCourseController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    
-        Route::controller(GpoaActivityModeController::class)
-            ->name('gpoa-activities.modes.')->group(function () {
-    
-            Route::get('/gpoa-modes.html', 'index')->name('index');
-        });
-    
-        Route::prefix('gpoa-mode-{mode}')->name('gpoa-activities.modes.')
-            ->controller(GpoaActivityModeController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    
-        Route::controller(GpoaActivityFundSourceController::class)
-            ->name('gpoa-activities.fund-sources.')->group(function () {
-    
-            Route::get('/gpoa-sources-of-fund.html', 'index')->name('index');
-        });
-    
-        Route::prefix('gpoa-source-of-fund-{fund}')->name('gpoa-activities.fund-sources.')
-            ->controller(GpoaActivityFundSourceController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    
-        Route::controller(GpoaActivityPartnershipTypeController::class)
-            ->name('gpoa-activities.partnership-types.')->group(function () {
-    
-            Route::get('/gpoa-partnerships.html', 'index')->name('index');
-        });
-    
-        Route::prefix('gpoa-partnership-{partnership}')->name('gpoa-activities.partnership-types.')
-            ->controller(GpoaActivityPartnershipTypeController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    
-        Route::controller(GpoaActivityTypeController::class)
-            ->name('gpoa-activities.types.')->group(function () {
-    
-            Route::get('/gpoa-types.html', 'index')->name('index');
-        });
-    
-        Route::prefix('gpoa-type-{type}')->name('gpoa-activities.types.')
-            ->controller(GpoaActivityTypeController::class)->group(function () {
-    
-            Route::get('/delete.html', 'confirmDestroy')
-                ->name('confirm-destroy');
-    
-            Route::delete('/delete.php', 'destroy')->name('destroy');
-        });
-    });
-
 Route::domain(config('app.admin_domain'))->group(function () {
 
     Route::name('admin.')->group(function () {
@@ -425,6 +290,146 @@ Route::domain(config('app.user_domain'))->group(function () {
 
 Route::domain(config('app.user_domain'))->middleware('auth')
     ->group(function () {
+
+    Route::middleware('auth.setting')->prefix('settings')->name('settings.')
+        ->group(function () {
+
+        Route::get('/index.html', [SettingController::class, 'index'])
+            ->name('index');
+
+	Route::middleware('auth.setting-edit')->controller(AssetController::class)->name('logos.')
+            ->group(function () {
+
+            Route::get('/logos.html', 'editLogo')->name('edit');  
+
+            Route::put('/logos.php', 'updateLogo')->name('update');  
+        });
+    
+        Route::controller(StudentSectionController::class)
+            ->name('students.sections.')->group(function () {
+    
+            Route::get('/student-sections.html', 'index')->name('index');
+    
+            Route::get('/add-student-sections.html', 'create')->name('create');
+    
+            Route::post('/add-student-sections.php', 'store')->name('store');
+        });
+    
+        Route::prefix('student-section-{section}')->name('students.sections.')
+            ->controller(StudentSectionController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(StudentYearController::class)
+            ->name('students.years.')->group(function () {
+    
+            Route::get('/student-year-levels.html', 'index')->name('index');
+    
+            Route::get('/add-student-year-levels.html', 'create')
+                ->name('create');
+    
+            Route::post('/add-student-year-levels.php', 'store')
+                ->name('store');
+        });
+    
+        Route::prefix('student-year-level-{year}')->name('students.years.')
+            ->controller(StudentYearController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(StudentCourseController::class)
+            ->name('students.courses.')->group(function () {
+    
+            Route::get('/student-courses.html', 'index')->name('index');
+    
+            Route::get('/add-student-course.html', 'create')
+                ->name('create');
+    
+            Route::post('/add-student-course.php', 'store')
+                ->name('store');
+        });
+    
+        Route::prefix('student-course-{course}')->name('students.courses.')
+            ->controller(StudentCourseController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityModeController::class)
+            ->name('gpoa-activities.modes.')->group(function () {
+    
+            Route::get('/gpoa-modes.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-mode-{mode}')->name('gpoa-activities.modes.')
+            ->controller(GpoaActivityModeController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityFundSourceController::class)
+            ->name('gpoa-activities.fund-sources.')->group(function () {
+    
+            Route::get('/gpoa-sources-of-fund.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-source-of-fund-{fund}')
+            ->name('gpoa-activities.fund-sources.')
+            ->controller(GpoaActivityFundSourceController::class)
+            ->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityPartnershipTypeController::class)
+            ->name('gpoa-activities.partnership-types.')->group(function () {
+    
+            Route::get('/gpoa-partnerships.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-partnership-{partnership}')
+            ->name('gpoa-activities.partnership-types.')
+            ->controller(GpoaActivityPartnershipTypeController::class)
+            ->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    
+        Route::controller(GpoaActivityTypeController::class)
+            ->name('gpoa-activities.types.')->group(function () {
+    
+            Route::get('/gpoa-types.html', 'index')->name('index');
+        });
+    
+        Route::prefix('gpoa-type-{type}')->name('gpoa-activities.types.')
+            ->controller(GpoaActivityTypeController::class)->group(function () {
+    
+            Route::get('/delete.html', 'confirmDestroy')
+                ->name('confirm-destroy');
+    
+            Route::delete('/delete.php', 'destroy')->name('destroy');
+        });
+    });
 
     Route::get('/home.html', [HomeController::class, 'index'])
         ->name('user.home');

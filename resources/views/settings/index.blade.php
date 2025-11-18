@@ -28,9 +28,11 @@
 			<h2 class="title"><a href="{{ $gpoaTypesRoute }}">GPOA Type of Activity</a></h2>
 			<p>Remove GPOA types of activity</p>
 		</section>
+	@can ('update-settings')
 		<section>
 			<h2 class="title"><a href="{{ $logoRoute }}">Logos</a></h2>
 			<p>Update all logos</p>
 		</section>
+	@endcan
 	</div>
 </x-layout>

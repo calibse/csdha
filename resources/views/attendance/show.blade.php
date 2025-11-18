@@ -1,5 +1,8 @@
-<x-layout.user form title="Attendance" route='user.home' class="attendance form">
+<x-layout.user :index="!$gpoaActive" form title="Attendance" route='user.home' class="attendance form">
     <article class="article">
+	@if (!$gpoaActive)
+		<p>There is no active GPOA right now.</p>
+	@else
         <noscript>
 		<p>
 			This page requires JavaScript, which your browser doesn't support.
@@ -90,5 +93,6 @@
             <p>There are no ongoing events today.</p>
         </template>
     @endif
+	@endif
     </article>
 </x-layout.user>

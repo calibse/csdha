@@ -1,6 +1,8 @@
 <x-layout.user index form id="home-content" class="home form index" title="Home">
 <div class="article">
-@if ($gpoaActive)
+@if (!$hasPerm)
+	<p>It looks like you are not part of the organization.</p>
+@elseif ($gpoaActive)
 	<div class="infos" id="home-content_infos">
 	@include('home.infos')
 	</div>

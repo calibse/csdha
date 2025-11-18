@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="settings form" title="Delete Student Year Level">
+<x-layout.user content-view :$backRoute class="settings form" title="Delete Student Year Level">
     <div class="article">
         <p>
             Are you sure you want to delete this student year level?

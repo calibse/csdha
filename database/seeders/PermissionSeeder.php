@@ -44,6 +44,9 @@ class PermissionSeeder extends Seeder
         $resource = new ResourceType();
         $resource->name = 'attendance';
         $resource->save();
+        $resource = new ResourceType();
+        $resource->name = 'settings';
+        $resource->save();
 
     	$action = new ResourceActionType();
     	$action->name = 'view';

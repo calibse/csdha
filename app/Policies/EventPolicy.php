@@ -17,7 +17,7 @@ class EventPolicy
 
     public function view(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         return ($user->hasPerm('events.view'))
             ? Response::allow() : Response::deny();
@@ -33,7 +33,7 @@ class EventPolicy
 
     public function update(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         if (!self::canEdit($user, $event)) {
             return Response::deny();
@@ -78,7 +78,7 @@ class EventPolicy
 
     public function viewAccomReport(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
@@ -113,7 +113,7 @@ class EventPolicy
 
     public function submitAccomReport(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         if (!self::canEdit($user, $event)) {
             return Response::deny();
@@ -149,7 +149,7 @@ class EventPolicy
 
     public function returnAccomReport(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!($active && self::canChangeStatus($user, $event))) {
             return Response::deny();
         }
@@ -171,7 +171,7 @@ class EventPolicy
 
     public function approveAccomReport(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!($active && self::canChangeStatus($user, $event))) {
             return Response::deny();
         }
@@ -231,7 +231,7 @@ class EventPolicy
 
     public function register(?User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         $openRegis = $event->automatic_attendance;
         return ($openRegis) ? Response::allow() : Response::deny();
@@ -239,7 +239,7 @@ class EventPolicy
 
     public function evaluate(?User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         $openEval = $event->accept_evaluation;
         return ($openEval) ? Response::allow() : Response::deny();
@@ -247,7 +247,7 @@ class EventPolicy
 
     public function recordAttendance(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         $openEval = $event->participant_type;
         return ($openEval) ? Response::allow() : Response::deny();
@@ -255,7 +255,7 @@ class EventPolicy
 
     public function addAttendee(User $user, Event $event): Response
     {
-        $active = $event->gpoa()->active()->exists();
+        $active = $event->gpoa()->active;
         if (!$active) return Response::deny();
         $recordsAttendance = $event->participant_type !== null;
         $manualAttendance = $event->automatic_attendance === 0;

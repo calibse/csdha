@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Vite;
 use App\Services\Format;
+use Illuminate\Support\Facades\Gate;
+use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('update-settings', function (User $user) {
+            return $user->hasPerm('settings.edit');
+        });
+
         Blade::directive('vite_legacy', function ($entry) {
             return "<?php echo \\App\\Services\\Format::legacyScriptTag($entry); ?>";
         });
