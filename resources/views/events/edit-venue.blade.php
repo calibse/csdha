@@ -1,4 +1,4 @@
-<x-layout.user class="events form" :$backRoute title="Edit event venue">
+<x-layout.user content-view class="events form" :$backRoute title="Edit event venue">
 <div class="article">
         <x-alert errorBag="event-venue_edit" />
 	<form method="post" action="{{ $formAction }}">

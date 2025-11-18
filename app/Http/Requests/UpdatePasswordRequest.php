@@ -10,7 +10,7 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
 	$requiredRule = 'required';
-	if (!auth()->user()->password && auth()->user()->google) {
+	if (!auth()->user()->password) {
 		$requiredRule = 'nullable';
         }
         return [

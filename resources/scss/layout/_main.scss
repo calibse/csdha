@@ -73,8 +73,9 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 }
 
-.main-body.form {
-	background-color: color.$form-bg;
+.main-body.form,
+.main-body.view {
+	background-color: color.$view-bg;
 }
 
 .main-body.index {
@@ -105,7 +106,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 .main-header-title {
 	background-color: color.$header-bg;
 	white-space: nowrap;
-	padding: 1em;
+	padding: .56em;
 	width: size.$page-width;
 	max-width: 100%;
 	text-align: justify;
@@ -368,7 +369,6 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 .main-content {
 	padding-top: .001em;
-	background-color: color.$background;
 
 	> .content-block {
 		@include content-block;
@@ -394,7 +394,9 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 */
 
 	&.form {
+	/*
 		background-color: color.$form-bg;
+	*/
 	}
 }
 
@@ -427,13 +429,8 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		}
 	}
 
-	a[href] {
+	a:link, a:visited {
 		color: color.$foreground;
-		&:hover .text, &:focus .text {
-		/*
-			text-decoration: underline;
-		*/
-		}
 
 		.icon {
 			opacity: 1;
@@ -468,9 +465,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	margin: .5em 0;
 	white-space: nowrap;
 
-	a, button {
-		color: color.$foreground;
-		border: 0;
+	a:link, a:visited {
 		text-decoration: none;
 	}
 
@@ -649,6 +644,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 	#menu:target,
 	#menu:not(:target) {
+		transition: none;
 		top: 0;
 		left: 0;
 		box-shadow: none;
@@ -668,7 +664,6 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		z-index: 100;
 		width: size.$sidebar-width;
 		box-shadow: none;
-		transition: none;
 	}
 
 	.main-header-info {

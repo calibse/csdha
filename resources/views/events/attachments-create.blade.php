@@ -1,4 +1,4 @@
-<x-layout.user class="events attachments form create" :$backRoute title="{{ $set ? 'Update' : 'Create' }} Attachment Set">
+<x-layout.user content-view class="events attachments form create" :$backRoute title="{{ $set ? 'Update' : 'Create' }} Attachment Set">
 <div class="article">
 	<x-alert/>
 	<form method="post" action="{{ $formAction }}" enctype="multipart/form-data">

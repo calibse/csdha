@@ -75,11 +75,21 @@
 .item-list {
 	list-style-type: none;
 	padding-left: 0;
-	max-width: size.$text-width;
+	max-width: size.$text-width + 2em;
+	border: solid size.$line-width color.$line;
+	border-radius: size.$corner-roundness;
+	background-color: color.$background;
+	margin-left: auto;
+	margin-right: auto;
 
 	.item {
-		margin: 1em 0;
 		white-space: nowrap;
+		padding: 1em;
+		border-top: solid size.$line-width color.$line;
+
+		&:first-child {
+			border-top: 0;
+		}
 	}
 
 	.content, .context-menu {
@@ -89,11 +99,11 @@
 	}
 
 	.content {
-		width: 70%;
+		width: 68%;
 	}
 
 	.context-menu {
-		width: 30%;
+		width: 28%;
 		text-align: right;
 
 		form {

@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="events form" title="{{ $update ? 'Edit' : 'Add' }} Date">
+<x-layout.user content-view :$backRoute class="events form" title="{{ $update ? 'Edit' : 'Add' }} Date">
     <article class="article">
         <x-alert errorBag="event-date_create" />
         <form method="POST" action="{{ $formAction }}">

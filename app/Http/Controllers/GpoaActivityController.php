@@ -460,33 +460,32 @@ class GpoaActivityController extends Controller implements HasMiddleware
         }
         $activity->number_of_participants = 0;
         $activity->save();
-        if (($update && auth()->user()->can('updateEventHeads', $activity)) ||
-                !$update) {
-            $allAreEventHeads = false;
-            if ($request->event_heads && in_array('0',
-                    $request->event_heads)) {
-                $activity->eventHeads()->syncWithPivotValues(
-                    User::has('position')->notOfPosition(['adviser'])->get(),
-                    ['role' => 'event head']);
-                $allAreEventHeads = true;
-            } elseif ($request->event_heads) {
-                $eventHeads = User::whereIn('public_id', $request->event_heads)
-                    ->pluck('id')->toArray();
-                $activity->eventHeads()->syncWithPivotValues($eventHeads,
-                    ['role' => 'event head']);
-                $activity->eventheads()->attach(auth()->user(),
-                    ['role' => 'event head']);
-            } else {
-                $activity->eventheads()->syncWithPivotValues([auth()->user()],
-                    ['role' => 'event head']);
-            }
-            if (!$allAreEventHeads && $request->coheads) {
-                $coheads = User::whereIn('public_id', array_diff($request
-                    ->coheads, $request->event_heads ?? []))->pluck('id')
-                    ->toArray();
-                $activity->eventHeads()->syncWithPivotValues($coheads,
-                    ['role' => 'co-head'], false);
-            }
+        if (!(($update && auth()->user()->can('updateEventHeads', $activity)) ||
+                !$update)) {
+            return $activity;
+        }
+        $allAreEventHeads = false;
+        if ($request->event_heads && in_array('0', $request->event_heads)) {
+            $activity->eventHeads()->syncWithPivotValues(User::has('position')
+                ->notOfPosition(['adviser'])->get(), ['role' => 'event head']);
+            $allAreEventHeads = true;
+        } elseif ($request->event_heads) {
+            $eventHeads = User::whereIn('public_id', $request->event_heads)
+                ->pluck('id')->toArray();
+            $activity->eventHeads()->syncWithPivotValues($eventHeads,
+                ['role' => 'event head']);
+            $activity->eventheads()->attach(auth()->user(),
+                ['role' => 'event head']);
+        } else {
+            $activity->eventheads()->syncWithPivotValues([auth()->user()],
+                ['role' => 'event head']);
+        }
+        if (!$allAreEventHeads && $request->coheads) {
+            $coheads = User::whereIn('public_id', array_diff($request
+                ->coheads, $request->event_heads ?? []))->pluck('id')
+                ->toArray();
+            $activity->eventHeads()->syncWithPivotValues($coheads,
+                ['role' => 'co-head'], false);
         }
         $activity->save();
         return $activity;

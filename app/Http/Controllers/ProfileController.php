@@ -37,16 +37,6 @@ class ProfileController extends Controller implements HasMiddleware
         ];
     }
 
-    private static bool $hasPassword;
-
-    public function __construct()
-    {
-	self::$hasPassword = true;
-        if (!auth()->user()->password && auth()->user()->google) {
-		self::$hasPassword = false;
-	}
-    }
-
     public function index()
     {
         return view('profile.index');
@@ -68,12 +58,13 @@ class ProfileController extends Controller implements HasMiddleware
         $email = auth()->user()->email;
         $hasEmail = auth()->user()->email ? true : false;
         $emailVerified = auth()->user()->email_verified_at ? true : false;
+        $hasPassword = auth()->user()->password ? true : false;
         return view('profile.edit', [
             'backRoute' => $backRoute,
             'passwordRoute' => $passwordRoute,
             'emailRoute' => $emailRoute,
             'formAction' => $formAction,
-            'hasPassword' => self::$hasPassword,
+            'hasPassword' => $hasPassword,
             'googleRoute' => $googleRoute,
             'email' => $email,
             'emailVerified' => $emailVerified,
@@ -176,9 +167,10 @@ class ProfileController extends Controller implements HasMiddleware
     public function editPassword()
     {
         $backRoute = route('profile.edit');
+        $hasPassword = auth()->user()->password ? true : false;
         return view('profile.edit-password', [
             'backRoute' => $backRoute,
-            'hasPassword' => self::$hasPassword,
+            'hasPassword' => $hasPassword,
             'formAction' => route('profile.password.update')
         ]);
     }

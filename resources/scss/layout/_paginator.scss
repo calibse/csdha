@@ -1,13 +1,11 @@
 /* _paginator.scss */
 
+@use "../color";
+
 .main-paginator {
 	margin: 1em 0;
 
-	.controls {
-
+	a:link, a:visited {
+		color: color.$foreground;
 	}
-
-    .next, .previous {
-
-    }
 }
