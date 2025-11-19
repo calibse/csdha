@@ -215,6 +215,7 @@ $auditRoute = route('audit.index');
 			<div class="main-content-header">
 				<div class="content-block">
 					<header> 
+					@if ($index || $backRoute || $route)
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
@@ -227,13 +228,14 @@ $auditRoute = route('audit.index');
 
 								<span class="text">Back to previous page</span>
 							</a>
-						@else
+						@elseif ($route)
 							<a id="main-back-link" class="main-back-link" href="{{ route($route, $routeParams) }}" >
 								<img class="icon" src="{{ asset('icon/light/caret-left-bold.png') }}">
 								<span class="text">Back to previous page</span>
 							</a>
 						@endif
 						</div>
+					@endif
 						<h1 title="{{ $title }}" class="title">{{ $title ?? 'CSDHA' }}</h1>
 					</header>
 				</div>

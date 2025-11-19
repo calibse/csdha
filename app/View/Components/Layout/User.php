@@ -12,13 +12,13 @@ class User extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $route = '',
+        public ?string $route = null, 
         public bool $index = false,
         public bool $contentView = false,
         public bool $form = false,
-        public string $title = '',
+        public ?string $title = null,
         public array $routeParams = [],
-        public string $backRoute = ''
+        public ?string $backRoute = null
     )
     {
         //

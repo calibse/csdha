@@ -58,7 +58,7 @@ use App\Services\EvalFormStep;
 use App\Services\QrCode;
 
 Route::get('/test.html', function (Request $request) {
-     return url()->full();
+	abort(500);
 });
 
 Route::domain(config('app.admin_domain'))->group(function () {

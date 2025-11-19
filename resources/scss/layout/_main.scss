@@ -299,13 +299,17 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	}
 
 	.title {
-		width: 81%;
+		width: 100%;
 		vertical-align: middle;
 		display: inline-block;
 		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		padding: .92em 0;
+	}
+
+	.nav-actions + .title {
+		width: 81%;
 	}
 }
 
@@ -327,7 +331,7 @@ $mq-count: 4;
 				width: $nav;
 			}
 
-			.title {
+			.nav-actions + .title {
 				width: $title;
 			}
 		}
