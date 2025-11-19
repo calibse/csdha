@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import path from 'path';
 
 export default defineConfig(({ command, mode }) => {
 	if (command === 'build' && mode === 'legacy') {
@@ -37,12 +38,17 @@ export default defineConfig(({ command, mode }) => {
 			cssMinify: false
 		},
 		server: {
-			cors: {
-				origin: '*'
-			},
 			proxy: {
-				'/font': 'http://127.0.0.1:8000',
-				'/images': 'http://127.0.0.1:8000',
+				'/font': {
+					target: 'http://localhost:5173',
+					changeOrigin: true,
+					rewrite: (path) => `public${path}`,
+				},
+				'/images': {
+					target: 'http://localhost:5173',
+					changeOrigin: true,
+					rewrite: (path) => `public${path}`,
+				}
 			}
 		}
 	};
