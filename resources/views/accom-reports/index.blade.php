@@ -33,7 +33,7 @@ e.png') }}">
             </thead>
             <tbody>
             @foreach ($accomReports as $accomReport)
-                <tr>
+                <tr class="{{ $loop->last ? 'last-row' : null }}">
                     <td class="activity-name">
                         <a href="{{ route('accom-reports.show', ['event' => $accomReport->event->public_id]) }}">
                             {{ $accomReport->event->gpoaActivity->name }}
