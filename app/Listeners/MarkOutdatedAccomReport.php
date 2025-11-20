@@ -16,6 +16,7 @@ class MarkOutdatedAccomReport
     public function handle(EventUpdated $event): void
     {
         $accomReport = $event->event->accomReport;
+        if (!$accomReport) return;
         $accomReport->file_updated = false;
         $accomReport->save();
     }
