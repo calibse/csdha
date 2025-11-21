@@ -1,8 +1,8 @@
-<x-layout.user form index title="Accomplishment Reports" class="form gpoa index">
+<x-layout.user has-toolbar form index title="Accomplishment Reports" class="form gpoa index">
     <x-slot:toolbar>
     @if ($gpoa)
         <a href="{{ $genRoute }}">
-		<img class="icon" src="{{ asset('icon/light/file-plus-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/file-plus.png') }}">
 
             <span class="text">Gen. PDF</span>
         </a>
@@ -11,8 +11,7 @@
                 href="{{ $changeBgRoute }}"
         @endcan
         >
-                <img class="icon" src="{{ asset('icon/light/pencil-simple-duoton
-e.png') }}">
+                <img class="icon" src="{{ asset('icon/light/pencil-line.png') }}">
                 <span class="text">Change Background</span>
         </a>
     @endif

@@ -1,4 +1,4 @@
-<x-layout.user form route="gpoa.index" class="gpoa activity form" title="GPOA Activity">
+<x-layout.user has-toolbar form route="gpoa.index" class="gpoa activity form" title="GPOA Activity">
 <x-slot:toolbar>
 @if ($actions['edit'])
 	<a
@@ -6,7 +6,7 @@
 		href="{{ route('gpoa.activities.edit', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/pencil-simple-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/pencil-line.png') }}">
 		<span class="text">Edit </span>
 	</a>
 @endif
@@ -16,7 +16,7 @@
 		href="{{ route('gpoa.activities.prepareForReject', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/x-circle-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/x-circle.png') }}">
 		<span class="text">Reject</span>
 	</a>
 @endif
@@ -26,7 +26,7 @@
 		href="{{ route('gpoa.activities.prepareForReturn', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-fat-line-left-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.png') }}">
 		<span class="text">Return</span>
 	</a>
 @endif
@@ -36,7 +36,7 @@
 		href="{{ route('gpoa.activities.prepareForSubmit', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-fat-line-right-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.png') }}">
 		<span class="text">Submit</span>
 	</a>
 @endif
@@ -46,7 +46,7 @@
 		href="{{ route('gpoa.activities.prepareForApprove', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/check-circle-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/check-circle.png') }}">
 		<span class="text">Approve</span>
 	</a>
 @endif
@@ -56,7 +56,7 @@
 		href="{{ route('gpoa.activities.confirmDestroy', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/trash-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/trash.png') }}">
 		<span class="text">Delete</span>
 	</a>
 @endif
@@ -66,20 +66,20 @@
 		<aside class="main-status">
 			<p class="title">Status</p>
 			<p>
-				<img class="icon" src="{{ asset('icon/small/light/circle-notch-fill.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/circle-notch.png') }}">
 				<span class="text">
 					{{ $activity->full_status }}
 				</span>
 			</p>
 		@if ($activity->comments)
 			<div>
-				<img class="icon" src="{{ asset('icon/small/light/chat-text-fill.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/chat-text.png') }}">
 				<pre class="text">"{{ $activity->comments }}"</pre>
 			</div>
 		@endif
 		@if ($date)
 			<p>
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dots-fill.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/calendar-dots.png') }}">
 				<span class="text">
 					{{ $date }}
 				</span>

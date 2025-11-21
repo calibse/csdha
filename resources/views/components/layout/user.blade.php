@@ -34,7 +34,7 @@ $auditRoute = route('audit.index');
 	@vite_legacy('resources/js/app-legacy.js')
 	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
 </head>
-<body class="main-body {{ $index ? 'index' : null }} {{ $form || $contentView ? 'form view' : null }}">
+<body class="main-body {{ $index ? 'index' : null }} {{ $form || $contentView ? 'form view' : null }} {{ $hasToolbar ? 'has-toolbar' : null }}">
 @if ($index)
 	<div class="main-header" id="menu">
 		<a href="#" class="close-menu-button">
@@ -50,7 +50,7 @@ $auditRoute = route('audit.index');
 					</div>
 					<div class="main-account-link">
 							<a href="{{ route('profile.edit') }}">
-								<img class="icon" src="{{ asset('icon/dark/user-circle-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/dark/user-circle.png') }}">
 								<span class="text">Account</span>
 							</a>
 					</div>
@@ -81,7 +81,7 @@ $auditRoute = route('audit.index');
 					@if ($siteContext === 'user')
 						<p class="main-action">
 							<a href="{{ route('profile.edit') }}">
-								<img class="icon" src="{{ asset('icon/dark/pencil-simple-duotone.png') }}">
+								<img class="icon" src="{{ asset('icon/dark/pencil-line.png') }}">
 								<span class="text">Edit account</span>
 							</a>
 						</p>
@@ -95,14 +95,14 @@ $auditRoute = route('audit.index');
 						@if ($siteContext === 'user')
 							<li class="{{ Format::currentIndex($userHomeRoute) ? 'current-page' : null }}">
 								<a href="{{ $userHomeRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/house.png') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
 							@can ('viewAny', 'App\Models\Gpoa')
 							<li class="{{ Format::currentIndex($gpoaRoute) ? 'current-page' : null }}">
 								<a href="{{ $gpoaRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/blueprint-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/blueprint.png') }}">
 									<span class="text">GPOA</span>
 								</a>
 							</li>
@@ -110,7 +110,7 @@ $auditRoute = route('audit.index');
 							@can ('viewAny', 'App\Models\Event')
 							<li class="{{ Format::currentIndex($eventsRoute) ? 'current-page' : null }}">
 								<a href="{{ $eventsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/calendar-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/calendar.png') }}">
 									<span class="text">Events</span>
 								</a>
 							</li>
@@ -118,7 +118,7 @@ $auditRoute = route('audit.index');
 							@can ('viewAnyAccomReport', 'App\Models\Event')
 							<li class="{{ Format::currentIndex($accomReportsRoute) ? 'current-page' : null }}">
 								<a href="{{ $accomReportsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/files-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/files.png') }}">
 									<span class="text">Accom. Reports</span>
 								</a>
 							</li>
@@ -136,7 +136,7 @@ $auditRoute = route('audit.index');
 							@can ('viewAny', 'App\Models\Position')
 							<li class="{{ Format::currentIndex($positionsRoute) ? 'current-page' : null }}">
 								<a href="{{ $positionsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/users-three-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/users-three.png') }}">
 									<span class="text">Central Body</span>
 								</a>
 							</li>
@@ -144,7 +144,7 @@ $auditRoute = route('audit.index');
 							@can ('viewAttendance', 'App\Models\Event')
 							<li class="{{ Format::currentIndex($attendanceRoute) ? 'current-page' : null }}">
 								<a href="{{ $attendanceRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/user-check-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/user-check.png') }}">
 									<span class="text">Attendance</span>
 								</a>
 							</li>
@@ -152,53 +152,53 @@ $auditRoute = route('audit.index');
 							@if (auth()->user()->hasPerm('settings.view'))
 							<li class="{{ Format::currentIndex($settingsRoute) ? 'current-page' : null }}">
 								<a href="{{ $settingsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/wrench-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/wrench.png') }}">
 									<span class="text">Settings</span>
 								</a>
 							</li>
 							@endif
 							<li class="{{ Format::currentIndex($userSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $userSignoutRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/sign-out.png') }}">
 									<span class="text">Sign out</span>
 								</a>
 							</li>
 						@elseif ($siteContext === 'admin')
 							<li class="{{ Format::currentIndex($adminHomeRoute) ? 'current-page' : null }}">
 								<a href="{{ $adminHomeRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/house-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/house.png') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
 							<li class="{{ Format::currentIndex($auditRoute) ? 'current-page' : null }}">
 								<a href="{{ $auditRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/table-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/table.png') }}">
 									<span class="text">Audit Trail</span>
 								</a>
 							</li>
 							{{--
 							<li>
 								<a href="{{ route('analytics.index') }}">
-									<img class="icon" src="{{ asset('icon/dark/chart-line-up-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/chart-line.png') }}">
 									<span class="text">Analytics</span>
 								</a>
 							</li>
 							--}}
 							<li class="{{ Format::currentIndex($accountsRoute) ? 'current-page' : null }}">
 								<a href="{{ $accountsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/user-square-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/user-square.png') }}">
 									<span class="text">Accounts</span>
 								</a>
 							</li>
 							<li class="{{ Format::currentIndex($rolesRoute) ? 'current-page' : null }}">
 								<a href="{{ $rolesRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/user-gear-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/user-gear.png') }}">
 									<span class="text">Roles</span>
 								</a>
 							</li>
 							<li class="{{ Format::currentIndex($adminSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $adminSignoutRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/sign-out-duotone.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/sign-out.png') }}">
 									<span class="text">Sign out</span>
 								</a>
 							</li>
@@ -219,18 +219,18 @@ $auditRoute = route('audit.index');
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
-								<img class="icon" src="{{ asset('icon/light/list-bold.png') }}">
+								<img class="icon" src="{{ asset('icon/light/list.png') }}">
 								<span class="text">Menu</span>
 							</a>
 						@elseif ($backRoute)
 							<a id="main-back-link" class="main-back-link" href="{{ $backRoute }}" >
-								<img class="icon" src="{{ asset('icon/light/caret-left-bold.png') }}">
+								<img class="icon" src="{{ asset('icon/light/caret-left.png') }}">
 
 								<span class="text">Back to previous page</span>
 							</a>
 						@elseif ($route)
 							<a id="main-back-link" class="main-back-link" href="{{ route($route, $routeParams) }}" >
-								<img class="icon" src="{{ asset('icon/light/caret-left-bold.png') }}">
+								<img class="icon" src="{{ asset('icon/light/caret-left.png') }}">
 								<span class="text">Back to previous page</span>
 							</a>
 						@endif

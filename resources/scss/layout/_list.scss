@@ -8,16 +8,13 @@
 		font-size: 1.2em;
 	}
 
-	border: solid color.$form-border size.$line-width;
+	border: solid color.$line size.$line-width;
+	box-shadow: color.$content-shadow;
 	border-radius: size.$corner-roundness;
 	margin-bottom: 1em;
 	background-color: color.$background;
 	padding: 0 1em;
 	vertical-align: top;
-
-	a:hover, a:active {
-		text-decoration-thickness: .3em;
-	}
 }
 
 .view-links  {
@@ -28,14 +25,16 @@
 		display: inline-block;
 		white-space: nowrap;
 		border-radius: size.$corner-roundness;
-		border: solid color.$form-border size.$line-width;
+		//border: solid color.$form-border size.$line-width;
 		width: auto;
 		overflow: hidden;
 	}
 
 	a {
 		display: inline-block;
-		padding: .625em;
+		padding: .48em;
+		font-weight: bold;
+		min-width: 8em;
 	}
 
 	a:link, a:visited {
@@ -43,17 +42,21 @@
 		text-decoration: none;
 	}
 
+	a:hover {
+		background-color: color.$hovered-button-bg;
+	}
+
 	a:active {
-		background-color: color.$pressed;
+		background-color: color.$pressed-button-bg;
 	}
 }
 
 .view-links > .content-block > * {
 	display: inline-block;
 	width: auto;
-	background-color: color.$background;
+	background-color: color.$view-button-bg;
 	margin: 0;
-	border-left: solid color.$form-border size.$line-width;
+	border-left: solid color.$view-border size.$line-width;
 
 	&:first-child {
 		border-left: 0;
@@ -73,6 +76,7 @@
 }
 
 .item-list {
+	box-shadow: color.$content-shadow;
 	list-style-type: none;
 	padding-left: 0;
 	max-width: size.$text-width + 2em;

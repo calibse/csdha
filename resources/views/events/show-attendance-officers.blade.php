@@ -1,11 +1,11 @@
-<x-layout.user title="Event Attendance" :$backRoute class="events" >
+<x-layout.user has-toolbar title="Event Attendance" :$backRoute class="events" >
     <x-slot:toolbar>
         <a
             @can ('addAttendee', $event)
             href="{{ $addRoute }}"
             @endcan
         >
-		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
             <span class="text">Add Attendee</span>
         </a>
     </x-slot:toolbar>

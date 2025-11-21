@@ -1,4 +1,4 @@
-<x-layout.user index title="Roles" class="events index form">
+<x-layout.user content-view index title="Roles" class="events index form">
 <article class="article">
 	<x-alert/>
 	<form method="post" action={{ $formAction }} >

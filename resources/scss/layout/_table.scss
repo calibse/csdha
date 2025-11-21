@@ -74,7 +74,8 @@ thead + tbody tr {
 }
 
 thead th {
-	font-weight: normal;
+	font-weight: bold;
+	color: color.$table-header-fg;
 }
 
 tbody tr:first-child {
@@ -88,7 +89,8 @@ table.articles {
 		border-radius: size.$corner-roundness;
 		border: solid color.$line size.$line-width;
 		padding: 1em;
-
+		overflow: hidden;
+		box-shadow: color.$content-shadow;
 	}
 
 /*
@@ -109,6 +111,7 @@ table.articles {
 	tbody {
 		width: auto;
 		display: table-row-group;
+		overflow: hidden;
 
 		th {
 			display: table-cell;
@@ -125,7 +128,7 @@ table.articles {
 		opacity: 1;
 
 		tr {
-			border-bottom: solid .16em color.$line;
+			border-bottom: solid size.$line-width color.$line;
 		}
 	}
 
@@ -148,11 +151,32 @@ table.articles {
 
 @mixin articles-wide {
 	border-collapse: separate;
+	overflow: hidden;
 	border-spacing: 0 0;
+	position: relative;
+
+	&:after {
+		content: '';
+		position: absolute;
+		box-shadow: color.$content-shadow;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 2.5em;
+		border-radius: size.$corner-roundness;
+		z-index: -1;
+	}
+
+	tbody tr {
+		background-color: transparent;
+	}
 
 	th {
 		padding-top: .5em;
 		padding-bottom: .5em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis
 	}
 
 	th:first-child {
@@ -166,6 +190,7 @@ table.articles {
 	td {
 		border-bottom: solid size.$line-width color.$line;
 		background-color: color.$background;
+		overflow: hidden;
 	}
 
 	tbody :first-child td:first-child {
@@ -192,36 +217,6 @@ table.articles {
 	td.last-row-cell {
 		border-right: solid size.$line-width color.$line;
 	}
-
-/*
-	tr td > :first-child {
-		padding-top: 1em;
-	}
-
-	tr td > :last-child {
-		padding-bottom: 1em;
-	}
-*/
-
-/*
-	tr::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		border: solid size.$line-width color.$line;
-		border-radius: size.$corner-roundness;
-		pointer-events: none;
-		z-index: 1;
-		background-color: color.$background;
-	}
-
-	tr::after {
-		content: "";
-		display: block;
-		height: 1em;
-		background: transparent;
-	}
-*/
 }
 
 @media (min-width: 31em) {

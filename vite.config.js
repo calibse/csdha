@@ -42,12 +42,12 @@ export default defineConfig(({ command, mode }) => {
 				'/font': {
 					target: 'http://localhost:5173',
 					changeOrigin: true,
-					rewrite: (path) => `public${path}`,
+					rewrite: (path) => `/public${path}`,
 				},
 				'/images': {
 					target: 'http://localhost:5173',
 					changeOrigin: true,
-					rewrite: (path) => `public${path}`,
+					rewrite: (path) => `/public${path}`,
 				}
 			}
 		}

@@ -1,8 +1,8 @@
-<x-layout.user index title="Central Body" class="index positions">
+<x-layout.user has-toolbar index title="Central Body" class="index positions">
 	<x-slot:toolbar>
 	@can ('create', 'App\Models\Position')
 	    <a href="{{ route('positions.create') }}">
-			<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
+			<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
 
 	    	<span class="text">Add new officer position</span>
     	</a>

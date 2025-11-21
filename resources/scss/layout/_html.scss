@@ -12,7 +12,7 @@ html {
 	line-height: 1.5;
 	font-family: font.$font;
 	//font-size: .833em;
-	//font-size: 10pt;
+	font-size: 11pt;
 }
 
 *, ::before, ::after {
@@ -21,10 +21,7 @@ html {
 
 a {
 	text-underline-offset: .25em;
-
-	&:hover, &:active {
-		text-decoration-thickness: .1em;
-	}
+	text-decoration-thickness: .1em;
 }
 
 h1, h2, h3, h4, h5, h6, th {
@@ -90,7 +87,9 @@ a, button {
 
 a:hover > .text,
 a:focus > .text {
-    text-decoration: underline;
+	text-decoration: underline;
+	text-underline-offset: .25em;
+	text-decoration-thickness: .1em;
 }
 
 .signin-link {
@@ -101,7 +100,7 @@ a:focus > .text {
 	text-align: center;
 	text-decoration: none;
 	color: color.$foreground;
-	padding: .3em;
+	padding: .54em;
 	border-radius: size.$corner-roundness;
 
 	&:hover .text, &:focus .text {

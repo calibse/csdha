@@ -21,6 +21,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	margin: 1em auto;
 	border-radius: size.$corner-roundness;
 	border: solid size.$line-width color.$line;
+	box-shadow: color.$content-shadow;
 
 	hr {
 		display: none;
@@ -97,16 +98,12 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 			margin: 0;
 		}
 	}
-
-	.main-content-header .title {
-
-	}
 }
 
 .main-header-title {
 	background-color: color.$header-bg;
 	white-space: nowrap;
-	padding: .56em;
+	padding: .55em;
 	width: size.$page-width;
 	max-width: 100%;
 	text-align: justify;
@@ -156,7 +153,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	padding-bottom: 1em;
 
 	.account {
-		color: #ffffff;
+		color: color.$menu-fg;
 		padding: 0 1em;
 		margin-top: 1em;
 
@@ -166,7 +163,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 			width: 100%;
 
 			a[href] {
-				color: color.$header-fg;
+				color: color.$menu-fg;
 			}
 
 			.text {
@@ -280,9 +277,13 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 }
 
 .main-content-header {
+	position: relative;
+	z-index: 20;
 	color: color.$title-fg;
 	background-color: color.$title-bg;
 	overflow: hidden;
+	box-shadow: color.$title-shadow;
+	border-bottom: solid color.$title-border size.$line-width;
 
 	> .content-block {
 		padding: 0 size.$page-margin;
@@ -294,24 +295,33 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
-		padding: .4em 0;
+		padding: .45em 0;
 		width: 16%;
 	}
 
 	.title {
+		font-weight: bold;
 		width: 100%;
 		vertical-align: middle;
 		display: inline-block;
 		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		padding: .92em 0;
+		padding: .94em 0;
 	}
 
 	.nav-actions + .title {
 		width: 81%;
 	}
 }
+
+.main-body.has-toolbar {
+	.main-content-header {
+		border-bottom: 0;
+		box-shadow: none;
+	}
+}
+
 
 $start-mq: 25em;
 $step-mq: 10em;
@@ -345,9 +355,10 @@ $mq-count: 4;
 	color: color.$header-fg;
 	text-decoration: none;
 	display: inline-block;
-	padding: .4em;
-	border: solid size.$line-width color.$title-bg;
+	padding: .55em;
+	//border: solid size.$line-width color.$title-bg;
 	border-radius: size.$corner-roundness;
+	line-height: 1;
 
 	.icon {
 		margin: 0;
@@ -362,13 +373,13 @@ $mq-count: 4;
 	}
 
 	&:hover {
-		border: solid size.$line-width color.$line;
-		background-color: color.$background;
+		//border: solid size.$line-width color.$line;
+		background-color: color.$hovered-button-bg;
 	}
 
 	&:active {
-		border: solid size.$line-width color.$title-button-border;
-		background-color: color.$line;
+		//border: solid size.$line-width color.$title-button-border;
+		background-color: color.$pressed-button-bg;
 	}
 }
 
@@ -379,7 +390,7 @@ $mq-count: 4;
 @mixin content-block {
 	height: calc(100vh - 4.2em);
 	overflow: auto;
-	border-top: solid color.$title-border size.$line-width;
+	//border-top: solid color.$title-border size.$line-width;
 }
 
 @mixin main-toolbar-with-content-block {
@@ -421,27 +432,30 @@ $mq-count: 4;
 }
 
 .main-toolbar {
+	position: relative;
+	z-index: 10;
 	white-space: nowrap;
-	border-bottom: solid size.$line-width color.$title-border;
 
 	.content-block {
 		background-color: color.$toolbar-bg;
 		padding: 0 size.$page-margin;
 		overflow: auto;
+		box-shadow: color.$title-shadow;
+		border-bottom: solid size.$line-width color.$title-border;
 	}
 
 	a, button {
 		display: inline-block;
 		white-space: nowrap;
 		display: inline-block;
-		margin-right: .4em;
-		margin-bottom: .4em;
+		margin-right: .45em;
+		margin-bottom: .45em;
 		background-color: transparent;
-		border: 0;
 		width: auto;
-		border: solid size.$line-width color.$title-bg;
+		//border: solid size.$line-width color.$title-bg;
 		border-radius: size.$corner-roundness;
-		padding: .4em;
+		padding: .45em;
+		font-weight: bold;
 
 		.icon, .text {
 			white-space: nowrap;
@@ -457,13 +471,11 @@ $mq-count: 4;
 		}
 
 		&:hover {
-			background-color: color.$background;
-			border: solid size.$line-width color.$line;
+			background-color: color.$hovered-button-bg;
 		}
 
 		&:active {
-			background-color: color.$line;
-			border: solid size.$line-width color.$title-border;
+			background-color: color.$pressed-button-bg;
 		}
 	}
 
@@ -506,8 +518,8 @@ $mq-count: 4;
 	position: fixed;
 	z-index: 100;
 	overflow: auto;
-	border-right: solid color.$line size.$line-width;
-        box-shadow: 0 0 .8em 0 #bfbfbf;
+	border-right: solid color.$menu-border size.$line-width;
+        box-shadow: color.$window-shadow;
 }
 
 @mixin main-header-menu {
@@ -531,22 +543,29 @@ $mq-count: 4;
 	li {
 		display: block;
 		margin: 0;
+		margin: .2em .45em;
+		border-radius: size.$corner-roundness;
 
 		&.current-page {
 			background-color: color.$selected-menu-bg;
 		}
 	}
 
-	li:hover, li:active {
-		background-color: color.$selected-menu-bg;
+	li:hover {
+		background-color: color.$hovered-menu-bg;
+	}
+
+	li:active {
+		background-color: color.$pressed-menu-bg;
 	}
 
 	a {
 		display: block;
-	/*
-		height: 100%;
-	*/
-		padding: .5em 1em;
+		padding: .45em 1em;
+
+		.icon, .text {
+			vertical-align: middle;
+		}
 	}
 
 	a:hover .text, a:focus .text {
@@ -563,7 +582,7 @@ $mq-count: 4;
 }
 
 @mixin main-toolbar-detached {
-	margin-top: .4em;
+	margin-top: .45em;
 	padding: 0 size.$page-margin;
 	border-bottom: 0;
 
@@ -571,12 +590,13 @@ $mq-count: 4;
 		border-radius: size.$corner-roundness;
 		border: solid size.$line-width color.$title-border;
 		padding: 0;
+		box-shadow: color.$content-shadow;
 	}
 
 	a {
 		border: 0;
 		border-radius: 0;
-		margin: 0;
+		margin-bottom: 0;
 	}
 
 	a[href]:hover, a[href]:active {
@@ -790,8 +810,10 @@ $mq-count: 4;
 		@include main-toolbar-detached;
 	}
 
-	.main-content-header {
+	.main-content-header,
+	.main-body.has-toolbar .main-content-header {
 		border-bottom: solid color.$title-border size.$line-width;
+		box-shadow: color.$title-shadow;
 	}
 }
 

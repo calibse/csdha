@@ -1,11 +1,11 @@
-<x-layout.user form :$backRoute class="events event form" title="Event">
+<x-layout.user has-toolbar form :$backRoute class="events event form" title="Event">
 <x-slot:toolbar>
 	<a
 	@can ('update', $event)
 		href="{{ $editRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/wrench-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/wrench.png') }}">
 		<span class="text">Settings</span>
 	</a>
 	<a
@@ -13,7 +13,7 @@
 		href="{{ $genArRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/file-text-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/file-text.png') }}">
 		<span class="text">View accom. report</span>
 	</a>
 </x-slot:toolbar>

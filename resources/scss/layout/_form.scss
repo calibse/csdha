@@ -10,52 +10,83 @@ select,
 button,
 textarea {
         font-family: font.$font;
-        padding: .3em 0;
-        background-color: color.$background;
+        padding: .48em 0;
+        background-color: color.$input-bg;
         color: color.$foreground;
         border-radius: size.$corner-roundness;
-        border: solid color.$form-border size.$line-width;
+        border: 0;
 	line-height: 1.5;
 
-        &:disabled, &:disabled:active {
+        &:disabled, &:disabled:active, &:disabled:hover, &:disabled:focus {
                 background-color: color.$disabled-bg;
                 color: color.$disabled-fg;
         }
 
+	&:focus {
+		background-color: color.$background;
+	}
+}
+
+select {
+	height: 1.5em;
+
+	&:focus {
+		background-color: color.$input-bg;
+	}
+}
+
+select[multiple] {
+	height: auto;
 }
 
 button {
-	padding: .55em;
-	min-width: 4.5em;
+	padding: .48em;
+	min-width: 5em;
+
+	&:hover {
+		background-color: color.$hovered-button-bg
+	}
+
+	&:focus {
+		background-color: color.$input-bg;
+	}
 
 	&:active {
-		background-color: color.$pressed;
+		background-color: color.$pressed-button-bg;
 	}
 }
 
 input::file-selector-button {
-	padding: .55em;
-	min-width: 4.5em;
+	padding: .48em;
+	min-width: 5em;
+	font-weight: bold;
+
+	&:hover {
+		background-color: color.$hovered-button-bg
+	}
 
 	&:active {
-		background-color: color.$pressed;
+		background-color: color.$pressed-button-bg;
 	}
 }
 
 input::file-selector-button {
         font-family: font.$font;
-        background-color: color.$background;
+        background-color: color.$input-bg;
         color: color.$foreground;
-	padding: .25em;
 	border: 0;
-	border-right: solid color.$form-border size.$line-width;
+	border-right: solid size.$line-width color.$line;
 	border-radius: 0;
 	height: 100%;
 }
 
 input[type="file"] {
 	padding: 0;
-	height: 2em;
+	height: 2.46em;
+
+	&:focus {
+		background-color: color.$input-bg;
+	}
 }
 
 form {
@@ -153,6 +184,7 @@ form {
 		max-width: size.$text-width - 2em;
 		padding-left: 1em;
 		padding-right: 1em;
+		border-radius: size.$corner-roundness;
 
 		margin: 1em 0;
 		

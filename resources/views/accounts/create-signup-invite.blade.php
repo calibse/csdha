@@ -1,4 +1,4 @@
-<x-layout.user title="Create Sign-up Invite" :$backRoute class="accounts form">
+<x-layout.user content-view title="Create Sign-up Invite" :$backRoute class="accounts form">
     <article class="article">
         <x-alert/>
         <form type="post" action="{{ $formAction }}">

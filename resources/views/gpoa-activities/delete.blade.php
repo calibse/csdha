@@ -3,7 +3,7 @@ $routeParams = [
     'activity' => $activity->public_id
 ]; 
 @endphp
-<x-layout.user route="gpoa.activities.show" :$routeParams class="form gpoa" title="Delete GPOA Activity">
+<x-layout.user content-view route="gpoa.activities.show" :$routeParams class="form gpoa" title="Delete GPOA Activity">
     <article class="article">
         <p>Are you sure you want to delete GPOA activity 
             "{{ $activity->name }}"?

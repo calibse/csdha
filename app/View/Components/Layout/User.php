@@ -18,7 +18,8 @@ class User extends Component
         public bool $form = false,
         public ?string $title = null,
         public array $routeParams = [],
-        public ?string $backRoute = null
+        public ?string $backRoute = null,
+        public bool $hasToolbar = false
     )
     {
         //

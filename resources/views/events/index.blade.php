@@ -23,7 +23,7 @@
 		--}}
 		@if ($event->dates()->exists())
 			<p class="date">
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dots-fill.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/calendar-dots.png') }}">
 				<span class="text">
 				@if ($event->is_ongoing)
 					{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
@@ -33,7 +33,7 @@
 				</span>
 			</p>
 			<p class="time">
-				<img class="icon" src="{{ asset('icon/small/light/clock-fill.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/clock.png') }}">
 				<span class="text">
 				@if ($event->is_ongoing)
 					{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}

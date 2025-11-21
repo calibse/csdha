@@ -85,10 +85,11 @@ $featbox-y-margin: 2.3em;
 }
 
 .main-content.home .featbox {
+	box-shadow: color.$content-shadow;
 	position: relative;
 	width: 100%;
 	max-width: 100%;
-	border-radius: .4em;
+	border-radius: size.$corner-roundness;
 	overflow: hidden;
 	border: solid size.$line-width color.$line;
 	margin: 1em auto;
@@ -361,6 +362,7 @@ $featbox-y-margin: 2.3em;
 }
 
 .main-content.home .infos .introbox {
+	box-shadow: color.$content-shadow;
 	border-radius: size.$corner-roundness;
 	background-color: #ffffff;
 	border: solid size.$line-width color.$line;
@@ -381,6 +383,7 @@ $featbox-y-margin: 2.3em;
 
 .main-content.home .infos {
 	.infobox {
+		box-shadow: color.$content-shadow;
 		border-radius: size.$corner-roundness;
 		background-color: #ffffff;
 		border: solid size.$line-width color.$line;
@@ -394,6 +397,8 @@ $featbox-y-margin: 2.3em;
 
 		a:focus .legend, a:hover .legend {
 			text-decoration: underline;
+			text-underline-offset: .25em;
+			text-decoration-thickness: .1em;
 		}
 	}
 

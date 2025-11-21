@@ -1,4 +1,4 @@
-<x-layout.user class="events attachments" :$backRoute title="Event Attachments">
+<x-layout.user has-toolbar content-view class="events attachments" :$backRoute title="Event Attachments">
 <x-slot:toolbar>
 	<a 
 	@can ('update', $event)
@@ -6,7 +6,7 @@
 		href="{{ $createRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
 		<span class="text">Create Set</span>
 	</a>
 </x-slot:toolbar>

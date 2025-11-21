@@ -4,20 +4,20 @@
 @use "../color";
 @use "sass:math";
 
-$window-width: size.$text-width + 1em;
+$window-width: size.$text-width + .94em * 2;
 
 .window {
 	position: absolute;
 	top: 0;
 	left: 0;
 	border: solid size.$line-width color.$window-border;
-	border-top-left-radius: .6em;
-	border-top-right-radius: .6em;
+	border-radius: size.$corner-roundness;
 	overflow: hidden;
 	width: 96%;
 	margin-top: 1em;
 	margin-left: 2%;
-	box-shadow: 0 0 .8em 0 #bfbfbf;
+	box-shadow: color.$window-shadow;
+	z-index: 50;
 
 	&.form .window-content {
 		background-color: color.$form-bg;
@@ -25,17 +25,18 @@ $window-width: size.$text-width + 1em;
 }
 
 .window-title {
-	border-bottom: solid size.$line-width color.$title-border;
-	background-color: color.$title-bg;
+	background-color: color.$view-bg;
 	color: color.$title-fg;
-	padding: .9em;
+	padding: .94em;
+	box-shadow: color.$title-shadow;
 
 	.text {
+		font-weight: bold;
 	}
 }
 
 .window-content {
-	padding: size.$edge-padding .5em;
+	padding: size.$edge-padding .94em;
 	background-color: color.$background;
 	color: color.$foreground;
 }
@@ -44,7 +45,7 @@ $window-width: size.$text-width + 1em;
 .window-content .submit-button,
 .window-content .button-block,
 .window-content .submit-buttons {
-	margin-bottom: .5em;
+	margin-bottom: .94em;
 
 	button {
 		margin-bottom: 0;
@@ -53,7 +54,7 @@ $window-width: size.$text-width + 1em;
 
 @media (min-width: $window-width) {
 	.window {
-		top: 4em;
+		top: 3em;
 		left: 50%;
 		margin-right: 0;
 		margin-left: math.div($window-width, 2) * -1;

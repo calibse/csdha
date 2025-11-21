@@ -1,4 +1,4 @@
-<x-layout.user form :$backRoute title="Accomplishment Report" class="accom-reports accom-report form">
+<x-layout.user has-toolbar form :$backRoute title="Accomplishment Report" class="accom-reports accom-report form">
 <x-slot:toolbar>
 @if ($actions['submit'])
 	<a
@@ -6,7 +6,7 @@
 		href="{{ $submitRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-fat-line-right-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.png') }}">
 		<span class="text">Submit</span>
 	</a>
 @endif
@@ -16,7 +16,7 @@
 		href="{{ $returnRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-fat-line-left-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.png') }}">
 		<span class="text">Return</span>
 	</a>
 @endif
@@ -26,12 +26,12 @@
 		href="{{ $approveRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/check-circle-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/check-circle.png') }}">
 		<span class="text">Approve</span>
 	</a>
 @endif
 	<a href="{{ $eventRoute }}">
-		<img class="icon" src="{{ asset('icon/light/calendar-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/calendar.png') }}">
 
 		<span class="text">View event</span>
 	</a>
