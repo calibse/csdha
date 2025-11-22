@@ -103,7 +103,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 .main-header-title {
 	background-color: color.$header-bg;
 	white-space: nowrap;
-	padding: .55em;
+	padding: .59em;
 	width: size.$page-width;
 	max-width: 100%;
 	text-align: justify;
@@ -590,7 +590,7 @@ $mq-count: 4;
 		border-radius: size.$corner-roundness;
 		border: solid size.$line-width color.$title-border;
 		padding: 0;
-		box-shadow: color.$content-shadow;
+		box-shadow: color.$toolbar-shadow;
 	}
 
 	a {

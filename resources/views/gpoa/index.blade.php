@@ -15,7 +15,7 @@
 		@endcan
 		@can ('update', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.edit') }}">
-			<img class="icon" src="{{ asset('icon/light/pencil-line.png') }}">
+			<img class="icon" src="{{ asset('icon/light/pencil-simple-line.png') }}">
 			<span class="text">Edit</span>
 		</a>
 		@endcan

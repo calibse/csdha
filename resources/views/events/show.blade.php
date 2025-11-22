@@ -28,7 +28,7 @@
 			<tr>
 				<th>Date 
 				@can ('update', $event)
-					<span class="edit-link">[<a href="{{ $dateRoute }}">Edit</a>]</span>
+					<span class="edit-link">[ <a href="{{ $dateRoute }}">Edit</a> ]</span>
 				@endcan
 				</th>
 				<td>
@@ -44,7 +44,7 @@
 			{{--
 				<th>Registration Form 
 				@can ('update', $event)
-					<span class="edit-link">[<a>Edit</a>]</span>
+					<span class="edit-link">[ <a>Edit</a> ]</span>
 				@endcan
 				</th>
 			--}}
@@ -59,7 +59,7 @@
 			<tr>
 				<th>Description 
 				@can ('update', $event)
-					<span class="edit-link">[<a id="event-description_edit-button" href="{{ $descriptionRoute }}">Edit</a>]</span>
+					<span class="edit-link">[ <a id="event-description_edit-button" href="{{ $descriptionRoute }}">Edit</a> ]</span>
 				@endcan
 				</th>
 				<td id="event-description"><pre>{{ $event->description }}</pre></td>
@@ -67,7 +67,7 @@
 			<tr>
 				<th>Narrative 
 				@can ('update', $event)
-					<span class="edit-link">[<a id="event-narrative_edit-button" href="{{ $narrativeRoute }}">Edit</a>]</span>
+					<span class="edit-link">[ <a id="event-narrative_edit-button" href="{{ $narrativeRoute }}">Edit</a> ]</span>
 				@endcan
 				</th>
 				<td id="event-narrative"><pre>{{ $event->narrative }}</pre></td>
@@ -75,7 +75,7 @@
 			<tr>
 				<th>Venue 
 				@can ('update', $event)
-					<span class="edit-link">[<a id="event-venue_edit-button" href="{{ $venueRoute }}">Edit</a>]</span>
+					<span class="edit-link">[ <a id="event-venue_edit-button" href="{{ $venueRoute }}">Edit</a> ]</span>
 				@endcan
 				</th>
 				<td id="event-venue">{{ $event->venue }}</td>
@@ -85,7 +85,7 @@
 			<tr>
 				<th>Evaluation Form 
 				@can ('update', $event)
-					<span class="edit-link">[<a>Edit</a>]</span>
+					<span class="edit-link">[ <a>Edit</a> ]</span>
 				@endcan
 				</th>
 				<td><a>Show preview</a></td>
@@ -93,7 +93,7 @@
 			<tr>
 				<th>Evaluation Result 
 				@can ('update', $event)
-					<span class="edit-link">[<a>Edit</a>]</span>
+					<span class="edit-link">[ <a>Edit</a> ]</span>
 				@endcan
 				</th>
 				<td>0 comments selected</td>

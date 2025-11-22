@@ -19,6 +19,27 @@ $window-width: 21em;
 		position: relative;
 		padding: 1em;
 		background-color: color.$header-bg;
+		$light: #2370a6;
+		$dark: #070930;
+		$primary: #174eae;
+	/*
+		background: linear-gradient(
+			135deg,
+			$primary 0%,
+			$dark 60%,
+			$light 100%
+		);
+		background:
+			linear-gradient(135deg, $primary, $dark),
+			linear-gradient(225deg, $dark, $light);
+	*/
+		background:
+			radial-gradient(circle at top right, $primary 20%, $dark 100%),
+			radial-gradient(circle at bottom left, $dark 90%, $dark 100%),
+			radial-gradient(circle at bottom right, $light 10%, transparent 80%);
+		background-blend-mode: lighten;
+		border: .06em solid rgb(255, 255, 255, .2);
+
 		color: color.$header-fg;
 		min-height: 100vh;
 	}
@@ -72,9 +93,27 @@ $window-width: 21em;
 	margin-top: 2em;
 	padding-bottom: 1em;
 
+	.alert {
+		background-color: rgb(255, 255, 255, .15);
+		color: color.$background;
+	}
+
 	form {
 		input, p {
 			width: 100%;
+		}
+
+		input, button {
+			background-color: rgb(255, 255, 255, .15);
+			color: color.$background;
+		}
+
+		button:hover {
+			background-color: rgb(255, 255, 255, .3);
+		}
+
+		button:active {
+			background-color: rgb(255, 255, 255, .2);
 		}
 	}
 
@@ -106,10 +145,6 @@ $window-width: 21em;
 
 	.sign-in-with {
 		margin: 1em 0;
-	}
-
-	.alert {
-		color: color.$foreground;
 	}
 
 	.signin-link {
@@ -146,5 +181,8 @@ $window-width: 21em;
 		border-radius: 0;
 		margin: 0;
 		min-height: calc(100vh - 2em);
+		border-left: 0;
+		border-top: 0;
+		border-bottom: 0;
 	}
 }

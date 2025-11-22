@@ -1,4 +1,4 @@
-<x-layout.user title="Account" :$backRoute class="accounts form">
+<x-layout.user content-view title="Account" :$backRoute class="accounts form">
     <article class="article">
         <x-alert/>
         <form method="post" action="{{ $formAction }}">
@@ -37,12 +37,12 @@
                 <input name="suffix_name" value="{{ $account->suffix_name }}" >
             </p>
             <p class="form-submit">
-                <button>Update</button>
                 <button form="form-deactivate"
                 @cannot ('delete', $account)
                     disabled
                 @endcan
                 >Delete</button>
+                <button>Update</button>
             </p>
         </form>
         <form id="form-deactivate" action="{{ route('accounts.confirm-destroy', ['account' => $account->public_id]) }}"> </form>

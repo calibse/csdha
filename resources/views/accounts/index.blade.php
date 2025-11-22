@@ -1,7 +1,7 @@
 <x-layout.user has-toolbar index class="accounts index" title="Accounts">
     <x-slot:toolbar>
         <a href="{{ route('accounts.create-signup-invite') }}">
-		<img class="icon" src="{{ asset('icon/light/plus-circle-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/plus.png') }}">
             <span class="text">Create Sign-up Invite</span>
         </a>
     </x-slot:toolbar>

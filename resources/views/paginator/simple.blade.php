@@ -5,7 +5,7 @@
 	@unless ($paginator->onFirstPage())
         <p class="previous main-action">
             <a href="{{ $paginator->previousPageUrl() }}">
-		<img class="icon" src="{{ asset('icon/light/caret-left-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/caret-left.png') }}">
                 <span class="text">Previous Page</span>
             </a>
         </p>
@@ -13,7 +13,7 @@
 	@if ($paginator->hasMorePages() && $paginator->currentPage() >= 1)
         <p class="next main-action">
             <a href="{{ $paginator->nextPageUrl() }}">
-		<img class="icon" src="{{ asset('icon/light/caret-right-duotone.png') }}">
+		<img class="icon" src="{{ asset('icon/light/caret-right.png') }}">
                 <span class="text">Next Page</span>
             </a>
         </p>

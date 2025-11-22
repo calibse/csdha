@@ -31,17 +31,27 @@ select {
 	height: 1.5em;
 
 	&:focus {
-		background-color: color.$input-bg;
+		background-color: color.$pressed-button-bg;
 	}
 }
 
 select[multiple] {
 	height: auto;
+
+	&:focus {
+		background-color: color.$background;
+	}
+
+	option:checked {
+		background-color: rgb(31, 73, 125, .2);
+		background-color: #bec7d1;
+	}
 }
 
 button {
 	padding: .48em;
 	min-width: 5em;
+	font-weight: bold;
 
 	&:hover {
 		background-color: color.$hovered-button-bg
@@ -92,7 +102,6 @@ input[type="file"] {
 form {
 	label {
 		display: block;
-		margin-bottom: .5em;
 	}
 
 	input, select, textarea {

@@ -6,7 +6,7 @@
 		href="{{ route('gpoa.activities.edit', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/pencil-line.png') }}">
+		<img class="icon" src="{{ asset('icon/light/pencil-simple-line.png') }}">
 		<span class="text">Edit </span>
 	</a>
 @endif
@@ -79,7 +79,7 @@
 		@endif
 		@if ($date)
 			<p>
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dots.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/calendar-dot.png') }}">
 				<span class="text">
 					{{ $date }}
 				</span>

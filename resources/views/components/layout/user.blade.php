@@ -81,7 +81,7 @@ $auditRoute = route('audit.index');
 					@if ($siteContext === 'user')
 						<p class="main-action">
 							<a href="{{ route('profile.edit') }}">
-								<img class="icon" src="{{ asset('icon/dark/pencil-line.png') }}">
+								<img class="icon" src="{{ asset('icon/dark/pencil-simple-line.png') }}">
 								<span class="text">Edit account</span>
 							</a>
 						</p>

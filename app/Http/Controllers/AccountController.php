@@ -28,7 +28,7 @@ class AccountController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $accounts = User::orderBy('first_name', 'asc')->paginate('7');
+        $accounts = User::orderBy('first_name', 'asc')->paginate(15);
         return view('accounts.index', [
             'accounts' => $accounts
         ]);

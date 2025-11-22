@@ -2,7 +2,7 @@
 	<x-slot:toolbar>
 	@can ('create', 'App\Models\Position')
 	    <a href="{{ route('positions.create') }}">
-			<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
+			<img class="icon" src="{{ asset('icon/light/plus.png') }}">
 
 	    	<span class="text">Add new officer position</span>
     	</a>
