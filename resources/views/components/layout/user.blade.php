@@ -14,6 +14,7 @@ $adminSignoutRoute = route('admin.logout');
 $rolesRoute = route('roles.index');
 $accountsRoute = route('accounts.index');
 $auditRoute = route('audit.index');
+$hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -241,7 +242,7 @@ $auditRoute = route('audit.index');
 				</div>
 			</div>
 			<div {{ $attributes->merge(['class' => 'main-content']) }}>
-			@if (isset($toolbar) && $toolbar->hasActualContent())
+			@if ($hasToolbar)
 				<div class="main-toolbar">
 					<div class="content-block">
 						<nav> 

@@ -19,9 +19,9 @@ $window-width: 21em;
 		position: relative;
 		padding: 1em;
 		background-color: color.$header-bg;
-		$light: #2370a6;
-		$dark: #070930;
-		$primary: #174eae;
+		$light: #4e6d7f;
+		$dark: #393a44;
+		$primary: #3d529c;
 	/*
 		background: linear-gradient(
 			135deg,
@@ -34,10 +34,10 @@ $window-width: 21em;
 			linear-gradient(225deg, $dark, $light);
 	*/
 		background:
-			radial-gradient(circle at top right, $primary 20%, $dark 100%),
-			radial-gradient(circle at bottom left, $dark 90%, $dark 100%),
-			radial-gradient(circle at bottom right, $light 10%, transparent 80%);
-		background-blend-mode: lighten;
+			radial-gradient(circle at top right, $primary 20%, $dark 70%),
+			radial-gradient(circle at bottom left, $dark 50%, $dark 100%),
+			radial-gradient(circle at bottom right, $light 10%, transparent 60%);
+		background-blend-mode: saturation;
 		border: .06em solid rgb(255, 255, 255, .2);
 
 		color: color.$header-fg;

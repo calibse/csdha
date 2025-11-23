@@ -5,7 +5,7 @@
 		href="{{ $createSectionRoute }}"
 		@endcan
 		>
-			<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
+			<img class="icon" src="{{ asset('icon/light/plus.png') }}">
 
 			<span class="text">Add student section</span>
 		</a>

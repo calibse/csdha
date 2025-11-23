@@ -37,14 +37,15 @@ select {
 
 select[multiple] {
 	height: auto;
+	//background-color: white;
 
 	&:focus {
 		background-color: color.$background;
 	}
 
 	option:checked {
-		background-color: rgb(31, 73, 125, .2);
-		background-color: #bec7d1;
+		background-color: rgb(0, 212, 234, .1);
+		background-color: #e5fbfd;
 	}
 }
 
