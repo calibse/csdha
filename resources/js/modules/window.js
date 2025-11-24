@@ -115,7 +115,7 @@ export function stopWindowDragging(e) {
 export function openWindow(force) {
 	var elementId, el, offsetX, offsetY, marginLeft, dragging, 
 		parentWidth, leftPercent, realLeft, elWidth, dragged, 
-		titleEl, closeEl;
+		titleEl, closeEl, errorEl;
 
 	force = (typeof force !== "undefined") ? force : false;
 	elementId = getOpenedWindowId();

@@ -127,10 +127,10 @@ class EventDate extends Model
     {
         $timezone = $this->event->timezone;
         $start = Carbon::parse("{$this->date->format('Y-m-d')} " .
-            "{$this->start_time}", $timezone)->setTimezone(config('timezone'));
+            "{$this->start_time}", $timezone);
         $end = Carbon::parse("{$this->date->format('Y-m-d')} " .
-            "{$this->end_time}", $timezone)->setTimezone(config('timezone'));
-        $ongoing = Carbon::now(config('timezone'))->between($end, $start);
+            "{$this->end_time}", $timezone);
+        $ongoing = Carbon::now($timezone)->between($end, $start);
         return Attribute::make(
             get: fn () => $ongoing
         );
@@ -139,11 +139,9 @@ class EventDate extends Model
     #[Scope]
     protected function ongoing(Builder $query): void
     {
-        $timezone = config('timezone');
-        $query->whereRaw('convert_tz(now(), @@session.time_zone, ?) between
-            convert_tz(timestamp(date, start_time), timezone, ?) and
-            convert_tz(timestamp(date, end_time), timezone, ?)',
-            [$timezone, $timezone, $timezone])
+        $query->whereRaw('convert_tz(now(), @@session.time_zone, timezone) 
+            between timestamp(date, start_time) and
+            timestamp(date, end_time)')
             ->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')
             ->where(function ($query) {
@@ -151,46 +149,6 @@ class EventDate extends Model
                     $query->whereNotIn('status', ['pending', 'approved']);
                 })->orDoesntHave('event.accomReport');
             });
-
-/*
-        $timezone = config('timezone');
-        $date = "date(convert_tz(date, timezone, '{$timezone}'))";
-        $startTime = "time(convert_tz(start_time, timezone, '{$timezone}'))";
-        $endTime = "time(convert_tz(end_time, timezone, '{$timezone}'))";
-        $now = Carbon::now(config('timezone'));
-        $timeQuery = function ($query) use ($now, $startTime, $endTime) {
-            $query->where(function ($query) use ($now, $startTime, $endTime) {
-                $query->whereColumn(DB::raw($startTime), '<=',
-                        DB::raw($endTime))
-                    ->where(function ($query) use ($now, $startTime, $endTime) {
-                        $query->whereRaw($startTime . ' <= ?',
-                                [$now->toTimeString()])
-                            ->whereRaw($endTime . ' > ?',
-                                [$now->toTimeString()]);
-                    });
-            })->orWhere(function ($query) use ($now, $startTime, $endTime) {
-                $query->whereColumn(DB::raw($startTime), '>',
-                        DB::raw($endTime))
-                    ->where(function ($query) use ($now, $startTime, $endTime) {
-                        $query->whereRaw($startTime . ' <= ?',
-                                [$now->toTimeString()])
-                            ->orWhereRaw($endTime . ' > ?',
-                                [$now->toTimeString()]);
-                    });
-            });
-        };
-        $dateQuery = function ($query) use ($now, $date, $timeQuery) {
-            $query->whereRaw($date . ' = ?', [$now->toDateString()])
-                ->where($timeQuery);
-        };
-        $query->join('events', 'events.id', '=', 'event_dates.event_id')
-            ->select('event_dates.*')
-            ->where($dateQuery)->where(function ($query) {
-                $query->whereHas('event.accomReport', function ($query) {
-                    $query->whereNotIn('status', ['pending', 'approved']);
-                })->orDoesntHave('event.accomReport');
-            });
-*/
     }
 
     #[Scope]

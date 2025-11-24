@@ -52,6 +52,7 @@ use App\Http\Middleware\CheckEventEvalForm;
 use App\Http\Middleware\CheckPasswordResetToken;
 use App\Http\Middleware\CheckActiveGpoa;;
 use App\Http\Middleware\EnsureGpoaIsActive;;
+use App\Http\Middleware\CheckEventRegistration;;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Event;
 use App\Services\EvalFormStep;
@@ -173,7 +174,7 @@ Route::name('profile.')->controller(PasswordResetController::class)
 Route::domain(config('app.user_domain'))->group(function () {
 
     Route::prefix('event-register-{event}')->name('events.registrations.')
-        ->middleware([EnsureGpoaIsActive::class, 'can:register,event'])
+        ->middleware([EnsureGpoaIsActive::class, CheckEventRegistration::class])
         ->controller(EventRegistrationController::class)->group(function () {
 
         Route::get('/index.html', 'editConsentStep')->name('consent.edit');

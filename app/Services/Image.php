@@ -16,6 +16,7 @@ class Image
     public function scaleDown($imageSize)
     {
         $image = IImage::read($this->image);
+        $image->orient();
         if ($image->width() !== $imageSize && $image->width() <=
                 $image->height()) {
             $image->scaleDown(width: $imageSize);
@@ -30,6 +31,7 @@ class Image
     public function get()
     {
         $image = IImage::read($this->image);
+        $image->orient();
         return $image->toJpeg();
     }
 
@@ -54,6 +56,7 @@ class Image
         $imagick->readImageBlob($pngData);
         $imagick->setImageFormat('png32'); 
         $image = IImage::read($imagick);
+        $image->orient();
         return $image->toPng();
     }
 

@@ -87,11 +87,13 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	.main-content {
 		> .content-block {
 			height: calc(100vh - 10em);
+			height: calc(100dvh - 10em);
 			overflow: auto;
 		}
 
 		.main-toolbar + .content-block {
 			height: calc(100vh - 12em);
+			height: calc(100dvh - 12em);
 		}
 
 		.article {
@@ -390,12 +392,14 @@ $mq-count: 4;
 
 @mixin content-block {
 	height: calc(100vh - 4.2em);
+	height: calc(100dvh - 4.2em);
 	overflow: auto;
 	//border-top: solid color.$title-border size.$line-width;
 }
 
 @mixin main-toolbar-with-content-block {
 	height: calc(100vh - 7.2em);
+	height: calc(100dvh - 7.2em);
 	border-top: 0;
 }
 
@@ -580,6 +584,7 @@ $mq-count: 4;
 
 @mixin main-toolbar-with-content-block-wide {
 	height: calc(100vh - 7.5em);
+	height: calc(100dvh - 7.5em);
 }
 
 @mixin main-toolbar-detached {

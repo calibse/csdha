@@ -343,9 +343,13 @@ class Event extends Model
 
     public function isUpcoming(): Attribute
     {
-        $isUpcoming = $this->dates()->whereRaw('timestamp(date, 
-            start_time) > ?',
-            [now(config('timezone'))])->exists();
+        $eventTimezone = $this->timezone;
+        $isUpcoming = $this->dates()
+            ->selectRaw('timestamp(date, start_time) > 
+                convert_tz(now(), @@session.time_zone, ?) as value', 
+                [$eventTimezone])
+            ->orderByRaw('timestamp(date, end_time) desc')->limit(1)
+            ->value('value');
         return Attribute::make(
             get: fn () => $isUpcoming,
         );
@@ -353,9 +357,11 @@ class Event extends Model
 
     public function isOngoing(): Attribute
     {
-        $isOngoing = $this->dates()->whereRaw('? between timestamp(date, 
-            start_time) and timestamp(date, end_time)', 
-            [now(config('timezone'))])->exists();
+        $eventTimezone = $this->timezone;
+        $isOngoing = $this->dates()
+            ->whereRaw('convert_tz(now(), @@session.time_zone, ?) between 
+            timestamp(date, start_time) and timestamp(date, end_time)', 
+            [$eventTimezone])->exists();
         return Attribute::make(
             get: fn () => $isOngoing,
         );
@@ -363,10 +369,13 @@ class Event extends Model
 
     public function isCompleted(): Attribute
     {
-        $isCompleted = $this->dates()->whereRaw('not(? between timestamp(date, 
-            start_time) and timestamp(date, end_time) 
-            or timestamp(date, start_time) > ?)', 
-            [now(config('timezone')), now(config('timezone'))])->exists();
+        $eventTimezone = $this->timezone;
+        $isCompleted = $this->dates()
+            ->selectRaw('timestamp(date, end_time) < 
+                convert_tz(now(), @@session.time_zone, ?) as is_completed', 
+                [$eventTimezone])
+            ->orderByRaw('timestamp(date, end_time) desc')->limit(1)
+            ->value('is_completed');
         return Attribute::make(
             get: fn () => $isCompleted,
         );
@@ -420,16 +429,9 @@ class Event extends Model
     #[Scope]
     protected function completed(Builder $query): void
     {
-	$timezone = config('timezone');
-        /*
-        $latestDatesSub = DB::table('event_dates')->select('event_id', 
-        */
         $latestDatesSub = EventDate::select('event_id', 
             DB::raw('max(timestamp(date, end_time)) as latest_date'))
             ->groupBy('event_id');
-        /*
-        $latestDates = DB::table('event_dates as ed')
-        */
         $latestDates = EventDate::from('event_dates as ed')
             ->joinSub($latestDatesSub, 'ed_max', function ($join) {
                 $join->on('ed.event_id', '=', 'ed_max.event_id')
@@ -439,36 +441,21 @@ class Event extends Model
         $query->joinSub($latestDates, 'latest_dates', function ($join) { 
             $join->on('events.id', '=', 'latest_dates.event_id'); 
         })->select('events.*')->distinct()
-        ->whereRaw('convert_tz(timestamp(latest_dates.date, 
-            latest_dates.end_time), timezone, ?) < 
-            convert_tz(now(), @@session.time_zone, ?)', 
-            [$timezone, $timezone])
+        ->whereRaw('timestamp(latest_dates.date, 
+            latest_dates.end_time) < 
+            convert_tz(now(), @@session.time_zone, timezone)')
         ->orderBy('date', 'desc')->orderBy('end_time', 'desc');
-
-
-        /*
-            ->groupBy('events.id')
-            ->distinct()
-            ->whereRaw('not(convert_tz(now(), @@session.time_zone, ?) between 
-                convert_tz(timestamp(date, start_time), timezone, ?) and
-                convert_tz(timestamp(date, end_time), timezone, ?) 
-                or convert_tz(timestamp(date, start_time), timezone, 
-                ?) > convert_tz(now(), @@session.time_zone, ?))', 
-                [$timezone, $timezone, $timezone, $timezone, $timezone]);
-        */
     }
 
     #[Scope]
     protected function upcoming(Builder $query): void
     {
         $nextDays = 5;
-	$timezone = config('timezone');
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
-                ?) > convert_tz(now(), @@session.time_zone, ?)", 
-                [$timezone, $timezone])
+            ->whereRaw("timestamp(date, start_time) > 
+                convert_tz(now(), @@session.time_zone, timezone)")
             ->orderBy('date', 'desc')->orderBy('start_time', 'desc');
 
             /*
@@ -481,30 +468,28 @@ class Event extends Model
     #[Scope]
     protected function ongoing(Builder $query): void
     {
-	$timezone = config('timezone');
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->whereRaw('convert_tz(now(), @@session.time_zone, ?) between 
-                convert_tz(timestamp(date, start_time), timezone, ?) and
-                convert_tz(timestamp(date, end_time), timezone, ?)', 
-                [$timezone, $timezone, $timezone]);
+            ->whereRaw('convert_tz(now(), @@session.time_zone, timezone) 
+                between timestamp(date, start_time) and
+                timestamp(date, end_time)');
     }
 
     #[Scope]
     protected function ongoingAndUpcoming(Builder $query): void
     {
-	$timezone = config('timezone');
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
-                ?) > convert_tz(now(), @@session.time_zone, ?)", 
-                [$timezone, $timezone])
-            ->orWhereRaw('convert_tz(now(), @@session.time_zone, ?) between 
-                convert_tz(timestamp(date, start_time), timezone, ?) and
-                convert_tz(timestamp(date, end_time), timezone, ?)', 
-                [$timezone, $timezone, $timezone])
-            ->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+            ->whereRaw("timestamp(date, start_time) > 
+                convert_tz(now(), @@session.time_zone, timezone)")
+            ->orWhereRaw('convert_tz(now(), @@session.time_zone, timezone) 
+                between timestamp(date, start_time) and
+                timestamp(date, end_time)')
+            ->orderByRaw('(convert_tz(now(), @@session.time_zone, timezone) 
+                between timestamp(date, start_time) and
+                timestamp(date, end_time)) desc')
+            ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
     }
 }

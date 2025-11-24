@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use App\Traits\HasPublicId;
+use Illuminate\Support\Facades\Vite;
 use DateTimeZone;
 
 class Format
@@ -174,27 +175,11 @@ class Format
             ->format(config('app.date_format'));
     }
 
-/*
     public static function legacyScriptTag($entry)
     {
-        $manifestPath = public_path('build/manifest.json');
-        $filename = '';
-        if (file_exists($manifestPath)) {
-            $manifest = json_decode(file_get_contents($manifestPath), true);
-            $entry = trim($entry, "'\"");
-            if (isset($manifest[$entry])) {
-                $filename = $manifest[$entry]['file'];
-            }
+        if (Vite::isRunningHot()) {
+            return '<script type="module" src="' . Vite::asset($entry) . '"></script>';
         }
-        if (true || $filename) {
-            return '<script nomodule defer src="' . asset('build/' . $filename)                 . '"></script>';
-        }
-        return '';
-    }
-*/
-
-    public static function legacyScriptTag($entry)
-    {
         $manifestPath = public_path('build-legacy/manifest.json');
         if (!file_exists($manifestPath)) {
             return '';

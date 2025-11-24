@@ -19,13 +19,14 @@ $window-width: 21em;
 		position: relative;
 		padding: 1em;
 		background-color: color.$header-bg;
-		$light: #4e6d7f;
-		$dark: #393a44;
+		//$light: #4e6d7f;
+		$light: #85897b;
+		$dark: #3a3b4f;
 		$primary: #3d529c;
 		background:
-			radial-gradient(circle at top right, $primary 20%, $dark 70%),
-			radial-gradient(circle at bottom left, $dark 20%, $dark 70%),
-			radial-gradient(circle at bottom right, $light 10%, transparent 60%);
+			radial-gradient(circle at bottom right, $light 20%, transparent 50%),
+			radial-gradient(circle at top right, $primary 20%, $dark 60%),
+			radial-gradient(circle at bottom left, $dark 20%, $dark 50%);
 		background-blend-mode: saturation;
 		border: .06em solid lab(100% 0 0 / 0.2);
 
