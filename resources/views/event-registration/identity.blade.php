@@ -29,7 +29,7 @@
         <fieldset>
             <legend>Program</legend>
         @foreach ($programs as $program)
-            <p>
+            <p class="checkbox">
                 <input id="program-{{ $program->id }}" name="program" type="radio" value="{{ $program->id }}" {{ (old('program') ?? ($inputs['program'] ?? null)) === (string)$program->id ? 'checked' : null }}>
                 <label for="program-{{ $program->id }}">{{ $program->acronym . ' - ' . $program->name }}</label>
             </p>
@@ -38,7 +38,7 @@
         <fieldset>
             <legend>Year level</legend>
         @foreach ($yearLevels as $yearLevel)
-            <p name="year_level">
+            <p class="checkbox">
                 <input id="year-level-{{ $yearLevel->id }}" name="year_level" type="radio" value="{{ $yearLevel->id }}" {{ (old('year_level') ?? ($inputs['year_level'] ?? null)) === (string)$yearLevel->id ? 'checked' : null }}>
                 <label for="year-level-{{ $yearLevel->id }}">{{ $yearLevel->label }}</label>
             </select>

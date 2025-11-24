@@ -27,6 +27,12 @@ textarea {
 	}
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+	background-color: transparent;
+	padding: 0;
+}
+
 select {
 	height: 1.5em;
 
@@ -138,7 +144,7 @@ form {
 			display: inline-block;
 			margin-right: .5em;
 			vertical-align: top;
-			margin-top: .3em;
+			margin-top: .25em;
 
 			+ label {
 				white-space: normal;
@@ -151,7 +157,7 @@ form {
 		}
 
 		&:first-child {
-			margin-top: 0;
+			//margin-top: 0;
 		}
 
 	}
@@ -194,6 +200,7 @@ form {
 		max-width: size.$text-width - 2em;
 		padding-left: 1em;
 		padding-right: 1em;
+		padding-bottom: 1em;
 		border-radius: size.$corner-roundness;
 
 		margin: 1em 0;

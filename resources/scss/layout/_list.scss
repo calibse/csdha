@@ -26,13 +26,14 @@
 		white-space: nowrap;
 		border-radius: size.$corner-roundness;
 		//border: solid color.$form-border size.$line-width;
-		width: auto;
+		//width: auto;
 		overflow: hidden;
 	}
 
 	a {
 		display: inline-block;
 		padding: .48em;
+		padding-right: .48em;
 		font-weight: bold;
 		min-width: 8em;
 	}

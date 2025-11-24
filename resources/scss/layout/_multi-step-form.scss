@@ -50,8 +50,9 @@
 }
 
 .multi-step-form .section {
+	box-shadow: color.$content-shadow;
 	max-width: size.$text-width;
-	padding: 0 1em;
+	padding: size.$edge-padding 1em;
 	margin: 1em auto;
 	background-color: color.$background;
 	border-radius: size.$corner-roundness;

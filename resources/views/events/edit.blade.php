@@ -27,7 +27,7 @@
 				<label for="record-attendance--1">Officers only</label>
 			</p>
 		@foreach ($participants as $participant)
-			<p>
+			<p class="checkbox">
 				<input id="record-attendance-{{ $participant->id }}" type="checkbox" name="record_attendance[]" value="{{ $participant->id }}" 
 				@if ($errors->any())
 					{{ in_array((string)$participant->id, old('record_attendance') ?? []) ? 'checked' : null }}

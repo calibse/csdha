@@ -22,23 +22,12 @@ $window-width: 21em;
 		$light: #4e6d7f;
 		$dark: #393a44;
 		$primary: #3d529c;
-	/*
-		background: linear-gradient(
-			135deg,
-			$primary 0%,
-			$dark 60%,
-			$light 100%
-		);
-		background:
-			linear-gradient(135deg, $primary, $dark),
-			linear-gradient(225deg, $dark, $light);
-	*/
 		background:
 			radial-gradient(circle at top right, $primary 20%, $dark 70%),
-			radial-gradient(circle at bottom left, $dark 50%, $dark 100%),
+			radial-gradient(circle at bottom left, $dark 20%, $dark 70%),
 			radial-gradient(circle at bottom right, $light 10%, transparent 60%);
 		background-blend-mode: saturation;
-		border: .06em solid rgb(255, 255, 255, .2);
+		border: .06em solid lab(100% 0 0 / 0.2);
 
 		color: color.$header-fg;
 		min-height: 100vh;
@@ -94,8 +83,8 @@ $window-width: 21em;
 	padding-bottom: 1em;
 
 	.alert {
-		background-color: rgb(255, 255, 255, .15);
-		color: color.$background;
+		background-color: lab(100% 0 0 / 0.15);
+		color: lab(100% 0 0);
 	}
 
 	form {
@@ -104,16 +93,16 @@ $window-width: 21em;
 		}
 
 		input, button {
-			background-color: rgb(255, 255, 255, .15);
-			color: color.$background;
+			background-color: lab(100% 0 0 / 0.15);
+			color: lab(100% 0 0);
 		}
 
 		button:hover {
-			background-color: rgb(255, 255, 255, .3);
+			background-color: lab(100% 0 0 / 0.3);
 		}
 
 		button:active {
-			background-color: rgb(255, 255, 255, .2);
+			background-color: lab(100% 0 0 / 0.2);
 		}
 	}
 

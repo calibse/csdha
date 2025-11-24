@@ -364,8 +364,9 @@ $mq-count: 4;
 		margin: 0;
 	}
 
-	.text {
+	.icon + .text {
 		position: absolute;
+		top: -200%;
 		overflow: hidden;
 		width: 1px;
 		height: 1px;
@@ -607,6 +608,7 @@ $mq-count: 4;
 
 @mixin main-header-target {
 	@include main-header;
+	bottom: 0;
 	top: 0;
 	left: -18em;
 
@@ -687,6 +689,7 @@ $mq-count: 4;
 		transition: none;
 		top: 0;
 		left: 0;
+		bottom: 0;
 		box-shadow: none;
 
 		.close-menu-button {
