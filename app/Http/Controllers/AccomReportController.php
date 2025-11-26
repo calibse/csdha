@@ -139,7 +139,7 @@ class AccomReportController extends Controller implements HasMiddleware
             $fileRoute = route('events.accom-report.stream', [
                 'event' => $event->public_id,
                 'id' => $id,
-            ]);
+            ], false);
         }
         $prepareMessage = Format::documentPrepareMessage();
         $updateMessage = Format::documentUpdateMessage();

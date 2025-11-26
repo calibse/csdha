@@ -75,18 +75,31 @@
 	@if (!$updated)
 	<p>This document copy is outdated.</p>
 	@endif
-	<figure class="pdf-document">
-		<div class="pdf-file">
+	<div class="pdf-document">
+		<figure class="pdf-file">
+			<iframe src="/viewerjs/#..{{ $fileRoute}}">
+				<p>
+				Preview of this file is unsupported. 
+				You may download this file 
+				<a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
+				</p>
+			</iframe>
+		{{--
 			<object data="{{ $fileRoute }}" type="application/pdf">
-			<p>
+				<p>
 				Preview of this file is unsupported. 
 				You may download this file 
 				<a href="{{ $fileRoute }}">here</a>.
-			</p>
+				</p>
 			</object>
-		</div>
-		<figcaption class="caption">Accomplishment Report</figcaption>
-	</figure>
+		--}}
+			<figcaption>
+				<div class="caption">
+					Accomplishment Report
+				</div>
+			</figcaption>
+		</figure>
+	</div>
 @else
         <p class="has-icon">
 		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
