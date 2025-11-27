@@ -42,21 +42,21 @@
 	<aside class="main-status item-full-content-wide">
 		<p class="title">Status</p>
 		<p>
-			<img class="icon" src="{{ asset('icon/small/light/circle-notch-fill.png') }}">
+			<img class="icon" src="{{ asset('icon/small/light/circle-notch.png') }}">
 			<span class="text">
 				{{ $accomReport->full_status }}
 			</span>
 		</p>
 	@if ($accomReport?->comments)
 		<div>
-			<img class="icon" src="{{ asset('icon/small/light/chat-text-fill.png') }}">
+			<img class="icon" src="{{ asset('icon/small/light/chat-text.png') }}">
 
 			<pre class="text">"{{ $accomReport?->comments }}"</pre>
 		</div>
 	@endif
 	@if ($date)
 		<p>
-			<img class="icon" src="{{ asset('icon/small/light/calendar-dots-fill.png') }}">
+			<img class="icon" src="{{ asset('icon/small/light/calendar-dot.png') }}">
 			<span class="text">
 				{{ $date }}
 			</span>
@@ -66,7 +66,7 @@
 @endif
 @if (!$updated && auth()->user()->can('makeAccomReport', $event))
 	<p class="has-icon">
-		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.png') }}">
 		<span class="text">
 			{{ $updateMessage }}
 		</span>
@@ -79,30 +79,18 @@
 		<figure class="pdf-file">
 			<iframe src="/viewerjs/#..{{ $fileRoute}}">
 				<p>
-				Preview of this file is unsupported. 
-				You may download this file 
-				<a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
+					Preview of this file is unsupported. You may download this 
+					file <a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
 				</p>
 			</iframe>
-		{{--
-			<object data="{{ $fileRoute }}" type="application/pdf">
-				<p>
-				Preview of this file is unsupported. 
-				You may download this file 
-				<a href="{{ $fileRoute }}">here</a>.
-				</p>
-			</object>
-		--}}
 			<figcaption>
-				<div class="caption">
-					Accomplishment Report
-				</div>
+				<div class="caption">Accomplishment Report</div>
 			</figcaption>
 		</figure>
 	</div>
 @else
         <p class="has-icon">
-		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.png') }}">
 		<span class="text">
 			{{ $prepareMessage }}
 		</span>

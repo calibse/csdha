@@ -142,7 +142,7 @@ class GpoaController extends Controller implements HasMiddleware
         if ($updated) {
             $fileRoute = route('gpoas.report-file.show', [
                 'gpoa' => $gpoa->public_id
-            ]);
+            ], false);
         }
         $response = response()->view('gpoa.show-gpoa-report', [
             'fileRoute' => $fileRoute,
@@ -177,7 +177,7 @@ class GpoaController extends Controller implements HasMiddleware
         if ($hasFile) {
             $fileRoute = route('gpoas.accom-report-file.show', [
                 'gpoa' => $gpoa->public_id
-            ]);
+            ], false);
         }
         $response = response()->view('gpoa.show-accom-report', [
             'fileRoute' => $fileRoute,
@@ -226,7 +226,7 @@ class GpoaController extends Controller implements HasMiddleware
         if ($gpoa->report_filepath && $gpoa->report_file_updated) {
             $fileRoute = route('gpoa.streamPdf', [
                 'id' => $gpoa->report_file_updated_at->format('ymdHis')
-            ]);
+            ], false);
         }
         $response = response()->view('gpoa.show-gpoa-report', [
             'gpoa' => $gpoa,

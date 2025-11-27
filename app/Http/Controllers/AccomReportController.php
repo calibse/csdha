@@ -298,7 +298,7 @@ class AccomReportController extends Controller implements HasMiddleware
             });
             $fileRoute = route('accom-reports.stream', [
                 'id' => now()->format('ymdHis')
-            ]);
+            ], false);
         } elseif ($hasLastJob && !$jobDone) {
             $startDate = $userJob['start_date'];
             $endDate = $userJob['end_date'];
@@ -333,12 +333,6 @@ class AccomReportController extends Controller implements HasMiddleware
                 $hasLastJob = true;
                 $jobDone = false;
             }
-/*
-            $fileRoute = $events ? route('accom-reports.stream', [
-                'start_date' => $startDate,
-                'end_date' => $endDate
-            ]) : null;
-*/
         } 
         $prepareMessage = Format::documentPrepareMessage();
         $response = response()->view('accom-reports.gen-accom-report', [

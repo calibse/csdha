@@ -20,20 +20,22 @@
 		</form>
 	</div>
 @if ($fileRoute)
-	<figure class="pdf-document">
-		<div class="pdf-file">
-			<object data="{{ $fileRoute }}" type="application/pdf">
+	<div class="pdf-document">
+		<figure class="pdf-file">
+			<iframe src="/viewerjs/#..{{ $fileRoute}}">
 				<p>
 					Preview of this file is unsupported. You may download
-					this file <a href="{{ $fileRoute }}">here</a>.
+					this file <a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
 				</p>
-			</object>
-		</div>
-		<figcaption class="caption">Accomplishment Report</figcaption>
-	</figure>
+			</iframe>
+			<figcaption>
+				<div class="caption">Accomplishment Report</div>
+			</figcaption>
+		</figure>
+	</div>
 @elseif ($hasLastJob && !$jobDone)
 	<p class="has-icon">
-		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium-fill.png') }}">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.png') }}">
                 <span class="text">
 			{{ $prepareMessage }}
 		</span>
