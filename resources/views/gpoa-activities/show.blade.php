@@ -62,8 +62,8 @@
 @endif
 </x-slot>
 <div class="article has-item-full-content document">
-	<div class="item-full-content">
-		<aside class="main-status">
+	<aside class="item-full-content main-status">
+		<div class="content-block">
 			<p class="title">Status</p>
 			<p>
 				<img class="icon" src="{{ asset('icon/small/light/circle-notch.svg') }}">
@@ -85,73 +85,75 @@
 				</span>
 			</p>
 		@endif
-		</aside>
 		<hr>
-	</div>
+		</div>
+	</aside>
 	<div class="item-full-content">
-		<h2>{{ $activity->name }}</h2>
-		<table class="table-2">
-			<colgroup>
-				<col style="width: 12em;">
-			</colgroup>
-			<tbody>
-				<tr>
-					<th>Date</th>
-					<td>{{ $activity->date }}</td>
-				</tr>
-				<tr>
-					<th>Objectives</th>
-					<td>
-						<pre>{{ $activity->objectives }}</pre>
-					</td>
-				</tr>
-				<tr>
-					<th>Participants / Beneficiaries</th>
-					<td>{{ $activity->participants }}</td>
-				</tr>
-				<tr>
-					<th>Type of Activity</th>
-					<td>{{ $activity->type }}</td>
-				</tr>
-				<tr>
-					<th>Partnership</th>
-					<td>{{ $activity->partnership_type }}</td>
-				</tr>
-				<tr>
-					<th>Proposed Budget</th>
-					<td>{{ $activity->proposed_budget }}</td>
-				</tr>
-				<tr>
-					<th>Source of Fund</th>
-					<td>{{ $activity->fund_source }}</td>
-				</tr>
-				<tr>
-					<th>Mode</th>
-					<td>{{ $activity->mode }}</td>
-				</tr>
-				<tr>
-					<th>Event Head</th>
-					<td>
-						<ul>
-						@foreach ($eventHeads as $eventHead)
-							<li>{{ $eventHead->full_name }}</li>
-						@endforeach
-						</ul>
-					</td>
-				</tr>
-			@if ($coheads->isNotEmpty())
-				<tr>
-					<th>Co-head</th>
-					<td>
-						<ul>
-						@foreach ($coheads as $cohead)
-							<li>{{ $cohead->full_name }}</li>
-						@endforeach
-						</ul>
-					</td>
-				</tr>
-			@endif
-		</table>
+		<div class="content-block">
+			<h2>{{ $activity->name }}</h2>
+			<table class="table-2">
+				<colgroup>
+					<col style="width: 12em;">
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>Date</th>
+						<td>{{ $activity->date }}</td>
+					</tr>
+					<tr>
+						<th>Objectives</th>
+						<td>
+							<pre>{{ $activity->objectives }}</pre>
+						</td>
+					</tr>
+					<tr>
+						<th>Participants / Beneficiaries</th>
+						<td>{{ $activity->participants }}</td>
+					</tr>
+					<tr>
+						<th>Type of Activity</th>
+						<td>{{ $activity->type }}</td>
+					</tr>
+					<tr>
+						<th>Partnership</th>
+						<td>{{ $activity->partnership_type }}</td>
+					</tr>
+					<tr>
+						<th>Proposed Budget</th>
+						<td>{{ $activity->proposed_budget }}</td>
+					</tr>
+					<tr>
+						<th>Source of Fund</th>
+						<td>{{ $activity->fund_source }}</td>
+					</tr>
+					<tr>
+						<th>Mode</th>
+						<td>{{ $activity->mode }}</td>
+					</tr>
+					<tr>
+						<th>Event Head</th>
+						<td>
+							<ul>
+							@foreach ($eventHeads as $eventHead)
+								<li>{{ $eventHead->full_name }}</li>
+							@endforeach
+							</ul>
+						</td>
+					</tr>
+				@if ($coheads->isNotEmpty())
+					<tr>
+						<th>Co-head</th>
+						<td>
+							<ul>
+							@foreach ($coheads as $cohead)
+								<li>{{ $cohead->full_name }}</li>
+							@endforeach
+							</ul>
+						</td>
+					</tr>
+				@endif
+			</table>
+		</div>
 	</div>
 </div>
 </x-layout.user>

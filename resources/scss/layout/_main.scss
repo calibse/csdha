@@ -12,16 +12,23 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 
 .item-full-content {
 	background-color: color.$background;
-	padding: size.$edge-padding 1em;
+	overflow: hidden;
+
+	> .content-block {
+		padding: size.$edge-padding 1em;
+	}
 }
 
 @mixin item-full-content-wide {
 	background-color: color.$background;
-	padding: size.$edge-padding 1em;
 	margin: 1em auto;
 	border-radius: size.$corner-roundness;
 	border: solid size.$line-width color.$line;
 	box-shadow: color.$content-shadow;
+
+	> .content-block {
+		padding: size.$edge-padding 1em;
+	}
 
 	hr {
 		display: none;
@@ -193,6 +200,8 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 			img {
 				display: block;
 				height: 100%;
+				width: min(100%);
+				object-fit: cover;
 				margin: 0 auto;
 			}
 		}

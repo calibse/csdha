@@ -40,28 +40,30 @@
 	<x-alert/>
 @if ($accomReport)
 	<aside class="main-status item-full-content-wide">
-		<p class="title">Status</p>
-		<p>
-			<img class="icon" src="{{ asset('icon/small/light/circle-notch.svg') }}">
-			<span class="text">
-				{{ $accomReport->full_status }}
-			</span>
-		</p>
-	@if ($accomReport?->comments)
-		<div>
-			<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
+		<div class="content-block">
+			<p class="title">Status</p>
+			<p>
+				<img class="icon" src="{{ asset('icon/small/light/circle-notch.svg') }}">
+				<span class="text">
+					{{ $accomReport->full_status }}
+				</span>
+			</p>
+		@if ($accomReport?->comments)
+			<div>
+				<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
 
-			<pre class="text">"{{ $accomReport?->comments }}"</pre>
+				<pre class="text">"{{ $accomReport?->comments }}"</pre>
+			</div>
+		@endif
+		@if ($date)
+			<p>
+				<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
+				<span class="text">
+					{{ $date }}
+				</span>
+			</p>
+		@endif
 		</div>
-	@endif
-	@if ($date)
-		<p>
-			<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
-			<span class="text">
-				{{ $date }}
-			</span>
-		</p>
-	@endif
 	</aside>
 @endif
 @if (!$updated && auth()->user()->can('makeAccomReport', $event))

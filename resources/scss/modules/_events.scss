@@ -14,6 +14,44 @@ $event-content-width: 1em + 12em + size.$text-width;
 	}
 }
 
+.events.event .item-full-content {
+	.banner {
+		background-color: #EEEEF1;
+		overflow: hidden;
+		height: 10em;
+		border-bottom: solid size.$line-width color.$line;
+		position: relative;
+
+		img {
+			display: block;
+			width: 100%;
+			height: min(100%);
+			object-fit: cover;
+		}
+	}
+
+	.banner-edit-link {
+		background-color: color.$background;
+		background-color: rgb(255, 255, 255, .5);
+		width: auto;
+		margin: 0;
+		position: absolute;
+		bottom: 1em;
+		right: 1em;
+		border-radius: size.$corner-roundness;
+		overflow: hidden;
+
+		a {
+			padding: .5em;
+			display: block;
+		}
+
+		&:hover {
+			background-color: color.$background;
+		}
+	}
+}
+
 .events.index {
     table {
         td {
@@ -31,6 +69,28 @@ $event-content-width: 1em + 12em + size.$text-width;
 }
 
 .events.index .event-item {
+	.banner {
+		background-color: #EEEEF1;
+		height: 5em;
+		border-bottom: solid size.$line-width color.$line;
+		overflow: hidden;
+
+		img {
+			display: block;
+			width: 100%;
+			height: min(100%);
+			object-fit: cover;
+		}
+	}
+
+	.content-block {
+		padding: 0 1em;
+
+		> :first-child {
+			margin-top: .5em;
+		}
+	}
+
 	.title {
 		white-space: nowrap;
 		overflow: hidden;

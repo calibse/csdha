@@ -15,48 +15,50 @@
 	<div class="article-list">
 	@foreach ($events as $event)
 		<div class="event-item">
-			<h2 class="title">
-				<a href="{{ route('events.show', ['event' => $event->public_id]) }}">{{ $event->gpoaActivity->name }}</a>
-			</h2>
-		{{--
-			<p class="date">{{ $event->status }}</p>
-		--}}
-		@if ($event->dates()->exists())
-			<p class="date">
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dots.svg') }}">
-				<span class="text">
-				@if ($event->is_ongoing)
-					{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
-				@else
-					{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
-				@endif
-				</span>
-			</p>
-			<p class="time">
-				<img class="icon" src="{{ asset('icon/small/light/clock.svg') }}">
-				<span class="text">
-				@if ($event->is_ongoing)
-					{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
-				@else
-					{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
-				@endif
-				</span>
-			</p>
-		@endif
-			<p class="description">
-			@if ($event->description)
-				@if ($event->is_ongoing)
-				(Ongoing)
-				@endif
-				{{ $event->description }}
-			@else
-				@if ($event->is_ongoing)
-				Ongoing
-				@else
-				<i>No description.</i>
-				@endif
+			<div class="banner">
+				<img src="{{ asset('images/app-cover.jpg') }}">
+			</div>
+			<div class="content-block">
+				<h2 class="title">
+					<a href="{{ route('events.show', ['event' => $event->public_id]) }}">{{ $event->gpoaActivity->name }}</a>
+				</h2>
+			@if ($event->dates()->exists())
+				<p class="date">
+					<img class="icon" src="{{ asset('icon/small/light/calendar-dots.svg') }}">
+					<span class="text">
+					@if ($event->is_ongoing)
+						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+					@else
+						{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+					@endif
+					</span>
+				</p>
+				<p class="time">
+					<img class="icon" src="{{ asset('icon/small/light/clock.svg') }}">
+					<span class="text">
+					@if ($event->is_ongoing)
+						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+					@else
+						{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+					@endif
+					</span>
+				</p>
 			@endif
-			</p>
+				<p class="description">
+				@if ($event->description)
+					@if ($event->is_ongoing)
+					(Ongoing)
+					@endif
+					{{ $event->description }}
+				@else
+					@if ($event->is_ongoing)
+					Ongoing
+					@else
+					<i>No description.</i>
+					@endif
+				@endif
+				</p>
+			</div>
 		</div>
 	@endforeach
 	</div>

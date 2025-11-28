@@ -558,6 +558,15 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/update.php', 'update')->name('update');
 
+                Route::name('banner.')->group(function () {
+
+                    Route::get('/banner.html', 'editBanner')
+                        ->name('edit');
+
+                    Route::put('/banner.php', 'updateBanner')
+                        ->name('update');
+                });
+
                 Route::name('venue.')->group(function () {
 
                     Route::get('/venue.html', 'editVenue')

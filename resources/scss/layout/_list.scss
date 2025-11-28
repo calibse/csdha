@@ -8,12 +8,12 @@
 		font-size: 1.2em;
 	}
 
+	overflow: hidden;
 	border: solid color.$line size.$line-width;
 	box-shadow: color.$content-shadow;
 	border-radius: size.$corner-roundness;
 	margin-bottom: 1em;
 	background-color: color.$background;
-	padding: 0 1em;
 	vertical-align: top;
 }
 

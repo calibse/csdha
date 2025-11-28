@@ -27,6 +27,7 @@ use App\Http\Requests\UpdateCommentsRequest;
 use App\Http\Requests\UpdateEventNarrativeRequest;
 use App\Http\Requests\UpdateEventDescriptionRequest;
 use App\Http\Requests\UpdateEventVenueRequest;
+use App\Http\Requests\UpdateEventBannerRequest;
 use App\Services\Format;
 use App\Mail\EventEvaluation as EventEvaluationMail;
 use Illuminate\Support\Facades\Hash;
@@ -73,6 +74,8 @@ class EventController extends Controller implements HasMiddleware
                 'updateDescription',
                 'editVenue',
                 'updateVenue',
+                'editBanner',
+                'updateBanner',
             ]),
             new Middleware('auth.event:delete,event', only: ['destroy']),
             new Middleware('auth.event:update,date', only: [
@@ -145,6 +148,12 @@ class EventController extends Controller implements HasMiddleware
 
     public function show(Event $event)
     {
+        $backRoute = route('events.index');
+        if ($event->is_completed) {
+            $backRoute = route('events.index', [
+                'status' => 'completed',
+            ]);
+        }
         return view('events.show', [
             'event' => $event,
             'activity' => $event->gpoaActivity,
@@ -160,7 +169,7 @@ class EventController extends Controller implements HasMiddleware
             ]),
             'eventHeads' => $event->gpoaActivity->eventHeadsOnly()->get(),
             'coheads' => $event->gpoaActivity->coheads()->get(),
-            'backRoute' => route('events.index'),
+            'backRoute' => $backRoute,
             'genArRoute' => route('accom-reports.show', [
                 'event' => $event->public_id,
             ]),
@@ -171,6 +180,9 @@ class EventController extends Controller implements HasMiddleware
                 'event' => $event->public_id
             ]),
             'venueRoute' => route('events.venue.edit', [
+                'event' => $event->public_id
+            ]),
+            'bannerRoute' => route('events.banner.edit', [
                 'event' => $event->public_id
             ]),
             'narrativeRoute' => route('events.narrative.edit', [
@@ -186,6 +198,9 @@ class EventController extends Controller implements HasMiddleware
                  'event' => $event->public_id
              ]),
             'venueFormAction' => route('events.venue.update', [
+                 'event' => $event->public_id
+             ]),
+            'bannerFormAction' => route('events.banner.update', [
                  'event' => $event->public_id
              ]),
         ]);
@@ -270,6 +285,26 @@ class EventController extends Controller implements HasMiddleware
         return redirect()->route('events.show', [
             'event' => $event->public_id
         ]);
+    }
+
+    public function editBanner(Event $event)
+    {
+        return view('events.edit-banner', [
+            'formAction' => route('events.banner.update', [
+                 'event' => $event->public_id
+             ]),
+            'backRoute' => route('events.show', [
+                 'event' => $event->public_id
+             ]),
+        ]);
+    }
+
+    public function updateBanner(UpdateEventBannerRequest $request, 
+        Event $event)
+    {
+        return redirect()->route('events.show', [
+                 'event' => $event->public_id
+        ])->with('status', 'Event banner updated.');
     }
 
     public function editVenue(Event $event)

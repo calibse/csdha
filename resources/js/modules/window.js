@@ -103,7 +103,7 @@ export function startWindowDragging(e) {
 }
 
 export function stopWindowDragging(e) {
-	var elementId, el;
+	var elementId, el, titleEl;
 
 	elementId = getOpenedWindowId();
 	titleEl = document.getElementById(elementId + "_title-bar");
