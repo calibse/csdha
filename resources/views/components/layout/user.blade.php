@@ -1,10 +1,16 @@
 @use('Illuminate\Support\Facades\Route')
 @use('App\Services\Format')
+@use('App\Models\Event')
 @php
 $adminHomeRoute = route('admin.home'); 
 $userHomeRoute = route('user.home'); 
 $gpoaRoute = route('gpoa.index'); 
 $eventsRoute = route('events.index');
+if (!Event::active()->ongoingAndUpcoming()->exists()) {
+    $eventsRoute = route('events.index', [
+        'status' => 'completed',
+    ]);
+}
 $accomReportsRoute = route('accom-reports.index');
 $positionsRoute = route('positions.index');
 $attendanceRoute = route('attendance.create');

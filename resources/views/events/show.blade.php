@@ -21,7 +21,9 @@
 	<x-alert/>
 	<div class="item-full-content"> 
 		<div class="banner">
-			<img src="{{ asset('images/app-cover.jpg') }}">
+		@if ($bannerFileRoute)
+			<img src="{{ $bannerFileRoute }}">
+		@endif
 		@can ('update', $event)
 			<p class="banner-edit-link"><a href="{{ $bannerRoute }}">Edit</a></p>
 		@endcan

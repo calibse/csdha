@@ -11,7 +11,10 @@ class UpdateEventBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'remove_banner' => ['boolean'],
+            'banner' => ['exclude_if:remove_banner,true',
+                'required', 'mimetypes:image/jpeg,image/png,'
+                .'image/webp,image/avif']
         ];
     }
 }

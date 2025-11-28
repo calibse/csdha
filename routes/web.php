@@ -560,20 +560,18 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::name('banner.')->group(function () {
 
-                    Route::get('/banner.html', 'editBanner')
-                        ->name('edit');
+                    Route::get('/banner.html', 'editBanner')->name('edit');
 
-                    Route::put('/banner.php', 'updateBanner')
-                        ->name('update');
+                    Route::put('/banner.php', 'updateBanner')->name('update');
+
+                    Route::get('/{file}', 'showBanner')->name('show');
                 });
 
                 Route::name('venue.')->group(function () {
 
-                    Route::get('/venue.html', 'editVenue')
-                        ->name('edit');
+                    Route::get('/venue.html', 'editVenue')->name('edit');
 
-                    Route::put('/venue.php', 'updateVenue')
-                        ->name('update');
+                    Route::put('/venue.php', 'updateVenue')->name('update');
                 });
 
                 Route::name('description.')->group(function () {

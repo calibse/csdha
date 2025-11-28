@@ -51,6 +51,7 @@ class EventController extends Controller implements HasMiddleware
                 'showLetterOfIntentFile',
                 'showLetterOfIntent',
                 'showAttendance',
+                'showBanner',
             ]),
             new Middleware('auth.index:create,' . Event::class,
                 only: ['create', 'store']),
@@ -149,6 +150,11 @@ class EventController extends Controller implements HasMiddleware
     public function show(Event $event)
     {
         $backRoute = route('events.index');
+        $bannerFileRoute = $event->banner_filepath ? route(
+            'events.banner.show', [
+            'event' => $event->public_id,
+            'file' => basename($event->banner_filepath)
+        ]) : null;
         if ($event->is_completed) {
             $backRoute = route('events.index', [
                 'status' => 'completed',
@@ -203,6 +209,7 @@ class EventController extends Controller implements HasMiddleware
             'bannerFormAction' => route('events.banner.update', [
                  'event' => $event->public_id
              ]),
+             'bannerFileRoute' => $bannerFileRoute
         ]);
     }
 
@@ -287,6 +294,12 @@ class EventController extends Controller implements HasMiddleware
         ]);
     }
 
+    public function showBanner(Event $event)
+    {
+        if (!$event->banner_filepath) abort(404);
+        return response()->file(Storage::path($event->banner_filepath));
+    }
+
     public function editBanner(Event $event)
     {
         return view('events.edit-banner', [
@@ -302,8 +315,25 @@ class EventController extends Controller implements HasMiddleware
     public function updateBanner(UpdateEventBannerRequest $request, 
         Event $event)
     {
+        $imageFile = "events/event_{$event->id}/banner_" . Str::random(8) . 
+            '.jpg';
+        if ($request->boolean('remove_banner')) {
+            Storage::delete($imageFile);
+            $event->banner_filepath = null;
+            $event->save();
+            return redirect()->route('events.show', [
+                'event' => $event->public_id
+            ])->with('status', 'Event banner updated.');
+        }
+        $image = new Image($request->file('banner'));
+        Storage::put($imageFile, (string) $image->scaleDown(1600));
+        if ($event->banner_filepath) {
+            Storage::delete($event->banner_filepath);
+        }
+        $event->banner_filepath = $imageFile;
+        $event->save();
         return redirect()->route('events.show', [
-                 'event' => $event->public_id
+            'event' => $event->public_id
         ])->with('status', 'Event banner updated.');
     }
 

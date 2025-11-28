@@ -77,17 +77,17 @@ class ProfileController extends Controller implements HasMiddleware
         $user = auth()->user();
         $user->username = $request->username;
         if ($request->remove_avatar && $user->avatar_filepath) {
-        	Storage::delete($user->avatar_filepath);
-        	$user->avatar_filepath = null;
+            Storage::delete($user->avatar_filepath);
+            $user->avatar_filepath = null;
         }
         elseif ($request->has('avatar')) {
-        $imageFile = 'user/avatar/' . Str::random(8) . '.jpg';
-        $image = new Image($request->file('avatar'));
-        Storage::put($imageFile, (string) $image->scaleDown(300));
-        	if ($user->avatar_filepath) {
-        		Storage::delete($user->avatar_filepath);
-        	}
-        	$user->avatar_filepath = $imageFile;
+            $imageFile = 'user/avatar/' . Str::random(8) . '.jpg';
+            $image = new Image($request->file('avatar'));
+            Storage::put($imageFile, (string) $image->scaleDown(300));
+            if ($user->avatar_filepath) {
+                Storage::delete($user->avatar_filepath);
+            }
+            $user->avatar_filepath = $imageFile;
         }
         $user->save();
         return redirect()->back()->with('status', 'Account updated.');
@@ -194,8 +194,8 @@ class ProfileController extends Controller implements HasMiddleware
     public function showAvatar()
     {
         $user = auth()->user();
-        return $user->avatar_filepath ? response()->file(Storage::path(
-        $user->avatar_filepath)) : null;
+        if (!$user->avatar_filepath) abort(404);
+        return response()->file(Storage::path($user->avatar_filepath));
     }
 
     public function connectSocial(string $provider)
