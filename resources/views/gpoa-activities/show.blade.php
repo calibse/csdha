@@ -6,7 +6,7 @@
 		href="{{ route('gpoa.activities.edit', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/pencil-simple-line.png') }}">
+		<img class="icon" src="{{ asset('icon/light/pencil-simple-line.svg') }}">
 		<span class="text">Edit </span>
 	</a>
 @endif
@@ -16,7 +16,7 @@
 		href="{{ route('gpoa.activities.prepareForReject', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/x-circle.png') }}">
+		<img class="icon" src="{{ asset('icon/light/x-circle.svg') }}">
 		<span class="text">Reject</span>
 	</a>
 @endif
@@ -26,7 +26,7 @@
 		href="{{ route('gpoa.activities.prepareForReturn', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.svg') }}">
 		<span class="text">Return</span>
 	</a>
 @endif
@@ -36,7 +36,7 @@
 		href="{{ route('gpoa.activities.prepareForSubmit', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.svg') }}">
 		<span class="text">Submit</span>
 	</a>
 @endif
@@ -46,7 +46,7 @@
 		href="{{ route('gpoa.activities.prepareForApprove', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/check-circle.png') }}">
+		<img class="icon" src="{{ asset('icon/light/check-circle.svg') }}">
 		<span class="text">Approve</span>
 	</a>
 @endif
@@ -56,7 +56,7 @@
 		href="{{ route('gpoa.activities.confirmDestroy', ['activity' => $activity->public_id]) }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/trash.png') }}">
+		<img class="icon" src="{{ asset('icon/light/trash.svg') }}">
 		<span class="text">Delete</span>
 	</a>
 @endif
@@ -66,20 +66,20 @@
 		<aside class="main-status">
 			<p class="title">Status</p>
 			<p>
-				<img class="icon" src="{{ asset('icon/small/light/circle-notch.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/circle-notch.svg') }}">
 				<span class="text">
 					{{ $activity->full_status }}
 				</span>
 			</p>
 		@if ($activity->comments)
 			<div>
-				<img class="icon" src="{{ asset('icon/small/light/chat-text.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
 				<pre class="text">"{{ $activity->comments }}"</pre>
 			</div>
 		@endif
 		@if ($date)
 			<p>
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dot.png') }}">
+				<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
 				<span class="text">
 					{{ $date }}
 				</span>

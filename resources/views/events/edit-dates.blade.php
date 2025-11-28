@@ -1,7 +1,7 @@
 <x-layout.user has-toolbar content-view :$backRoute class="events dates" title="Edit event dates">
 <x-slot:toolbar>
 	<a id="event-date_create-button" href="{{ route('events.dates.create', ['event' => $event->public_id]) }}">
-		<img class="icon" src="{{ asset('icon/light/plus.png') }}">
+		<img class="icon" src="{{ asset('icon/light/plus.svg') }}">
 
 		<span class="text">Add Date</span>
 	</a>

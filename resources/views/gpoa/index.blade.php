@@ -3,38 +3,38 @@
 	@if ($gpoa)
 		@can ('create', 'App\Models\GpoaActivity')
 		<a href="{{ route('gpoa.activities.create') }}">
-			<img class="icon" src="{{ asset('icon/light/plus.png') }}">
+			<img class="icon" src="{{ asset('icon/light/plus.svg') }}">
 			<span class="text">Add Activity</span>
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.confirmClose') }}">
-			<img class="icon" src="{{ asset('icon/light/x-circle.png') }}">
+			<img class="icon" src="{{ asset('icon/light/x-circle.svg') }}">
 			<span class="text">Close</span>
 		</a>
 		@endcan
 		@can ('update', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.edit') }}">
-			<img class="icon" src="{{ asset('icon/light/pencil-simple-line.png') }}">
+			<img class="icon" src="{{ asset('icon/light/pencil-simple-line.svg') }}">
 			<span class="text">Edit</span>
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.showGenPdf') }}">
-			<img class="icon" src="{{ asset('icon/light/file-plus.png') }}">
+			<img class="icon" src="{{ asset('icon/light/file-plus.svg') }}">
 			<span class="text">View Report</span>
 		</a>
 		@endcan
 	@else
 		@can ('create', 'App\Models\Gpoa')
 		<a href="{{ route('gpoa.create') }}">
-			<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
+			<img class="icon" src="{{ asset('icon/light/plus.svg') }}">
 			<span class="text">Create</span>
 		</a>
 		@endcan
 	@endif
 		<a href="{{ route('gpoas.old-index') }}">
-			<img class="icon" src="{{ asset('icon/light/archive.png') }}">
+			<img class="icon" src="{{ asset('icon/light/archive.svg') }}">
 			<span class="text">Browse Closed GPOAs</span>
 		</a>
 	</x-slot:toolbar>

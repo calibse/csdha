@@ -2,7 +2,7 @@
     <x-slot:toolbar>
     @if ($gpoa)
         <a href="{{ $genRoute }}">
-		<img class="icon" src="{{ asset('icon/light/file-plus.png') }}">
+		<img class="icon" src="{{ asset('icon/light/file-plus.svg') }}">
 
             <span class="text">Gen. PDF</span>
         </a>
@@ -11,7 +11,7 @@
                 href="{{ $changeBgRoute }}"
         @endcan
         >
-                <img class="icon" src="{{ asset('icon/light/pencil-line.png') }}">
+                <img class="icon" src="{{ asset('icon/light/pencil-simple-line.svg') }}">
                 <span class="text">Change Background</span>
         </a>
     @endif

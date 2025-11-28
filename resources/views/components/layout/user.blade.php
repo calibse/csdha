@@ -67,7 +67,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 								<img src="{{ route('admin-profile.showAvatar', ['avatar' => basename(auth()->user()->avatar_filepath)]) }}">
 								@endif
 							@else
-								<img src="{{ asset('icon/user.png') }}">
+								<img src="{{ asset('icon/user.svg') }}">
 							@endif
 							</div>
 							<div class="details">
@@ -82,7 +82,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 					@if ($siteContext === 'user')
 						<p class="main-action">
 							<a href="{{ route('profile.edit') }}">
-								<img class="icon" src="{{ asset('icon/dark/pencil-simple-line.png') }}">
+								<img class="icon" src="{{ asset('icon/dark/pencil-simple-line.svg') }}">
 								<span class="text">Edit account</span>
 							</a>
 						</p>
@@ -96,14 +96,14 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 						@if ($siteContext === 'user')
 							<li class="{{ Format::currentIndex($userHomeRoute) ? 'current-page' : null }}">
 								<a href="{{ $userHomeRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/house.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/house.svg') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
 							@can ('viewAny', 'App\Models\Gpoa')
 							<li class="{{ Format::currentIndex($gpoaRoute) ? 'current-page' : null }}">
 								<a href="{{ $gpoaRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/blueprint.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/blueprint.svg') }}">
 									<span class="text">GPOA</span>
 								</a>
 							</li>
@@ -111,7 +111,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 							@can ('viewAny', 'App\Models\Event')
 							<li class="{{ Format::currentIndex($eventsRoute) ? 'current-page' : null }}">
 								<a href="{{ $eventsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/calendar.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/calendar.svg') }}">
 									<span class="text">Events</span>
 								</a>
 							</li>
@@ -119,7 +119,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 							@can ('viewAnyAccomReport', 'App\Models\Event')
 							<li class="{{ Format::currentIndex($accomReportsRoute) ? 'current-page' : null }}">
 								<a href="{{ $accomReportsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/files.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/files.svg') }}">
 									<span class="text">Accom. Reports</span>
 								</a>
 							</li>
@@ -137,7 +137,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 							@can ('viewAny', 'App\Models\Position')
 							<li class="{{ Format::currentIndex($positionsRoute) ? 'current-page' : null }}">
 								<a href="{{ $positionsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/users-three.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/users-three.svg') }}">
 									<span class="text">Central Body</span>
 								</a>
 							</li>
@@ -145,7 +145,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 							@can ('viewAttendance', 'App\Models\Event')
 							<li class="{{ Format::currentIndex($attendanceRoute) ? 'current-page' : null }}">
 								<a href="{{ $attendanceRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/user-check.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/user-check.svg') }}">
 									<span class="text">Attendance</span>
 								</a>
 							</li>
@@ -153,53 +153,53 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 							@if (auth()->user()->hasPerm('settings.view'))
 							<li class="{{ Format::currentIndex($settingsRoute) ? 'current-page' : null }}">
 								<a href="{{ $settingsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/wrench.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/wrench.svg') }}">
 									<span class="text">Settings</span>
 								</a>
 							</li>
 							@endif
 							<li class="{{ Format::currentIndex($userSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $userSignoutRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/sign-out.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/sign-out.svg') }}">
 									<span class="text">Sign out</span>
 								</a>
 							</li>
 						@elseif ($siteContext === 'admin')
 							<li class="{{ Format::currentIndex($adminHomeRoute) ? 'current-page' : null }}">
 								<a href="{{ $adminHomeRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/house.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/house.svg') }}">
 									<span class="text">Home</span>
 								</a>
 							</li>
 							<li class="{{ Format::currentIndex($auditRoute) ? 'current-page' : null }}">
 								<a href="{{ $auditRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/table.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/table.svg') }}">
 									<span class="text">Audit Trail</span>
 								</a>
 							</li>
 							{{--
 							<li>
 								<a href="{{ route('analytics.index') }}">
-									<img class="icon" src="{{ asset('icon/dark/chart-line.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/chart-line.svg') }}">
 									<span class="text">Analytics</span>
 								</a>
 							</li>
 							--}}
 							<li class="{{ Format::currentIndex($accountsRoute) ? 'current-page' : null }}">
 								<a href="{{ $accountsRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/user-square.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/user-square.svg') }}">
 									<span class="text">Accounts</span>
 								</a>
 							</li>
 							<li class="{{ Format::currentIndex($rolesRoute) ? 'current-page' : null }}">
 								<a href="{{ $rolesRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/user-gear.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/user-gear.svg') }}">
 									<span class="text">Roles</span>
 								</a>
 							</li>
 							<li class="{{ Format::currentIndex($adminSignoutRoute) ? 'current-page' : null }}">
 								<a href="{{ $adminSignoutRoute }}">
-									<img class="icon" src="{{ asset('icon/dark/sign-out.png') }}">
+									<img class="icon" src="{{ asset('icon/dark/sign-out.svg') }}">
 									<span class="text">Sign out</span>
 								</a>
 							</li>
@@ -220,18 +220,18 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
-								<img class="icon" src="{{ asset('icon/light/list.png') }}">
+								<img class="icon" src="{{ asset('icon/light/list.svg') }}">
 								<span class="text">Menu</span>
 							</a>
 						@elseif ($backRoute)
 							<a id="main-back-link" class="main-back-link" href="{{ $backRoute }}" >
-								<img class="icon" src="{{ asset('icon/light/caret-left.png') }}">
+								<img class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
 
 								<span class="text">Back to previous page</span>
 							</a>
 						@elseif ($route)
 							<a id="main-back-link" class="main-back-link" href="{{ route($route, $routeParams) }}" >
-								<img class="icon" src="{{ asset('icon/light/caret-left.png') }}">
+								<img class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
 								<span class="text">Back to previous page</span>
 							</a>
 						@endif

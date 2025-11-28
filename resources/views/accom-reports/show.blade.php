@@ -6,7 +6,7 @@
 		href="{{ $submitRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.svg') }}">
 		<span class="text">Submit</span>
 	</a>
 @endif
@@ -16,7 +16,7 @@
 		href="{{ $returnRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.png') }}">
+		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.svg') }}">
 		<span class="text">Return</span>
 	</a>
 @endif
@@ -26,12 +26,12 @@
 		href="{{ $approveRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/check-circle.png') }}">
+		<img class="icon" src="{{ asset('icon/light/check-circle.svg') }}">
 		<span class="text">Approve</span>
 	</a>
 @endif
 	<a href="{{ $eventRoute }}">
-		<img class="icon" src="{{ asset('icon/light/calendar.png') }}">
+		<img class="icon" src="{{ asset('icon/light/calendar.svg') }}">
 
 		<span class="text">View event</span>
 	</a>
@@ -42,21 +42,21 @@
 	<aside class="main-status item-full-content-wide">
 		<p class="title">Status</p>
 		<p>
-			<img class="icon" src="{{ asset('icon/small/light/circle-notch.png') }}">
+			<img class="icon" src="{{ asset('icon/small/light/circle-notch.svg') }}">
 			<span class="text">
 				{{ $accomReport->full_status }}
 			</span>
 		</p>
 	@if ($accomReport?->comments)
 		<div>
-			<img class="icon" src="{{ asset('icon/small/light/chat-text.png') }}">
+			<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
 
 			<pre class="text">"{{ $accomReport?->comments }}"</pre>
 		</div>
 	@endif
 	@if ($date)
 		<p>
-			<img class="icon" src="{{ asset('icon/small/light/calendar-dot.png') }}">
+			<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
 			<span class="text">
 				{{ $date }}
 			</span>
@@ -66,7 +66,7 @@
 @endif
 @if (!$updated && auth()->user()->can('makeAccomReport', $event))
 	<p class="has-icon">
-		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.png') }}">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.svg') }}">
 		<span class="text">
 			{{ $updateMessage }}
 		</span>
@@ -90,7 +90,7 @@
 	</div>
 @else
         <p class="has-icon">
-		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.png') }}">
+		<img class="icon" src="{{ asset('icon/small/light/hourglass-medium.svg') }}">
 		<span class="text">
 			{{ $prepareMessage }}
 		</span>

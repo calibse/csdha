@@ -6,7 +6,7 @@
 		href="{{ $createRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/plus-circle.png') }}">
+		<img class="icon" src="{{ asset('icon/light/plus.svg') }}">
 		<span class="text">Create Set</span>
 	</a>
 </x-slot:toolbar>

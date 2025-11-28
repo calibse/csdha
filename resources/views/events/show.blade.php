@@ -5,7 +5,7 @@
 		href="{{ $editRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/wrench.png') }}">
+		<img class="icon" src="{{ asset('icon/light/wrench.svg') }}">
 		<span class="text">Settings</span>
 	</a>
 	<a
@@ -13,7 +13,7 @@
 		href="{{ $genArRoute }}"
 	@endcan
 	>
-		<img class="icon" src="{{ asset('icon/light/file-text.png') }}">
+		<img class="icon" src="{{ asset('icon/light/file-text.svg') }}">
 		<span class="text">View accom. report</span>
 	</a>
 </x-slot:toolbar>
