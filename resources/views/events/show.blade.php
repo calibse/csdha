@@ -22,7 +22,9 @@
 	<div class="item-full-content"> 
 		<div class="banner">
 		@if ($bannerFileRoute)
-			<img src="{{ $bannerFileRoute }}">
+			<div class="content-block">
+				<img src="{{ $bannerFileRoute }}">
+			</div>
 		@endif
 		@can ('update', $event)
 			<p class="banner-edit-link"><a href="{{ $bannerRoute }}">Edit</a></p>
@@ -48,23 +50,30 @@
 						</ul>
 					</td>
 				</tr>
-			@can ('register', $event)
+			@if ($event->automatic_attendance)
 				<tr>
-				{{--
-					<th>Registration Form 
-					@can ('update', $event)
-						<span class="edit-link">[ <a>Edit</a> ]</span>
-					@endcan
-					</th>
-				--}}
-					<th>Registration Form</th> 
+					<th>Registration Form</th>
+					<td><a href="{{ $regisRoute }}">Show</a></td>
+				</tr>
+				<tr>
+					<th>Registration Form Link</th> 
 					<td>
-						<a href="{{ $regisRoute }}">
-							{{ $regisRoute }}
+						<a href="{{ $regisFormRoute }}">
+							{{ $regisFormRoute }}
 						</a>
 					</td>
 				</tr>
-			@endcan
+			@endif
+			@if ($event->accept_evaluation)
+				<tr>
+					<th>Evaluation Form</th>
+					<td><a href="{{ $evalRoute }}">Show</a></td>
+				</tr>
+				<tr>
+					<th>Evaluation Comments</th>
+					<td><a href="{{ $commentsRoute }}">Show</a></td>
+				</tr>
+			@endif
 				<tr>
 					<th>Description 
 					@can ('update', $event)

@@ -56,7 +56,8 @@
 	margin: 1em auto;
 	background-color: color.$background;
 	border-radius: size.$corner-roundness;
-	border: solid .05em color.$line;
+	border: solid size.$line-width color.$line;
+	overflow: hidden;
 
 	.title:first-child, &.intro .title {
 		font-size: 1.2em;
@@ -67,7 +68,36 @@
 		scroll-margin-top: 1em;
 	}
 }
-.multi-step-form .intro.section h2 {
+.multi-step-form .intro.section {
+	padding: 0;
+	max-width: size.$text-width + 2em;
+
+	.banner {
+		background-color: #eeeef1;
+		padding-top: 25%;
+		position: relative;
+		overflow: hidden;
+		border-bottom: solid size.$line-width color.$line;
+
+		> .content-block {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			top: 0;
+			left: 0;
+		}
+
+		img {
+			width: 100%;
+			display: block;
+			height: min(100%);
+			object-fit: cover;
+		}
+	}
+
+	> .content-block {
+		padding: size.$edge-padding 1em;
+	}
 }
 
 .multi-step-form .main.section,

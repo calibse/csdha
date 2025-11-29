@@ -8,7 +8,11 @@
                 <textarea name="introduction">{{ old('introduction') ?? $regisForm?->introduction }}</textarea>
             </p>
             <p class="form-submit">
-                <button>Update</button>
+                <button
+		@cannot('update', $event)
+			disabled
+		@endcannot
+		>Update</button>
             </p>
         </form>
     </article>

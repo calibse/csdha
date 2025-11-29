@@ -10,15 +10,26 @@ use App\Models\StudentYear;
 use App\Http\Requests\UpdateEventEvalQuestionRequest;
 use App\Http\Requests\StoreEvalFormResponseRequest;
 use App\Services\EvalFormStep;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EventEvalFormController extends Controller
+class EventEvalFormController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth.event:update,event', only: [
+                'updateQuestions'
+            ]),
+        ];
+    }
+
     public function editQuestions(Event $event)
     {
         return view('events.edit-eval-questions', [
             'event' => $event,
             'question' => $event?->evalForm,
-            'backRoute' => route('events.edit', ['event' => $event->public_id]),
+            'backRoute' => route('events.show', ['event' => $event->public_id]),
             'formAction' => route('events.eval-form.update-questions', [
                 'event' => $event->public_id
             ])

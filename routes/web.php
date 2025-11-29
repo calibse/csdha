@@ -558,15 +558,6 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/update.php', 'update')->name('update');
 
-                Route::name('banner.')->group(function () {
-
-                    Route::get('/banner.html', 'editBanner')->name('edit');
-
-                    Route::put('/banner.php', 'updateBanner')->name('update');
-
-                    Route::get('/{file}', 'showBanner')->name('show');
-                });
-
                 Route::name('venue.')->group(function () {
 
                     Route::get('/venue.html', 'editVenue')->name('edit');
@@ -641,6 +632,16 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/evaluation.php', 'updateComments')
                     ->name('evaluations.comments.update');
+
+                Route::name('banner.')->group(function () {
+
+                    Route::get('/banner/{file}', 'showBanner')->name('show');
+
+                    Route::get('/banner.html', 'editBanner')->name('edit');
+
+                    Route::put('/banner.php', 'updateBanner')->name('update');
+
+                });
             });
 
             Route::controller(EventEvalFormController::class)

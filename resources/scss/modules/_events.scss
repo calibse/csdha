@@ -18,9 +18,17 @@ $event-content-width: 1em + 12em + size.$text-width;
 	.banner {
 		background-color: #EEEEF1;
 		overflow: hidden;
-		height: 10em;
+		padding-top: 25%;
 		border-bottom: solid size.$line-width color.$line;
 		position: relative;
+
+		.content-block {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+		}
 
 		img {
 			display: block;
@@ -71,9 +79,18 @@ $event-content-width: 1em + 12em + size.$text-width;
 .events.index .event-item {
 	.banner {
 		background-color: #EEEEF1;
-		height: 5em;
+		padding-top: 25%;
 		border-bottom: solid size.$line-width color.$line;
 		overflow: hidden;
+		position: relative;
+
+		.content-block {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+		}
 
 		img {
 			display: block;
@@ -83,7 +100,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 		}
 	}
 
-	.content-block {
+	> .content-block {
 		padding: 0 1em;
 
 		> :first-child {

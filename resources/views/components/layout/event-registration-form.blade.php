@@ -21,9 +21,17 @@
 	</header>
 	<div class="sections">
 		<section class="intro section">
-			<img hidden>
-			<h2 class="title">Introduction</h2>
-			<pre>{{ $event->regisForm?->introduction }}</pre>
+		@if ($event->banner_filepath)
+			<div class="banner">
+					<div class="content-block">
+							<img src="{{ route('events.banner.show', ['event' => $event->public_id, 'file' => basename($event->banner_filepath)]) }}">
+					</div>
+			</div>
+		@endif
+			<div class="content-block">
+					<h2 class="title">Introduction</h2>
+					<pre>{{ $event->regisForm?->introduction }}</pre>
+			</div>
 		</section>
 @php
     $steps = [

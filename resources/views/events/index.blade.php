@@ -16,7 +16,11 @@
 	@foreach ($events as $event)
 		<div class="event-item">
 			<div class="banner">
-				<img src="{{ asset('images/app-cover.jpg') }}">
+			@if ($event->banner_filepath)
+				<div class="content-block">
+						<img src="{{ route('events.banner.show', ['event' => $event->public_id, 'file' => basename($event->banner_filepath)]) }}">
+				</div>
+			@endif
 			</div>
 			<div class="content-block">
 				<h2 class="title">

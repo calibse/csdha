@@ -93,18 +93,6 @@
 			<label>Evaluation Delay in Hours</label>
 			<input type="number" name="evaluation_delay_hours" value="{{ $errors->any() ? old('evaluation_delay_hours') : $event->evaluation_delay_hours }}">
 		</p>
-		<p>
-			<label>Registration form</label>
-			<a href="{{ $regisRoute }}">Edit here</a>
-		</p>
-		<p>
-			<label>Evaluation form</label>
-			<a href="{{ $evalRoute }}">Edit here</a>
-		</p>
-		<p>
-			<label>Attendees Evaluation</label>
-			<a href="{{ $commentsRoute }}">Edit here</a>
-		</p>
 		<p class="form-submit">
 			<button type="submit">Update</button>
 		</p>

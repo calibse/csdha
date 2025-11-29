@@ -67,7 +67,6 @@ class EventController extends Controller implements HasMiddleware
                 'destroyDate',
                 'createAttendee',
                 'storeAttendee',
-                'editComments',
                 'updateComments',
                 'editNarrative',
                 'updateNarrative',
@@ -164,13 +163,19 @@ class EventController extends Controller implements HasMiddleware
             'event' => $event,
             'activity' => $event->gpoaActivity,
             'editRoute' => route('events.edit', ['event' => $event->public_id]),
-            'regisRoute' => route('events.registrations.consent.edit', [
+            'regisFormRoute' => route('events.registrations.consent.edit', [
+                'event' => $event->public_id
+            ]),
+            'evalRoute' => route('events.eval-form.edit-questions', [
+                'event' => $event->public_id
+            ]),
+            'regisRoute' => route('events.regis-form.edit', [
+                'event' => $event->public_id
+            ]),
+            'commentsRoute' => route('events.evaluations.comments.edit', [
                 'event' => $event->public_id
             ]),
             'attendanceRoute' => route('events.attendance.show', [
-                'event' => $event->public_id
-            ]),
-            'evalRoute' => route('events.evaluations.consent.edit', [
                 'event' => $event->public_id
             ]),
             'eventHeads' => $event->gpoaActivity->eventHeadsOnly()->get(),
@@ -246,15 +251,6 @@ class EventController extends Controller implements HasMiddleware
             'formAction' => route('events.update', [
                 'event' => $event->public_id
             ]),
-            'evalRoute' => route('events.eval-form.edit-questions', [
-                'event' => $event->public_id
-            ]),
-            'regisRoute' => route('events.regis-form.edit', [
-                'event' => $event->public_id
-            ]),
-            'commentsRoute' => route('events.evaluations.comments.edit', [
-                'event' => $event->public_id
-            ]),
         ]);
     }
 
@@ -326,7 +322,7 @@ class EventController extends Controller implements HasMiddleware
             ])->with('status', 'Event banner updated.');
         }
         $image = new Image($request->file('banner'));
-        Storage::put($imageFile, (string) $image->scaleDown(1600));
+        Storage::put($imageFile, (string) $image->scaleDown(400));
         if ($event->banner_filepath) {
             Storage::delete($event->banner_filepath);
         }
@@ -504,7 +500,8 @@ class EventController extends Controller implements HasMiddleware
     {
         return match($event->participant_type) {
             'students' => view('events.add-attendee', [
-                'dates' => $event->dates,
+                'dates' => $event->dates()->orderBy('date', 'asc')
+                    ->orderBy('start_time', 'asc')->get(),
                 'backRoute' => route('events.attendance.show', [
                     'event' => $event->public_id
                 ]),
@@ -515,7 +512,8 @@ class EventController extends Controller implements HasMiddleware
                 'yearLevels' => $event->participants
             ]),
             'officers' => view('events.add-attendee-officer', [
-                'dates' => $event->dates,
+                'dates' => $event->dates()->orderBy('date', 'asc')
+                    ->orderBy('start_time', 'asc')->get(),
                 'backRoute' => route('events.attendance.show', [
                     'event' => $event->public_id
                 ]),
@@ -766,10 +764,11 @@ class EventController extends Controller implements HasMiddleware
             break;
         }
         return view('events.edit-comments', [
+            'event' => $event,
             'selectedComments' => $selectedComments,
             'unselectedComments' => $unselectedComments,
             'typeRoutes' => $typeRoutes,
-            'backRoute' => route('events.edit', [
+            'backRoute' => route('events.show', [
                 'event' => $event->public_id
             ]),
             'commentType' => $commentType,
