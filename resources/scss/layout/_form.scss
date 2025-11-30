@@ -11,6 +11,10 @@ button,
 textarea {
         font-family: font.$font;
         padding: .48em 0;
+        padding-left: min(.48em);
+        padding-right: min(.48em);
+	max-width: calc(100% - .48em * 2);
+	width: size.$text-width;
         background-color: color.$input-bg;
         color: color.$foreground;
         border-radius: size.$corner-roundness;
@@ -21,6 +25,9 @@ textarea {
                 background-color: color.$disabled-bg;
                 color: color.$disabled-fg;
         }
+}
+
+textarea {
 
 	&:focus {
 		background-color: color.$background;
@@ -59,6 +66,8 @@ button {
 	padding: .48em;
 	min-width: 5em;
 	font-weight: bold;
+	max-width: none;
+	width: auto;
 
 	&:hover {
 		background-color: color.$hovered-button-bg
@@ -109,11 +118,6 @@ input[type="file"] {
 form {
 	label {
 		display: block;
-	}
-
-	input, select, textarea {
-		max-width: 100%;
-		width: size.$text-width;
 	}
 
 	input[type="checkbox"], 

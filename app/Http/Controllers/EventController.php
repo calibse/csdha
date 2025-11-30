@@ -204,17 +204,20 @@ class EventController extends Controller implements HasMiddleware
             ]),
             'descriptionFormAction' => route('events.description.update', [
                  'event' => $event->public_id
-             ]),
+            ]),
             'narrativeFormAction' => route('events.narrative.update', [
                  'event' => $event->public_id
-             ]),
+            ]),
             'venueFormAction' => route('events.venue.update', [
                  'event' => $event->public_id
-             ]),
+            ]),
             'bannerFormAction' => route('events.banner.update', [
                  'event' => $event->public_id
-             ]),
-             'bannerFileRoute' => $bannerFileRoute
+            ]),
+            'bannerFileRoute' => $bannerFileRoute,
+            'linksRoute' => route('events.links.index', [
+                 'event' => $event->public_id
+            ]),
         ]);
     }
 

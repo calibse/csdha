@@ -141,6 +141,16 @@
 					<td><pre>{{ $activity->objectives }}</pre></td>
 				</tr>
 				<tr>
+					<th>Links <span class="edit-link">[ <a href="{{ $linksRoute }}">Edit</a> ]</span></th>
+					<td>
+						<ul>
+							<li>Link 1</li>
+							<li>Link 2</li>
+							<li>Link 3</li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
 					<th>Event Head</th>
 					<td>
 						<ul>

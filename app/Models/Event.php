@@ -20,6 +20,11 @@ class Event extends Model
 {
     use HasPublicId;
 
+    public function links(): HasMany
+    {
+        return $this->hasMany(EventLink::class);
+    }
+
     public function lastDate()
     {
         return $this->dates()->orderBy('date', 'desc')

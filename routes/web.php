@@ -40,6 +40,7 @@ use App\Http\Controllers\GpoaActivityTypeController;
 use App\Http\Controllers\GpoaActivityFundSourceController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\EventLinkController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -642,6 +643,26 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                     Route::put('/banner.php', 'updateBanner')->name('update');
 
                 });
+            });
+
+            Route::controller(EventLinkController::class)->prefix('links')
+                ->name('links.')->group(function () {
+
+                Route::get('/index.html', 'index')->name('index');
+
+                Route::get('/create.html', 'create')->name('create');
+
+                Route::post('/create.php', 'store')->name('store');
+                
+                Route::prefix('link-{link}')->group(function () {
+
+                    Route::get('/delete.html', 'confirmDestroy')
+                        ->name('confirm-destroy');
+
+                    Route::delete('/delete.php', 'destroy')->name('destroy');
+
+                });
+
             });
 
             Route::controller(EventEvalFormController::class)
