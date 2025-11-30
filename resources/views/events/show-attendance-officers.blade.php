@@ -1,4 +1,4 @@
-<x-layout.user has-toolbar title="Event Attendance" :$backRoute class="events" >
+<x-layout.user has-toolbar title="Event Attendance" :$backRoute class="events event attendance" >
     <x-slot:toolbar>
         <a
             @can ('addAttendee', $event)

@@ -178,6 +178,10 @@ class EventAttachmentController extends Controller implements HasMiddleware
 
     public function destroySet(Event $event, EventAttachmentSet $attachmentSet)
     {
+        foreach ($attachmentSet->attachments as $attachment) {
+            Storage::delete($attachment->image_filepath);
+            Storage::delete($attachment->preview_filepath);
+        }
         $attachmentSet->attachments()->delete();
         $attachmentSet->delete();
         EventUpdated::dispatch($event);
@@ -207,6 +211,8 @@ class EventAttachmentController extends Controller implements HasMiddleware
     public function destroy(Event $event, EventAttachmentSet $attachmentSet, 
             EventAttachment $attachment)
     {
+        Storage::delete($attachment->image_filepath);
+        Storage::delete($attachment->preview_filepath);
         $attachment->delete();
         EventUpdated::dispatch($event);
         return redirect()->route('events.attachments.index', [

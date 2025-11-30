@@ -19,19 +19,20 @@
 			<h1 class="title of-form">Event Evaluation</h1>
 		</hgroup>
 	</header>
-	<section class="intro section">
-	@if ($event->banner_filepath)
-		<div class="banner">
-			<div class="content-block">
-				<img src="{{ route('events.banner.show', ['event' => $event->public_id, 'file' => basename($event->banner_filepath)]) }}">
+	<div class="sections">
+		<section class="intro section">
+		@if ($event->banner_filepath)
+			<div class="banner">
+				<div class="content-block">
+					<img src="{{ route('events.banner.show', ['event' => $event->public_id, 'file' => basename($event->banner_filepath)]) }}">
+				</div>
 			</div>
-		</div>
-	@endif
-		<div class="content-block">
-			<h2 class="title">Introduction</h2>
-			<pre>{{ $event->evalForm?->introduction }}</pre>
-		</div>
-	</section>
+		@endif
+			<div class="content-block">
+				<h2 class="title">Introduction</h2>
+				<pre>{{ $event->evalForm?->introduction }}</pre>
+			</div>
+		</section>
 @php
 $steps = [
     [
@@ -52,24 +53,25 @@ $steps = [
     ],
 ];
 @endphp
-@foreach ($steps as $thisStep => $thisStepInfo)
-	@if ($step === $thisStep)
-	<main id="content" class="main section">
-		<h2 class="title">{{ $thisStepInfo['title'] }}</h2>
-		{{ $slot }}
-	</main>
-	@else
-	<section class="section content">
-		<h2 class="title"><a
-		@if ($thisStep <= $completeSteps)
-			href="{{ $routes[$thisStep] }}"
+	@foreach ($steps as $thisStep => $thisStepInfo)
+		@if ($step === $thisStep)
+		<main id="content" class="main section">
+			<h2 class="title">{{ $thisStepInfo['title'] }}</h2>
+			{{ $slot }}
+		</main>
+		@else
+		<section class="section content">
+			<h2 class="title"><a
+			@if ($thisStep <= $completeSteps)
+				href="{{ $routes[$thisStep] }}"
+			@endif
+			>{{ $thisStepInfo['title'] }}</a></h2>
+		@if ($thisStep !== (count($steps) - 1))
+			<p class="status">{{ ($thisStep < $completeSteps || $step === (count($steps) - 1)) ? 'Complete' : 'Incomplete' }}</p>
 		@endif
-		>{{ $thisStepInfo['title'] }}</a></h2>
-	@if ($thisStep !== (count($steps) - 1))
-		<p class="status">{{ ($thisStep < $completeSteps || $step === (count($steps) - 1)) ? 'Complete' : 'Incomplete' }}</p>
-	@endif
-	</section>
-	@endif
-@endforeach
+		</section>
+		@endif
+	@endforeach
+	</div>
 </body>
 </html>

@@ -311,16 +311,16 @@ class EventController extends Controller implements HasMiddleware
     public function updateBanner(UpdateEventBannerRequest $request, 
         Event $event)
     {
-        $imageFile = "events/event_{$event->id}/banner_" . Str::random(8) . 
-            '.jpg';
         if ($request->boolean('remove_banner')) {
-            Storage::delete($imageFile);
+            Storage::delete($event->banner_filepath);
             $event->banner_filepath = null;
             $event->save();
             return redirect()->route('events.show', [
                 'event' => $event->public_id
             ])->with('status', 'Event banner updated.');
         }
+        $imageFile = "events/event_{$event->id}/banner_" . Str::random(8) . 
+            '.jpg';
         $image = new Image($request->file('banner'));
         Storage::put($imageFile, (string) $image->scaleDown(400));
         if ($event->banner_filepath) {
