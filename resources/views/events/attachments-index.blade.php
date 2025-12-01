@@ -11,8 +11,9 @@
 	</a>
 </x-slot:toolbar>
 <div id="event-attachment-set-items" class="article">
-@foreach ($attachmentSets as $set)
-	@if ($set->attachments->isNotEmpty())
+@if ($attachmentSets->isNotEmpty())
+	@foreach ($attachmentSets as $set)
+		@if ($set->attachments->isNotEmpty())
 	<figure class="attachment-set">
 		<figcaption class="caption"><a 
 		@can ('update', $event)
@@ -28,7 +29,7 @@
 		@endforeach
 		</span>
 	</figure>
-	@else
+		@else
 	<p>
 		<a 
 		@can ('update', $event)
@@ -38,11 +39,14 @@
 		><span id="event-attachment-set-{{ $set->id }}">{{ $set->caption }}</span></a>
 (Empty)
 	</p>
-	@endif
+		@endif
 	<input type="hidden" id="event-attachment-set-{{ $set->id }}_update-link" value="{{ route('events.attachments.update', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">
 	<input type="hidden" id="event-attachment-set-{{ $set->id }}_delete-link" value="{{ route('events.attachments.destroySet', ['event' => $event->public_id, 'attachment_set' => $set->id]) }}">
 	<span style="display: none;" id="event-attachment-set-{{ $set->id }}_id">{{ $set->id }}</span>
-@endforeach
+	@endforeach
+@else
+	<p>Nothing here yet.</p>
+@endif
 </div>
 <x-window class="form" id="event-attachment-set_create" title="Create attachment set">
 	<form method="post" action="{{ $createFormAction }}" enctype="multipart/form-data">

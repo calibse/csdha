@@ -27,7 +27,7 @@
 			</div>
 		@endif
 		@can ('update', $event)
-			<p class="banner-edit-link"><a href="{{ $bannerRoute }}">Edit</a></p>
+			<p class="banner-edit-link"><a id="event-banner_edit-button" href="{{ $bannerRoute }}">Edit</a></p>
 		@endcan
 		</div>
 		<div class="content-block">
@@ -141,12 +141,16 @@
 					<td><pre>{{ $activity->objectives }}</pre></td>
 				</tr>
 				<tr>
-					<th>Links <span class="edit-link">[ <a href="{{ $linksRoute }}">Edit</a> ]</span></th>
+					<th>Links 
+					@can ('update', $event)
+						<span class="edit-link">[ <a href="{{ $linksRoute }}">Edit</a> ]</span>
+					@endcan
+					</th>
 					<td>
 						<ul>
-							<li>Link 1</li>
-							<li>Link 2</li>
-							<li>Link 3</li>
+						@foreach ($event->links as $link)
+							<li><a href="{{ $link->url }}">{{ $link->name }}</a></li>
+						@endforeach
 						</ul>
 					</td>
 				</tr>
@@ -213,6 +217,24 @@
 		</p>
 		<p class="form-submit">
 			<button type="button" id="event-venue_edit_close">Cancel</button>
+			<button>Update</button>
+		</p>
+	</form>
+</x-window>
+<x-window class="form" id="event-banner_edit" title="Edit event banner">
+	<form method="post" action="{{ $bannerFormAction }}" enctype="multipart/form-data">
+	@csrf
+	@method('PUT')
+		<p>
+			<label for="banner">Banner</label>
+			<input id="banner" name="banner" type="file" accept="image/jpeg, image/png, image/webp, image/avif">
+		</p>
+		<p class="checkbox">
+			<input id="remove-banner" type="checkbox" name="remove_banner" value="1">
+			<label for="remove-banner">Remove banner</label>
+		</p>
+		<p class="form-submit">
+			<button type="button" id="event-banner_edit_close">Cancel</button>
 			<button>Update</button>
 		</p>
 	</form>

@@ -6,8 +6,9 @@
 		<span class="text">Add Date</span>
 	</a>
 </x-slot:toolbar>
-<article class="article">
+<div class="article">
 	<x-alert/>
+@if ($dates->isNotEmpty())
 	<ul id="event-date-items" class="item-list">
 	@foreach ($dates as $date)
 @php
@@ -33,7 +34,10 @@ $watten = $date->has_attendees;
 		</li>
 	@endforeach
 	</ul>
-</article>
+@else
+	<p>Nothing here yet.</p>
+@endif
+</div>
 <x-window class="form" id="event-date_create" title="Add event date">
         <form method="POST" action="{{ $addDateFormAction }}">
         @csrf

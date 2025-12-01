@@ -22,7 +22,11 @@ $event-content-width: 1em + 12em + size.$text-width;
 
 .events.event .item-full-content {
 	.banner {
-		background-color: #EEEEF1;
+		background-color: color.$view-bg;
+		background: radial-gradient(ellipse,
+			color.$view-bg 50%,
+			rgba(0, 0, 0, 0.07) 100%
+		);
 		overflow: hidden;
 		padding-top: 25%;
 		border-bottom: solid size.$line-width color.$line;
@@ -84,7 +88,11 @@ $event-content-width: 1em + 12em + size.$text-width;
 
 .events.index .event-item {
 	.banner {
-		background-color: #EEEEF1;
+		background-color: color.$view-bg; 
+		background: radial-gradient(ellipse,
+			color.$view-bg 50%,
+			rgba(0, 0, 0, 0.07) 100%
+		);
 		padding-top: 25%;
 		border-bottom: solid size.$line-width color.$line;
 		overflow: hidden;

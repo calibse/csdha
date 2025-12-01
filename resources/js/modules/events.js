@@ -85,6 +85,32 @@ export function createEventAttachmentSet(e) {
 	window.openWindow(true);
 }
 
+export function createEventLink(e) {
+	var el, id;
+
+	e.preventDefault();
+	if (window.isThereOpenWindow()) {
+		return;
+	}
+	id = "event-link_create";
+	el = document.getElementById(id);
+	window.setOpenedWindowId(id);
+	window.openWindow(true);
+}
+
+export function editEventBanner(e) {
+	var el, id;
+
+	e.preventDefault();
+	if (window.isThereOpenWindow()) {
+		return;
+	}
+	id = "event-banner_edit";
+	el = document.getElementById(id);
+	window.setOpenedWindowId(id);
+	window.openWindow(true);
+}
+
 export function editEventAttachmentSet(e) {
 	var windowEl, contentId, deleteEl;
 

@@ -443,13 +443,14 @@ class Event extends Model
                     ->on(DB::raw('timestamp(ed.date, ed.end_time)'), '=', 
                     'ed_max.latest_date');
         })->select('ed.*');
-        $query->joinSub($latestDates, 'latest_dates', function ($join) { 
+        $query->leftJoinSub($latestDates, 'latest_dates', function ($join) { 
             $join->on('events.id', '=', 'latest_dates.event_id'); 
-        })->select('events.*')->distinct()
-        ->whereRaw('timestamp(latest_dates.date, 
-            latest_dates.end_time) < 
-            convert_tz(now(), @@session.time_zone, timezone)')
-        ->orderBy('date', 'desc')->orderBy('end_time', 'desc');
+        })->select('events.*')->distinct()->where(function ($query) {
+            $query->whereRaw('timestamp(latest_dates.date, 
+                latest_dates.end_time) < 
+                convert_tz(now(), @@session.time_zone, timezone)')
+            ->orWhereNull('latest_dates.date');
+        })->orderBy('date', 'desc')->orderBy('end_time', 'desc');
     }
 
     #[Scope]
@@ -462,12 +463,6 @@ class Event extends Model
             ->whereRaw("timestamp(date, start_time) > 
                 convert_tz(now(), @@session.time_zone, timezone)")
             ->orderBy('date', 'desc')->orderBy('start_time', 'desc');
-
-            /*
-            ->whereRaw("convert_tz(timestamp(date, start_time), timezone, 
-                ?) <= convert_tz(now(), @@session.time_zone, ?) + 
-                interval {$nextDays} day", [$timezone, $timezone]);
-            */
     }
 
     #[Scope]
@@ -487,11 +482,13 @@ class Event extends Model
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->whereRaw("timestamp(date, start_time) > 
-                convert_tz(now(), @@session.time_zone, timezone)")
-            ->orWhereRaw('convert_tz(now(), @@session.time_zone, timezone) 
-                between timestamp(date, start_time) and
-                timestamp(date, end_time)')
+            ->where(function ($query) {
+                $query->whereRaw("timestamp(date, start_time) > 
+                        convert_tz(now(), @@session.time_zone, timezone)")
+                    ->orWhereRaw('convert_tz(now(), @@session.time_zone, 
+                        timezone) between timestamp(date, start_time) and
+                        timestamp(date, end_time)');
+            })
             ->orderByRaw('(convert_tz(now(), @@session.time_zone, timezone) 
                 between timestamp(date, start_time) and
                 timestamp(date, end_time)) desc')

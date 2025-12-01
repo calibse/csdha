@@ -15,7 +15,7 @@ class EventLinkController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth.event:update,event', only: [
-                'create', 'store', 'confirmDestroy', 'destroy'
+                'index', 'create', 'store', 'confirmDestroy', 'destroy'
             ]),
         ];
     }
@@ -29,6 +29,9 @@ class EventLinkController extends Controller implements HasMiddleware
                 'event' => $event->public_id
             ]),
             'backRoute' => route('events.show', [
+                'event' => $event->public_id
+            ]),
+            'addFormAction' => route('events.links.store', [
                 'event' => $event->public_id
             ]),
         ]);

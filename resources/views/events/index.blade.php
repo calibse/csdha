@@ -26,14 +26,21 @@
 				<h2 class="title">
 					<a href="{{ route('events.show', ['event' => $event->public_id]) }}">{{ $event->gpoaActivity->name }}</a>
 				</h2>
-			@if ($event->dates()->exists())
 				<p class="date">
 					<img class="icon" src="{{ asset('icon/small/light/calendar-dots.svg') }}">
 					<span class="text">
 					@if ($event->is_ongoing)
 						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
 					@else
-						{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+@php
+$date = $event->dates()->orderBy('date', 'desc')->orderBy('start_time')
+    ->first();
+@endphp
+						@if ($date)
+						{{ $date->dateFmt }}
+						@else
+						<em>No date.</em>
+						@endif
 					@endif
 					</span>
 				</p>
@@ -43,11 +50,18 @@
 					@if ($event->is_ongoing)
 						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
 					@else
-						{{ $event->dates()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+@php
+$time = $event->dates()->orderBy('date', 'desc')->orderBy('start_time')
+    ->first();
+@endphp
+						@if ($time)
+						{{ $time->fullTime }}
+						@else
+						<em>No time.</em>
+						@endif
 					@endif
 					</span>
 				</p>
-			@endif
 				<p class="description">
 				@if ($event->description)
 					@if ($event->is_ongoing)
@@ -58,7 +72,7 @@
 					@if ($event->is_ongoing)
 					Ongoing
 					@else
-					<i>No description.</i>
+					<em>No description.</em>
 					@endif
 				@endif
 				</p>

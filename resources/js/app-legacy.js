@@ -143,6 +143,11 @@ function setEvents() {
 			action: window.openDeleteItemWindow 
 		},
 		{
+			element: "event-link-*_delete-button",
+			event: "click",
+			action: window.openDeleteItemWindow 
+		},
+		{
 			element: "event-date-watten-*_delete-button",
 			event: "click",
 			action: window.openDeleteItemWindow 
@@ -151,6 +156,16 @@ function setEvents() {
 			element: "event-attachment-set_create-button",
 			event: "click",
 			action: events.createEventAttachmentSet
+		},
+		{
+			element: "event-link_create-button",
+			event: "click",
+			action: events.createEventLink
+		},
+		{
+			element: "event-banner_edit-button",
+			event: "click",
+			action: events.editEventBanner
 		},
 		{
 			element: "event-attachment-set-*_edit-button",
