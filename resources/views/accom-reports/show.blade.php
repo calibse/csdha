@@ -1,9 +1,9 @@
 <x-layout.user has-toolbar form :$backRoute title="Accomplishment Report" class="accom-reports accom-report form">
 <x-slot:toolbar>
 @if ($actions['submit'])
-	<a
+	<a 
 	@can('submitAccomReport', $event)
-		href="{{ $submitRoute }}"
+		id="accom-report_submit-button" data-action="{{ $submitActionRoute }}" href="{{ $submitRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.svg') }}">
@@ -11,9 +11,9 @@
 	</a>
 @endif
 @if ($actions['return'])
-	<a
+	<a 
 	@can('returnAccomReport', $event)
-		href="{{ $returnRoute }}"
+		href="{{ $returnRoute }}" id="accom-report_return-button" data-action="{{ $returnActionRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.svg') }}">
@@ -21,9 +21,9 @@
 	</a>
 @endif
 @if ($actions['approve'])
-	<a
+	<a 
 	@can('approveAccomReport', $event)
-		href="{{ $approveRoute }}"
+		href="{{ $approveRoute }}" id="accom-report_approve-button" data-action="{{ $approveActionRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/check-circle.svg') }}">
@@ -36,7 +36,7 @@
 		<span class="text">View event</span>
 	</a>
 </x-slot:toolbar>
-<article class="article has-item-full-content-wide">
+<div class="article has-item-full-content-wide">
 	<x-alert/>
 @if ($accomReport)
 	<aside class="main-status item-full-content-wide">
@@ -98,5 +98,19 @@
 		</span>
 	</p>
 @endif
-</article>
+</div>
+<x-window id="accom-report_prepare" class="form" title="{{ $action ?? '[Action]'}} accom. report">
+	<form method="post" action="{{ $formActionUrl }}">
+	@method('PUT')
+	@csrf
+		<p>
+			<label>Comments</label>
+			<textarea name="comments"></textarea>
+		</p>
+		<p class="form-submit">
+			<button id="accom-report_prepare_close" type="button">Cancel</button>
+			<button id="accom-report_prepare-button">{{ $action ?? '[Action]' }}</button>
+		</p>
+	</form>
+</x-window>
 </x-layout.user>

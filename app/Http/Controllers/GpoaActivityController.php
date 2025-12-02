@@ -165,6 +165,35 @@ class GpoaActivityController extends Controller implements HasMiddleware
         if (config('timezone') === 'UTC') {
             $date = $date . ' UTC';
         }
+        $submitActionRoute = route('gpoa.activities.submit', [
+            'activity' => $activity->public_id
+        ]);
+        $returnActionRoute = route('gpoa.activities.return', [
+            'activity' => $activity->public_id
+        ]);
+        $rejectActionRoute = route('gpoa.activities.reject', [
+            'activity' => $activity->public_id
+        ]);
+        $approveActionRoute = route('gpoa.activities.approve', [
+            'activity' => $activity->public_id
+        ]);
+        $deleteActionRoute = route('gpoa.activities.destroy', [
+            'activity' => $activity->public_id
+        ]);
+        $formActionUrl = session('form_action_url');
+        $action = null;
+        if ($formActionUrl) {
+            switch ($formActionUrl) {
+            case $returnActionRoute:
+                $action = 'Return'; break;
+            case $submitActionRoute:
+                $action = 'Submit'; break;
+            case $approveActionRoute:
+                $action = 'Approve'; break;
+            case $rejectActionRoute:
+                $action = 'Reject'; break;
+            }
+        }
         return view('gpoa-activities.show', [
             'date' => $date,
             'gpoa' => $gpoa,
@@ -173,7 +202,14 @@ class GpoaActivityController extends Controller implements HasMiddleware
                 'event head')->get(),
             'coheads' => $activity->eventHeads()->wherePivot('role',
                 'co-head')->get(),
-            'actions' => $actions
+            'actions' => $actions,
+            'submitActionRoute' => $submitActionRoute,
+            'returnActionRoute' => $returnActionRoute,
+            'approveActionRoute' => $approveActionRoute,
+            'rejectActionRoute' => $rejectActionRoute,
+            'deleteActionRoute' => $deleteActionRoute,
+            'formActionUrl' => $formActionUrl,
+            'action' => $action,
         ]);
     }
 

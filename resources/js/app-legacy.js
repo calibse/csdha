@@ -1,9 +1,11 @@
 /* app-legacy.js */
 
 import * as timezone from "./modules/timezone";
-import * as events from "./modules/events";
 import * as home from "./modules/home";
 import * as window from "./modules/window";
+import * as events from "./modules/events";
+import * as accomReports from "./modules/accom_reports";
+import * as gpoaActivities from "./modules/gpoa_activities";
 
 function runTimezoneAction(actionDeps) {
 	var date, intl, satisfied;
@@ -181,6 +183,41 @@ function setEvents() {
 			element: "event-attachment_delete-button",
 			event: "click",
 			action: events.deleteEventAttachment
+		},
+		{
+			element: "accom-report_return-button",
+			event: "click",
+			action: accomReports.returnAccomReport
+		},
+		{
+			element: "accom-report_submit-button",
+			event: "click",
+			action: accomReports.submitAccomReport
+		},
+		{
+			element: "accom-report_approve-button",
+			event: "click",
+			action: accomReports.approveAccomReport
+		},
+		{
+			element: "gpoa-activity_approve-button",
+			event: "click",
+			action: gpoaActivities.approveActivity
+		},
+		{
+			element: "gpoa-activity_return-button",
+			event: "click",
+			action: gpoaActivities.returnActivity
+		},
+		{
+			element: "gpoa-activity_reject-button",
+			event: "click",
+			action: gpoaActivities.rejectActivity
+		},
+		{
+			element: "gpoa-activity_submit-button",
+			event: "click",
+			action: gpoaActivities.submitActivity
 		},
 	];
 	addEvents(elementActions);

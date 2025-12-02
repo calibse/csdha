@@ -11,9 +11,9 @@
 	</a>
 @endif
 @if ($actions['reject'])
-	<a
+	<a 
 	@can ('reject', $activity)
-		href="{{ route('gpoa.activities.prepareForReject', ['activity' => $activity->public_id]) }}"
+		href="{{ route('gpoa.activities.prepareForReject', ['activity' => $activity->public_id]) }}" id="gpoa-activity_reject-button" data-action="{{ $rejectActionRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/x-circle.svg') }}">
@@ -21,9 +21,9 @@
 	</a>
 @endif
 @if ($actions['return'])
-	<a
+	<a 
 	@can ('return', $activity)
-		href="{{ route('gpoa.activities.prepareForReturn', ['activity' => $activity->public_id]) }}"
+		href="{{ route('gpoa.activities.prepareForReturn', ['activity' => $activity->public_id]) }}" id="gpoa-activity_return-button" data-action="{{ $returnActionRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/arrow-u-down-left.svg') }}">
@@ -31,9 +31,9 @@
 	</a>
 @endif
 @if ($actions['submit'])
-	<a
+	<a 
 	@can ('submit', $activity)
-		href="{{ route('gpoa.activities.prepareForSubmit', ['activity' => $activity->public_id]) }}"
+		href="{{ route('gpoa.activities.prepareForSubmit', ['activity' => $activity->public_id]) }}" id="gpoa-activity_submit-button" data-action="{{ $submitActionRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/arrow-bend-down-right.svg') }}">
@@ -41,9 +41,9 @@
 	</a>
 @endif
 @if ($actions['approve'])
-	<a
+	<a 
 	@can ('approve', $activity)
-		href="{{ route('gpoa.activities.prepareForApprove', ['activity' => $activity->public_id]) }}"
+		href="{{ route('gpoa.activities.prepareForApprove', ['activity' => $activity->public_id]) }}" id="gpoa-activity_approve-button" data-action="{{ $approveActionRoute }}"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/check-circle.svg') }}">
@@ -51,7 +51,7 @@
 	</a>
 @endif
 @if ($actions['delete'])
-	<a
+	<a id="gpoa-activity_delete-button" data-action="{{ $deleteActionRoute }}"
 	@can ('delete', $activity)
 		href="{{ route('gpoa.activities.confirmDestroy', ['activity' => $activity->public_id]) }}"
 	@endcan
@@ -156,4 +156,18 @@
 		</div>
 	</div>
 </div>
+<x-window class="form" id="gpoa-activity_prepare" title="{{ $action ?? '[Action]' }} activity">
+        <form method="post" action="{{ $formActionUrl }}">
+        @method('PUT')
+        @csrf
+                <p>
+                        <label>Comments</label>
+                        <textarea name="comments"></textarea>
+                </p>
+                <p class="form-submit">
+                        <button type="button" id="gpoa-activity_prepare_close">Cancel</button>
+                        <button id="gpoa-activity_prepare-button">{{ $action ?? '[Action]' }}</button>
+                </p>
+        </form>
+</x-window>
 </x-layout.user>

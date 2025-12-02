@@ -144,6 +144,27 @@ class AccomReportController extends Controller implements HasMiddleware
         $prepareMessage = Format::documentPrepareMessage();
         $updateMessage = Format::documentUpdateMessage();
         $updated = $accomReport->file_updated;
+        $submitActionRoute = route('accom-reports.submit', [
+            'event' => $event->public_id
+        ]);
+        $returnActionRoute = route('accom-reports.return', [
+            'event' => $event->public_id
+        ]);
+        $approveActionRoute = route('accom-reports.approve', [
+            'event' => $event->public_id
+        ]);
+        $formActionUrl = session('form_action_url');
+        $action = null;
+        if ($formActionUrl) {
+            switch ($formActionUrl) {
+            case $returnActionRoute:
+                $action = 'Return'; break;
+            case $submitActionRoute:
+                $action = 'Submit'; break;
+            case $approveActionRoute:
+                $action = 'Approve'; break;
+            }
+        }
         $response = response()->view('accom-reports.show', [
             'actions' => $actions,
             'accomReport' => $accomReport,
@@ -154,18 +175,23 @@ class AccomReportController extends Controller implements HasMiddleware
             'submitRoute' => route('accom-reports.prepareForSubmit', [
                 'event' => $event->public_id
             ]),
+            'submitActionRoute' => $submitActionRoute,
             'returnRoute' => route('accom-reports.prepareForReturn', [
                 'event' => $event->public_id
             ]),
+            'returnActionRoute' => $returnActionRoute,
             'approveRoute' => route('accom-reports.prepareForApprove', [
                 'event' => $event->public_id
             ]),
+            'approveActionRoute' => $approveActionRoute,
             'eventRoute' => route('events.show', [
                 'event' => $event->public_id,
             ]),
             'updated' => $updated,
             'updateMessage' => $updateMessage,
             'prepareMessage' => $prepareMessage,
+            'formActionUrl' => $formActionUrl,
+            'action' => $action,
         ]);
         if (!auth()->user()->can('makeAccomReport', $event)) {
             return $response;
