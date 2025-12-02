@@ -33,8 +33,7 @@
 						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
 					@else
 @php
-$date = $event->dates()->orderBy('date', 'desc')->orderBy('start_time')
-    ->first();
+$date = $event->dates()->upcoming()->first();
 @endphp
 						@if ($date)
 						{{ $date->dateFmt }}
@@ -51,8 +50,7 @@ $date = $event->dates()->orderBy('date', 'desc')->orderBy('start_time')
 						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
 					@else
 @php
-$time = $event->dates()->orderBy('date', 'desc')->orderBy('start_time')
-    ->first();
+$time = $event->dates()->upcoming()->first();
 @endphp
 						@if ($time)
 						{{ $time->fullTime }}

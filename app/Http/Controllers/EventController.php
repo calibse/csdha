@@ -51,7 +51,6 @@ class EventController extends Controller implements HasMiddleware
                 'showLetterOfIntentFile',
                 'showLetterOfIntent',
                 'showAttendance',
-                'showBanner',
             ]),
             new Middleware('auth.index:create,' . Event::class,
                 only: ['create', 'store']),

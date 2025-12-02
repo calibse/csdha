@@ -137,18 +137,29 @@ class EventDate extends Model
     }
 
     #[Scope]
+    protected function upcoming(Builder $query): void
+    {
+        $query->join('events', 'events.id', '=', 'event_dates.event_id')
+            ->select('event_dates.*')
+            ->whereRaw("timestamp(date, start_time) >
+                convert_tz(now(), @@session.time_zone, timezone)")
+            ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
+    }
+
+    #[Scope]
     protected function ongoing(Builder $query): void
     {
-        $query->whereRaw('convert_tz(now(), @@session.time_zone, timezone) 
-            between timestamp(date, start_time) and
-            timestamp(date, end_time)')
-            ->join('events', 'events.id', '=', 'event_dates.event_id')
-            ->select('event_dates.*')
-            ->where(function ($query) {
-                $query->whereHas('event.accomReport', function ($query) {
-                    $query->whereNotIn('status', ['pending', 'approved']);
-                })->orDoesntHave('event.accomReport');
-            });
+        $query->join('events', 'events.id', '=', 'event_dates.event_id')
+            ->select('event_dates.*')->where(function ($query) {
+                $query->whereRaw('convert_tz(now(), @@session.time_zone, 
+                    timezone) between timestamp(date, start_time) and
+                    timestamp(date, end_time)')
+                ->where(function ($query) {
+                    $query->whereHas('event.accomReport', function ($query) {
+                        $query->whereNotIn('status', ['pending', 'approved']);
+                    })->orDoesntHave('event.accomReport');
+                });
+        });
     }
 
     #[Scope]

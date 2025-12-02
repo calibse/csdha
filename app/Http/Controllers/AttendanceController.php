@@ -27,7 +27,10 @@ class AttendanceController extends Controller implements HasMiddleware
 
     public function create()
     {
-        $dates = EventDate::active()->ongoing()->get();
+        $dates = EventDate::active()->ongoing()
+            ->whereHas('event', function ($query) {
+            $query->where('automatic_attendance', true);
+        })->get();
         return view('attendance.show', [
             'dates' => $dates,
             'gpoaActive' => Gpoa::active()->exists(),
@@ -42,7 +45,7 @@ class AttendanceController extends Controller implements HasMiddleware
         $regis = EventRegistration::where('token', $request->token)
             ->whereBelongsTo($eventDate->event)->first();
         $event = $eventDate->event;
-        if (!$eventDate->is_ongoing) {
+        if (!$eventDate->is_ongoing || !$event->automatic_attendance) {
             return response([], 403);
         }
         if (!$regis) {

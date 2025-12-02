@@ -174,6 +174,17 @@ Route::name('profile.')->controller(PasswordResetController::class)
 
 Route::domain(config('app.user_domain'))->group(function () {
 
+    Route::controller(EventController::class)->prefix('/event-{event}')
+        ->name('events.')->middleware(CheckActiveGpoa::class)
+        ->group(function () {
+
+        Route::name('banner.')->group(function () {
+
+            Route::get('/banner/{file}', 'showBanner')->name('show');
+
+        });
+    });
+
     Route::prefix('event-register-{event}')->name('events.registrations.')
         ->middleware([EnsureGpoaIsActive::class, CheckEventRegistration::class])
         ->controller(EventRegistrationController::class)->group(function () {
@@ -635,8 +646,6 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                     ->name('evaluations.comments.update');
 
                 Route::name('banner.')->group(function () {
-
-                    Route::get('/banner/{file}', 'showBanner')->name('show');
 
                     Route::get('/banner.html', 'editBanner')->name('edit');
 
