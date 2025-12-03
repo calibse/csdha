@@ -34,3 +34,7 @@ export function approveAccomReport(e) {
 	openActionWindow(e, "Approve");
 }
 
+export function editBackground(e) {
+	window.prepareOpenWindow(e, "accom-report-background_edit");
+}
+

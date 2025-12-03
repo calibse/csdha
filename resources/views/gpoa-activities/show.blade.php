@@ -51,9 +51,9 @@
 	</a>
 @endif
 @if ($actions['delete'])
-	<a id="gpoa-activity_delete-button" data-action="{{ $deleteActionRoute }}"
+	<a 
 	@can ('delete', $activity)
-		href="{{ route('gpoa.activities.confirmDestroy', ['activity' => $activity->public_id]) }}"
+		href="{{ route('gpoa.activities.confirmDestroy', ['activity' => $activity->public_id]) }}" id="gpoa-activity_delete-button"
 	@endcan
 	>
 		<img class="icon" src="{{ asset('icon/light/trash.svg') }}">
@@ -62,6 +62,7 @@
 @endif
 </x-slot>
 <div class="article has-item-full-content document">
+	<x-alert/>
 	<aside class="item-full-content main-status">
 		<div class="content-block">
 			<p class="title">Status</p>
@@ -169,5 +170,18 @@
                         <button id="gpoa-activity_prepare-button">{{ $action ?? '[Action]' }}</button>
                 </p>
         </form>
+</x-window>
+<x-window class="form" id="gpoa-activity_delete" title="Delete GPOA activity">
+	<p>
+		Are you sure you want to delete GPOA activity "<strong>{{ $activity->name }}</strong>"?
+	</p>
+	<div class="submit-buttons">
+		<button id="gpoa-activity_delete_close">Cancel</button>
+		<form method="post" action="{{ $deleteActionRoute }}">
+		@csrf
+		@method('DELETE')
+			<button>Delete</button>
+		</form>
+	</div>
 </x-window>
 </x-layout.user>

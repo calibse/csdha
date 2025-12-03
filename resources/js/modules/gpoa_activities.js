@@ -38,3 +38,10 @@ export function rejectActivity(e) {
 	openActionWindow(e, "Reject");
 }
 
+export function deleteActivity(e) {
+	window.prepareOpenWindow(e, "gpoa-activity_delete");
+}
+
+export function closeGpoa(e) {
+	window.prepareOpenWindow(e, "gpoa_close");
+}

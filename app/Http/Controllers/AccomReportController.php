@@ -84,6 +84,7 @@ class AccomReportController extends Controller implements HasMiddleware
             'accomReports' => $accomReports,
             'genRoute' => route('accom-reports.generate'),
             'changeBgRoute' => route('accom-reports.background.edit'),
+            'updateBgRoute' => route('accom-reports.background.update'),
         ]);
     }
 

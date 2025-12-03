@@ -17,10 +17,16 @@ $window-width: size.$text-width + .94em * 2;
 	margin-top: 1em;
 	margin-left: 2%;
 	box-shadow: color.$window-shadow;
-	z-index: 50;
+	z-index: 90;
 
 	&.form .window-content {
 		background-color: color.$form-bg;
+	}
+}
+
+@media (min-width: #{size.$wide-screen}) {
+	.window {
+		z-index: 101;
 	}
 }
 
@@ -31,7 +37,11 @@ $window-width: size.$text-width + .94em * 2;
 	box-shadow: color.$title-shadow;
 
 	.text {
+		display: block;
+		white-space: nowrap;
 		font-weight: bold;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 }
 

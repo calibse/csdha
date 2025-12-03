@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAccomReportBackgroundRequest extends FormRequest
 {
+    protected $errorBag = 'accom-report-background_edit';
+
     public function rules(): array
     {
         return [

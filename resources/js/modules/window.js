@@ -126,6 +126,8 @@ export function openWindow(force) {
 	if (!errorEl && !force) {
 		closeWindow();
 		return;
+	} else if (errorEl && force) {
+		errorEl.style.display = "none";
 	}
 	el = document.getElementById(elementId);
 	if (!el) return;
@@ -141,7 +143,7 @@ export function openWindow(force) {
 
 export function openDeleteItemWindow(e) {
         var windowId, formId, actionLink, formEl, content, contentId, 
-		contentEl, windowEl, baseId;
+		contentEl, windowEl, baseId, actionEl;
 
         e.preventDefault();
         if (isThereOpenWindow()) {
@@ -150,7 +152,8 @@ export function openDeleteItemWindow(e) {
         contentId = e.currentTarget.id.replace("_delete-button", "");
 	baseId = contentId.replace(/-\d+/g, "");
         windowId = baseId + "_delete";
-        actionLink = document.getElementById(contentId + "_delete-link").value;
+        actionEl = document.getElementById(contentId + "_delete-link");
+        actionLink = actionEl.value || actionEl.dataset.action;
 	windowEl = document.getElementById(windowId);
 	formEl = windowEl.getElementsByTagName("form")[0];
 	formEl.action = actionLink;
@@ -200,5 +203,14 @@ export function openEditItemWindow(windowEl) {
 	deleteEl.removeEventListener("click", openDeleteWindowOnWindow);
 	deleteEl.addEventListener("click", openDeleteWindowOnWindow);
 	openEditWindow(windowEl);
+}
+
+export function prepareOpenWindow(e, id) {
+	e.preventDefault();
+	if (isThereOpenWindow()) {
+		return;
+	}
+	setOpenedWindowId(id);
+	openWindow(true);
 }
 

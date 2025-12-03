@@ -63,8 +63,9 @@ select[multiple] {
 }
 
 button {
-	padding: .48em;
-	min-width: 5em;
+	padding-left: .78em;
+	padding-right: .78em;
+	min-width: 4.6em;
 	font-weight: bold;
 	max-width: none;
 	width: auto;
@@ -109,6 +110,7 @@ input::file-selector-button {
 input[type="file"] {
 	padding: 0;
 	height: 2.46em;
+	max-width: 100%;
 
 	&:focus {
 		background-color: color.$input-bg;

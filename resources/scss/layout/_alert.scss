@@ -13,7 +13,7 @@
 }
 
 .alert {
-	border-bottom: size.$line-width solid color.$line;
+	border-radius: size.$corner-roundness;
 
 	li {
 		max-width: size.$text-width;

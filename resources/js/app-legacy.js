@@ -219,6 +219,21 @@ function setEvents() {
 			event: "click",
 			action: gpoaActivities.submitActivity
 		},
+		{
+			element: "gpoa-activity_delete-button",
+			event: "click",
+			action: gpoaActivities.deleteActivity
+		},
+		{
+			element: "accom-report-background_edit-button",
+			event: "click",
+			action: accomReports.editBackground
+		},
+		{
+			element: "gpoa_close-button",
+			event: "click",
+			action: gpoaActivities.closeGpoa
+		},
 	];
 	addEvents(elementActions);
 }

@@ -67,7 +67,8 @@ class GpoaController extends Controller implements HasMiddleware
         return view('gpoa.index', [
             'gpoa' => $gpoa,
             'activities' => $activities->orderBy('updated_at', 'desc')
-                ->paginate(15)
+                ->paginate(15),
+            'closeRoute' => route('gpoa.close'),
         ]);
     }
 
@@ -261,7 +262,11 @@ class GpoaController extends Controller implements HasMiddleware
     public function confirmClose(Request $request)
     {
         $gpoa = self::$gpoa;
-        return view('gpoa.close', ['gpoa' => $gpoa]);
+        return view('gpoa.close', [
+            'gpoa' => $gpoa,
+            'backRoute' => route('gpoa.index'),
+            'closeRoute' => route('gpoa.close'),
+        ]);
     }
 
     public function close(Request $request)

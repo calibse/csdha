@@ -22,7 +22,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 
 .events.event .item-full-content {
 	.banner {
-		background-color: color.$view-bg;
+		background-color: #f5f5f6;
 		background: radial-gradient(ellipse,
 			color.$view-bg 50%,
 			rgba(0, 0, 0, 0.07) 100%
@@ -88,7 +88,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 
 .events.index .event-item {
 	.banner {
-		background-color: color.$view-bg; 
+		background-color: #f5f5f6;
 		background: radial-gradient(ellipse,
 			color.$view-bg 50%,
 			rgba(0, 0, 0, 0.07) 100%

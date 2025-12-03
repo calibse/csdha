@@ -309,7 +309,13 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $activity = $gpoa->activities()->find($activity->id);
         return view('gpoa-activities.delete', [
             'gpoa' => $gpoa,
-            'activity' => $activity
+            'activity' => $activity,
+            'backRoute' => route('gpoa.activities.show', [
+                'activity' => $activity->public_id
+            ]),
+            'formAction' => route('gpoa.activities.destroy', [
+                'activity' => $activity->public_id
+            ]),
         ]);
     }
 
@@ -402,17 +408,19 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->current_step = 'adviser';
             $activity->president_submitted_at = now();
             $activity->save();
+            $status = 'Activity submitted to the Adviser.';
             break;
         default:
             $activity->status = 'pending';
             $activity->current_step = 'president';
             $activity->officers_submitted_at = now();
             $activity->save();
+            $status = 'Activity submitted to the President.';
         }
         GpoaActivityStatusChanged::dispatch($activity);
         return redirect()->route('gpoa.activities.show', [
             'activity' => $activity->public_id
-        ]);
+        ])->with('status', $status);
     }
 
     public function return(SaveGpoaActivityCommentsRequest $request,

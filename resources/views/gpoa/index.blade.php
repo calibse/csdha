@@ -8,7 +8,7 @@
 		</a>
 		@endcan
 		@can ('close', 'App\Models\Gpoa')
-		<a href="{{ route('gpoa.confirmClose') }}">
+		<a id="gpoa_close-button" href="{{ route('gpoa.confirmClose') }}">
 			<img class="icon" src="{{ asset('icon/light/x-circle.svg') }}">
 			<span class="text">Close</span>
 		</a>
@@ -73,25 +73,6 @@
             @endforeach
             </tbody>
         </table>
-        {{--
-		<ul class="item-list-icon">
-		@foreach ($activities as $activity)
-			<li class="item">
-				<div class="icon">
-					<x-phosphor-blueprint/>
-				</div>
-				<div class="content">
-					<p class="title">
-						<a href="{{ route('gpoa.activities.show', ['activity' => $activity->public_id]) }}">
-							{{ mb_strimwidth($activity->name, 0, 70, '...') }}
-						</a>
-					</p>
-					<p class="subtitle">Status: {{ mb_strimwidth($activity->full_status, 0, 70, '...') }} </p>
-				</div>
-			</li>
-		@endforeach
-		</ul>
-        --}}
 		{{ $activities->links('paginator.simple') }}
 	@else
 		@switch (auth()->user()->position_name)
@@ -104,4 +85,17 @@
 		@endswitch
 	@endif
 	</div>
+<x-window class="form" id="gpoa_close" title="Close GPOA">
+	<p>
+		Are you sure you want to close this GPOA for {{ $gpoa->academicPeriod->term->label }} A.Y. {{ $gpoa->academicPeriod->year_label }}?
+	</p>
+	<div class="submit-buttons">
+		<button id="gpoa_close_close">Cancel</button>
+		<form method="post" action="{{ $closeRoute }}">
+		@csrf
+		@method('PUT')
+			<button>Close GPOA</button>
+		</form>
+	</div>
+</x-window>
 </x-layout.user>
