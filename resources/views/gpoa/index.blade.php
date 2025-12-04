@@ -68,7 +68,10 @@
                             {{ $activity->name }}
                         </a>
                     </td>
-                    <td class="last-row-cell">{{ $activity->full_status }}</td>
+                    <td class="last-row-cell">
+			<img class="icon" src="{{ asset("icon/small/light/circle-{$activity->status_color}.svg") }}">
+			<span class="text">{{ $activity->full_status }}</span>
+			</td>
                 </tr>
             @endforeach
             </tbody>

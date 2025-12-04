@@ -25,6 +25,36 @@ class AccomReport extends Model
         return $this->belongsTo(Event::class);
     }
 
+    protected function statusColor(): Attribute
+    {
+        $status = $this->status;
+        $step = $this->current_step;
+        $position = auth()->user()->position_name;
+        if (!in_array($position, ['president', 'adviser', null])) {
+            $position = 'officers';
+        }
+        switch ("{$position}_{$step}_{$status}") {
+        case 'officers_officers_returned':
+        case 'president_president_pending':
+            $color = 'red';
+            break;
+        case 'officers_president_pending':
+        case 'officers_officers_draft':
+            $color = 'yellow';
+            break;
+        case 'officers_adviser_approved':
+        case 'president_adviser_approved':
+        case 'adviser_adviser_approved':
+            $color = 'green';
+            break;
+        default:
+            $color = 'black';
+        }
+        return Attribute::make(
+            get: fn () => $color,
+        );
+    }
+
     public function fullStatus(): Attribute
     {
         $status = $this->status;

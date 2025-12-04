@@ -43,8 +43,9 @@
 		<div class="content-block">
 			<p class="title">Status</p>
 			<p>
-				<img class="icon" src="{{ asset('icon/small/light/circle-notch.svg') }}">
+				<img class="icon" src="{{ asset("icon/small/light/circle-{$accomReport->status_color}.svg") }}">
 				<span class="text">
+
 					{{ $accomReport->full_status }}
 				</span>
 			</p>

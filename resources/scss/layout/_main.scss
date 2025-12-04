@@ -449,13 +449,15 @@ $mq-count: 4;
 	position: relative;
 	z-index: 10;
 	white-space: nowrap;
+	max-width: size.$page-width;
+	box-shadow: color.$title-shadow;
+	border-bottom: solid size.$line-width color.$title-border;
+	background-color: color.$toolbar-bg;
+	padding: 0 size.$page-margin;
 
 	.content-block {
 		background-color: color.$toolbar-bg;
-		padding: 0 size.$page-margin;
 		overflow: auto;
-		box-shadow: color.$title-shadow;
-		border-bottom: solid size.$line-width color.$title-border;
 	}
 
 	a, button {
@@ -600,6 +602,8 @@ $mq-count: 4;
 	margin-top: .45em;
 	padding: 0 size.$page-margin;
 	border-bottom: 0;
+	box-shadow: none;
+	background-color: transparent;
 
 	.content-block {
 		border-radius: size.$corner-roundness;
@@ -819,9 +823,6 @@ $mq-count: 4;
 	}
 
 	.main-toolbar {
-	/*
-		max-width: size.$page-width - 2em;
-	*/
 		margin-right: auto;
 		margin-left: auto;
 		@include main-toolbar-detached;
@@ -834,20 +835,27 @@ $mq-count: 4;
 	}
 }
 
+/*
 @media (min-width: #{(size.$page-width + (size.$wide-page-margin * 2))}) {
 	.main-toolbar {
 		width: size.$page-width;
 	}
 }
+*/
 
-@media (min-width: #{(size.$page-width + size.$sidebar-width + 2em + (size.$wide-page-margin * 2))}) {
+/*
+@media (min-width: #{(size.$page-width + size.$sidebar-width + (size.$wide-page-margin * 2))}) {
+*/
+@media (min-width: #{(size.$page-width + size.$sidebar-width)}) {
 	.main-toolbar,
 	.main-content-header > .content-block,
 	.main-content .article {
 		margin-left: size.$content-only-left-margin;
+		margin-right: 0;
 	}
 }
 
+/*
 @media (min-width: #{(size.$page-width + size.$sidebar-width + (size.$wide-page-margin * 2))}) {
 	.main-body.index {
 		.main-toolbar {
@@ -856,4 +864,5 @@ $mq-count: 4;
 	}
 
 }
+*/
 

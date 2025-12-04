@@ -15,7 +15,7 @@
 	<div class="article-list">
 	@foreach ($events as $event)
 		<div class="event-item">
-			<div class="banner">
+			<div class="banner" style="background-color: {{ $event->banner_placeholder_color }};">
 			@if ($event->banner_filepath)
 				<div class="content-block">
 						<img src="{{ route('events.banner.show', ['event' => $event->public_id, 'file' => basename($event->banner_filepath)]) }}">
@@ -29,45 +29,41 @@
 				<p class="date">
 					<img class="icon" src="{{ asset('icon/small/light/calendar-dots.svg') }}">
 					<span class="text">
-					@if ($event->is_ongoing)
-						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
-					@else
-@php
-$date = $event->dates()->upcoming()->first();
-@endphp
-						@if ($date)
-						{{ $date->dateFmt }}
-						@else
+					@if (!$event->dates()->exists())
 						<em>No date.</em>
-						@endif
+					@elseif ($event->is_ongoing)
+						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+					@elseif ($event->is_upcoming)
+						{{ $event->dates()->upcoming()->first()->dateFmt }}
+					@else
+						{{ $event->dates()->orderBy('date', 'desc')->orderBy('end_time', 'desc')->first()->dateFmt }}
 					@endif
 					</span>
 				</p>
 				<p class="time">
 					<img class="icon" src="{{ asset('icon/small/light/clock.svg') }}">
 					<span class="text">
-					@if ($event->is_ongoing)
-						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
-					@else
-@php
-$time = $event->dates()->upcoming()->first();
-@endphp
-						@if ($time)
-						{{ $time->fullTime }}
-						@else
+					@if (!$event->dates()->exists())
 						<em>No time.</em>
-						@endif
+					@elseif ($event->is_ongoing)
+						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+					@elseif ($event->is_upcoming)
+						{{ $event->dates()->upcoming()->first()->fullTime }}
+					@else
+						{{ $event->dates()->orderBy('date', 'desc')->orderBy('end_time', 'desc')->first()->fullTime }}
 					@endif
 					</span>
 				</p>
 				<p class="description">
 				@if ($event->description)
 					@if ($event->is_ongoing)
-					(Ongoing)
+					<img class="inline-icon" src="{{ asset('icon/small/light/circle-red.svg') }}">
+					Ongoing -- 
 					@endif
 					{{ $event->description }}
 				@else
 					@if ($event->is_ongoing)
+					<img class="inline-icon" src="{{ asset('icon/small/light/circle-red.svg') }}">
 					Ongoing
 					@else
 					<em>No description.</em>

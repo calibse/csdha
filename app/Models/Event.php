@@ -324,6 +324,16 @@ class Event extends Model
         ];
     } 
 
+    public function bannerPlaceholderColor(): Attribute
+    {
+        $colors = ['#F3ECD6', '#DFF4FF', '#FBF1E7', '#D5F4EE', '#DCE6EE', '#F5EEE9'];
+        $limit = count($colors);
+        $color = $colors[crc32($this->gpoaActivity->name) % $limit];
+        return Attribute::make(
+            get: fn () => $color,
+        );
+    }
+
     public function membersOnly(): Attribute
     {
         $members = ['BSIT', 'DIT'];

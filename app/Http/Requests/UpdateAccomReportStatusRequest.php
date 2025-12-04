@@ -13,7 +13,7 @@ class UpdateAccomReportStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comments' => ['required', new MaxText]
+            'comments' => [new MaxText]
         ];
     }
 

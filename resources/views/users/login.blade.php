@@ -38,7 +38,7 @@
 							<article> 
 								<p>
 									<a href="{{ $googleSigninRoute }}" class="signin-link">
-										<img class="icon" src="{{ asset('icon/dark/google-logo-duotone.png') }}">
+										<img class="icon" src="{{ asset('icon/dark/google-logo.svg') }}">
 										<span class="text">Sign in with Google</span>
 									</a>
 								</p>

@@ -243,6 +243,38 @@ class GpoaActivity extends Model
         );
     }
 
+    protected function statusColor(): Attribute
+    {
+        $status = $this->status;
+        $currentStep = $this->current_step;
+        $position = auth()->user()->position_name;
+        if (!in_array($position, ['president', 'adviser', null])) {
+            $position = 'officers';
+        }
+        switch ("{$position}_{$currentStep}_{$status}") {
+        case 'officers_officers_returned':
+        case 'president_president_pending':
+        case 'adviser_adviser_pending':
+            $color = 'red';
+            break;
+        case 'officers_officers_draft':
+        case 'officers_president_pending':
+        case 'president_adviser_pending':
+            $color = 'yellow';
+            break;
+        case 'adviser_adviser_approved':
+        case 'officers_adviser_approved':
+        case 'president_adviser_approved':
+            $color = 'green';
+            break;
+        default:
+            $color = 'black';
+        }
+        return Attribute::make(
+            get: fn () => $color
+        );
+    }
+
     protected function fullStatus(): Attribute
     {
         $status = $this->status;

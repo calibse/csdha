@@ -37,7 +37,10 @@
 						{{ $accomReport->event->gpoaActivity->name }}
 					</a>
 				</td>
-				<td class="last-row-cell">{{ $accomReport->full_status }}</td>
+				<td class="last-row-cell">
+					<img class="icon" src="{{ asset("icon/small/light/circle-{$accomReport->status_color}.svg") }}">
+					<span class="text">{{ $accomReport->full_status }}</span>
+				</td>
 			</tr>
 		@endforeach
 		</tbody>

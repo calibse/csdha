@@ -20,7 +20,7 @@
 <div class="article has-item-full-content document">
 	<x-alert/>
 	<div class="item-full-content"> 
-		<div class="banner">
+		<div class="banner" style="background-color: {{ $event->banner_placeholder_color }};">
 		@if ($bannerFileRoute)
 			<div class="content-block">
 				<img src="{{ $bannerFileRoute }}">
