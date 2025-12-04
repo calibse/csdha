@@ -103,6 +103,7 @@ reinstall() {
 		podman kube play --replace kube/${kube}
 	done
 	podman kube play --replace --start=false kube/${update_kube}
+	podman kube play --replace --start=false kube/init.yaml
 	podman image prune -f
 }
 
