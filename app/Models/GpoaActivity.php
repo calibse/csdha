@@ -258,6 +258,7 @@ class GpoaActivity extends Model
             $color = 'red';
             break;
         case 'officers_officers_draft':
+        case 'officers_adviser_pending':
         case 'officers_president_pending':
         case 'president_adviser_pending':
             $color = 'yellow';
