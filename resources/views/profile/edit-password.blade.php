@@ -1,5 +1,5 @@
 <x-layout.user form class="profile form" :$backRoute title="Change Password">
-    <article class="article">
+    <div class="article">
         <x-alert/>
         <form method="post" action="{{ $formAction }}">
             @csrf
@@ -22,5 +22,5 @@
                 <button>Update</button>
             </p>
         </form>
-    </article>
+    </div>
 </x-layout>

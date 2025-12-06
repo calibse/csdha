@@ -1,25 +1,25 @@
 /* events.js */
 
-import * as window from "./window.js";
+import * as dialog from "./window.js";
 
 export function createEventDate(e) {
 	var el, id;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "event-date_create";
 	el = document.getElementById(id);
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 
 export function editEventVenue(e) {
 	var windowEl;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	windowEl = {
@@ -31,14 +31,14 @@ export function editEventVenue(e) {
 			},
 		]
 	};
-	window.openEditWindow(windowEl)
+	dialog.openEditWindow(windowEl)
 }
 
 export function editEventNarrative(e) {
 	var windowEl;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	windowEl = {
@@ -50,14 +50,14 @@ export function editEventNarrative(e) {
 			},
 		]
 	};
-	window.openEditWindow(windowEl)
+	dialog.openEditWindow(windowEl)
 }
 
 export function editEventDescription(e) {
 	var windowEl;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	windowEl = {
@@ -69,53 +69,53 @@ export function editEventDescription(e) {
 			},
 		]
 	};
-	window.openEditWindow(windowEl)
+	dialog.openEditWindow(windowEl)
 }
 
 export function createEventAttachmentSet(e) {
 	var el, id;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "event-attachment-set_create";
 	el = document.getElementById(id);
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 
 export function createEventLink(e) {
 	var el, id;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "event-link_create";
 	el = document.getElementById(id);
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 
 export function editEventBanner(e) {
 	var el, id;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "event-banner_edit";
 	el = document.getElementById(id);
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 
 export function editEventAttachmentSet(e) {
 	var windowEl, contentId, deleteEl;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	contentId = e.currentTarget.id.replace("_edit-button", "");
@@ -134,19 +134,19 @@ export function editEventAttachmentSet(e) {
 			},
 		]
 	};
-	window.openEditItemWindow(windowEl)
+	dialog.openEditItemWindow(windowEl)
 }
 
 export function deleteEventAttachment(e) {
 	var el, id;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "event-attachment_delete";
 	el = document.getElementById(id);
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 

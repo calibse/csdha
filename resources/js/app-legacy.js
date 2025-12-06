@@ -2,7 +2,7 @@
 
 import * as timezone from "./modules/timezone";
 import * as home from "./modules/home";
-import * as window from "./modules/window";
+import * as dialog from "./modules/window";
 import * as events from "./modules/events";
 import * as accomReports from "./modules/accom_reports";
 import * as gpoaActivities from "./modules/gpoa_activities";
@@ -14,7 +14,7 @@ function runTimezoneAction(actionDeps) {
 	intl = actionDeps[0];
 	date = actionDeps[1];
 	for (var i = 0; i < intl.depends.length; i++) {
-		if (window[intl.depends[i]] === "undefined") {
+		if (window[intl.depends[i]] === undefined) {
 			satisfied = false;
 			break;
 		}
@@ -24,7 +24,7 @@ function runTimezoneAction(actionDeps) {
 		return;
 	}
 	for (var i = 0; i < date.depends.length; i++) {
-		if (window[date.depends[i]] === "undefined") {
+		if (window[date.depends[i]] === undefined) {
 			satisfied = false;
 			break;
 		}
@@ -41,7 +41,7 @@ function runActions(actionDeps) {
 		satisfied = true;
 		action = actionDeps[i];
 		for (var j = 0; j < action.depends.length; j++) {
-			if (window[action.depends[j]] === "undefined") {
+			if (window[action.depends[j]] === undefined) {
 				satisfied = false;
 				break;
 			}
@@ -142,17 +142,17 @@ function setEvents() {
 		{
 			element: "event-date-*_delete-button",
 			event: "click",
-			action: window.openDeleteItemWindow 
+			action: dialog.openDeleteItemWindow 
 		},
 		{
 			element: "event-link-*_delete-button",
 			event: "click",
-			action: window.openDeleteItemWindow 
+			action: dialog.openDeleteItemWindow 
 		},
 		{
 			element: "event-date-watten-*_delete-button",
 			event: "click",
-			action: window.openDeleteItemWindow 
+			action: dialog.openDeleteItemWindow 
 		},
 		{
 			element: "event-attachment-set_create-button",
@@ -252,5 +252,5 @@ function setBackLink(e) {
 setTimezoneActions();
 setActions();
 setEvents();
-window.openWindow();
+dialog.openWindow();
 

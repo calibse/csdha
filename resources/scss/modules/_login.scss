@@ -85,6 +85,7 @@ $window-width: 21em;
 
 	.alert {
 		background-color: lab(100% 0 0 / 0.15);
+		color: color.$foreground;
 		color: lab(100% 0 0);
 	}
 

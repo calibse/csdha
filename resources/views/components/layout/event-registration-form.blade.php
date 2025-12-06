@@ -20,7 +20,7 @@
 		</hgroup>
 	</header>
 	<div class="sections">
-		<section class="intro section">
+		<div class="intro section">
 		@if ($event->banner_filepath)
 			<div class="banner">
 					<div class="content-block">
@@ -32,7 +32,7 @@
 					<h2 class="title">Introduction</h2>
 					<pre>{{ $event->regisForm?->introduction }}</pre>
 			</div>
-		</section>
+		</div>
 @php
     $steps = [
         [
@@ -51,12 +51,12 @@
 @endphp
 	@foreach ($steps as $thisStep => $thisStepInfo)
 		@if ($step === $thisStep)
-		<main id="content" class="main section">
+		<div id="content" class="main section">
 			<h2 class="title">{{ $thisStepInfo['title'] }}</h2>
 			{{ $slot }}
-		</main>
+		</div>
 		@else
-		<section class="section content">
+		<div class="section content">
 			<h2 class="title"><a
 			@if ($thisStep <= $completeSteps)
 				href="{{ $routes[$thisStep] }}"
@@ -65,7 +65,7 @@
 		@if ($thisStep !== (count($steps) - 1))
 			<p class="status">{{ ($thisStep < $completeSteps || $step === (count($steps) - 1)) ? 'Complete' : 'Incomplete' }}</p>
 		@endif
-		</section>
+		</div>
 		@endif
 	@endforeach
 	</div>

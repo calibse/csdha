@@ -3,6 +3,7 @@
 @use "../color";
 @use "../size";
 @use "../font";
+@use "sass:string";
 
 $one-d-table-width: 3em + 12em + size.$text-width;
 
@@ -200,7 +201,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 			img {
 				display: block;
 				height: 100%;
-				width: min(100%);
+				width: string.unquote("min(100%)");
 				object-fit: cover;
 				margin: 0 auto;
 			}

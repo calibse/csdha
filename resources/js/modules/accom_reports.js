@@ -1,12 +1,12 @@
 /* accom_reports.js */
 
-import * as window from "./window.js";
+import * as dialog from "./window.js";
 
 function openActionWindow(e, $action) {
 	var el, id, actionUrl, formEl, titleEl, buttonEl;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "accom-report_prepare";
@@ -18,8 +18,8 @@ function openActionWindow(e, $action) {
 	actionUrl = e.currentTarget.dataset.action;
 	formEl = el.getElementsByTagName("form")[0];
 	formEl.action = actionUrl;
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 
 export function returnAccomReport(e) {
@@ -35,6 +35,6 @@ export function approveAccomReport(e) {
 }
 
 export function editBackground(e) {
-	window.prepareOpenWindow(e, "accom-report-background_edit");
+	dialog.prepareOpenWindow(e, "accom-report-background_edit");
 }
 

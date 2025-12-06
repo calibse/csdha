@@ -63,33 +63,35 @@
 </x-slot>
 <div class="article has-item-full-content document">
 	<x-alert/>
-	<aside class="item-full-content main-status">
+	<div class="item-full-content main-status">
 		<div class="content-block">
-			<p class="title">Status</p>
-			<p>
-				<img class="icon" src="{{ asset("icon/small/light/circle-{$activity->status_color}.svg") }}">
+			<aside>
+				<p class="title">Status</p>
+				<p>
+					<img class="icon" src="{{ asset("icon/small/light/circle-{$activity->status_color}.svg") }}">
 
-				<span class="text">
-					{{ $activity->full_status }}
-				</span>
-			</p>
-		@if ($activity->comments)
-			<div>
-				<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
-				<pre class="text">"{{ $activity->comments }}"</pre>
-			</div>
-		@endif
-		@if ($date)
-			<p>
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
-				<span class="text">
-					{{ $date }}
-				</span>
-			</p>
-		@endif
-		<hr>
+					<span class="text">
+						{{ $activity->full_status }}
+					</span>
+				</p>
+			@if ($activity->comments)
+				<div>
+					<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
+					<pre class="text">"{{ $activity->comments }}"</pre>
+				</div>
+			@endif
+			@if ($date)
+				<p>
+					<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
+					<span class="text">
+						{{ $date }}
+					</span>
+				</p>
+			@endif
+			</aside>	
+			<hr>
 		</div>
-	</aside>
+	</div>
 	<div class="item-full-content">
 		<div class="content-block">
 			<h2>{{ $activity->name }}</h2>

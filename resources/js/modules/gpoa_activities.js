@@ -1,12 +1,12 @@
 /* gpoa_activities.js */
 
-import * as window from "./window.js";
+import * as dialog from "./window.js";
 
 function openActionWindow(e, $action) {
 	var el, id, actionUrl, formEl, titleEl, buttonEl;
 
 	e.preventDefault();
-	if (window.isThereOpenWindow()) {
+	if (dialog.isThereOpenWindow()) {
 		return;
 	}
 	id = "gpoa-activity_prepare";
@@ -18,8 +18,8 @@ function openActionWindow(e, $action) {
 	actionUrl = e.currentTarget.dataset.action;
 	formEl = el.getElementsByTagName("form")[0];
 	formEl.action = actionUrl;
-	window.setOpenedWindowId(id);
-	window.openWindow(true);
+	dialog.setOpenedWindowId(id);
+	dialog.openWindow(true);
 }
 
 export function submitActivity(e) {
@@ -39,9 +39,9 @@ export function rejectActivity(e) {
 }
 
 export function deleteActivity(e) {
-	window.prepareOpenWindow(e, "gpoa-activity_delete");
+	dialog.prepareOpenWindow(e, "gpoa-activity_delete");
 }
 
 export function closeGpoa(e) {
-	window.prepareOpenWindow(e, "gpoa_close");
+	dialog.prepareOpenWindow(e, "gpoa_close");
 }

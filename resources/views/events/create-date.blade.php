@@ -1,5 +1,5 @@
 <x-layout.user content-view :$backRoute class="events form" title="{{ $update ? 'Edit' : 'Add' }} Date">
-    <article class="article">
+    <div class="article">
         <x-alert errorBag="event-date_create" />
         <form method="POST" action="{{ $formAction }}">
         @if ($update)
@@ -24,5 +24,5 @@
                 <button type="submit">{{ $update ? 'Update' : 'Save' }}</button>
             </p>
         </form>
-    </article>
+    </div>
 </x-layout.user>

@@ -39,33 +39,35 @@
 <div class="article has-item-full-content-wide">
 	<x-alert/>
 @if ($accomReport)
-	<aside class="main-status item-full-content-wide">
+	<div class="main-status item-full-content-wide">
 		<div class="content-block">
-			<p class="title">Status</p>
-			<p>
-				<img class="icon" src="{{ asset("icon/small/light/circle-{$accomReport->status_color}.svg") }}">
-				<span class="text">
+			<aside>
+				<p class="title">Status</p>
+				<p>
+					<img class="icon" src="{{ asset("icon/small/light/circle-{$accomReport->status_color}.svg") }}">
+					<span class="text">
 
-					{{ $accomReport->full_status }}
-				</span>
-			</p>
-		@if ($accomReport?->comments)
-			<div>
-				<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
+						{{ $accomReport->full_status }}
+					</span>
+				</p>
+			@if ($accomReport?->comments)
+				<div>
+					<img class="icon" src="{{ asset('icon/small/light/chat-text.svg') }}">
 
-				<pre class="text">"{{ $accomReport?->comments }}"</pre>
-			</div>
-		@endif
-		@if ($date)
-			<p>
-				<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
-				<span class="text">
-					{{ $date }}
-				</span>
-			</p>
-		@endif
+					<pre class="text">"{{ $accomReport?->comments }}"</pre>
+				</div>
+			@endif
+			@if ($date)
+				<p>
+					<img class="icon" src="{{ asset('icon/small/light/calendar-dot.svg') }}">
+					<span class="text">
+						{{ $date }}
+					</span>
+				</p>
+			@endif
+			</aside>
 		</div>
-	</aside>
+	</div>
 @endif
 @if (!$updated && auth()->user()->can('makeAccomReport', $event))
 	<p class="has-icon">
@@ -79,13 +81,17 @@
 	<p>This document copy is outdated.</p>
 	@endif
 	<div class="pdf-document">
-		<figure class="pdf-file">
-			<iframe src="/viewerjs/#..{{ $fileRoute}}">
-				<p>
-					Preview of this file is unsupported. You may download this 
-					file <a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
-				</p>
-			</iframe>
+		<figure>
+			<div class="pdf-file">
+				<object data="{{ rtrim(url('/'), '/') . $fileRoute }}">
+				<iframe src="/viewerjs/#..{{ $fileRoute}}">
+					<p>
+						Preview of this file is unsupported. You may download this 
+						file <a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
+					</p>
+				</iframe>
+				</object>
+			</div>
 			<figcaption>
 				<div class="caption">Accomplishment Report</div>
 			</figcaption>

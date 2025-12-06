@@ -3,6 +3,7 @@
 @use "../size";
 @use "../color";
 @use "../font";
+@use "sass:string";
 
 .multi-step-form {
 	.qr-code {
@@ -90,7 +91,7 @@
 		img {
 			width: 100%;
 			display: block;
-			height: min(100%);
+			height: string.unquote("min(100%)");
 			object-fit: cover;
 		}
 	}

@@ -226,18 +226,18 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 						<div class="nav-actions">
 						@if ($index)
 							<a href="#menu" class="main-menu-button">
-								<img class="icon" src="{{ asset('icon/light/list.svg') }}">
+								<img alt="Menu" class="icon" src="{{ asset('icon/light/list.svg') }}">
 								<span class="text">Menu</span>
 							</a>
 						@elseif ($backRoute)
 							<a id="main-back-link" class="main-back-link" href="{{ $backRoute }}" >
-								<img class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
+								<img alt="Back" class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
 
 								<span class="text">Back to previous page</span>
 							</a>
 						@elseif ($route)
 							<a id="main-back-link" class="main-back-link" href="{{ route($route, $routeParams) }}" >
-								<img class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
+								<img alt="Back" class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
 								<span class="text">Back to previous page</span>
 							</a>
 						@endif

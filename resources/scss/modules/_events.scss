@@ -3,12 +3,13 @@
 @use "../color";
 @use "../size";
 @use "../common";
+@use "sass:string";
 
 $time-width: 16em;
 $event-item-width: $time-width + 2em; 
 $event-content-width: 1em + 12em + size.$text-width;
 
-@media (min-width: #{($event-content-width + 7em)}) {
+@media (min-width: #{($event-content-width)}) {
 	.events.event .item-full-content {
 		width: $event-content-width;
 	}
@@ -45,7 +46,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 		img {
 			display: block;
 			width: 100%;
-			height: min(100%);
+			height: string.unquote("min(100%)");
 			object-fit: cover;
 		}
 	}
@@ -113,7 +114,7 @@ $event-content-width: 1em + 12em + size.$text-width;
 		img {
 			display: block;
 			width: 100%;
-			height: min(100%);
+			height: string.unquote("min(100%)");
 			object-fit: cover;
 		}
 	}

@@ -3,6 +3,7 @@
 @use "../size";
 @use "../color";
 @use "../font";
+@use "sass:string";
 
 input,
 optgroup,
@@ -11,8 +12,9 @@ button,
 textarea {
         font-family: font.$font;
         padding: .48em 0;
-        padding-left: min(.48em);
-        padding-right: min(.48em);
+        padding-left: string.unquote("calc(.48em)");
+        padding-right: string.unquote("calc(.48em)");
+	max-width: 100%;
 	max-width: calc(100% - .48em * 2);
 	width: size.$text-width;
         background-color: color.$input-bg;
@@ -41,15 +43,12 @@ input[type="radio"] {
 }
 
 select {
-	height: 1.5em;
-
 	&:focus {
 		background-color: color.$pressed-button-bg;
 	}
 }
 
 select[multiple] {
-	height: auto;
 	//background-color: white;
 
 	&:focus {
@@ -104,12 +103,10 @@ input::file-selector-button {
 	border: 0;
 	border-right: solid size.$line-width color.$line;
 	border-radius: 0;
-	height: 100%;
 }
 
 input[type="file"] {
 	padding: 0;
-	height: 2.46em;
 	max-width: 100%;
 
 	&:focus {

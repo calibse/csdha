@@ -1,5 +1,5 @@
-<x-layout.user :$backRoute class="events form" title="Delete Date">
-<article class="article">
+<x-layout.user content-view :$backRoute class="events form" title="Delete Date">
+<div class="article">
 	<p>
 	@if ($date->has_attendees)
 		Attendance records in this date will be destroyed.
@@ -16,5 +16,5 @@
 			<button>Delete</button>
 		</form>
 	</div>
-</article>
+</div>
 </x-layout.user>

@@ -2,25 +2,31 @@
 $errorsToShow = $errorBag ? $errors->getBag($errorBag) : $errors;
 @endphp
 @if ($errorsToShow->any())
-<aside id="{{ $window ? 'window-form-error' : 'form-error' }}" {{ $attributes->merge(['class' => 'alert alert-error']) }}>
+<div id="{{ $window ? 'window-form-error' : 'form-error' }}" {{ $attributes->merge(['class' => 'alert alert-error']) }}>
+	<aside>
 	@if ($errorsToShow->count() > 1)
-	<p>There are problems</p>
-	<ul>
+		<p>There are problems</p>
+		<ul>
 	@foreach ($errorsToShow->all() as $error)
-		<li>{{ $error }}</li>
+			<li>{{ $error }}</li>
 	@endforeach
-	</ul>
+		</ul>
 	@else
-	<p>There is a problem</p>
-	<p>{{ $errorsToShow->first() }}</p>
+		<p>There is a problem</p>
+		<p>{{ $errorsToShow->first() }}</p>
 	@endif
-</aside>
+	</aside>
+</div>
 @elseif (!$window && $slot->isNotEmpty())
-<aside id="form-info" {{ $attributes->merge(['class' => 'alert alert-info']) }}>
-	<p>{{ $slot }}</p>
-</aside>
+<div id="form-info" {{ $attributes->merge(['class' => 'alert alert-info']) }}>
+	<aside>
+		<p>{{ $slot }}</p>
+	</aside>
+</div>
 @elseif (!$window && session('status'))
-<aside id="form-info" {{ $attributes->merge(['class' => 'alert alert-info']) }}>
-	<p>{{ session('status') }}</p>
-</aside>
+<div id="form-info" {{ $attributes->merge(['class' => 'alert alert-info']) }}>
+	<aside>
+		<p>{{ session('status') }}</p>
+	</aside>
+</div>
 @endif

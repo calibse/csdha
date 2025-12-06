@@ -5,7 +5,7 @@
 
 $activity-content-width: 1em + 12em + size.$text-width;
 
-@media (min-width: #{($activity-content-width + 7em)}) {
+@media (min-width: #{$activity-content-width}) {
 	.gpoa.activity .item-full-content {
 		width: $activity-content-width;
 	}

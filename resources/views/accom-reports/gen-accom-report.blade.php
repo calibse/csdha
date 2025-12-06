@@ -1,5 +1,5 @@
 <x-layout.user form :$backRoute title="Generate Accomplishment Report" class="accom-report generate form">
-<article class="article">
+<div class="article">
 	<div class="pdf-control">
 		<x-alert/>
 		<form>
@@ -45,7 +45,7 @@
 @elseif (!$hasApproved)
 	<p>There are no approved accomplishment reports yet.</p>
 @endif
-</article>
+</div>
 <form id="cancel-form" style="display: none;" action="{{ $cancelFormAction }}">
 </form>
 </x-layout.user>

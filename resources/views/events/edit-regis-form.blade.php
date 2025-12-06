@@ -1,5 +1,5 @@
 <x-layout.user content-view class="events form" :$backRoute title="Edit Registration Form">
-    <article class="article">
+    <div class="article">
         <form method="post" action="{{ $formAction }}">
             @method('PUT')
             @csrf
@@ -15,5 +15,5 @@
 		>Update</button>
             </p>
         </form>
-    </article>
+    </div>
 </x-layout.user>
