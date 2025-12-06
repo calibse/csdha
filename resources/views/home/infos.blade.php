@@ -10,7 +10,13 @@
 			</div><!-- --><div class="featcontent">
 				<x-dynamic-component :component="$featContent['view']" :model="$featContent['model']" :next="$featContent['next_link']" :prev="$featContent['prev_link']" />
 			@endforeach
+			@if (count($featContents) === 2)
+			</div><!-- --><div class="featcontent">
+				<x-home-feat-welcome next="#featured-1" prev="#featured-2" />
 			</div>
+			@else
+			</div>
+			@endif
 		@elseif ($featStatus === 'partial')
 			<div> 	
 			@foreach ($featContents as $featContent)
@@ -29,6 +35,10 @@
 		</div>
 	</div>
 @if ($featStatus !== 'none')
+	<div class="featbox-nav-hint">
+		<img class="next" src="{{ asset('icon/light/caret-right.svg') }}">
+		<img class="prev" src="{{ asset('icon/light/caret-left.svg') }}">
+	</div>
 	<div class="content-nav-links featbox-indicator">
 		<a 
 			class="featured1-dot" href="#featured-1"></a><a 

@@ -267,6 +267,7 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 	display: none;
 	position: fixed;
 	top: 0;
+	bottom: 0;
         left: size.$sidebar-width; 
 	border: 0;
 	background-color: transparent;
@@ -531,8 +532,10 @@ $mq-count: 4;
 @mixin main-header {
 	width: size.$sidebar-width;
 	max-width: 100%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
 	height: 100%;
-	position: fixed;
 	z-index: 100;
 	overflow: auto;
 	border-right: solid color.$menu-border size.$line-width;
@@ -627,8 +630,6 @@ $mq-count: 4;
 
 @mixin main-header-target {
 	@include main-header;
-	bottom: 0;
-	top: 0;
 	left: -18em;
 
 	.main-header-title {
@@ -706,9 +707,7 @@ $mq-count: 4;
 	#menu:target,
 	#menu:not(:target) {
 		transition: none;
-		top: 0;
 		left: 0;
-		bottom: 0;
 		box-shadow: none;
 
 		.close-menu-button {
@@ -721,11 +720,13 @@ $mq-count: 4;
 	}
 
 	.main-header {
+	/*
 		@include main-header;
 		position: fixed;
 		z-index: 100;
 		width: size.$sidebar-width;
 		box-shadow: none;
+	*/
 	}
 
 	.main-header-info {

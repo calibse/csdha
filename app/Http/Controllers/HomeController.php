@@ -71,7 +71,7 @@ class HomeController extends Controller
                 ],
                 [
                     'names' => ['upcoming_event', 'ongoing_event', 
-                        'recent_event'],
+                        'recent_event', 'new_activity'],
                      'next_link' => '#featured-3',
                      'prev_link' => '#featured-1',
                 ],
@@ -114,7 +114,7 @@ class HomeController extends Controller
         foreach ($candidates as $candidate) {
             $chosenRecord = null;
             $names = $candidate['names'];
-            $lastName = array_pop($names);
+            //$lastName = array_pop($names);
             foreach ($names as $record) {
                 if (!in_array($record, $usedRecords) && self::getRecord(
                     $record, true)) {
@@ -122,9 +122,11 @@ class HomeController extends Controller
                     break;;
                 }
             }
+        /*
             if (!$chosenRecord) {
                 $chosenRecord = $lastName;
             }
+        */ 
 
             if ($chosenRecord) {
                 $usedRecords[] = $chosenRecord;

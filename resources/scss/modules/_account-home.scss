@@ -9,6 +9,7 @@ $dot-color: #dddddd;
 $selected-dot-color: #ffffff;
 $featbox-height: 18em;
 $featbox-y-margin: 2.3em;
+$featbox-duration: 15s;
 
 @mixin drift($slide2, $slide3) {
 	0%, 22%   { transform: translateX(0); }
@@ -95,6 +96,22 @@ $featbox-y-margin: 2.3em;
 	margin: 1em auto;
 	height: $featbox-height;
 
+	.featbox-nav-hint img {
+		&.next, &.prev {
+			position: absolute;
+			top: math.div($featbox-height, 2) - 1em;
+			pointer-events: none;
+		}
+
+		&.next {
+			right: .8em;
+		}
+
+		&.prev {
+			left: .8em;
+		}
+	}
+
 	.feat-controller {
 		position: fixed;
 		top: 0;
@@ -117,16 +134,16 @@ $featbox-y-margin: 2.3em;
 	}
 
 	.content-nav-links .featured1-dot {
-		animation: featured1-dot1-drift 12s infinite;
+		animation: featured1-dot1-drift $featbox-duration infinite;
 		background-color: $selected-dot-color; 
 	}
 
 	.content-nav-links .featured2-dot {
-		animation: featured1-dot2-drift 12s infinite;
+		animation: featured1-dot2-drift $featbox-duration infinite;
 	}
 
 	.content-nav-links .featured3-dot {
-		animation: featured1-dot3-drift 12s infinite;
+		animation: featured1-dot3-drift $featbox-duration infinite;
 	}
 
 	> .content-block {
@@ -138,23 +155,23 @@ $featbox-y-margin: 2.3em;
 
 		.featbox-contents {
 			height: 100%;
-			animation: drift1 12s infinite ease-in-out;
+			animation: drift1 $featbox-duration infinite ease-in-out;
 		}
 	}
 
 	#featured-1:target {
 		~ .content-nav-links .featured1-dot {
 			background-color: $selected-dot-color; 
-			animation: featured1-dot1-drift 12s infinite;
+			animation: featured1-dot1-drift $featbox-duration infinite;
 		}
 
 		~ .content-nav-links .featured2-dot {
-			animation: featured1-dot2-drift 12s infinite;
+			animation: featured1-dot2-drift $featbox-duration infinite;
 			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured3-dot {
-			animation: featured1-dot3-drift 12s infinite;
+			animation: featured1-dot3-drift $featbox-duration infinite;
 			background-color: $dot-color; 
 		}
 
@@ -162,24 +179,24 @@ $featbox-y-margin: 2.3em;
 			left: 0;
 
 			.featbox-contents {
-				animation: drift1 12s infinite ease-in-out;
+				animation: drift1 $featbox-duration infinite ease-in-out;
 			}
 		}
 	}
 
 	#featured-2:target {
 		~ .content-nav-links .featured1-dot {
-			animation: featured2-dot1-drift 12s infinite;
+			animation: featured2-dot1-drift $featbox-duration infinite;
 			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured2-dot {
 			background-color: $selected-dot-color; 
-			animation: featured2-dot2-drift 12s infinite;
+			animation: featured2-dot2-drift $featbox-duration infinite;
 		}
 
 		~ .content-nav-links .featured3-dot {
-			animation: featured2-dot3-drift 12s infinite;
+			animation: featured2-dot3-drift $featbox-duration infinite;
 			background-color: $dot-color; 
 		}
 
@@ -187,24 +204,24 @@ $featbox-y-margin: 2.3em;
 			left: -100%;
 
 			.featbox-contents {
-				animation: drift2 12s infinite ease-in-out;
+				animation: drift2 $featbox-duration infinite ease-in-out;
 			}
 		}
 	}
 
 	#featured-3:target {
 		~ .content-nav-links .featured1-dot {
-			animation: featured3-dot1-drift 12s infinite;
+			animation: featured3-dot1-drift $featbox-duration infinite;
 			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured2-dot {
-			animation: featured3-dot2-drift 12s infinite;
+			animation: featured3-dot2-drift $featbox-duration infinite;
 			background-color: $dot-color; 
 		}
 
 		~ .content-nav-links .featured3-dot {
-			animation: featured3-dot3-drift 12s infinite;
+			animation: featured3-dot3-drift $featbox-duration infinite;
 			background-color: $selected-dot-color; 
 		}
 
@@ -212,7 +229,7 @@ $featbox-y-margin: 2.3em;
 			left: -200%;
 
 			.featbox-contents {
-				animation: drift3 12s infinite ease-in-out;
+				animation: drift3 $featbox-duration infinite ease-in-out;
 			}
 		}
 	}
