@@ -532,7 +532,7 @@ $mq-count: 4;
 @mixin main-header {
 	width: size.$sidebar-width;
 	max-width: 100%;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	bottom: 0;
 	height: 100%;
