@@ -1,5 +1,5 @@
 <x-layout.user :index="!$gpoaActive || !$dates->isNotEmpty()" form title="Attendance" route='user.home' class="attendance form">
-    <article class="article">
+    <div class="article">
 	@if (!$gpoaActive)
 		<p>There is no active GPOA right now.</p>
 	@else
@@ -97,5 +97,5 @@
             <p>There are no ongoing events today.</p>
     @endif
 	@endif
-    </article>
+    </div>
 </x-layout.user>
