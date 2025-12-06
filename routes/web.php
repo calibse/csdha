@@ -455,7 +455,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
         Route::get('/index.html', 'show')->name('show');
 
-        Route::get('/report.html', 'showReport')->name('report.show');
+        Route::get('/report.html', 'showFinalReport')->name('report.show');
 
         Route::get('/report.pdf', 'showReportFile')->name('report-file.show');
 

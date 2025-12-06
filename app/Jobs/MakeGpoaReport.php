@@ -24,8 +24,7 @@ class MakeGpoaReport implements ShouldQueue, ShouldBeUnique
     public function handle(): void
     {
         $gpoa = $this->gpoa;
-        $gpoaActive = $gpoa?->active;
-        if (!$this->authUser || !$gpoaActive || !$gpoa?->activities()
+        if (!$this->authUser || !$gpoa?->activities()
             ->where('status', 'approved')->exists()) {
             return;
         }

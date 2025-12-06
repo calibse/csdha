@@ -136,6 +136,29 @@ class GpoaController extends Controller implements HasMiddleware
         ]);
     }
 
+    public function showFinalReport(Gpoa $gpoa)
+    {
+        $fileRoute = null;
+        $hasFile = $gpoa->report_filepath;
+        if ($hasFile) {
+            $fileRoute = route('gpoas.report-file.show', [
+                'gpoa' => $gpoa->public_id
+            ], false);
+        }
+        $response = response()->view('gpoa.show-final-report', [
+            'fileRoute' => $fileRoute,
+            'backRoute' => route('gpoas.show', [
+                'gpoa' => $gpoa->public_id
+            ]),
+            'prepareMessage' => Format::documentPrepareMessage(),
+        ]);
+        if ($hasFile) {
+            return $response;
+        }
+        MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
+        return $response->header('Refresh', '5');
+    }
+
     public function showReport(Gpoa $gpoa)
     {
         $fileRoute = null;
