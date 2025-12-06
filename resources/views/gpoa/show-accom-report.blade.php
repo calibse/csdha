@@ -2,13 +2,17 @@
 <div class="article">
 @if ($fileRoute)
 	<div class="pdf-document">
-		<figure class="pdf-file">
-			<iframe src="/viewerjs/#..{{ $fileRoute}}">
-				<p>
-					Preview of this file is unsupported. You may download this 
-					file <a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
-				</p>
-			</iframe>
+		<figure>
+			<div class="pdf-file">
+				<object data="{{ rtrim(url('/'), '/') . $fileRoute }}">
+					<iframe src="/viewerjs/#..{{ $fileRoute}}">
+						<p>
+							Preview of this file is unsupported. You may download this 
+							file <a href="{{ rtrim(url('/'), '/') . $fileRoute }}">here</a>.
+						</p>
+					</iframe>
+				</object>
+			</div>
 			<figcaption>
 				<div class="caption">Accomplishment Report</div>
 			</figcaption>
