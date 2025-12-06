@@ -68,7 +68,7 @@ function addEventToMatchingIds(element) {
 		if (!(id && id.indexOf(idParts[0]) === 0 && 
 			id.lastIndexOf(idParts[1]) === 
 			(id.length - idParts[1].length))) continue;
-		currentEl.addEventListener(element.event, element.action);
+		currentEl.addEventListener(element.event, element.action, false);
 	}
 }
 
@@ -83,7 +83,7 @@ function addEvents(elementActions) {
 		}
 		currentEl = document.getElementById(element.element);
 		if (!currentEl) continue;
-		currentEl.addEventListener(element.event, element.action);
+		currentEl.addEventListener(element.event, element.action, false);
 	}
 }
 

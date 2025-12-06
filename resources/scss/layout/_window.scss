@@ -7,7 +7,7 @@
 $window-width: size.$text-width + .94em * 2;
 
 .window {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	border: solid size.$line-width color.$window-border;

@@ -88,8 +88,8 @@ export function setWindowDragging(e) {
 	e.currentTarget.style.cursor = "grab";
 	WINDOW_OFFSET_X = e.clientX - el.offsetLeft;
 	WINDOW_OFFSET_Y = e.clientY - el.offsetTop;
-	document.addEventListener("mousemove", startWindowDragging);
-	document.addEventListener("mouseup", stopWindowDragging);
+	document.addEventListener("mousemove", startWindowDragging, false);
+	document.addEventListener("mouseup", stopWindowDragging, false);
 }
 
 export function startWindowDragging(e) {
@@ -108,8 +108,8 @@ export function stopWindowDragging(e) {
 	elementId = getOpenedWindowId();
 	titleEl = document.getElementById(elementId + "_title-bar");
 	titleEl.style.removeProperty("cursor");
-	document.removeEventListener("mousemove", startWindowDragging);
-	document.removeEventListener("mouseup", stopWindowDragging);
+	document.removeEventListener("mousemove", startWindowDragging, false);
+	document.removeEventListener("mouseup", stopWindowDragging, false);
 }
 
 export function openWindow(force) {
@@ -134,10 +134,10 @@ export function openWindow(force) {
 	titleEl = document.getElementById(elementId + "_title-bar");
 	closeEl = document.getElementById(elementId + "_close");
 	WINDOW_DRAGGED = false;
-	titleEl.removeEventListener("mousedown", setWindowDragging);
-	closeEl.removeEventListener("click", closeWindow); 
-	titleEl.addEventListener("mousedown", setWindowDragging);
-	closeEl.addEventListener("click", closeWindow); 
+	titleEl.removeEventListener("mousedown", setWindowDragging, false);
+	closeEl.removeEventListener("click", closeWindow, false); 
+	titleEl.addEventListener("mousedown", setWindowDragging, false);
+	closeEl.addEventListener("click", closeWindow, false); 
 	el.style.display = "block";
 }
 
@@ -200,8 +200,8 @@ export function openEditItemWindow(windowEl) {
 	}
 	baseId = windowEl.item.replace(/-\d+/g, "");
 	deleteEl = document.getElementById(baseId + "_delete-button");
-	deleteEl.removeEventListener("click", openDeleteWindowOnWindow);
-	deleteEl.addEventListener("click", openDeleteWindowOnWindow);
+	deleteEl.removeEventListener("click", openDeleteWindowOnWindow, false);
+	deleteEl.addEventListener("click", openDeleteWindowOnWindow, false);
 	openEditWindow(windowEl);
 }
 
