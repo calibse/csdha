@@ -88,6 +88,7 @@
 		@endswitch
 	@endif
 	</div>
+@if ($gpoa)
 <x-window class="form" id="gpoa_close" title="Close GPOA">
 	<p>
 		Are you sure you want to close this GPOA for {{ $gpoa->academicPeriod->term->label }} A.Y. {{ $gpoa->academicPeriod->year_label }}?
@@ -101,4 +102,5 @@
 		</form>
 	</div>
 </x-window>
+@endif
 </x-layout.user>

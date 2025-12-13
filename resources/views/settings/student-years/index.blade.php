@@ -1,29 +1,33 @@
 <x-layout.user content-view :$backRoute class="settings" title="Edit Student Year Levels">
-	<x-slot:toolbar>
-		<a 
-                @can ('create', 'App\Models\StudentYear')
-		href="{{ $createRoute }}"
-		@endcan
-		>
-			<img class="icon" src="{{ asset('icon/light/plus.png') }}">
+<x-slot:toolbar>
+	<a 
+	@can ('create', 'App\Models\StudentYear')
+	href="{{ $createRoute }}"
+	@endcan
+	>
+		<img class="icon" src="{{ asset('icon/light/plus.png') }}">
 
-			<span class="text">Add student year level</span>
-		</a>
-	</x-slot:toolbar>
-	<div class="article">
-		<x-alert/>
-		<ul class="item-list">
-		@foreach ($years as $year)
-			<li class="item">
-				<span class="content">{{ "{$year->label} ({$year->year})" }}</span>
-				<span class="context-menu">
-					<form method="get" action="{{ route('settings.students.years.confirm-destroy', ['year' => $year->id]) }}"> 
-                                                <button {{ auth()->user()->cannot('delete', $year) ? 'disabled' : null }} >Delete</button>
+		<span class="text">Add student year level</span>
+	</a>
+</x-slot:toolbar>
+<div class="article">
+	<x-alert/>
+@if ($years->isNotEmpty())
+	<ul class="item-list">
+	@foreach ($years as $year)
+		<li class="item">
+			<span class="content">{{ "{$year->label} ({$year->year})" }}</span>
+			<span class="context-menu">
+				<form method="get" action="{{ route('settings.students.years.confirm-destroy', ['year' => $year->id]) }}"> 
+					<button {{ auth()->user()->cannot('delete', $year) ? 'disabled' : null }} >Delete</button>
 
-					</form>
-				</span>
-			</li>
-		@endforeach
-		</ul>
-	</div>
+				</form>
+			</span>
+		</li>
+	@endforeach
+	</ul>
+@else
+	<p>Nothing here yet.</p>
+@endif
+</div>
 </x-layout.user>
