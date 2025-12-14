@@ -8,6 +8,8 @@ use Illuminate\Validation\Rule;
 
 class StoreStudentCourseRequest extends FormRequest
 {
+    protected $errorBag = 'student-course_create';
+
     public function rules(): array
     {
         return [

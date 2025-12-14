@@ -7,6 +7,8 @@ use Illuminate\Validation\Rule;
 
 class StoreStudentSectionRequest extends FormRequest
 {
+    protected $errorBag = 'student-section_create';
+
     public function rules(): array
     {
         return [

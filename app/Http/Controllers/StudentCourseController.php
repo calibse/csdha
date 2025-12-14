@@ -29,7 +29,7 @@ class StudentCourseController extends Controller implements HasMiddleware
             'courses' => $courses,
             'backRoute' => route('settings.index'),
             'createRoute' => route('settings.students.courses.create'),
-
+            'createFormAction' => route('settings.students.courses.store'),
         ]); 
     }
 

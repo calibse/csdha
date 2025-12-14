@@ -19,7 +19,7 @@ function openActionWindow(e, $action) {
 	formEl = el.getElementsByTagName("form")[0];
 	formEl.action = actionUrl;
 	dialog.setOpenedWindowId(id);
-	dialog.openWindow(true);
+	dialog.openWindow();
 }
 
 export function submitActivity(e) {

@@ -34,7 +34,7 @@ export function openEditWindow(windowEl) {
 		fieldEl.value = valueEl.textContent;
 	}
 	setOpenedWindowId(windowEl.element);
-	openWindow(true);
+	openWindow();
 }
 
 export function isThereOpenWindow() {
@@ -45,16 +45,18 @@ export function isThereOpenWindow() {
 		return false;
 	}
 	el = document.getElementById(id);
-	if (!el || el.style.display === "none") {
+	// if (!el || el.style.display === "none") {
+	if (!el || el.classList.contains("is-hidden") ) {
 		forgetOpenedWindowId(id);
 		return false;
 	}
 	return true;
 }
 
-export function closeWindow() {
+export function closeWindow(e, force) {
 	var elementId, el, errorEl;
 
+	force = (typeof force !== "undefined") ? force : false;
 	elementId = getOpenedWindowId();
 	if (!elementId) return;
 	el = document.getElementById(elementId);
@@ -63,10 +65,11 @@ export function closeWindow() {
 	if (errorEl) {
 		errorEl.style.display = "none";
 	}
-	el.style.display = "none";
-	el.style.removeProperty("top");
-	el.style.removeProperty("left"); 
-	el.style.removeProperty("margin-left");
+	// el.style.display = "none";
+	el.classList.remove("is-visible");
+	if (!force) {
+		el.classList.add("is-hidden");
+	}
 	forgetOpenedWindowId();
 }
 
@@ -123,10 +126,10 @@ export function openWindow(force) {
 		return;
 	}
 	errorEl = document.getElementById("window-form-error");
-	if (!errorEl && !force) {
-		closeWindow();
+	if (!errorEl && force) {
+		closeWindow(null, true);
 		return;
-	} else if (errorEl && force) {
+	} else if (errorEl && !force) {
 		errorEl.style.display = "none";
 	}
 	el = document.getElementById(elementId);
@@ -134,26 +137,39 @@ export function openWindow(force) {
 	titleEl = document.getElementById(elementId + "_title-bar");
 	closeEl = document.getElementById(elementId + "_close");
 	WINDOW_DRAGGED = false;
+	el.style.removeProperty("top");
+	el.style.removeProperty("left"); 
+	el.style.removeProperty("margin-left");
 	titleEl.removeEventListener("mousedown", setWindowDragging, false);
 	closeEl.removeEventListener("click", closeWindow, false); 
 	titleEl.addEventListener("mousedown", setWindowDragging, false);
 	closeEl.addEventListener("click", closeWindow, false); 
-	el.style.display = "block";
+	// el.style.display = "block";
+	el.classList.remove("is-hidden");
+	if (force) {
+		el.classList.add("is-always-visible");
+	} else {
+		el.classList.add("is-visible");
+	}
 }
 
 export function openDeleteItemWindow(e) {
         var windowId, formId, actionLink, formEl, content, contentId, 
-		contentEl, windowEl, baseId, actionEl;
+		contentEl, windowEl, baseId, actionEl, buttonEl;
 
         e.preventDefault();
         if (isThereOpenWindow()) {
                 return;
         } 
+	buttonEl = e.currentTarget;
         contentId = e.currentTarget.id.replace("_delete-button", "");
 	baseId = contentId.replace(/-\d+/g, "");
         windowId = baseId + "_delete";
         actionEl = document.getElementById(contentId + "_delete-link");
-        actionLink = actionEl.value || actionEl.dataset.action;
+	if (actionEl) {
+		actionLink = actionEl.value || actionEl.dataset.action;
+	}
+	actionLink = actionLink || buttonEl.dataset.action;
 	windowEl = document.getElementById(windowId);
 	formEl = windowEl.getElementsByTagName("form")[0];
 	formEl.action = actionLink;
@@ -161,7 +177,7 @@ export function openDeleteItemWindow(e) {
 	contentEl = document.getElementById(baseId + "_delete-content");
 	contentEl.textContent = content;
 	setOpenedWindowId(windowId);
-	openWindow(true);
+	openWindow();
 }
 
 export function openDeleteWindowOnWindow(e) {
@@ -183,7 +199,7 @@ export function openDeleteWindowOnWindow(e) {
 	contentEl = document.getElementById(baseId + "_delete-content");
 	contentEl.textContent = content;
 	setOpenedWindowId(windowId);
-	openWindow(true);
+	openWindow();
 }
 
 export function openEditItemWindow(windowEl) {
@@ -210,7 +226,13 @@ export function prepareOpenWindow(e, id) {
 	if (isThereOpenWindow()) {
 		return;
 	}
+	if (id) {
+		setOpenedWindowId(id);
+		openWindow();
+		return;
+	}
+        id = e.currentTarget.id.replace("-button", "");
 	setOpenedWindowId(id);
-	openWindow(true);
+	openWindow();
 }
 

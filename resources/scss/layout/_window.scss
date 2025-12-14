@@ -6,22 +6,74 @@
 
 $window-width: size.$text-width + .94em * 2;
 
+@mixin visible-window {
+	transform: scale(1);
+	opacity: 1;
+	visibility: visible;
+}
+
+@mixin hidden-window {
+	transform: scale(0.9);
+	opacity: 0;
+	visibility: hidden;
+}
+
 .window {
 	position: fixed;
 	top: 0;
 	left: 0;
 	border: solid size.$line-width color.$window-border;
-	border-radius: size.$corner-roundness;
+	border-radius: 1.3em;
 	overflow: hidden;
 	width: 96%;
 	margin-top: 1em;
 	margin-left: 2%;
 	box-shadow: color.$window-shadow;
 	z-index: 90;
+	@include hidden-window;
 
 	&.form .window-content {
 		background-color: color.$form-bg;
 	}
+}
+
+@keyframes hide-window {
+	0% {
+		@include visible-window;
+	}
+
+	100% {
+		@include hidden-window;
+	}
+}
+
+@keyframes show-window {
+	0% {
+		@include hidden-window;
+	}
+
+	50% {
+		@include visible-window;
+		transform: scale(1.01);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+
+.window.is-always-visible {
+	@include visible-window;
+}
+
+.window.is-visible {
+	@include visible-window;
+	animation: show-window .3s;
+}
+
+.window.is-hidden {
+	@include hidden-window;
+	animation: hide-window .15s;
 }
 
 @media (min-width: #{size.$wide-screen}) {

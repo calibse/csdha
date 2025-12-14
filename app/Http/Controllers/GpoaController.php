@@ -323,7 +323,11 @@ class GpoaController extends Controller implements HasMiddleware
     private static function destroyGpoa(): void
     {
         $gpoa = self::$gpoa;
-        $gpoa->activities()?->delete();
+        $activities = $gpoa->activities;
+        foreach ($activities as $activity) {
+            $activity->eventHeads()->detach();
+            $activity->delete();
+        }
         $gpoa->delete();
     }
 

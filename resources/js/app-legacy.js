@@ -6,6 +6,7 @@ import * as dialog from "./modules/window";
 import * as events from "./modules/events";
 import * as accomReports from "./modules/accom_reports";
 import * as gpoaActivities from "./modules/gpoa_activities";
+import * as students from "./modules/students";
 
 function runTimezoneAction(actionDeps) {
 	var date, intl, satisfied;
@@ -82,7 +83,10 @@ function addEvents(elementActions) {
 			continue;
 		}
 		currentEl = document.getElementById(element.element);
-		if (!currentEl) continue;
+		if (!currentEl) {
+			//console.log(element.element);
+			continue;
+		}
 		currentEl.addEventListener(element.event, element.action, false);
 	}
 }
@@ -234,6 +238,56 @@ function setEvents() {
 			event: "click",
 			action: gpoaActivities.closeGpoa
 		},
+		{
+			element: "student-section_create-button",
+			event: "click",
+			action: students.createSection,
+		},
+		{
+			element: "student-section-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "student-year-level_create-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
+		{
+			element: "student-year-level-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "student-course_create-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
+		{
+			element: "student-course-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "gpoa-mode-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "gpoa-fund-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "gpoa-partnership-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "gpoa-type-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
 	];
 	addEvents(elementActions);
 }
@@ -252,5 +306,5 @@ function setBackLink(e) {
 setTimezoneActions();
 setActions();
 setEvents();
-dialog.openWindow();
+dialog.openWindow(true);
 

@@ -30,6 +30,7 @@ class StudentSectionController extends Controller implements HasMiddleware
             'sections' => $sections,
             'backRoute' => route('settings.index'),
             'createSectionRoute' => route('settings.students.sections.create'),
+            'createFormAction' => route('settings.students.sections.store'),
         ]); 
     }
 

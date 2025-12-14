@@ -162,7 +162,7 @@ class GpoaActivityController extends Controller implements HasMiddleware
         };
         $date = $date?->timezone(config('timezone'))
             ->format(config('app.date_format'));
-        if (config('timezone') === 'UTC') {
+        if ($date && config('timezone') === 'UTC') {
             $date = $date . ' UTC';
         }
         $submitActionRoute = route('gpoa.activities.submit', [

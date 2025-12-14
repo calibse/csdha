@@ -12,7 +12,7 @@ export function createEventDate(e) {
 	id = "event-date_create";
 	el = document.getElementById(id);
 	dialog.setOpenedWindowId(id);
-	dialog.openWindow(true);
+	dialog.openWindow();
 }
 
 export function editEventVenue(e) {
@@ -82,7 +82,7 @@ export function createEventAttachmentSet(e) {
 	id = "event-attachment-set_create";
 	el = document.getElementById(id);
 	dialog.setOpenedWindowId(id);
-	dialog.openWindow(true);
+	dialog.openWindow();
 }
 
 export function createEventLink(e) {
@@ -95,7 +95,7 @@ export function createEventLink(e) {
 	id = "event-link_create";
 	el = document.getElementById(id);
 	dialog.setOpenedWindowId(id);
-	dialog.openWindow(true);
+	dialog.openWindow();
 }
 
 export function editEventBanner(e) {
@@ -108,7 +108,7 @@ export function editEventBanner(e) {
 	id = "event-banner_edit";
 	el = document.getElementById(id);
 	dialog.setOpenedWindowId(id);
-	dialog.openWindow(true);
+	dialog.openWindow();
 }
 
 export function editEventAttachmentSet(e) {
@@ -147,6 +147,6 @@ export function deleteEventAttachment(e) {
 	id = "event-attachment_delete";
 	el = document.getElementById(id);
 	dialog.setOpenedWindowId(id);
-	dialog.openWindow(true);
+	dialog.openWindow();
 }
 

@@ -29,6 +29,7 @@ class StudentYearController extends Controller implements HasMiddleware
             'years' => $years,
             'backRoute' => route('settings.index'),
             'createRoute' => route('settings.students.years.create'),
+            'createFormAction' => route('settings.students.years.store'),
         ]); 
     }
 

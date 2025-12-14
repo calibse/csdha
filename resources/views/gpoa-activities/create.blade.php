@@ -12,11 +12,11 @@
 		</p>
 		<p>
 			<label>Start Date</label>
-			<input type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $activity?->start_date?->toDateString() }}">
+			<input placeholder="yyyy-mm-dd" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $activity?->start_date?->toDateString() }}">
 		</p>
 		<p>
 			<label>End Date (optional)</label>
-			<input type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $activity?->end_date?->toDateString() }}">
+			<input placeholder="yyyy-mm-dd" type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $activity?->end_date?->toDateString() }}">
 		</p>
 		<p>
 			<label>Objectives</label>

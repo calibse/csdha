@@ -8,6 +8,8 @@ use Illuminate\Validation\Rule;
 
 class StoreStudentYearRequest extends FormRequest
 {
+    protected $errorBag = 'student-year-level_create';
+
     public function rules(): array
     {
         return [
