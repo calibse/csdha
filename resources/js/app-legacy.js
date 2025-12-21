@@ -8,33 +8,6 @@ import * as accomReports from "./modules/accom_reports";
 import * as gpoaActivities from "./modules/gpoa_activities";
 import * as students from "./modules/students";
 
-function runTimezoneAction(actionDeps) {
-	var date, intl, satisfied;
-	
-	satisfied = true;
-	intl = actionDeps[0];
-	date = actionDeps[1];
-	for (var i = 0; i < intl.depends.length; i++) {
-		if (window[intl.depends[i]] === undefined) {
-			satisfied = false;
-			break;
-		}
-	}
-	if (satisfied) {
-		intl.action();
-		return;
-	}
-	for (var i = 0; i < date.depends.length; i++) {
-		if (window[date.depends[i]] === undefined) {
-			satisfied = false;
-			break;
-		}
-	}
-	if (satisfied) {
-		date.action();
-	}
-}
-
 function runActions(actionDeps) {
 	var actions, depends, action, depend, satisfied;
 
@@ -84,7 +57,6 @@ function addEvents(elementActions) {
 		}
 		currentEl = document.getElementById(element.element);
 		if (!currentEl) {
-			//console.log(element.element);
 			continue;
 		}
 		currentEl.addEventListener(element.event, element.action, false);
@@ -104,19 +76,11 @@ function setActions() {
 }
 
 function setTimezoneActions() {
-	var timezoneActions;
-
-	timezoneActions = [
-		{
-			action: timezone.setTimezoneFromIntl,
-			depends: [ "Intl" ]
-		},
-		{
-			action: timezone.setTimezoneFromDate,
-			depends: [ "Date" ]
-		}
-	];
-	runTimezoneAction(timezoneActions);
+	if (window["Intl"] !== undefined) {
+		timezone.setTimezoneFromIntl();
+	} else if (window["Date"] !== undefined) {
+		timezone.setTimezoneFromDate();
+	}
 }
 
 function setEvents() {
@@ -288,8 +252,17 @@ function setEvents() {
 			event: "click",
 			action: dialog.openDeleteItemWindow 
 		},
+		{
+			element: "print-button",
+			event: "click",
+			action: printPage
+		},
 	];
 	addEvents(elementActions);
+}
+
+function printPage() {
+	window.print();
 }
 
 function setBackLink(e) {

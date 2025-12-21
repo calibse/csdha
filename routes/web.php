@@ -487,7 +487,8 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                 Route::get('/gpoa_report_{id}.pdf', 'streamPdf')
                     ->name('streamPdf');
 
-                Route::get('/report.html', 'genPdf')->name('showGenPdf');
+                // Route::get('/report.html', 'genPdf')->name('showGenPdf');
+                Route::get('/report.html', 'showCurrentReport')->name('showGenPdf');
 
                 Route::get('/confirm-close.html', 'confirmClose')
                     ->name('confirmClose');

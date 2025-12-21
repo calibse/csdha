@@ -81,7 +81,8 @@ export function setWindowDragging(e) {
 	elementId = getOpenedWindowId();
 	el = document.getElementById(elementId);
 	if (!WINDOW_DRAGGED) {
-		parentWidth = el.offsetParent.offsetWidth;
+		// parentWidth = el.offsetParent.offsetWidth;
+		parentWidth = window.innerWidth;
 		elWidth = el.offsetWidth;
 		realLeft = parentWidth / 2 - elWidth / 2;
 		el.style.left = realLeft + "px";

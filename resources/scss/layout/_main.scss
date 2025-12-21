@@ -868,3 +868,25 @@ $mq-count: 4;
 }
 */
 
+
+@media print {
+	.main-toolbar,
+	.main-content-header {
+		display: none;
+	}
+
+	.main-content.print {
+		padding-top: 0;
+
+		.content-block {
+			height: auto;
+		}
+
+		.content-block .article {
+			margin: 0;
+			padding: 0;
+			max-width: none;
+			min-height: 0;
+		}
+	}
+}

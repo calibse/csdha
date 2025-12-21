@@ -242,6 +242,15 @@ class GpoaController extends Controller implements HasMiddleware
         return redirect()->route('gpoa.index');
     }
 
+    public function showCurrentReport(Request $request)
+    {
+        $gpoa = self::$gpoa;
+        return view('gpoa.show-gpoa-report', [
+            'authUser' => auth()->user(), 
+            'backRoute' => route('gpoa.index'),
+        ] + $gpoa->reportViewData());
+    }
+
     public function genPdf(Request $request)
     {
         $gpoa = self::$gpoa;
