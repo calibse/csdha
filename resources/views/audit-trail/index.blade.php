@@ -2,7 +2,7 @@
 <x-layout.user index title="Audit Trail" class="index audit">
     <article class="article">
 @if ($audits->isNotEmpty())
-        <table class="table-4">
+        <table class="main-table table-4">
 		<colgroup>
 			<col span="4" style="width: 25%">
 		</colgroup>

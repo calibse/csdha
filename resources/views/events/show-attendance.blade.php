@@ -15,7 +15,7 @@
 	@foreach ($eventDates as $date)
 	<h2 class="title">{{ $date->full_date }}</h2>
 		@if ($date->attendees->isNotEmpty())
-	<table class="table-2">
+	<table class="main-table table-2">
 		<thead>
 			<tr>
 				<th>Student ID</th>

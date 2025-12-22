@@ -8,10 +8,10 @@
 	<div id="page-header">
 		<div class="logos">
 			<div class="logo">
-				<img src="storage/app/public/university-logo.png">
+				<img src="{{ asset('storage/university-logo.png') }}">
 			</div>
 			<div class="logo">
-				<img src="storage/app/public/organization-logo.png">
+				<img src="{{ asset('storage/organization-logo.png') }}">
 			</div>
 		</div>
 		<div class="text">
@@ -21,7 +21,7 @@
 			<p class="org-name">COMPUTER SOCIETY</p>
 		</div>
 	</div>
-	<div class="main-header">
+	<div class="header">
 		<p>GENERAL PLAN OF ACTIVITIES</p>
 		<p>{{ $gpoa->academicPeriod?->term?->label }}
 			A.Y. {{ $gpoa->academicPeriod?->year_label }}

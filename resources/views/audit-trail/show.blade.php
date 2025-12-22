@@ -1,6 +1,6 @@
 <x-layout.user :$backRoute class="audit" title="Audit Trail">
 <div class="article">
-	<table class="table-2">
+	<table class="main-table table-2">
 		<colgroup>
 			<col style="width: 10rem">
 		</colgroup>

@@ -95,7 +95,7 @@
 	<div class="item-full-content">
 		<div class="content-block">
 			<h2>{{ $activity->name }}</h2>
-			<table class="table-2">
+			<table class="main-table table-2">
 				<colgroup>
 					<col style="width: 12em;">
 				</colgroup>

@@ -15,7 +15,7 @@
         <h2 class="title">{{ $date->full_date }}</h2>
             @if ($date->officerAttendees->isNotEmpty())
         <div class="">
-            <table class="table-3">
+            <table class="main-table table-3">
                 <thead>
                     <tr>
                         <th>Name</th>

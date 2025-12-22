@@ -49,7 +49,7 @@
 	@if (!$gpoa)
 		<p>There is no active GPOA right now.</p>
 	@elseif ($gpoa && $activities?->isNotEmpty())
-        <table class="articles table-2">
+        <table class="main-table articles table-2">
             <colgroup>
                 <col style="width: 30%">
                 <col style="width: 70%">

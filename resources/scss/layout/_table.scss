@@ -8,7 +8,7 @@
 	margin-top: 0;
 }
 
-table {
+table.main-table {
 	border-collapse: collapse;
 	width: 100%;
 	display: block;
@@ -22,7 +22,7 @@ table {
 	}
 }
 
-thead {
+table.main-table thead {
 	display: block;
 	width: 1px;
 	height: 1px;
@@ -30,7 +30,7 @@ thead {
 	opacity: 0;
 }
 
-tbody {
+table.main-table tbody {
 	width: 100%;
 	display: block;
 
@@ -40,12 +40,12 @@ tbody {
 	}
 }
 
-th {
+table.main-table th {
 	text-align: left;
 	hyphens: auto;
 }
 
-td {
+table.main-table td {
 	display: list-item;
 	list-style: none;
 	padding: .25em 0;
@@ -61,28 +61,28 @@ td {
 	}
 }
 
-tr {
+table.main-table tr {
 	display: block;
 	margin-bottom: .5em;
 	padding-bottom: .5em;
 }
 
-thead + tbody tr {
+table.main-table thead + tbody tr {
 	border-bottom: solid size.$line-width color.$line;
 	margin-bottom: 1em;
 	padding-bottom: 1em;
 }
 
-thead th {
+table.main-table thead th {
 	font-weight: bold;
 	color: color.$table-header-fg;
 }
 
-tbody tr:first-child {
+table.main-table tbody tr:first-child {
 	margin-top: 1em;
 }
 
-table.articles {
+table.main-table.articles {
 
 	tbody tr {
 		background-color: color.$background;
@@ -221,41 +221,41 @@ table.articles {
 }
 
 @media (min-width: 31em) {
-	table.table-2 {
+	table.main-table.table-2 {
 		@include table-wide;
 	}
 
-	table.articles.table-2 {
+	table.main-table.articles.table-2 {
 		@include articles-wide;
 	}
 }
 
 @media (min-width: 57em) {
-	table.table-3 {
+	table.main-table.table-3 {
 		@include table-wide;
 	}
 
-	table.articles.table-3 {
+	table.main-table.articles.table-3 {
 		@include articles-wide;
 	}
 }
 
 @media (min-width: 68em) {
-	table.table-4 {
+	table.main-table.table-4 {
 		@include table-wide;
 	}
 
-	table.articles.table-4 {
+	table.main-table.articles.table-4 {
 		@include articles-wide;
 	}
 }
 
 @media (min-width: 70em) {
-	table.table-6 {
+	table.main-table.table-6 {
 		@include table-wide;
 	}
 
-	table.articles.table-6 {
+	table.main-table.articles.table-6 {
 		@include articles-wide;
 	}
 }

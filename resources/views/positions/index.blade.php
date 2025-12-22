@@ -10,7 +10,7 @@
 	</x-slot:toolbar>
     <div class="article">
     @if ($positions->isNotEmpty())
-	    <table class="table-2">
+	    <table class="main-table table-2">
             <colgroup>
                 <col style="width: 30%">
                 <col style="width: 70%">

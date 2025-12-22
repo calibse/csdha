@@ -7,7 +7,7 @@
     </x-slot:toolbar>
     <div class="article">
         <x-alert/>
-        <table class="table-4">
+        <table class="main-table table-4">
             <colgroup>
                 <col span="4" style="width: 25%">
             </colgroup>
