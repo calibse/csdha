@@ -39,7 +39,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 @endswitch
 	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
 	@vite_legacy('resources/js/app-legacy.js')
-	@vite(['resources/scss/app.scss', 'resources/js/app.js']) 
+	@vite(['resources/scss/app.scss', 'resources/js/app.js', ($style ? 'resources/scss/' . $style : null)]) 
 </head>
 <body class="main-body {{ $index ? 'index' : null }} {{ $form || $contentView ? 'form view' : null }} {{ $hasToolbar ? 'has-toolbar' : null }}">
 @if ($index)
