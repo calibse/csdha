@@ -79,6 +79,56 @@
     src: url("/font/Oxanium.ttf");
 }
 
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("/font/LiberationSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("/font/LiberationSans-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("/font/LiberationSans-Italic.ttf");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Liberation Sans";
+    src: url("/font/LiberationSans-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Liberation Serif";
+    src: url("/font/LiberationSerif-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Liberation Serif";
+    src: url("/font/LiberationSerif-Bold.ttf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Liberation Serif";
+    src: url("/font/LiberationSerif-Italic.ttf");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Liberation Serif";
+    src: url("/font/LiberationSerif-BoldItalic.ttf");
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+
 @source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
 @source "../../storage/framework/views/*.php";
 @source "../**/*.blade.php";

@@ -193,14 +193,16 @@ class AccomReportController extends Controller implements HasMiddleware
             'prepareMessage' => $prepareMessage,
             'formActionUrl' => $formActionUrl,
             'action' => $action,
-        ]);
+        ] + $event->accomReportViewData());
         if (!auth()->user()->can('makeAccomReport', $event)) {
-            return $response;
         }
+            return $response;
+        /*
         $gpoa = Gpoa::active()->first();
         MakeAccomReport::dispatch($gpoa, $event, auth()->user())
             ->onQueue('pdf');
         return $response->header('Refresh', '5');
+        */
     }
 
     public function prepareForSubmit(Event $event)

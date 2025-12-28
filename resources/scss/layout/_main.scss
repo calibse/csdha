@@ -870,17 +870,23 @@ $mq-count: 4;
 
 
 @media print {
+	.main-body.view {
+		background-color: #ffffff;
+	}
+
 	.main-toolbar,
-	.main-content-header {
+	.main-content-header,
+	.main-status {
 		display: none;
+	}
+
+	.main-content.print .content-block,
+	.main-content.print .main-toolbar + .content-block {
+		height: auto;
 	}
 
 	.main-content.print {
 		padding-top: 0;
-
-		.content-block {
-			height: auto;
-		}
 
 		.content-block .article {
 			margin: 0;
