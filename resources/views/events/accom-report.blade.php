@@ -31,10 +31,8 @@
 
 	<div id="cover-page" class="cover-page">
 		<div class="cover-title">
-			<div>
-				<p class="org-name">COMPUTER SOCIETY</p>
-				<p class="school-name">PUP - TAGUIG</p>
-			</div>
+			<p class="org-name">COMPUTER SOCIETY</p>
+			<p class="school-name">PUP - TAGUIG</p>
 		</div>
 		<div class="info">
 			<div class="credit">
@@ -42,7 +40,7 @@
 				<ul class="people">
 				@foreach ($editors as $editor)
 					<li>
-						<p class="name">{{ $editor->full_name }}</p>
+						<p class="name">{{ strtoupper($editor->full_name) }}</p>
 						<p>CS PUPT {{ $editor->position->name }}</p>
 					</li>
 				@endforeach
@@ -53,7 +51,7 @@
 				<p class="title">Approved By:</p>
 				<ul class="people">
 					<li>
-						<p>{{ $president->full_name }}</p>
+						<p>{{ strtoupper($president->full_name) }}</p>
 						<p>CS PUPT {{ $president->position->name }}</p>
 					</li>
 				</ul>

@@ -51,10 +51,15 @@
 @media print {
     @page {
         size: A4 portrait;
-        margin: 2em 1em;
+        margin: 4em 1.3em;
     }
 
     body {
+        font-family: Liberation Serif;
+        font-size: 12pt;
+    }
+
+    #cover-page, .start-page, h2, h3 {
         font-family: Liberation Sans;
     }
 
@@ -65,7 +70,6 @@
 
     #page-header {
         width: auto;
-        margin-top: 2em;
         margin-left: .5em;
         margin-right: .5em;
         padding-left: 3em;
@@ -107,5 +111,74 @@
         }
     }
 
+    #cover-page {
+        break-after: always;
+        height: 9in;
+        padding: .1em 0;
 
+        .cover-title {
+            padding: 9em 0;
+
+        }
+
+    }
+
+    .cover-title, .start-title {
+        font-weight: bold;
+        text-align: center;
+        line-height: 1.1;
+
+        > * {
+            margin: 0;
+        }
+
+        .org-name {
+            font-size: 4.4em;
+        }
+
+        .school-name {
+            font-size: 3.8em;
+        }
+    }
+
+    #cover-page .info .credit {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 2em;
+
+        ul {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 2.5em;
+        }
+
+        .title {
+            margin-bottom: 3em;
+        }
+    }
+
+    .start-page {
+        font-weight: bold;
+        break-after: always;
+        text-align: center;
+
+        .start-content {
+            padding-top: 5em;
+        }
+
+        .event-name {
+            font-size: 3.8em;
+        }
+
+        .year {
+            font-size: 2em;
+        }
+    }
+
+    .content {
+
+    }
 }
