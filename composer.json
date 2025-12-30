@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^v3.1.1",
         "codeat3/blade-phosphor-icons": "^2.0",
         "intervention/image-laravel": "^1.5",
         "laravel/framework": "^12.0",

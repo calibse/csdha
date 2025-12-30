@@ -3,6 +3,16 @@
 @use "../color";
 @use "../size";
 
+@media screen {
+	.print-view {
+		margin-top: 1em;
+		background-color: #ffffff;
+		height: calc(100vh - 16em);
+		overflow: auto;
+		border: size.$line-width solid color.$line;
+	}
+}
+
 .pdf-document {
 	width: 100%;
 	margin: 1em 0;

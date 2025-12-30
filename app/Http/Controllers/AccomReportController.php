@@ -25,6 +25,7 @@ use App\Jobs\GenerateAccomReport;
 use App\Jobs\MakeAccomReport;
 use App\Events\EventUpdated;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AccomReportController extends Controller implements HasMiddleware
 {
@@ -203,6 +204,20 @@ class AccomReportController extends Controller implements HasMiddleware
             ->onQueue('pdf');
         return $response->header('Refresh', '5');
         */
+    }
+
+    public function showReport(Event $event)
+    {
+        return view('events/accom-report', $event->accomReportViewData() + [
+            'browser' => true,
+        ]);
+    }
+
+    public function showReportFile(Event $event)
+    {
+        $file = PDF::loadView('events/accom-report', 
+            $event->accomReportViewData());
+        return $file->stream('accomplishment_report.pdf');
     }
 
     public function prepareForSubmit(Event $event)

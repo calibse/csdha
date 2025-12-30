@@ -1,184 +1,209 @@
 /* accom-report.scss */
 
+
 @font-face {
-    font-family: "Liberation Sans";
+    font-family: "liberation_sans";
     src: url("/font/LiberationSans-Regular.ttf");
 }
 
 @font-face {
-    font-family: "Liberation Sans";
+    font-family: "liberation_sans";
     src: url("/font/LiberationSans-Bold.ttf");
     font-weight: bold;
 }
 
 @font-face {
-    font-family: "Liberation Sans";
+    font-family: "liberation_sans";
     src: url("/font/LiberationSans-Italic.ttf");
     font-style: italic;
 }
 
 @font-face {
-    font-family: "Liberation Sans";
+    font-family: "liberation_sans";
     src: url("/font/LiberationSans-BoldItalic.ttf");
     font-weight: bold;
     font-style: italic;
 }
 
 @font-face {
-    font-family: "Liberation Serif";
+    font-family: "liberation_serif";
     src: url("/font/LiberationSerif-Regular.ttf");
 }
 
 @font-face {
-    font-family: "Liberation Serif";
+    font-family: "liberation_serif";
     src: url("/font/LiberationSerif-Bold.ttf");
     font-weight: bold;
 }
 
 @font-face {
-    font-family: "Liberation Serif";
+    font-family: "liberation_serif";
     src: url("/font/LiberationSerif-Italic.ttf");
     font-style: italic;
 }
 
 @font-face {
-    font-family: "Liberation Serif";
+    font-family: "liberation_serif";
     src: url("/font/LiberationSerif-BoldItalic.ttf");
     font-weight: bold;
     font-style: italic;
 }
 
-@media print {
-    @page {
-        size: A4 portrait;
-        margin: 4em 1.3em;
-    }
+$page-margin: .6in .1in;
 
-    body {
-        font-family: Liberation Serif;
-        font-size: 12pt;
-    }
+@page {
+	size: A4 portrait;
+	margin: $page-margin;
+}
 
-    #cover-page, .start-page, h2, h3 {
-        font-family: Liberation Sans;
-    }
+.print-view {
+	font-family: "liberation_serif";
+	font-size: 12pt;
+}
 
-    p {
-        width: auto;
-        max-width: none;
-    }
+@media screen {
+	.print-view {
+		padding: $page-margin;
+	}
+}
 
-    #page-header {
-        width: auto;
-        margin-left: .5em;
-        margin-right: .5em;
-        padding-left: 3em;
-        border-bottom: solid #000000 .1em;
+#cover-page, .start-page, h2, h3 {
+	font-family: "liberation_sans";
+}
 
-        .logos, .text {
-            display: inline-block;
-            vertical-align: middle;
-        }
+p {
+	width: auto;
+	max-width: none;
+}
 
-        .logos {
-            margin-right: .5em;
-        }
+/*
+li, div {
+	padding-top: .1em;
+	padding-bottom: .1em;
+}
+*/
 
-        .logo {
-            display: inline-block;
-            height: 6em;
-            min-width: 6em;
-            margin-right: .5em;
+#page-header {
+	width: auto;
+	margin-left: .5em;
+	margin-right: .5em;
+	padding-left: 3em;
+	border-bottom: .1em solid #000000;
 
-            img {
-                height: 100%;
-            }
-        }
-    }
+	.logos, .text {
+		display: inline-block;
+		vertical-align: middle;
+	}
 
-    #page-header .text {
-        > * {
-            margin: 0;
-        }
+	.logos {
+		margin-right: .5em;
+	}
 
-        .country, .campus {
-            font-size: 1.2em;
-            font-family: "Liberation Serif";
-        }
+	.logo {
+		display: inline-block;
+		height: 6em;
+		width: 6em;
+		margin-right: .5em;
 
-        .school {
-            font-weight: bold;
-        }
-    }
+		img {
+			height: 100%;
+			display: inline-block;
+		}
+	}
+}
 
-    #cover-page {
-        break-after: always;
-        height: 9in;
-        padding: .1em 0;
+#page-header .text {
+	.country, 
+	.school, 
+	.campus, 
+	.organization {
+		margin: 0;
+	}
 
-        .cover-title {
-            padding: 9em 0;
+	.country, .campus {
+		font-size: 1.2em;
+	}
 
-        }
+	.school, .organization {
+		font-family: "liberation_sans";
+	}
 
-    }
+	.school {
+		font-weight: bold;
+	}
+}
 
-    .cover-title, .start-title {
-        font-weight: bold;
-        text-align: center;
-        line-height: 1.1;
+#cover-page {
+	page-break-after: always;
+	padding: .1em 0;
 
-        > * {
-            margin: 0;
-        }
 
-        .org-name {
-            font-size: 4.4em;
-        }
+	p {
+	}
 
-        .school-name {
-            font-size: 3.8em;
-        }
-    }
+	.cover-title {
+		padding: 7em 0;
 
-    #cover-page .info .credit {
-        text-align: center;
-        font-weight: bold;
-        margin-bottom: 2em;
+	}
 
-        ul {
-            padding-left: 0;
-            list-style: none;
-        }
+}
 
-        li {
-            margin-bottom: 2.5em;
-        }
+.cover-title, .start-title {
+	font-weight: bold;
+	text-align: center;
+	line-height: 1.1;
 
-        .title {
-            margin-bottom: 3em;
-        }
-    }
 
-    .start-page {
-        font-weight: bold;
-        break-after: always;
-        text-align: center;
+	.org-name,
+	.school-name {
+		margin: 0;
+	}
 
-        .start-content {
-            padding-top: 5em;
-        }
+	.org-name {
+		font-size: 4.4em;
+	}
 
-        .event-name {
-            font-size: 3.8em;
-        }
+	.school-name {
+		font-size: 3.8em;
+	}
+}
 
-        .year {
-            font-size: 2em;
-        }
-    }
+#cover-page .info .credit {
+	text-align: center;
+	font-weight: bold;
 
-    .content {
+	ul {
+		padding-left: 0;
+		list-style: none;
+	}
 
-    }
+	li {
+		padding-top: 1.5em;
+	}
+
+	.title {
+		margin-bottom: 0em;
+	}
+}
+
+.start-page {
+	font-weight: bold;
+	page-break-after: always;
+	text-align: center;
+
+	.start-content {
+		padding-top: 5em;
+	}
+
+	.event-name {
+		font-size: 3.8em;
+	}
+
+	.year {
+		font-size: 2em;
+	}
+}
+
+.content {
+
 }

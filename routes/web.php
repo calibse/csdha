@@ -760,8 +760,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         Route::put('/accom-reports/change-background.php', 
             'updateBackground')->name('background.update');
 
-        Route::get('/accom-reports/gen-pdf.html', 'generate')
-            ->name('generate');
+        Route::get('/accom-reports/gen-pdf.html', 'generate')->name('generate');
 
         Route::get('/accom-reports/cancel-gen-pdf.php', 'stopGenerating')
             ->name('stop-generating');
@@ -772,6 +771,10 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         Route::prefix('accom-report-{event}')->group(function () {
 
             Route::get('/index.html', 'show')->name('show');
+
+            Route::get('/report.html', 'showReport')->name('report.show');
+
+            Route::get('/report.pdf', 'showReportFile')->name('report-file.show');
 
             Route::get('/submit.html', 'prepareForSubmit')
                 ->name('prepareForSubmit');

@@ -48,136 +48,141 @@
     font-style: italic;
 }
 
+@page {
+    size: A4 landscape;
+    margin: 0;
+    margin-top: .5in;
+    margin-bottom: .8in;
+}
 
-@media print {
-    @page {
-        size: A4 landscape;
-        margin: 0;
-        margin-top: 5em;
-        margin-bottom: 5em;
+@media screen {
+    .print-view {
+        padding-top: .5in;
+        padding-bottom: .8in;
+    }
+}
+
+.print-view {
+	font-family: "Liberation Sans";
+    font-size: 12pt;
+}
+
+p {
+    width: auto;
+    max-width: none;
+}
+
+#page-header {
+    width: auto;
+    margin-left: .5em;
+    margin-right: .5em;
+    padding-left: 6em;
+    border-bottom: .1em solid #000000;
+
+    .logos, .text {
+        display: inline-block;
+        vertical-align: middle;
     }
 
-    @page:first {
-        margin-top: 0;
+    .logos {
+        margin-right: .5em;
     }
 
-	body {
-		font-family: "Liberation Sans";
+    .logo {
+        display: inline-block;
+        height: 6em;
+        min-width: 6em;
+        margin-right: .5em;
+
+        img {
+            height: 100%;
+        }
+    }
+}
+
+#page-header .text {
+	> * {
+		margin-top: 0;
+		line-height: 1;
 	}
 
-    #page-header {
-        width: auto;
-        margin-top: 2em;
-        margin-left: .5em;
-        margin-right: .5em;
-        padding-left: 6em;
-        border-bottom: solid #000000 .1em;
+	.country, .campus {
+		font-size: 1.2em;
+		font-family: "Liberation Serif";
+	}
 
-        .logos, .text {
-            display: inline-block;
-            vertical-align: middle;
-        }
+	.school {
+        font-weight: bold;
+	}
+}
 
-        .logos {
-            margin-right: .5em;
-        }
+.header {
+    font-weight: bold;
+	font-size: 1.2em;
+	text-align: center;
+	margin-bottom: .5em;
+	margin-top: .3em;
 
-        .logo {
-            display: inline-block;
-            height: 6em;
-            min-width: 6em;
-            margin-right: .5em;
+	> * {
+		margin: 0;
+		width: auto;
+		max-width: none;
+	}
+}
 
-            img {
-                height: 100%;
-            }
-        }
+table {
+	border-collapse: collapse;
+	width: 97%;
+	margin-left: 1em;
+	break-after: always;
+}
+
+th, td {
+	border: solid #000000 .1em;		
+}
+
+th {
+	background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+td {
+	text-align: center;
+
+	ul {
+		padding-left: 0;
+		list-style: none;
+	}
+}
+
+.row-number {
+    font-weight: bold;
+}
+
+.signatures-page .column {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+
+    .content-block {
+        padding-left: 8em;
     }
 
-    #page-header .text {
-    	> * {
-    		margin-top: 0;
-    		line-height: 1;
-    	}
+    .person-list {
+        padding-left: 0;
+        list-style: none;
 
-    	.country, .campus {
-    		font-size: 1.2em;
-    		font-family: "Liberation Serif";
-    	}
+        li {
+            margin: 4em 0;
+        }
 
-    	.school {
+        .name, .position {
             font-weight: bold;
-    	}
-    }
-
-    .header {
-        font-weight: bold;
-    	font-size: 1.2em;
-    	text-align: center;
-    	margin-bottom: .5em;
-    	margin-top: .3em;
-
-    	> * {
-    		margin: 0;
-    		width: auto;
-    		max-width: none;
-    	}
-    }
-
-    table {
-    	border-collapse: collapse;
-    	width: 97%;
-    	margin-left: 1em;
-    	break-after: always;
-    }
-
-    th, td {
-    	border: solid #000000 .1em;		
-    }
-
-    th {
-    	background-color: #f5f5f5;
-        font-weight: bold;
-    }
-
-    td {
-    	text-align: center;
-
-    	ul {
-    		padding-left: 0;
-    		list-style: none;
-    	}
-    }
-
-    .row-number {
-        font-weight: bold;
-    }
-
-    .signatures-page .column {
-        display: inline-block;
-        width: 49%;
-        vertical-align: top;
-
-        .content-block {
-            padding-left: 8em;
+            margin: 0;
         }
 
-        .person-list {
-            padding-left: 0;
-            list-style: none;
-
-            li {
-                margin: 4em 0;
-            }
-
-            .name, .position {
-                font-weight: bold;
-                margin: 0;
-            }
-
-            .position {
-                font-style: italic;
-            }
+        .position {
+            font-style: italic;
         }
     }
 }
