@@ -1,6 +1,10 @@
 @use ('App\Services\Format')
 <x-layout.user style="accom-report.scss" has-toolbar content-view :$backRoute title="Accomplishment Report" class="accom-reports accom-report print">
 <x-slot:toolbar>
+	<button id="print-button">
+		<img class="icon" src="{{ asset('icon/light/printer.svg') }}">
+		<span class="text">Print</span>
+	</button>
 @if ($actions['submit'])
 	<a 
 	@can('submitAccomReport', $event)

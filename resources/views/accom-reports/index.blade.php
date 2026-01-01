@@ -3,7 +3,7 @@
 @if ($gpoa)
 	<a href="{{ $genRoute }}">
 		<img class="icon" src="{{ asset('icon/light/file-plus.svg') }}">
-		<span class="text">Gen. PDF</span>
+		<span class="text">Gen. Report</span>
 	</a>
 	<a
 	@can ('updateAccomReportBG', 'App\Models\Event')

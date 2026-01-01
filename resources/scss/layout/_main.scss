@@ -462,7 +462,7 @@ $mq-count: 4;
 		overflow: auto;
 	}
 
-	a, button {
+	a, button, button:last-child {
 		display: inline-block;
 		white-space: nowrap;
 		display: inline-block;
@@ -481,7 +481,7 @@ $mq-count: 4;
 		}
 	}
 
-	a:link, a:visited {
+	a:link, a:visited, button {
 		color: color.$foreground;
 
 		.icon {
@@ -616,13 +616,13 @@ $mq-count: 4;
 		box-shadow: color.$toolbar-shadow;
 	}
 
-	a {
+	a, button, button:last-child {
 		border: 0;
 		border-radius: 0;
 		margin-bottom: 0;
 	}
 
-	a[href]:hover, a[href]:active {
+	a[href]:hover, a[href]:active, button {
 		border: 0;
 	}
 }

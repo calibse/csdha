@@ -1,6 +1,7 @@
 <x-layout.user style="gpoa-report.scss" :$backRoute title="GPOA Report" class="gpoa print">
 <x-slot:toolbar>
 	<button id="print-button">
+		<img class="icon" src="{{ asset('icon/light/printer.svg') }}">
 		<span class="text">Print</span>
 	</button>
 </x-slot>
