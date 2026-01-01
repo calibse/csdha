@@ -3,6 +3,11 @@
 @use "../color";
 @use "../size";
 
+.print-view {
+	background-color: #ffffff;
+	color: #000000;
+}
+
 @media screen {
 	.print-view {
 		margin-top: 1em;

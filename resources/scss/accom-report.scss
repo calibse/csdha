@@ -50,15 +50,46 @@
 }
 
 $page-margin: .6in .1in;
+$page-width: 8.27in;
+$page-height: 11.69in;
 
 @page {
-	size: A4 portrait;
+	size: $page-width $page-height;
 	margin: $page-margin;
 }
 
 .print-view {
 	font-family: "liberation_serif";
 	font-size: 12pt;
+
+	pre {
+		font-family: "liberation_serif";
+	}
+
+	p, pre {
+		width: auto;
+		max-width: none;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+
+		th, td {
+			border: solid .1em #000000;
+		}
+
+		thead th {
+			background-color: rgba(0, 0, 0, 0.067);
+			text-align: left;
+		}
+
+		&.officers-attendance {
+			th, td {
+				text-align: center;
+			}
+		}
+	}
 }
 
 @media screen {
@@ -71,11 +102,6 @@ $page-margin: .6in .1in;
 	font-family: "liberation_sans";
 }
 
-p {
-	width: auto;
-	max-width: none;
-}
-
 /*
 li, div {
 	padding-top: .1em;
@@ -85,8 +111,7 @@ li, div {
 
 #page-header {
 	width: auto;
-	margin-left: .5em;
-	margin-right: .5em;
+	margin: 0 .5em;
 	padding-left: 3em;
 	border-bottom: .1em solid #000000;
 
@@ -137,15 +162,10 @@ li, div {
 	page-break-after: always;
 	padding: .1em 0;
 
-
-	p {
-	}
-
 	.cover-title {
 		padding: 7em 0;
 
 	}
-
 }
 
 .cover-title, .start-title {
@@ -205,5 +225,84 @@ li, div {
 }
 
 .content {
+	padding: 0 1em;
 
+	.sections {
+		padding: 0 1em;
+	}
+
+	.event-name {
+		text-align: center;
+		border: .1em solid #000000;
+
+		h2 {
+			font-size: 3em;
+			margin: 0;
+		}
+	}
+
+	.evaluation-summary .overall-score {
+		font-weight: bold;
+	}
+}
+
+.list-section p {
+	margin-bottom: 0;
+}
+
+.comment-list {
+	margin: 0;
+
+	pre {
+		margin: 0;
+	}
+}
+
+.date-section {
+	ul {
+		list-style: none;
+		padding-left: 0;
+	}
+}
+
+.attachment-section {
+
+    .attachment {
+        text-align: center;
+    }
+
+    img {
+        display: inline-block;
+        max-height: calc($page-height - 7.2in);
+        object-fit: contain;
+        vertical-align: middle;
+        margin: .5em 0;
+
+        &:first-child {
+            margin-right: .5em;
+        }
+
+        &:only-child {
+            margin-right: unset;
+        }
+    }
+
+    img.landscape {
+        width: calc($page-width - 1in);
+    }
+
+    img.square, img.portrait {
+        width: calc($page-width - 4.8in);
+
+        &.full-width {
+            max-height: calc($page-height - 2.4in);
+            width: calc($page-width - 1in);
+        }
+    }
+
+    .caption {
+	margin-top: 0;
+	margin-bottom: 1em;
+        text-align: center;
+    }
 }
