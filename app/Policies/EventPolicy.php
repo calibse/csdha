@@ -126,8 +126,10 @@ class EventPolicy
         if (!$canEdit || !$canView) {
             return Response::deny();
         }
+	/*
         $updated = $event->accomReport?->file_updated;
         if (!$updated) return Response::deny();
+	*/
         $position = $user->position_name;
         if (!in_array($position, ['adviser', 'president', null])) {
             $position = 'officers';

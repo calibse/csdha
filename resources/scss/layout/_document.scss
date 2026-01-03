@@ -12,9 +12,15 @@
 	.print-view {
 		margin-top: 1em;
 		background-color: #ffffff;
-		height: calc(100vh - 16em);
+		height: calc(100vh - 17em);
 		overflow: auto;
 		border: size.$line-width solid color.$line;
+	}
+}
+
+@media print {
+	.print-control {
+		display: none;
 	}
 }
 

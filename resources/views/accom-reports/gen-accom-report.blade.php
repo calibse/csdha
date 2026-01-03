@@ -1,6 +1,6 @@
-<x-layout.user form :$backRoute title="Generate Accomplishment Report" class="accom-report generate form">
+<x-layout.user style="accom-report.scss" form :$backRoute title="Generate Accomplishment Report" class="accom-report generate form print">
 <div class="article">
-	<div class="pdf-control">
+	<div class="print-control">
 		<x-alert/>
 		<form>
 			<div class="inline">
@@ -14,11 +14,17 @@
 				</p>
 				<p>
 					<button {{ $hasLastJob && !$jobDone ? 'disabled' : null }}>Generate</button>
+				{{--
 					<button form="cancel-form" {{ !$hasLastJob || $jobDone ? 'disabled' : null }}>Cancel</button>
+				--}}
+					<button type="button" id="print-button">Print</button>
 				</p>
 			</div>
 		</form>
 	</div>
+@if ($hasMatch)
+	<x-accom-report :$events :$editors :$approved :$president />
+{{--
 @if ($fileRoute)
 	<div class="pdf-document">
 		<figure>
@@ -44,6 +50,7 @@
 			{{ $prepareMessage }}
 		</span>
 	</p>
+--}}
 @elseif (!$errors->any() && $hasApproved && $hasInput)
 	<p>No records available to generate.</p>
 @elseif (!$hasApproved)

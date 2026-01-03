@@ -322,15 +322,17 @@ class AccomReportController extends Controller implements HasMiddleware
 
     public function generate(GenerateAccomReportRequest $request)
     {
+        $gpoa = Gpoa::active()->first();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        $hasInput = false;
+        $hasInput = $hasMatch = false;
         $fileRoute = null;
         $jobCache = 'gen_accom_reports';
         $jobs = Cache::get($jobCache, []);
         $hasLastJob = $userJob = $jobs[auth()->user()->id] ?? [];
         $jobDone = $hasLastJob ? $hasLastJob['finished'] : false;
         $hasApproved = Event::active()->approved()->exists();
+        /*
         if ($hasLastJob && $jobDone) {
             $startDate = $userJob['start_date'];
             $endDate = $userJob['end_date'];
@@ -347,6 +349,8 @@ class AccomReportController extends Controller implements HasMiddleware
             $startDate = $userJob['start_date'];
             $endDate = $userJob['end_date'];
         } elseif (!$startDate && $hasApproved) {
+        */
+        if (!$startDate && $hasApproved) {
             $startDate = $startDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'asc')->value('date')?->toDateString();
             $endDate = $endDate ?? EventDate::active()->approved()
@@ -354,9 +358,17 @@ class AccomReportController extends Controller implements HasMiddleware
             if ($startDate === $endDate) {
                 $endDate = Carbon::parse($endDate)?->addDay()->toDateString();
             }
+        /*
 	} elseif ((!$hasLastJob || $jobDone) && $hasApproved) {
+        */
+	} elseif ($hasApproved) {
             $hasInput = true;
+            $hasMatch = Event::active()->approved($startDate, $endDate)->exists();
+
+            
+            /*
             $events = Event::active()->approved($startDate, $endDate)->exists();
+
             $requestId = Str::random(8);
             $userJob = [
                 'request_id' => $requestId,
@@ -365,6 +377,7 @@ class AccomReportController extends Controller implements HasMiddleware
                 'finished' => false,
             ];
             if ($events) {
+
                 Cache::lock($jobCache . '_lock', 2)->block(1, function () 
                     use ($jobCache, $userJob) {
                     $jobs = Cache::get($jobCache, []);
@@ -377,6 +390,7 @@ class AccomReportController extends Controller implements HasMiddleware
                 $hasLastJob = true;
                 $jobDone = false;
             }
+            */
         } 
         $prepareMessage = Format::documentPrepareMessage();
         $response = response()->view('accom-reports.gen-accom-report', [
@@ -386,16 +400,18 @@ class AccomReportController extends Controller implements HasMiddleware
             'endDate' => $endDate,
             'hasApproved' => $hasApproved,
             'hasInput' => $hasInput,
+            'hasMatch' => $hasMatch,
             'hasLastJob' => $hasLastJob,
             'jobDone' => $jobDone,
             'prepareMessage' => $prepareMessage,
             'cancelFormAction' => route('accom-reports.stop-generating'),
-        ]);
+        ] + $gpoa->accomReportViewData($startDate, $endDate));
+
+	return $response;
 
         if (session('errors')?->any() || !$hasLastJob || $jobDone) {
-            return $response;
         }
-        return $response->header('Refresh', '5');
+        // return $response->header('Refresh', '5');
     }
 
     public function stopGenerating()
@@ -420,17 +436,6 @@ class AccomReportController extends Controller implements HasMiddleware
         $user = auth()->user();
         $file = "gen_accom_reports/accom_report_{$user->id}.pdf";
         return response()->file(Storage::path($file));
-        /*
-        $gpoa = Gpoa::active()->first();
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
-        if (!$startDate) abort(404);
-        $allEvents = $gpoa->events()->approved($startDate, $endDate)->exists();
-        if (!$allEvents) abort(404);
-        return WeasyPrint::prepareSource(new PagedView('events.accom-report', 
-            $gpoa->accomReportViewData($startDate, $endDate)))
-            ->stream('accom_report_set.pdf');
-        */
     }
 
     public function editBackground(Request $request)
