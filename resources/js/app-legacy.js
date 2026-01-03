@@ -257,6 +257,11 @@ function setEvents() {
 			event: "click",
 			action: printPage
 		},
+		{
+			element: "file-input",
+			event: "change",
+			action: browseFiles
+		},
 	];
 	addEvents(elementActions);
 }
@@ -273,6 +278,31 @@ function setBackLink(e) {
 	if (ref && ref.indexOf(href) === 0 && history.length > 1) {
 		e.preventDefault();
 		history.back();
+	}
+}
+
+function browseFiles(e) {
+	var el, fileSizeLimit, multiple, message, files;
+
+	el = e.currentTarget;
+	el.setCustomValidity("");
+	fileSizeLimit = 2097152;
+	multiple = el.hasAttribute("multiple");
+	message = "File too large! Max size is 2 MB.";
+	files = el.files;
+	if (multiple) {
+		for (var i = 0; i < files.length; i++) {
+			if (files[i].size > fileSizeLimit) {
+				el.setCustomValidity(message);
+				el.reportValidity();
+				break;
+			}
+		}
+	} else {
+		if (files[0].size > fileSizeLimit) {
+			el.setCustomValidity(message);
+			el.reportValidity();
+		}
 	}
 }
 

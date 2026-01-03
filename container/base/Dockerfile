@@ -1,15 +1,13 @@
 FROM alpine:3.22
 
-RUN apk add --no-cache php83 php83-fpm composer
-RUN apk add --no-cache php83-pdo_mysql php83-gd php83-zip php83-session php83-fileinfo php83-tokenizer php83-dom php83-pecl-imagick php83-pecl-memcached
+RUN apk add --no-cache php84 php84-fpm composer
+RUN apk add --no-cache php84-pdo_mysql php84-gd php84-zip php84-session php84-fileinfo php84-tokenizer php84-dom php84-exif php84-pecl-memcached
 RUN apk add --no-cache unzip git rclone
-RUN apk add --no-cache weasyprint
 RUN apk add --no-cache libqrencode-tools
-RUN apk add --no-cache imagemagick
 RUN apk add --no-cache font-cantarell
 RUN apk add --no-cache rsvg-convert
 RUN apk add --no-cache npm
-COPY container/config/php-fpm/www-overrides.conf /etc/php83/php-fpm.d/z-www-overrides.conf
+COPY container/config/php-fpm/www-overrides.conf /etc/php84/php-fpm.d/z-www-overrides.conf
 COPY rclone.conf /root/.config/rclone/
 RUN addgroup csdha
 RUN adduser -h /var/www/app -g csdha -G csdha -S -D -H csdha

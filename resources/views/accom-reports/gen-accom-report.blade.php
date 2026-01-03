@@ -17,7 +17,12 @@
 				{{--
 					<button form="cancel-form" {{ !$hasLastJob || $jobDone ? 'disabled' : null }}>Cancel</button>
 				--}}
-					<button type="button" id="print-button">Print</button>
+					<button 
+					@if (!$hasMatch)
+						disabled
+					@endif
+						type="button" id="print-button"
+					>Print</button>
 				</p>
 			</div>
 		</form>

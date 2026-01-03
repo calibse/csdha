@@ -6,7 +6,7 @@
 		@method('PUT')
 			<p>
 				<label>Avatar</label>
-				<input type="file" name="avatar" accept="image/png, image/jpeg">
+				<input id="file-input" type="file" name="avatar" accept="image/png, image/jpeg">
 			</p>
 			<p>
 				<input id="remove-avatar" type="checkbox" {{ auth()->user()->avatar_filepath ? '' : 'disabled' }} name="remove_avatar" value="1">

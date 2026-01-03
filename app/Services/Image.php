@@ -8,15 +8,16 @@ use ImagickPixel;
 
 class Image
 {
-    public function __construct(private $image)
-    {
+    private $image;
 
+    public function __construct(private $file)
+    {
+        $this->image = IImage::read($this->file);
     }
 
     public function scaleDown($imageSize)
     {
-        $image = IImage::read($this->image);
-        $image->orient();
+        $image = $this->image;
         if ($image->width() !== $imageSize && $image->width() <=
                 $image->height()) {
             $image->scaleDown(width: $imageSize);
@@ -30,8 +31,7 @@ class Image
 
     public function get()
     {
-        $image = IImage::read($this->image);
-        $image->orient();
+        $image = $this->image;
         return $image->toJpeg();
     }
 
@@ -40,7 +40,7 @@ class Image
 	config(['image.driver' => \Intervention\Image\Drivers\Imagick\Driver::class]);
         $mime = $this->image->getMimeType();
 	if ($mime !== 'image/svg+xml') {
-            $image = IImage::read($this->image);
+            $image = $this->image;
             return $image->toPng();
         }
 /*
@@ -56,13 +56,12 @@ class Image
         $imagick->readImageBlob($pngData);
         $imagick->setImageFormat('png32'); 
         $image = IImage::read($imagick);
-        $image->orient();
         return $image->toPng();
     }
 
     public function orientation()
     {
-        $image = IImage::read($this->image);
+        $image = $this->image;
         $width = $image->width();
         $height = $image->height();
         $portraitThreshold = 1.25 * $height;
