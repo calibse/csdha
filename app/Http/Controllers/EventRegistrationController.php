@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\QrCode;
+//use App\Services\QrCode;
 use Illuminate\Support\Str;
 use App\Models\Event;
 use App\Models\Student;
@@ -14,6 +14,7 @@ use App\Http\Requests\StoreEventRegistrationRequest;
 use App\Http\Requests\StoreConsentRequest;
 use App\Http\Requests\StoreEventRegisIdentityRequest;
 use App\Services\Format;
+use chillerlan\QRCode\{QRCode, QROptions};
 
 class EventRegistrationController extends Controller
 {
@@ -79,13 +80,25 @@ class EventRegistrationController extends Controller
         self::store($event);
         session()->forget(self::$sessionDataName);
         $step = 2;
+        $qrCode = self::createQrCode();
         return view('event-registration.end', [
             'step' => $step,
+            /*
             'qrCodeRoute' => route('events.registrations.qr-code.show', [
                 'event' => $event->public_id
             ]),
+            */
+            'qrCode' => $qrCode,
             'end' => true
         ] + self::multiFormData($event, $step));
+    }
+
+    private static function createQrCode()
+    {
+        $data = session('event_registration_qr_code', null);
+        if (!$data) abort(404);
+        $qrCode = (new QRCode)->render($data['token']);
+        return $qrCode;
     }
 
     public function showQrCode(Request $request, Event $event)

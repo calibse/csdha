@@ -6,7 +6,6 @@ php artisan optimize:clear
 php artisan migrate --force
 php artisan db:audit-triggers
 php artisan optimize 
-npm install --omit dev --prefer-online
 php artisan storage:link --silent
 chown -R csdha:csdha bootstrap/cache storage 
 cp -a storage/. /root/user_storage

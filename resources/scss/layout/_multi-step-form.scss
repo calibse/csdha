@@ -11,7 +11,7 @@
 		max-height: 100vh;
 
 		img {
-			border: .05em solid #000000;
+			border: size.$line-width solid color.$line;
 			height: 100%;
 			width: 100%;
 			object-fit: contain;
