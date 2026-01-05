@@ -20,6 +20,11 @@ class AccomReport extends Model
         ];
     }
 
+    public function president(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'president_user_id');
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);

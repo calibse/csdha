@@ -1,3 +1,4 @@
+@use ('App\Services\Format')
 <x-layout.user form :$backRoute title="Closed GPOAs" class="gpoa form">
 <div class="article">
 @if ($gpoas->isNotEmpty())
@@ -16,7 +17,7 @@
 		@foreach ($gpoas as $gpoa)
 			<tr class="{{ $loop->last ? 'last-row' : null }}">
 				<td><a href="{{ route('gpoas.show', ['gpoa' => $gpoa->public_id]) }}">{{ $gpoa->full_academic_period }}</td>
-				<td class="last-row-cell">{{ $gpoa->closed_at->format(config('app.date_format')) }}</td>
+				<td class="last-row-cell">{{ Format::date($gpoa->closed_at) }}</td>
 			</tr>
 		@endforeach
 		</tbody>	

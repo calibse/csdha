@@ -31,8 +31,8 @@ class AuditTrailController extends Controller
             'userId' => $audit->user_id,
             'userAgent' => $audit->user_agent,
             'sessionId' => $audit->session_id,
-            'createdAt' => $audit->created_at ? Format::date($audit->created_at)                : null,
-            'updatedAt' => $audit->updated_at ? Format::date($audit->updated_at)                : null,
+            'createdAt' => $audit->created_at ? Format::date($audit->created_at) : null,
+            'updatedAt' => $audit->updated_at ? Format::date($audit->updated_at) : null,
         ]);
     }
 

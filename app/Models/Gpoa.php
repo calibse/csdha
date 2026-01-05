@@ -31,16 +31,18 @@ class Gpoa extends Model
         $endDate = null): array
     {
         $events = [];
-        $allEvents = $this->events()->approved($startDate, $endDate)->get();
+        $eventQuery = $this->events()->approved($startDate, $endDate);
+        $allEvents = $eventQuery->get();
         foreach ($allEvents as $event) {
             $events[] = $event->eventData();
         }
+        $lastAccomReport = $eventQuery->reorder('dates_date', 'desc')->first()->accomReport;
         return [
             'events' => $events,
             'editors' => User::withPerm('accomplishment-reports.edit')
                 ->notOfPosition('adviser')->get(),
             'approved' => true,
-            'president' => User::ofPosition('president')->first()
+            'president' => $lastAccomReport->president,
         ];
     }
 
@@ -98,8 +100,11 @@ class Gpoa extends Model
     {
         $activities = $this->activities()->where('status', 'approved')
             ->orderBy('start_date', 'asc')->get();
-        $president = User::ofPosition(['president'])->first();
-        $adviser = User::ofPosition(['adviser'])->first();
+        $lastActivity = $this->activities()->select(['id', 'president_user_id', 
+            'adviser_user_id'])->where('status', 'approved')
+            ->orderBy('adviser_approved_at', 'desc')->first();
+        $president = $lastActivity->president;
+        $adviser = $lastActivity->adviser;
         return [
             'gpoa' => $this,
             'activities' => $activities,

@@ -276,6 +276,8 @@ class AccomReportController extends Controller implements HasMiddleware
             $accomReport->event()->associate($event);
         }
         $accomReport->current_step = 'president';
+        $accomReport->president()->associate(User::ofPosition(['president'])
+            ->first());
         $accomReport->status = 'pending';
         $accomReport->submitted_at = now();
         $accomReport->comments = $request->comments ?? null;
@@ -294,6 +296,8 @@ class AccomReportController extends Controller implements HasMiddleware
             abort(404);
         }
         $accomReport->current_step = 'officers';
+        $accomReport->president()->associate(User::ofPosition(['president'])
+            ->first());
         $accomReport->status = 'returned';
         $accomReport->returned_at = now();
         $accomReport->comments = $request->comments ?? null;
@@ -311,6 +315,8 @@ class AccomReportController extends Controller implements HasMiddleware
             abort(404);
         }
         $accomReport->current_step = 'adviser';
+        $accomReport->president()->associate(User::ofPosition(['president'])
+            ->first());
         $accomReport->status = 'approved';
         $accomReport->approved_at = now();
         $accomReport->comments = $request->comments ?? null;
@@ -327,12 +333,12 @@ class AccomReportController extends Controller implements HasMiddleware
         $endDate = $request->end_date;
         $hasInput = $hasMatch = false;
         $fileRoute = null;
+        $hasApproved = Event::active()->approved()->exists();
+        /*
         $jobCache = 'gen_accom_reports';
         $jobs = Cache::get($jobCache, []);
         $hasLastJob = $userJob = $jobs[auth()->user()->id] ?? [];
         $jobDone = $hasLastJob ? $hasLastJob['finished'] : false;
-        $hasApproved = Event::active()->approved()->exists();
-        /*
         if ($hasLastJob && $jobDone) {
             $startDate = $userJob['start_date'];
             $endDate = $userJob['end_date'];
@@ -406,12 +412,12 @@ class AccomReportController extends Controller implements HasMiddleware
             'prepareMessage' => $prepareMessage,
             'cancelFormAction' => route('accom-reports.stop-generating'),
         ] + $gpoa->accomReportViewData($startDate, $endDate));
-
 	return $response;
-
+        /*
         if (session('errors')?->any() || !$hasLastJob || $jobDone) {
         }
-        // return $response->header('Refresh', '5');
+        return $response->header('Refresh', '5');
+        */
     }
 
     public function stopGenerating()

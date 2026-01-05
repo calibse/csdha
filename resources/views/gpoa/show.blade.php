@@ -7,10 +7,12 @@
 	<dl>
 		<dt>Created by</dt>
 		<dd>{{ $createdBy }}</dd>
-		<dt>Closed by</dt>
-		<dd>{{ $closedBy }}</dd>
 		<dt>Academic Period</dt>
 		<dd>{{ $academicPeriod }}</dd>
+		<dt>Closed date</dt>
+		<dd>{{ $closedAt }}</dd>
+		<dt>Closed by</dt>
+		<dd>{{ $closedBy }}</dd>
 	{{--
 		<dt>Number of approved activities</dt>	
 		<dd>{{ $activityCount }} activities</dd>

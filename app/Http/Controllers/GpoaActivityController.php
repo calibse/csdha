@@ -407,6 +407,10 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->status = 'pending';
             $activity->current_step = 'adviser';
             $activity->president_submitted_at = now();
+            $activity->president()->associate(User::ofPosition(['president'])
+                ->first());
+            $activity->adviser()->associate(User::ofPosition(['adviser'])
+                ->first());
             $activity->save();
             $status = 'Activity submitted to the Adviser.';
             break;
@@ -414,6 +418,8 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->status = 'pending';
             $activity->current_step = 'president';
             $activity->officers_submitted_at = now();
+            $activity->president()->associate(User::ofPosition(['president'])
+                ->first());
             $activity->save();
             $status = 'Activity submitted to the President.';
         }
@@ -434,6 +440,8 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->status = 'returned';
             $activity->current_step = 'officers';
             $activity->president_returned_at = now();
+            $activity->president()->associate(User::ofPosition(['president'])
+                ->first());
             $activity->save();
             $status = 'Activity returned to the officers.';
             break;
@@ -441,6 +449,10 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->status = 'returned';
             $activity->current_step = 'president';
             $activity->adviser_returned_at = now();
+            $activity->adviser()->associate(User::ofPosition(['adviser'])
+                ->first());
+            $activity->president()->associate(User::ofPosition(['president'])
+                ->first());
             $activity->save();
             $status = 'Activity returned to the President.';
             break;
@@ -457,6 +469,16 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $activity->comments = $request->comments;
         $activity->status = 'rejected';
         $activity->rejected_at = now();
+        switch(auth()->user()->position_name) {
+        case 'president':
+            $activity->president()->associate(User::ofPosition(['president'])
+                ->first());
+            break;
+        case 'adviser':
+            $activity->adviser()->associate(User::ofPosition(['adviser'])
+                ->first());
+            break;
+        }
         $activity->save();
         GpoaActivityStatusChanged::dispatch($activity);
         return redirect()->route('gpoa.index')->with('status',
@@ -471,6 +493,8 @@ class GpoaActivityController extends Controller implements HasMiddleware
         $activity->comments = $request->comments;
         $activity->status = 'approved';
         $activity->adviser_approved_at = now();
+        $activity->adviser()->associate(User::ofPosition(['adviser'])
+            ->first());
         $activity->save();
         GpoaActivityStatusChanged::dispatch($activity);
         return redirect()->route('gpoa.index')->with('status',

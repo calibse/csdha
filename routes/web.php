@@ -455,7 +455,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
         Route::get('/index.html', 'show')->name('show');
 
-        Route::get('/report.html', 'showFinalReport')->name('report.show');
+        Route::get('/report.html', 'showReport')->name('report.show');
 
         Route::get('/report.pdf', 'showReportFile')->name('report-file.show');
 
@@ -557,6 +557,27 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
     Route::get('/events.html', [EventController::class, 'index'])
         ->name('events.index');
+
+    Route::name('events.')->group(function () {
+
+        Route::prefix('event-{event}')->group(function () {
+
+            Route::controller(EventAttachmentController::class)
+                    ->name('attachments.')->group(function () {
+
+                Route::prefix('attachment-set-{attachment_set}')
+                        ->group(function () {
+
+                    Route::get('/attachment-preview-{attachment}.jpg',
+                        'showPreviewFile')->name('showPreviewFile');
+
+                    Route::get('/attachment-{attachment}.jpg',
+                        'showFullFile')->name('showFullFile');
+                });
+            });
+        });
+
+    });
 
     Route::name('events.')->middleware(CheckActiveGpoa::class)
         ->group(function () {
@@ -705,12 +726,6 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::prefix('attachment-set-{attachment_set}')
                         ->group(function () {
-
-                    Route::get('/attachment-preview-{attachment}.jpg',
-                        'showPreviewFile')->name('showPreviewFile');
-
-                    Route::get('/attachment-{attachment}.jpg',
-                        'showFullFile')->name('showFullFile');
 
                     Route::get('/edit.html', 'edit')->name('edit');
 

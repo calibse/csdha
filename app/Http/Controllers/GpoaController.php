@@ -129,6 +129,7 @@ class GpoaController extends Controller implements HasMiddleware
             ]),
             'createdBy' => $gpoa->creator?->full_name,
             'closedBy' => $gpoa->closer?->full_name,
+            'closedAt' => Format::date($gpoa->closed_at),
             'academicPeriod' => $gpoa->full_academic_period,
             'activityCount' => $gpoa->activities()->approved()->count(),
             'accomReportCount' => $gpoa->events()->approved()->count(),
@@ -158,7 +159,8 @@ class GpoaController extends Controller implements HasMiddleware
         MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         return $response->header('Refresh', '5');
     }
-
+    
+    /*
     public function showReport(Gpoa $gpoa)
     {
         $fileRoute = null;
@@ -184,6 +186,7 @@ class GpoaController extends Controller implements HasMiddleware
         MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         return $response->header('Refresh', '5');
     }
+    */
 
     public function showReportFile(Gpoa $gpoa)
     {
@@ -197,24 +200,28 @@ class GpoaController extends Controller implements HasMiddleware
         $hasApproved = $gpoa->has_approved_accom_report;
         if (!$hasApproved) abort(404);
         $fileRoute = null;
+        /*
         $hasFile = $gpoa->accom_report_filepath; 
         if ($hasFile) {
             $fileRoute = route('gpoas.accom-report-file.show', [
                 'gpoa' => $gpoa->public_id
             ], false);
         }
+        */
         $response = response()->view('gpoa.show-accom-report', [
             'fileRoute' => $fileRoute,
             'backRoute' => route('gpoas.show', [
                 'gpoa' => $gpoa->public_id
             ]),
             'prepareMessage' => Format::documentPrepareMessage(),
-        ]);
+        ] + $gpoa->accomReportViewData());
+        return $response;
+        /*
         if ($hasFile) {
-            return $response;
         }
         MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         return $response->header('Refresh', '5');
+        */
     }
 
     public function showAccomReportFile(Gpoa $gpoa)
@@ -242,7 +249,15 @@ class GpoaController extends Controller implements HasMiddleware
         return redirect()->route('gpoa.index');
     }
 
-    public function showCurrentReport(Request $request)
+    public function showReport(Gpoa $gpoa)
+    {
+        return view('gpoa.show-gpoa-report', [
+            'authUser' => auth()->user(), 
+            'backRoute' => route('gpoa.index'),
+        ] + $gpoa->reportViewData());
+    }
+
+    public function showCurrentReport()
     {
         $gpoa = self::$gpoa;
         return view('gpoa.show-gpoa-report', [
