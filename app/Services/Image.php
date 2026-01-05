@@ -18,7 +18,7 @@ class Image
     public function scaleDown($imageSize)
     {
         $image = $this->image;
-        $image->scaleDownImage($imageSize);
+        $this->scaleDownImage($imageSize);
         return $image->toJpeg();
     }
 
@@ -44,14 +44,14 @@ class Image
     public function toFavicon()
     {
         $image = $this->image;
-        $image->scaleDownImage(16);
+        $this->scaleDownImage(16);
         return $image->toPng();
     }
 
     public function toLogo()
     {
         $image = $this->image;
-        $image->scaleDownImage(128);
+        $this->scaleDownImage(128);
         return $image->toPng();
     }
 

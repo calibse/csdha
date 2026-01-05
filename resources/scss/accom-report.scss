@@ -2,7 +2,6 @@
 
 @use "sass:math";
 
-
 @font-face {
     font-family: liberation-sans;
     src: url("/font/LiberationSans-Regular.ttf");
@@ -105,6 +104,11 @@ $page-height: 11.69in;
 	.print-view hr {
 		display: none;
 	}
+}
+
+.print-view {
+	position: relative;
+	z-index: 1;
 }
 
 #cover-page, .start-page, h2, h3 {

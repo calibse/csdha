@@ -11,6 +11,7 @@
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.1",
         "modern-normalize": "^3.0.1",
+        "pagedjs": "^0.4.3",
         "postcss-custom-properties": "^14.0.6",
         "qr-scanner": "^1.4.2",
         "sass-embedded": "^1.89.2",

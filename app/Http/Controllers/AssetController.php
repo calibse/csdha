@@ -28,8 +28,8 @@ class AssetController extends Controller
             Storage::disk('public')->put($filepath, $image->toLogo());
             Cache::put('website_logo_id', Str::random(8));
             if (app()->environment('production')) {
-                self::updateFavicon(public_path('storage/' . $filepath));
             }
+            self::updateFavicon(public_path('storage/' . $filepath));
         }
         if ($request->has('organization')) {
             $image = new Image($request->file('organization'));
@@ -49,7 +49,7 @@ class AssetController extends Controller
 
     private static function updateFavicon($source)
     {
-        $iconPath = public_path('favicon.ico');
+        $iconPath = public_path('favicon.png');
         $image = new Image(Storage::disk('public')->get('website-logo.png'));
         file_put_contents($iconPath, $image->toFavicon());
     }

@@ -1,5 +1,6 @@
 @use ('App\Services\Format')
 <div class="print-view">
+	<div id="sticky-background"></div>
 	<div id="page-header" class="page-header">
 		<div class="logos">
 			<div class="logo">

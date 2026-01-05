@@ -20,12 +20,14 @@
 <div class="article has-item-full-content document">
 	<x-alert/>
 	<div class="item-full-content"> 
-		<div class="banner" style="background-color: {{ $event->banner_placeholder_color }};">
-		@if ($bannerFileRoute)
+	@if ($bannerFileRoute)
+		<div class="banner">
 			<div class="content-block">
 				<img src="{{ $bannerFileRoute }}">
 			</div>
-		@endif
+	@else
+		<div class="banner" style="background-color: {{ $event->banner_placeholder_color }};">
+	@endif
 		@can ('update', $event)
 			<p class="banner-edit-link"><a id="event-banner_edit-button" href="{{ $bannerRoute }}">Edit</a></p>
 		@endcan

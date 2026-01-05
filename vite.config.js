@@ -49,6 +49,11 @@ export default defineConfig(({ command, mode }) => {
 					target: 'http://localhost:5173',
 					changeOrigin: true,
 					rewrite: (path) => `/public${path}`,
+				},
+				'/storage': {
+					target: 'http://localhost:5173',
+					changeOrigin: true,
+					rewrite: (path) => `/public${path}`,
 				}
 			}
 		}

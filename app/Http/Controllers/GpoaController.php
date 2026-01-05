@@ -305,6 +305,7 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = self::$gpoa;
         $status = 'GPOA closed.';
+        /*
         if (!$gpoa->has_approved_activity) {
             self::destroyGpoa();
             GpoaStatusChanged::dispatch();
@@ -313,19 +314,9 @@ class GpoaController extends Controller implements HasMiddleware
         $gpoa->report_file_updated = false;
         MakeClosingGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         MakeClosingAccomReport::dispatch($gpoa)->onQueue('pdf');
-/*
-        $reportFile = "gpoas/gpoa_{$gpoa->id}/gpoa_report.pdf";
-        $accomReportFile = "gpoas/gpoa_{$gpoa->id}/accom_report.pdf";
-        WeasyPrint::prepareSource(new PagedView('gpoa.report',
-            $gpoa->reportViewData()))->putFile($reportFile);
-        WeasyPrint::prepareSource(new PagedView('events.accom-report', 
-            $gpoa->accomReportViewData()))->putFile($accomReportFile);
-        $gpoa->report_filepath = $reportFile;
-        $gpoa->accom_report_filepath = $accomReportFile;
-        $gpoa->save();
-*/
-        self::closeGpoa();
         GpoaStatusChanged::dispatch();
+        */
+        self::closeGpoa();
         return redirect()->route('gpoa.index')->with('status', $status);
     }
 

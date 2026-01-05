@@ -15,13 +15,15 @@
 	<div class="article-list">
 	@foreach ($events as $event)
 		<div class="event-item">
-			<div class="banner" style="background-color: {{ $event->banner_placeholder_color }};">
-			@if ($event->banner_filepath)
+		@if ($event->banner_filepath)
+			<div class="banner">
 				<div class="content-block">
 						<img src="{{ route('events.banner.show', ['event' => $event->public_id, 'file' => basename($event->banner_filepath)]) }}">
 				</div>
-			@endif
 			</div>
+		@else
+			<div class="banner" style="background-color: {{ $event->banner_placeholder_color }};"></div>
+		@endif
 			<div class="content-block">
 				<h2 class="title">
 					<a href="{{ route('events.show', ['event' => $event->public_id]) }}">{{ $event->gpoaActivity->name }}</a>

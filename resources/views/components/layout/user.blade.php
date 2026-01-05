@@ -37,7 +37,7 @@ $hasToolbar = isset($toolbar) && $toolbar->hasActualContent();
 	<title>{{ $title }} - CSDHA Admin</title>
 	@break
 @endswitch
-	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
+	<link rel="icon" href="{{ asset('favicon.png') . '?id=' . cache('website_logo_id') }}" />
 	@vite_legacy('resources/js/app-legacy.js')
 	@vite(['resources/scss/app.scss', 'resources/js/app.js', ($style ? 'resources/scss/' . $style : null)]) 
 </head>

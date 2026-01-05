@@ -1,13 +1,11 @@
 // app.js
 
-
-
-import "./bootstrap";
-import QrScanner from "qr-scanner/qr-scanner.legacy.min.js";
 import.meta.glob([
     "../images/**",
     "../fonts/**",
 ]);
+import "./bootstrap";
+import QrScanner from "qr-scanner/qr-scanner.legacy.min.js";
 
 let CURRENT_REQUEST = null;
 let QR_SCANNER = null;

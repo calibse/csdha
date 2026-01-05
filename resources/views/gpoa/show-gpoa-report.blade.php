@@ -64,7 +64,6 @@
 	$actCount = 0;
 	@endphp
 			@foreach($activities as $activity)
-				@foreach (range(1, 10) as $i)
 				<tr>
 					<td class="row-number">{{ ++$actCount . '.' }}</td>
 					<td>{{ $activity->name }}</td>
@@ -95,7 +94,6 @@
 					@endif
 					</td>
 				</tr>
-				@endforeach
 			@endforeach
 			</tbody>
 		</table>

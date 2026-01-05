@@ -1,7 +1,7 @@
 <x-layout.user form :$backRoute title="Closed GPOAs" class="gpoa form">
 <div class="article">
 @if ($gpoas->isNotEmpty())
-	<table class="articles table-2">
+	<table class="articles main-table table-2">
 		<colgroup>
 			<col style="width: 30%">
 			<col style="width: 70%">
