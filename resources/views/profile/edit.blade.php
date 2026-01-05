@@ -51,7 +51,7 @@
 			</p>
 			<p>
 				<label>Username</label>
-				<input name="username" value="{{ old('username') ?? auth()->user()->username }}">
+				<input autocomplete="off" name="username" value="{{ old('username') ?? auth()->user()->username }}">
 			</p>
 			<p class="form-submit">
 				<button type="submit">Update profile</button>

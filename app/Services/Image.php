@@ -18,6 +18,13 @@ class Image
     public function scaleDown($imageSize)
     {
         $image = $this->image;
+        $image->scaleDownImage($imageSize);
+        return $image->toJpeg();
+    }
+
+    public function scaleDownImage($imageSize)
+    {
+        $image = $this->image;
         if ($image->width() !== $imageSize && $image->width() <=
                 $image->height()) {
             $image->scaleDown(width: $imageSize);
@@ -26,7 +33,6 @@ class Image
                 <= $image->width()) {
             $image->scaleDown(height: $imageSize);
         }
-        return $image->toJpeg();
     }
 
     public function get()
@@ -35,21 +41,28 @@ class Image
         return $image->toJpeg();
     }
 
+    public function toFavicon()
+    {
+        $image = $this->image;
+        $image->scaleDownImage(16);
+        return $image->toPng();
+    }
+
+    public function toLogo()
+    {
+        $image = $this->image;
+        $image->scaleDownImage(128);
+        return $image->toPng();
+    }
+
     public function toPng()
     {
-	config(['image.driver' => \Intervention\Image\Drivers\Imagick\Driver::class]);
-        $mime = $this->image->getMimeType();
+        $image = $this->image;
+        return $image->toPng();
+	// config(['image.driver' => \Intervention\Image\Drivers\Imagick\Driver::class]);
+        // $mime = $this->image->getMimeType();
 	if ($mime !== 'image/svg+xml') {
-            $image = $this->image;
-            return $image->toPng();
         }
-/*
-        $file = file_get_contents($this->image->getRealPath());
-        $imagick = new Imagick();
-        $imagick->setBackgroundColor(new ImagickPixel('transparent'));
-        $imagick->readImageBlob($file);
-        $imagick->setImageFormat('png32');
-*/
         $svgPath = $this->image->getRealPath();
         $pngData = shell_exec("rsvg-convert -f png " . escapeshellarg($svgPath));
         $imagick = new Imagick();

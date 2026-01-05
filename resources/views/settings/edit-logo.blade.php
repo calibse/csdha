@@ -6,15 +6,15 @@
 	@method('PUT')
 		<p>
 			<label for="website">Website Logo</label>
-			<input type="file" name="website" accept="image/png, image/svg+xml, image/webp, image/avif">
+			<input type="file" name="website" accept="image/png, image/webp, image/avif">
 		</p>
 		<p>
 			<label for="organization">Organization Logo</label>
-			<input type="file" name="organization" accept="image/png, image/svg+xml, image/webp, image/avif">
+			<input type="file" name="organization" accept="image/png, image/webp, image/avif">
 		</p>
 		<p>
 			<label for="university">University Logo</label>
-			<input type="file" name="university" accept="image/png, image/svg+xml, image/webp, image/avif">
+			<input type="file" name="university" accept="image/png, image/webp, image/avif">
 		</p>
 		<p class="form-submit">
 			<button>Update</button>
