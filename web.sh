@@ -3,10 +3,9 @@
 set -e
 
 app="csdha"
-containers="base:alpine-laravel cache:alpine-memcached server:alpine-apache init:laravel-init queue:laravel-queue queue-pdf:laravel-queue-pdf sync:laravel-sync web:laravel-web"
-init_kube="pvc.yaml secret.yaml database.yaml cache.yaml init.yaml server.yaml"
-install_kube="queue.yaml queue-pdf.yaml web-admin.yaml web-user.yaml"
-# install_kube="queue.yaml web-admin.yaml web-user.yaml"
+containers="base:alpine-laravel server:alpine-apache init:laravel-init sync:laravel-sync web:laravel-web cron:alpine-cron"
+init_kube="pvc.yaml secret.yaml database.yaml init.yaml server.yaml"
+install_kube="cron.yaml web-admin.yaml web-user.yaml"
 queue_kube="queue.yaml queue-pdf.yaml" 
 update_kube="sync.yaml"
 queues="queue queue-pdf" 
@@ -64,7 +63,7 @@ uninstall_queue() {
 }
 
 uninstall() {
-	restart_queue
+	# restart_queue
 	for kube in $install_kube
 	do
 		podman kube down kube/${kube}
@@ -73,7 +72,7 @@ uninstall() {
 }
 
 reset() {
-	restart_queue
+	# restart_queue
 	for kube in $install_kube
 	do
 		podman kube down kube/${kube}
@@ -97,7 +96,7 @@ install_queue() {
 }
 
 reinstall() {
-	restart_queue
+	# restart_queue
 	for kube in $install_kube
 	do
 		podman kube play --replace kube/${kube}
@@ -125,8 +124,8 @@ start_queue() {
 
 update() {
 	podman start ${app}-sync-pod-sync
-	restart_queue
-	start_queue
+	# restart_queue
+	# start_queue
 }
 
 if [ $# -ge 1 ]

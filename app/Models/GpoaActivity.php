@@ -253,6 +253,7 @@ class GpoaActivity extends Model
         }
         switch ("{$position}_{$currentStep}_{$status}") {
         case 'officers_officers_returned':
+        case 'president_president_returned':
         case 'president_president_pending':
         case 'adviser_adviser_pending':
             $color = 'red';

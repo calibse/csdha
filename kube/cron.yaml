@@ -1,0 +1,26 @@
+# queue.yaml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: csdha-cron
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+      - name: web-storage 
+        persistentVolumeClaim:
+          claimName: csdha-web-storage
+      - name: web-app 
+        persistentVolumeClaim:
+          claimName: csdha-web-app
+      containers:
+      - name: queue
+        image: localhost/alpine-cron:1.0
+        volumeMounts:
+        - name: web-app
+          mountPath: /var/www/app
+        - name: web-storage
+          mountPath: /var/www/app/storage/app
+

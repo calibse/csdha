@@ -1,0 +1,7 @@
+#! /bin/sh
+
+set -e 
+
+container/bin/check_db
+exec "$@" 
+

@@ -12,6 +12,12 @@
 	}
 }
 
+@media print {
+	.alert {
+		display: none;
+	}
+}
+
 .alert {
 	border-radius: size.$corner-roundness;
 
