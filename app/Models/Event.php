@@ -249,7 +249,7 @@ class Event extends Model
             'editors' => User::withPerm('accomplishment-reports.edit')
                 ->notOfPosition('adviser')->get(),
             'approved' => $this->accomReport?->status === 'approved',
-            'president' => User::ofPosition('president')->first()
+            'president' => $this->accomReport->president,
         ];
     }
 

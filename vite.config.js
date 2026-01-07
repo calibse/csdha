@@ -26,8 +26,7 @@ export default defineConfig(({ command, mode }) => {
 			laravel({
 				input: [
 					'resources/scss/app.scss', 
-					'resources/scss/accom-report-web.scss',
-					'resources/scss/accom-report-print.scss',
+					'resources/scss/accom-report.scss',
 					'resources/scss/gpoa-report.scss',
 					'resources/js/app.js',
 				],

@@ -40,8 +40,8 @@
 				<p class="title">Approved By:</p>
 				<ul class="people">
 					<li>
-						<p>{{ strtoupper($president->full_name) }}</p>
-						<p>CS PUPT {{ $president->position->name }}</p>
+						<p>{{ strtoupper($president?->full_name) }}</p>
+						<p>CS PUPT {{ $president?->position->name }}</p>
 					</li>
 				</ul>
 			</div>
