@@ -7,5 +7,5 @@ COPY container/config/crontabs/csdha /etc/crontabs/csdha
 RUN chown csdha:csdha /etc/crontabs/csdha
 RUN chmod 600 /etc/crontabs/csdha
 USER csdha
-CMD ["crond"]
+CMD ["crond", "-f"]
 
