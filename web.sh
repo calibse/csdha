@@ -3,7 +3,7 @@
 set -e
 
 app="csdha"
-containers="base:alpine-laravel server:alpine-apache init:laravel-init sync:laravel-sync web:laravel-web cron:alpine-cron"
+containers="base:alpine-laravel server:alpine-apache init:laravel-init sync:laravel-sync web:laravel-web cron:laravel-cron"
 init_kube="pvc.yaml secret.yaml database.yaml init.yaml server.yaml"
 install_kube="cron.yaml web-admin.yaml web-user.yaml"
 queue_kube="queue.yaml queue-pdf.yaml" 

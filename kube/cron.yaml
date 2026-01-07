@@ -1,4 +1,4 @@
-# queue.yaml
+# cron.yaml
 
 apiVersion: batch/v1
 kind: Job
@@ -16,8 +16,8 @@ spec:
         persistentVolumeClaim:
           claimName: csdha-web-app
       containers:
-      - name: queue
-        image: localhost/alpine-cron:1.0
+      - name: cron
+        image: localhost/laravel-cron:1.0
         volumeMounts:
         - name: web-app
           mountPath: /var/www/app

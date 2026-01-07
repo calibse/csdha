@@ -1,4 +1,4 @@
-FROM alpine:3.22
+FROM alpine:3.23
 
 RUN apk add --no-cache php84 php84-fpm composer
 RUN apk add --no-cache php84-pdo_mysql php84-gd php84-zip php84-session php84-fileinfo php84-tokenizer php84-dom php84-exif
