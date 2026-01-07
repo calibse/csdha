@@ -6,14 +6,23 @@
 			<div class="inline">
 				<p>
 					<label>Start date</label>
+				{{--
 					<input {{ $hasLastJob && !$jobDone ? 'disabled' : null }} type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
+				--}}
+					<input type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
 				</p>
 				<p>
 					<label>End date</label>
+				{{--
 					<input {{ $hasLastJob && !$jobDone ? 'disabled' : null }} type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
+				--}}
+					<input type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
 				</p>
 				<p>
+				{{--
 					<button {{ $hasLastJob && !$jobDone ? 'disabled' : null }}>Generate</button>
+				--}}
+					<button>Generate</button>
 				{{--
 					<button form="cancel-form" {{ !$hasLastJob || $jobDone ? 'disabled' : null }}>Cancel</button>
 				--}}
