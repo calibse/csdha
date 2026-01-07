@@ -407,8 +407,10 @@ class AccomReportController extends Controller implements HasMiddleware
             'hasApproved' => $hasApproved,
             'hasInput' => $hasInput,
             'hasMatch' => $hasMatch,
+            /*
             'hasLastJob' => $hasLastJob,
             'jobDone' => $jobDone,
+            */
             'prepareMessage' => $prepareMessage,
             'cancelFormAction' => route('accom-reports.stop-generating'),
         ] + $gpoa->accomReportViewData($startDate, $endDate));
