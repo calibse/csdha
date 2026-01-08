@@ -6,6 +6,6 @@ RUN apk add --no-cache unzip git rclone
 COPY container/config/php-fpm/www-overrides.conf /etc/php84/php-fpm.d/z-www-overrides.conf
 COPY rclone.conf /root/.config/rclone/
 RUN addgroup csdha
-RUN adduser -h /var/www/app -g csdha -G csdha -S -D -H csdha
+RUN adduser -h /var/www/app -g csdha -G csdha -D -H csdha
 WORKDIR /var/www/app
 
