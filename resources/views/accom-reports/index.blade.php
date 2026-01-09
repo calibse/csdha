@@ -60,6 +60,7 @@
 	@endswitch
 @endif
 </div>
+{{--
 <x-window class="form" id="accom-report-background_edit" title="Change accom. report background">
 	<form method="post" action="{{ $updateBgRoute }}" enctype="multipart/form-data">
 	@csrf
@@ -78,4 +79,5 @@
 		</p>
 	</form>
 </x-window>
+--}}
 </x-layout.user>
