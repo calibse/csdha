@@ -1,3 +1,2 @@
 * * * * * flock -n /tmp/laravel-queue.lock php -d max_execution_time=120 artisan queue:work --once -q 
-* * * * * touch /tmp/cron_test.log
-
+# * * * * * touch /tmp/cron_test.log
