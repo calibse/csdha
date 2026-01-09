@@ -768,12 +768,13 @@ Route::domain(config('app.user_domain'))->middleware('auth')
     Route::controller(AccomReportController::class)
             ->middleware(CheckActiveGpoa::class)->name('accom-reports.')
             ->group(function () {
-
+/*
         Route::get('/accom-reports/change-background.html', 
             'editBackground')->name('background.edit');
 
         Route::put('/accom-reports/change-background.php', 
             'updateBackground')->name('background.update');
+*/
 
         Route::get('/accom-reports/gen-pdf.html', 'generate')->name('generate');
 

@@ -5,6 +5,7 @@
 		<img class="icon" src="{{ asset('icon/light/file-plus.svg') }}">
 		<span class="text">Gen. Report</span>
 	</a>
+	{{--
 	<a
 	@can ('updateAccomReportBG', 'App\Models\Event')
 		href="{{ $changeBgRoute }}" id="accom-report-background_edit-button"
@@ -13,6 +14,7 @@
 		<img class="icon" src="{{ asset('icon/light/pencil-simple-line.svg') }}">
 		<span class="text">Change Background</span>
 	</a>
+	--}}
 @endif
 </x-slot:toolbar>
 <div class="article">
