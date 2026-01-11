@@ -49,10 +49,13 @@ CREATE TABLE `accom_reports` (
   `president_user_id` bigint(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `filepath` varchar(255) DEFAULT NULL,
+  `file_updated` tinyint(1) DEFAULT NULL,
+  `file_updated_at` timestamp NULL DEFAULT NULL,
   CONSTRAINT `accom_reports_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`),
   CONSTRAINT `accom_reports_president_user_id_foreign` FOREIGN KEY (`president_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `chk_status` CHECK (`status` in ('pending','returned','approved')),
-  CONSTRAINT `chk_current_step` CHECK (`current_step` in ('officers','president','adviser'))
+  CONSTRAINT `chk_current_step` CHECK (`current_step` in ('officers','president','adviser')),
+  CONSTRAINT `chk_status` CHECK (`status` in ('draft','pending','returned','approved'))
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `activity_logs`;
@@ -102,7 +105,7 @@ CREATE TABLE `audit_trail` (
   `user_agent` text DEFAULT NULL,
   `session_id` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp, 
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT `chk_action` CHECK (`action` in ('insert','update','delete')),
   CONSTRAINT `chk_request_method` CHECK (`request_method` in ('get','post','put','patch','delete','options'))
 );
@@ -137,10 +140,9 @@ CREATE TABLE `courses` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`name`,`unarchived`),
-  UNIQUE (`acronym`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `courses_acronym_unarchived_unique` ON `courses`(`acronym`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `event_attachment_sets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -215,9 +217,9 @@ CREATE TABLE `event_dates` (
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
   `public_id` bigint(20) DEFAULT NULL,
-  UNIQUE (`public_id`),
   CONSTRAINT `event_dates_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
 );
+CREATE UNIQUE INDEX `event_dates_public_id_unique` ON `event_dates`(`public_id`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `event_deliverable_assignee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -291,9 +293,9 @@ CREATE TABLE `event_eval_forms` (
   `default` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`default`),
   CONSTRAINT `event_eval_form_questions_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
 );
+CREATE UNIQUE INDEX `event_eval_form_questions_default_unique` ON `event_eval_forms`(`default`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `event_evaluation_tokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -328,6 +330,19 @@ CREATE TABLE `event_evaluations` (
   `feature_overall_experience` tinyint(1) NOT NULL DEFAULT 0,
   `feature_additional_comments` tinyint(1) NOT NULL DEFAULT 0,
   CONSTRAINT `event_evaluations_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `event_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `event_links` (
+  `id` integer not null primary key autoincrement,
+  `name` varchar(255) NOT NULL,
+  `url` varchar(2000) NOT NULL,
+  `event_id` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  CONSTRAINT `event_links_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `event_officer_attendees`;
@@ -392,11 +407,10 @@ CREATE TABLE `event_registrations` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `event_student_id` bigint(20) NOT NULL,
-  UNIQUE (`token`),
-  UNIQUE (`public_id`),
   CONSTRAINT `event_registrations_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`),
   CONSTRAINT `event_registrations_event_student_id_foreign` FOREIGN KEY (`event_student_id`) REFERENCES `event_students` (`id`)
 );
+CREATE UNIQUE INDEX `event_registrations_public_id_unique` ON `event_registrations`(`public_id`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `event_students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -439,10 +453,11 @@ CREATE TABLE `events` (
   `accept_evaluation` tinyint(1) NOT NULL,
   `timezone` varchar(50) NOT NULL DEFAULT 'UTC',
   `evaluation_delay_hours` tinyint(3) NOT NULL DEFAULT 24,
-  UNIQUE (`public_id`),
+  `banner_filepath` varchar(255) DEFAULT NULL,
   CONSTRAINT `events_gpoa_activity_id_foreign` FOREIGN KEY (`gpoa_activity_id`) REFERENCES `gpoa_activities` (`id`),
   CONSTRAINT `chk_participant_type` CHECK (`participant_type` in ('students','officers'))
 );
+CREATE UNIQUE INDEX `events_public_id_unique` ON `events`(`public_id`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `failed_jobs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -454,9 +469,9 @@ CREATE TABLE `failed_jobs` (
   `queue` text NOT NULL,
   `payload` longtext NOT NULL,
   `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp,
-  UNIQUE (`uuid`)
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX `failed_jobs_uuid_unique` ON `failed_jobs`(`uuid`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `funds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -504,7 +519,6 @@ CREATE TABLE `gpoa_activities` (
   `president_submitted_at` timestamp NULL DEFAULT NULL,
   `president_returned_at` timestamp NULL DEFAULT NULL,
   `adviser_returned_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`public_id`),
   CONSTRAINT `gpoa_activities_adviser_user_id_foreign` FOREIGN KEY (`adviser_user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `gpoa_activities_gpoa_activity_fund_source_id_foreign` FOREIGN KEY (`gpoa_activity_fund_source_id`) REFERENCES `gpoa_activity_fund_sources` (`id`),
   CONSTRAINT `gpoa_activities_gpoa_activity_mode_id_foreign` FOREIGN KEY (`gpoa_activity_mode_id`) REFERENCES `gpoa_activity_modes` (`id`),
@@ -515,6 +529,7 @@ CREATE TABLE `gpoa_activities` (
   CONSTRAINT `chk_status` CHECK (`status` in ('draft','pending','returned','approved','rejected')),
   CONSTRAINT `chk_current_step` CHECK (`current_step` in ('officers','president','adviser'))
 );
+CREATE UNIQUE INDEX `gpoa_activities_public_id_unique` ON `gpoa_activities`(`public_id`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `gpoa_activity_authors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -555,9 +570,9 @@ CREATE TABLE `gpoa_activity_fund_sources` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`name`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `gpoa_activity_fund_sources_name_unarchived_unique` ON `gpoa_activity_fund_sources`(`name`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `gpoa_activity_modes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -568,9 +583,9 @@ CREATE TABLE `gpoa_activity_modes` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`name`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `gpoa_activity_modes_name_unarchived_unique` ON `gpoa_activity_modes`(`name`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `gpoa_activity_participants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -594,9 +609,9 @@ CREATE TABLE `gpoa_activity_partnership_types` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`name`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `gpoa_activity_partnership_types_name_unarchived_unique` ON `gpoa_activity_partnership_types`(`name`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `gpoa_activity_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -607,9 +622,9 @@ CREATE TABLE `gpoa_activity_types` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`name`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `gpoa_activity_types_name_unarchived_unique` ON `gpoa_activity_types`(`name`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `gpoas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -626,12 +641,13 @@ CREATE TABLE `gpoas` (
   `closed_at` timestamp NULL DEFAULT NULL,
   `closer_user_id` bigint(20) DEFAULT NULL,
   `active` tinyint(4) GENERATED ALWAYS AS (if(`closed_at` is null,1,NULL)) STORED,
-  UNIQUE (`public_id`),
-  UNIQUE (`active`),
+  `report_file_updated` tinyint(1) DEFAULT NULL,
+  `report_file_updated_at` timestamp NULL DEFAULT NULL,
   CONSTRAINT `gpoas_academic_period_id_foreign` FOREIGN KEY (`academic_period_id`) REFERENCES `academic_periods` (`id`),
   CONSTRAINT `gpoas_closer_user_id_foreign` FOREIGN KEY (`closer_user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `gpoas_creator_user_id_foreign` FOREIGN KEY (`creator_user_id`) REFERENCES `users` (`id`)
 );
+CREATE UNIQUE INDEX `gpoas_active_unique` ON `gpoas`(`active`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `job_batches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -743,9 +759,9 @@ CREATE TABLE `personal_access_tokens` (
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`token`)
+  `updated_at` timestamp NULL DEFAULT NULL
 );
+CREATE UNIQUE INDEX `personal_access_tokens_token_unique` ON `personal_access_tokens`(`token`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `platforms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -808,9 +824,9 @@ CREATE TABLE `positions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `position_order` tinyint(3) NOT NULL,
-  UNIQUE (`name`)
+  `position_order` tinyint(3) NOT NULL
 );
+CREATE UNIQUE INDEX `positions_name_unique` ON `positions`(`name`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `resource_action_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -819,9 +835,9 @@ CREATE TABLE `resource_action_types` (
   `id` integer not null primary key autoincrement,
   `name` varchar(50) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`name`)
+  `updated_at` timestamp NULL DEFAULT NULL
 );
+CREATE UNIQUE INDEX `resource_action_types_name_unique` ON `resource_action_types`(`name`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `resource_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -830,9 +846,9 @@ CREATE TABLE `resource_types` (
   `id` integer not null primary key autoincrement,
   `name` varchar(50) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`name`)
+  `updated_at` timestamp NULL DEFAULT NULL
 );
+CREATE UNIQUE INDEX `resource_types_name_unique` ON `resource_types`(`name`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -882,9 +898,9 @@ CREATE TABLE `student_sections` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`section`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `student_sections_section_unarchived_unique` ON `student_sections`(`section`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `student_years`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -896,10 +912,9 @@ CREATE TABLE `student_years` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `label` varchar(15) NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
-  UNIQUE (`year`,`unarchived`),
-  UNIQUE (`label`,`unarchived`)
+  `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED
 );
+CREATE UNIQUE INDEX `student_years_label_unarchived_unique` ON `student_years`(`label`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -918,13 +933,11 @@ CREATE TABLE `students` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `public_id` bigint(20) DEFAULT NULL,
-  UNIQUE (`student_id`),
-  UNIQUE (`email`),
-  UNIQUE (`public_id`),
   CONSTRAINT `students_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `students_student_section_id_foreign` FOREIGN KEY (`student_section_id`) REFERENCES `student_sections` (`id`),
   CONSTRAINT `students_student_year_id_foreign` FOREIGN KEY (`student_year_id`) REFERENCES `student_years` (`id`)
 );
+CREATE UNIQUE INDEX `students_public_id_unique` ON `students`(`public_id`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `user_google_accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -938,10 +951,9 @@ CREATE TABLE `user_google_accounts` (
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`user_id`),
-  UNIQUE (`google_id`),
   CONSTRAINT `user_google_accounts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
+CREATE UNIQUE INDEX `user_google_accounts_google_id_unique` ON `user_google_accounts`(`google_id`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -969,14 +981,10 @@ CREATE TABLE `users` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `unarchived` tinyint(4) GENERATED ALWAYS AS (if(`deleted_at` is null,1,NULL)) STORED,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  UNIQUE (`public_id`),
-  UNIQUE (`position_id`,`unarchived`),
-  UNIQUE (`username`,`unarchived`),
-  UNIQUE (`email`,`unarchived`),
-  UNIQUE (`google_id`,`unarchived`),
   CONSTRAINT `users_position_id_foreign` FOREIGN KEY (`position_id`) REFERENCES `positions` (`id`),
   CONSTRAINT `users_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
 );
+CREATE UNIQUE INDEX `users_google_id_unarchived_unique` ON `users`(`google_id`,`unarchived`);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -1105,3 +1113,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (117,'2025_10_13_05
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (118,'2025_10_16_100614_change_columns_in_gpoas_table',3);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (119,'2025_10_17_065642_create_event_participant_courses_table',3);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (120,'2025_10_18_030748_change_columns_in_audit_trail_table',3);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (121,'2025_10_31_022613_change_columns_in_accom_reports_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (122,'2025_10_31_024218_change_columns_in_accom_reports_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (123,'2025_10_31_024343_change_columns_in_gpoas_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (124,'2025_11_07_015804_change_columns_in_accom_reports_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (125,'2025_11_07_015924_change_columns_in_gpoas_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (126,'2025_11_28_081951_change_columns_in_events_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (127,'2025_11_30_095622_create_event_links_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (128,'2026_01_10_162318_change_columns_in_audit_trail_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (129,'2026_01_10_163253_drop_gspoas_table',4);
