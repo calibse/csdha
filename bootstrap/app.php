@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\SetAuditVariables;
 use App\Http\Middleware\SetTimezone;
+use App\Http\Middleware\SetAssetsId;
 use App\Http\Middleware\AuthorizeGpoa;
 use App\Http\Middleware\AuthorizeEvent;
 use App\Http\Middleware\AuthorizeAccomReport;
@@ -48,7 +49,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptcookies(except: ['timezone']);
         $middleware->web(append: [
             SetAuditVariables::class,
-            SetTimezone::class
+            SetTimezone::class,
+            SetAssetsId::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

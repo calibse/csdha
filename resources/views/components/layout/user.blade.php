@@ -1,6 +1,6 @@
-@use('Illuminate\Support\Facades\Route')
-@use('App\Services\Format')
-@use('App\Models\Event')
+@use ('Illuminate\Support\Facades\Route')
+@use ('App\Services\Format')
+@use ('App\Models\Event')
 @php
 $adminHomeRoute = route('admin.home'); 
 $userHomeRoute = route('user.home'); 
