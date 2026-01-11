@@ -52,13 +52,16 @@ CREATE TABLE `accom_reports` (
   `president_user_id` bigint(20) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `filepath` varchar(255) DEFAULT NULL,
+  `file_updated` tinyint(1) DEFAULT NULL,
+  `file_updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `accom_reports_event_id_foreign` (`event_id`),
   KEY `accom_reports_president_user_id_foreign` (`president_user_id`),
   CONSTRAINT `accom_reports_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`),
   CONSTRAINT `accom_reports_president_user_id_foreign` FOREIGN KEY (`president_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `chk_status` CHECK (`status` in ('pending','returned','approved')),
-  CONSTRAINT `chk_current_step` CHECK (`current_step` in ('officers','president','adviser'))
+  CONSTRAINT `chk_current_step` CHECK (`current_step` in ('officers','president','adviser')),
+  CONSTRAINT `chk_status` CHECK (`status` in ('draft','pending','returned','approved'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `activity_logs`;
@@ -112,7 +115,7 @@ CREATE TABLE `audit_trail` (
   `user_agent` text DEFAULT NULL,
   `session_id` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   CONSTRAINT `chk_action` CHECK (`action` in ('insert','update','delete')),
   CONSTRAINT `chk_request_method` CHECK (`request_method` in ('get','post','put','patch','delete','options'))
@@ -371,6 +374,21 @@ CREATE TABLE `event_evaluations` (
   CONSTRAINT `event_evaluations_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `event_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `event_links` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `url` varchar(2000) NOT NULL,
+  `event_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `event_links_event_id_foreign` (`event_id`),
+  CONSTRAINT `event_links_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `event_officer_attendees`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -498,6 +516,7 @@ CREATE TABLE `events` (
   `accept_evaluation` tinyint(1) NOT NULL,
   `timezone` varchar(50) NOT NULL DEFAULT 'UTC',
   `evaluation_delay_hours` tinyint(3) unsigned NOT NULL DEFAULT 24,
+  `banner_filepath` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `events_public_id_unique` (`public_id`),
   KEY `events_gpoa_activity_id_foreign` (`gpoa_activity_id`),
@@ -711,6 +730,8 @@ CREATE TABLE `gpoas` (
   `closed_at` timestamp NULL DEFAULT NULL,
   `closer_user_id` bigint(20) unsigned DEFAULT NULL,
   `active` tinyint(4) GENERATED ALWAYS AS (if(`closed_at` is null,1,NULL)) STORED,
+  `report_file_updated` tinyint(1) DEFAULT NULL,
+  `report_file_updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `gpoas_public_id_unique` (`public_id`),
   UNIQUE KEY `gpoas_active_unique` (`active`),
@@ -720,88 +741,6 @@ CREATE TABLE `gpoas` (
   CONSTRAINT `gpoas_academic_period_id_foreign` FOREIGN KEY (`academic_period_id`) REFERENCES `academic_periods` (`id`),
   CONSTRAINT `gpoas_closer_user_id_foreign` FOREIGN KEY (`closer_user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `gpoas_creator_user_id_foreign` FOREIGN KEY (`creator_user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `gspoa_editors`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gspoa_editors` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `gspoa_id` bigint(20) unsigned NOT NULL,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `gspoa_editors_gspoa_id_foreign` (`gspoa_id`),
-  KEY `gspoa_editors_user_id_foreign` (`user_id`),
-  CONSTRAINT `gspoa_editors_gspoa_id_foreign` FOREIGN KEY (`gspoa_id`) REFERENCES `gspoas` (`id`),
-  CONSTRAINT `gspoa_editors_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `gspoa_event_participants`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gspoa_event_participants` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `gspoa_event_id` bigint(20) unsigned NOT NULL,
-  `student_year_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `gspoa_event_participants_gspoa_event_id_foreign` (`gspoa_event_id`),
-  KEY `gspoa_event_participants_student_year_id_foreign` (`student_year_id`),
-  CONSTRAINT `gspoa_event_participants_gspoa_event_id_foreign` FOREIGN KEY (`gspoa_event_id`) REFERENCES `gspoa_events` (`id`),
-  CONSTRAINT `gspoa_event_participants_student_year_id_foreign` FOREIGN KEY (`student_year_id`) REFERENCES `student_years` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `gspoa_events`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gspoa_events` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `gspoa_id` bigint(20) unsigned NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `participants` varchar(255) NOT NULL,
-  `venue` varchar(255) NOT NULL,
-  `objective` text NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `gspoa_events_gspoa_id_foreign` (`gspoa_id`),
-  CONSTRAINT `gspoa_events_gspoa_id_foreign` FOREIGN KEY (`gspoa_id`) REFERENCES `gspoas` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `gspoas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gspoas` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `program_title` varchar(255) NOT NULL,
-  `executive_summary` text DEFAULT NULL,
-  `objectives` text DEFAULT NULL,
-  `promotion` text DEFAULT NULL,
-  `logistics` text DEFAULT NULL,
-  `financial_plan` text DEFAULT NULL,
-  `safety` text DEFAULT NULL,
-  `queued_at` datetime DEFAULT NULL,
-  `adviser_approved_at` datetime DEFAULT NULL,
-  `adviser_id` bigint(20) unsigned DEFAULT NULL,
-  `president_approved_at` datetime DEFAULT NULL,
-  `president_id` bigint(20) unsigned DEFAULT NULL,
-  `rejected_at` datetime DEFAULT NULL,
-  `rejected_by` bigint(20) unsigned DEFAULT NULL,
-  `status` enum('draft','pending','returned','approved','rejected') NOT NULL,
-  `current_step` enum('officers','president','adviser','completed') NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `comments` text DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `gspoas_adviser_id_foreign` (`adviser_id`),
-  KEY `gspoas_president_id_foreign` (`president_id`),
-  KEY `gspoas_rejected_by_foreign` (`rejected_by`),
-  CONSTRAINT `gspoas_adviser_id_foreign` FOREIGN KEY (`adviser_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `gspoas_president_id_foreign` FOREIGN KEY (`president_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `gspoas_rejected_by_foreign` FOREIGN KEY (`rejected_by`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `job_batches`;
@@ -1314,3 +1253,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (117,'2025_10_13_05
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (118,'2025_10_16_100614_change_columns_in_gpoas_table',3);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (119,'2025_10_17_065642_create_event_participant_courses_table',3);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (120,'2025_10_18_030748_change_columns_in_audit_trail_table',3);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (121,'2025_10_31_022613_change_columns_in_accom_reports_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (122,'2025_10_31_024218_change_columns_in_accom_reports_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (123,'2025_10_31_024343_change_columns_in_gpoas_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (124,'2025_11_07_015804_change_columns_in_accom_reports_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (125,'2025_11_07_015924_change_columns_in_gpoas_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (126,'2025_11_28_081951_change_columns_in_events_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (127,'2025_11_30_095622_create_event_links_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (128,'2026_01_10_162318_change_columns_in_audit_trail_table',4);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (129,'2026_01_10_163253_drop_gspoas_table',4);
