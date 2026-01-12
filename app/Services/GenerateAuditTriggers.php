@@ -52,7 +52,7 @@ SQL;
         }
         foreach ($triggers as $trigger) {
             if (str_starts_with($trigger, self::$prefix)) {
-                DB::statement("drop trigger if exists {$trigger}");
+                DB::statement("drop trigger if exists \"{$trigger}\"");
             }
         }
     }
@@ -79,10 +79,10 @@ SQL;
                 continue;
             }
             if (config('database.default') === 'sqlite') {
-                $columns = collect(DB::select("
-                    select name
+                $columns = collect(DB::select('
+                    select "name"
                     from pragma_table_info(?)
-                ", [$tableName]))->pluck('name');
+                ', [$tableName]))->pluck('name');
             } else {
                 $columns = DB::table('information_schema.columns')
                     ->where('table_schema', self::$dbName)
@@ -91,8 +91,8 @@ SQL;
             $colNames = $columns;
             foreach (['insert', 'update', 'delete'] as $action) {
                 $triggerName = self::$prefix . "{$tableName}_{$action}";
-                $timing = "after";
-                $when = strtoupper($action);
+                $timing = 'after';
+                $when = $action;
                 $columnDiff = '';
                 if ($action === 'update') {
                     /*
@@ -101,26 +101,27 @@ SQL;
                         set changed_cols = json_array();\n";
                     */
                     $columnDiff .= <<<SQL
-insert into audit_trigger_variables (changed_cols)
+insert into "audit_trigger_variables" ("changed_cols")
 values ('');
 
 SQL;
                     foreach ($colNames as $col) {
                         $columnDiff .= <<<SQL
-update audit_trigger_variables
-set changed_cols = json_array_append(changed_cols, '$', '$col')
-where not (old."$col" $columnCompOperator new."$col");
+update "audit_trigger_variables"
+set "changed_cols" = json_array_append(changed_cols, '$', '$col')
+where not (
+  old."$col" = new."$col" or (old."$col" is null and new."$col" is null)
+);
 
 SQL;
-                        $columnDiff .= "\n";
                     }
                 } else {
                     $columnDiff .= <<<SQL
-insert into audit_trigger_variables (changed_cols) 
+insert into "audit_trigger_variables" ("changed_cols") 
 values (null);
 
 SQL;
-}
+                }
                 $columnsChangedValue = match ($action) {
                     'insert', 'delete' => 'NULL',
                     'update' => 'changed_cols',
@@ -134,7 +135,7 @@ update audit_trail_data
 set
   action = '$action',
   table_name = '$tableName',
-  column_names = (select changed_cols from audit_trigger_variables),
+  column_names = (select "changed_cols" from "audit_trigger_variables"),
   primary_key = $primaryKeyValue,
   created_at = now();
 
@@ -146,38 +147,38 @@ for each row
 begin
   $columnDiff
   $prepareAuditData
-  insert into $auditTable (
-    action,
-    table_name,
-    column_names,
-    primary_key,
-    request_id,
-    request_ip,
-    request_url,
-    request_method,
-    request_time,
-    user_id,
-    user_agent,
-    session_id,
-    created_at
+  insert into "$auditTable" (
+    "action",
+    "table_name",
+    "column_names",
+    "primary_key",
+    "request_id",
+    "request_ip",
+    "request_url",
+    "request_method",
+    "request_time",
+    "user_id",
+    "user_agent",
+    "session_id",
+    "created_at"
   )
   select
-    action,
-    table_name,
-    column_names,
-    primary_key,
-    request_id,
-    request_ip,
-    request_url,
-    request_method,
-    request_time,
-    user_id,
-    user_agent,
-    session_id,
-    created_at
-  from audit_trail_data;
-  delete from `audit_trail_data`;
-  delete from `audit_trigger_variables`;
+    "action",
+    "table_name",
+    "column_names",
+    "primary_key",
+    "request_id",
+    "request_ip",
+    "request_url",
+    "request_method",
+    "request_time",
+    "user_id",
+    "user_agent",
+    "session_id",
+    "created_at"
+  from "audit_trail_data";
+  delete from "audit_trail_data";
+  delete from "audit_trigger_variables";
 end;
 
 SQL;

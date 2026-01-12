@@ -19,23 +19,23 @@ class SetAuditVariables
     {
         $prefix = 'audit_';
         $requestId = (string) Str::ulid();
-        DB::statement("
-            create temporary table audit_trail_data (
-                `action` varchar(10) DEFAULT NULL,
-                `table_name` varchar(100) DEFAULT NULL,
-                `column_names` longtext DEFAULT NULL,
-                `primary_key` bigint(20) DEFAULT NULL,
-                `request_id` char(26) DEFAULT NULL,
-                `request_ip` varchar(45) DEFAULT NULL,
-                `request_url` text DEFAULT NULL,
-                `request_method` varchar(10) DEFAULT NULL,
-                `request_time` timestamp NULL DEFAULT NULL,
-                `user_id` bigint(20) DEFAULT NULL,
-                `user_agent` text DEFAULT NULL,
-                `session_id` varchar(255) DEFAULT NULL,
-                `created_at` timestamp NULL DEFAULT NULL,
+        DB::statement('
+            create temporary "table audit_trail_data" (
+                "action" varchar(10) default null,
+                "table_name" varchar(100) default null,
+                "column_names" longtext default null,
+                "primary_key" bigint(20) default null,
+                "request_id" char(26) default null,
+                "request_ip" varchar(45) default null,
+                "request_url" text default null,
+                "request_method" varchar(10) default null,
+                "request_time" timestamp null default null,
+                "user_id" bigint(20) default null,
+                "user_agent" text default null,
+                "session_id" varchar(255) default null,
+                "created_at" timestamp null default null,
             )
-        ");
+        ');
         DB::table('audit_trail_data')->insert([
             'request_id' => $requestId,
             'request_ip' => $request->ip(),
