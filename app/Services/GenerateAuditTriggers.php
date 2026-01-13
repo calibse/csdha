@@ -26,19 +26,7 @@ class GenerateAuditTriggers
     {
         self::boot();
         self::dropAllTriggers();
-        self::createTriggerVars();
         self::createTriggers();
-    }
-
-    public static function createTriggerVars()
-    {
-        $sql = <<<SQL
-drop table if exists "audit_trigger_variables";
-create temporary table "audit_trigger_variables" (
-    "changed_cols" longtext
-);
-
-SQL;
     }
 
     private static function dropAllTriggers()

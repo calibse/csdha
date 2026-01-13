@@ -68,6 +68,10 @@
         "prod": [
             "Composer\\Config::disableProcessTimeout",
             "APP_URL='http://127.0.0.1:8000' npx concurrently \"php artisan serve --host 127.0.0.1\" \"mailpit\" \"./cron.sh\" \"php artisan pail --timeout=0\" \"npm run build\" --names=server,mail,cron,logs,vite"
+        ],
+        "prod-admin": [
+            "Composer\\Config::disableProcessTimeout",
+            "APP_URL='http://127.0.0.2:8000' npx concurrently \"php artisan serve --host 127.0.0.2\" \"mailpit\" \"./cron.sh\" \"php artisan pail --timeout=0\" \"npm run build\" --names=server,mail,cron,logs,vite"
         ]
     },
     "extra": {
