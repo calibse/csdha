@@ -141,8 +141,8 @@ class EventDate extends Model
     {
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')
-            ->whereRaw("timestamp(date, start_time) >
-                convert_tz(now(), @@session.time_zone, timezone)")
+            ->whereRaw('timestamp(date, start_time) >
+                convert_tz(now(), ?, timezone)', [config('app.timezone')])
             ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
     }
 
@@ -151,9 +151,9 @@ class EventDate extends Model
     {
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')->where(function ($query) {
-                $query->whereRaw('convert_tz(now(), @@session.time_zone, 
+                $query->whereRaw('convert_tz(now(), ?, 
                     timezone) between timestamp(date, start_time) and
-                    timestamp(date, end_time)')
+                    timestamp(date, end_time)', [config('app.timezone')])
                 ->where(function ($query) {
                     $query->whereHas('event.accomReport', function ($query) {
                         $query->whereNotIn('status', ['pending', 'approved']);
