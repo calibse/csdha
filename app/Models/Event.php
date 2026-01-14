@@ -361,8 +361,8 @@ class Event extends Model
         $eventTz = $this->timezone;
         $now = Carbon::now($eventTz);
         $isUpcoming = $this->dates()
-            ->selectRaw('timestamp(date, start_time) > ? as value', [$now])
-            ->orderByRaw('timestamp(date, end_time) desc')->limit(1)
+            ->selectRaw("concat(date, start_time) > '?' as value", [$now])
+            ->orderByRaw('concat(date, end_time) desc')->limit(1)
             ->value('value');
         return Attribute::make(
             get: fn () => $isUpcoming,
@@ -374,8 +374,8 @@ class Event extends Model
         $eventTz = $this->timezone;
         $now = Carbon::now($eventTz);
         $isOngoing = $this->dates()
-            ->whereRaw('? between 
-            timestamp(date, start_time) and timestamp(date, end_time)', 
+            ->whereRaw("'?' between 
+            concat(date, start_time) and concat(date, end_time)", 
             [$now])->exists();
         return Attribute::make(
             get: fn () => $isOngoing,
@@ -387,9 +387,9 @@ class Event extends Model
         $eventTz = $this->timezone;
         $now = Carbon::now($eventTz);
         $isCompleted = $this->dates()
-            ->selectRaw('timestamp(date, end_time) < ? as is_completed', 
+            ->selectRaw("concat(date, end_time) < '?' as is_completed", 
                 [$now])
-            ->orderByRaw('timestamp(date, end_time) desc')->limit(1)
+            ->orderByRaw('concat(date, end_time) desc')->limit(1)
             ->value('is_completed');
         return Attribute::make(
             get: fn () => $isCompleted,
@@ -445,20 +445,19 @@ class Event extends Model
     protected function completed(Builder $query): void
     {
         $latestDatesSub = EventDate::select('event_id', 
-            DB::raw('max(timestamp(date, end_time)) as latest_date'))
+            DB::raw('max(concat(date, end_time)) as latest_date'))
             ->groupBy('event_id');
         $latestDates = EventDate::from('event_dates as ed')
             ->joinSub($latestDatesSub, 'ed_max', function ($join) {
                 $join->on('ed.event_id', '=', 'ed_max.event_id')
-                    ->on(DB::raw('timestamp(ed.date, ed.end_time)'), '=', 
+                    ->on(DB::raw('concat(ed.date, ed.end_time)'), '=', 
                     'ed_max.latest_date');
         })->select('ed.*');
         $query->leftJoinSub($latestDates, 'latest_dates', function ($join) { 
             $join->on('events.id', '=', 'latest_dates.event_id'); 
         })->select('events.*')->distinct()->where(function ($query) {
-            $query->whereRaw('timestamp(latest_dates.date, 
-                latest_dates.end_time) < 
-                convert_tz(now(), ?, timezone)', [config('app.timezone')])
+            $query->whereRaw('concat(latest_dates.date, 
+                latest_dates.end_time) < ?', [Carbon::now()])
             ->orWhereNull('latest_dates.date');
         })->orderBy('date', 'desc')->orderBy('end_time', 'desc');
     }
@@ -469,8 +468,7 @@ class Event extends Model
         $nextDays = 5;
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')->distinct()
-            ->whereRaw('timestamp(date, start_time) > 
-                convert_tz(now(), ?, timezone)', [config('app.timezone')])
+            ->whereRaw('concat(date, start_time) > ?', [Carbon::now()])
             ->orderBy('date', 'desc')->orderBy('start_time', 'desc');
     }
 
@@ -480,28 +478,25 @@ class Event extends Model
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->whereRaw('convert_tz(now(), ?, timezone) 
-                between timestamp(date, start_time) and
-                timestamp(date, end_time)', [config('app.timezone')]);
+            ->whereRaw('? between concat(date, start_time) and
+                concat(date, end_time)', [Carbon::now()]);
     }
 
     #[Scope]
     protected function ongoingAndUpcoming(Builder $query): void
     {
+        $now = Carbon::now()->toDateTimeString();
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->where(function ($query) {
-                $query->whereRaw('timestamp(date, start_time) > 
-                        convert_tz(now(), ?, timezone)', 
-                        [config('app.timezone')])
-                    ->orWhereRaw('convert_tz(now(), ?, 
-                        timezone) between timestamp(date, start_time) and
-                        timestamp(date, end_time)', [config('app.timezone')]);
+            ->where(function ($query) use ($now) {
+                $query->whereRaw("concat(date, start_time) > ?", [$now])
+                    ->orWhereRaw("? between concat(date, start_time) and
+                        concat(date, end_time)", 
+                        [$now]);
             })
-            ->orderByRaw('(convert_tz(now(), ?, timezone) 
-                between timestamp(date, start_time) and
-                timestamp(date, end_time)) desc', [config('app.timezone')])
+            ->orderByRaw("(? between concat(date, start_time) and
+                concat(date, end_time)) desc", [$now])
             ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
     }
 }

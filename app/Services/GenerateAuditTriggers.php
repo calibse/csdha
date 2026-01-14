@@ -19,7 +19,8 @@ class GenerateAuditTriggers
         self::$excludes = [self::$tableName, 'migrations', 'sessions', 
             'personal_access_tokens', 'event_evaluation_tokens', 
             'password_reset_tokens', 'cache', 'cache_locks', 'jobs', 
-            'job_batches', 'failed_jobs'];
+            'job_batches', 'failed_jobs', 'audit_trail_data', 
+            'audit_trigger_variables'];
     }
 
     public static function run()
@@ -93,6 +94,8 @@ insert into "audit_trigger_variables" ("changed_cols")
 values ('');
 
 SQL;
+                    $colCount = count($colNames);
+/*
                     foreach ($colNames as $col) {
                         $columnDiff .= <<<SQL
 update "audit_trigger_variables"
@@ -103,7 +106,32 @@ where not (
 
 SQL;
                     }
+*/
+                    $changedCol = <<<SQL
+concat('[',
+
+SQL;
+                    for ($i = 0; $i < $colCount; $i++) {
+                        $changedCol .= <<<SQL
+    case when not (old."$colNames[$i]" = new."$colNames[$i]" 
+      or (old."$colNames[$i]" is null and new."$colNames[$i]" is null))
+    then '"$colNames[$i]"'
+    else ''
+    end
+
+SQL;
+                        if ($i < ($colCount - 1)) {
+                            $changedCol .= <<<SQL
+    , ',', 
+
+SQL;
+                        }
+                    }
+                    $changedCol .= <<<SQL
+  , ']')
+SQL;
                 } else {
+                    $changedCol = 'null';
                     $columnDiff .= <<<SQL
 insert into "audit_trigger_variables" ("changed_cols") 
 values (null);
@@ -126,6 +154,17 @@ set
   column_names = (select "changed_cols" from "audit_trigger_variables"),
   primary_key = $primaryKeyValue,
   created_at = now();
+
+SQL;
+
+                $prepareAuditData = <<<SQL
+update audit_trail_data
+set
+  action = '$action',
+  table_name = '$tableName',
+  primary_key = $primaryKeyValue,
+  created_at = now(),
+  column_names = $changedCol ;
 
 SQL;
                 $sql = <<<SQL

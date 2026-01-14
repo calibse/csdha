@@ -59,10 +59,40 @@ class EventDate extends Model
         );
     }
 
+    public function realEndTime(): Attribute
+    {
+        $time = Carbon::parse(
+            "{$this->date->toDateString()} {$this->end_time}")
+            ->setTimezone($event->timezone)->toTimeString();
+        return Attribute::make(
+            get: fn () => $time,
+        );
+    }
+
+    public function realStartTime(): Attribute
+    {
+        $time = Carbon::parse(
+            "{$this->date->toDateString()} {$this->start_time}")
+            ->setTimezone($event->timezone)->toTimeString();
+        return Attribute::make(
+            get: fn () => $time,
+        );
+    }
+
+    public function realDate(): Attribute
+    {
+        $date = Carbon::parse(
+            "{$this->date->toDateString()} {$this->start_time}")
+            ->setTimezone($event->timezone)->toDateString();
+        return Attribute::make(
+            get: fn () => $date,
+        );
+    }
+
     public function startTimeShort(): Attribute
     {
         $time = $this->start_time
-            ? Carbon::parse($this->start_time, $this->event->timezone)->format('H:i') : null;
+            ? Carbon::parse($this->real_start_time)->format('H:i') : null;
         return Attribute::make(
             get: fn () => $time,
         );
@@ -71,7 +101,7 @@ class EventDate extends Model
     public function endTimeShort(): Attribute
     {
         $time = $this->end_time
-            ? Carbon::parse($this->end_time, $this->event->timezone)->format('H:i') : null;
+            ? Carbon::parse($this->real_end_time)->format('H:i') : null;
         return Attribute::make(
             get: fn () => $time,
         );
@@ -79,7 +109,7 @@ class EventDate extends Model
 
     public function dateFmt(): Attribute
     {
-        $date = $this->date->format('F j, Y');
+        $date = Carbon::parse($this->real_date)->format('F j, Y');
         return Attribute::make(
             get: fn () => $date
         );
@@ -88,7 +118,7 @@ class EventDate extends Model
     public function startTimeFmt(): Attribute
     {
         $time = $this->start_time
-            ? Carbon::parse($this->start_time, $this->event->timezone)->format('g:i A') : null;
+            ? Carbon::parse($this->real_start_time)->format('g:i A') : null;
         return Attribute::make(
             get: fn () => $time
         );
@@ -97,7 +127,7 @@ class EventDate extends Model
     public function endTimeFmt(): Attribute
     {
         $time = $this->end_time
-            ? Carbon::parse($this->end_time, $this->event->timezone)->format('g:i A') : null;
+            ? Carbon::parse($this->real_end_time)->format('g:i A') : null;
         return Attribute::make(
             get: fn () => $time
         );
@@ -125,12 +155,9 @@ class EventDate extends Model
 
     public function isOngoing(): Attribute
     {
-        $timezone = $this->event->timezone;
-        $start = Carbon::parse("{$this->date->format('Y-m-d')} " .
-            "{$this->start_time}", $timezone);
-        $end = Carbon::parse("{$this->date->format('Y-m-d')} " .
-            "{$this->end_time}", $timezone);
-        $ongoing = Carbon::now($timezone)->between($end, $start);
+        $start = "{$this->date->format('Y-m-d')} {$this->start_time}";
+        $end = "{$this->date->format('Y-m-d')} {$this->end_time}";
+        $ongoing = Carbon::now()->between($end, $start);
         return Attribute::make(
             get: fn () => $ongoing
         );
@@ -141,8 +168,7 @@ class EventDate extends Model
     {
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')
-            ->whereRaw('timestamp(date, start_time) >
-                convert_tz(now(), ?, timezone)', [config('app.timezone')])
+            ->whereRaw('concat(date, start_time) > ?', [Carbon::now()])
             ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
     }
 
@@ -151,9 +177,8 @@ class EventDate extends Model
     {
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')->where(function ($query) {
-                $query->whereRaw('convert_tz(now(), ?, 
-                    timezone) between timestamp(date, start_time) and
-                    timestamp(date, end_time)', [config('app.timezone')])
+                $query->whereRaw('? between concat(date, start_time) and
+                    concat(date, end_time)', [Carbon::now()])
                 ->where(function ($query) {
                     $query->whereHas('event.accomReport', function ($query) {
                         $query->whereNotIn('status', ['pending', 'approved']);
