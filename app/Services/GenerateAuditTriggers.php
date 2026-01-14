@@ -20,7 +20,7 @@ class GenerateAuditTriggers
             'personal_access_tokens', 'event_evaluation_tokens', 
             'password_reset_tokens', 'cache', 'cache_locks', 'jobs', 
             'job_batches', 'failed_jobs', 'audit_trail_data', 
-            'audit_trigger_variables'];
+            'audit_trigger_variables', 'audit_trail_data_copy'];
     }
 
     public static function run()
@@ -84,59 +84,32 @@ class GenerateAuditTriggers
                 $when = $action;
                 $columnDiff = '';
                 if ($action === 'update') {
-                    /*
-                    $columnDiff .= "
-                        declare changed_cols json;\n
-                        set changed_cols = json_array();\n";
-                    */
-                    $columnDiff .= <<<SQL
-insert into "audit_trigger_variables" ("changed_cols")
-values ('');
-
-SQL;
                     $colCount = count($colNames);
-/*
-                    foreach ($colNames as $col) {
-                        $columnDiff .= <<<SQL
-update "audit_trigger_variables"
-set "changed_cols" = json_array_append(changed_cols, '$', '$col')
-where not (
-  old."$col" = new."$col" or (old."$col" is null and new."$col" is null)
-);
-
-SQL;
-                    }
-*/
-                    $changedCol = <<<SQL
-concat('[',
-
-SQL;
+                    $changedCol = 'concat(';
                     for ($i = 0; $i < $colCount; $i++) {
                         $changedCol .= <<<SQL
     case when not (old."$colNames[$i]" = new."$colNames[$i]" 
       or (old."$colNames[$i]" is null and new."$colNames[$i]" is null))
-    then '"$colNames[$i]"'
+    then '"$colNames[$i]",'
     else ''
     end
-
 SQL;
-                        if ($i < ($colCount - 1)) {
-                            $changedCol .= <<<SQL
-    , ',', 
-
-SQL;
+                        if ($i < $colCount - 1) {
+                            $changedCol .= ', ';
                         }
                     }
-                    $changedCol .= <<<SQL
-  , ']')
+                    $changedCol .= ')';
+                    $setChangedCols = <<<SQL
+insert into "audit_trigger_variables" ("changed_cols") 
+values ($changedCol);
+SQL;
+                    $changedCol = <<<SQL
+(select concat('[', substr("changed_cols", 1, length("changed_cols") -1), ']')
+from "audit_trigger_variables")
 SQL;
                 } else {
-                    $changedCol = 'null';
-                    $columnDiff .= <<<SQL
-insert into "audit_trigger_variables" ("changed_cols") 
-values (null);
-
-SQL;
+                    $setChangedCols = '';
+                    $changedCol = "'[]'";
                 }
                 $columnsChangedValue = match ($action) {
                     'insert', 'delete' => 'NULL',
@@ -147,24 +120,20 @@ SQL;
                     'insert' => 'new.id',
                 };
                 $prepareAuditData = <<<SQL
-update audit_trail_data
-set
-  action = '$action',
-  table_name = '$tableName',
-  column_names = (select "changed_cols" from "audit_trigger_variables"),
-  primary_key = $primaryKeyValue,
-  created_at = now();
+$setChangedCols
+update "audit_trail_data" set
+action = '$action',
+table_name = '$tableName',
+primary_key = $primaryKeyValue,
+created_at = now(),
+column_names = ($changedCol) ;
 
-SQL;
-
-                $prepareAuditData = <<<SQL
-update audit_trail_data
-set
-  action = '$action',
-  table_name = '$tableName',
-  primary_key = $primaryKeyValue,
-  created_at = now(),
-  column_names = $changedCol ;
+update "audit_trail_data_copy" set
+action = '$action',
+table_name = '$tableName',
+primary_key = $primaryKeyValue,
+created_at = now(),
+column_names = $changedCol ;
 
 SQL;
                 $sql = <<<SQL
@@ -172,7 +141,6 @@ create trigger "$triggerName"
 $timing $when on "$tableName"
 for each row
 begin
-  $columnDiff
   $prepareAuditData
   insert into "$auditTable" (
     "action",
@@ -210,23 +178,6 @@ end;
 
 SQL;
                 DB::unprepared($sql);
-/*
-  values (
-    '$action',
-    '$tableName',
-    $columnsChangedValue,
-    $primaryKeyValue,
-    coalesce(@audit_request_id, null),
-    coalesce(@audit_request_ip, null),
-    coalesce(@audit_request_url, null),
-    coalesce(@audit_request_method, null),
-    coalesce(@audit_request_time, null),
-    coalesce(@audit_user_id, null),
-    coalesce(@audit_user_agent, null),
-    coalesce(@audit_session_id, null),
-    now()
-  );
-*/
             }
         }
     }

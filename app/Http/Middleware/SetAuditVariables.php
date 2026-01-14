@@ -19,27 +19,19 @@ class SetAuditVariables
     {
         $prefix = 'audit_';
         $requestId = (string) Str::ulid();
-/*
-        $createTable = <<<SQL
-create temporary table "audit_trail_data" (
-    "action" varchar(10) default null,
-    "table_name" varchar(100) default null,
-    "column_names" longtext default null,
-    "primary_key" bigint(20) default null,
-    "request_id" char(26) default null,
-    "request_ip" varchar(45) default null,
-    "request_url" text default null,
-    "request_method" varchar(10) default null,
-    "request_time" timestamp null default null,
-    "user_id" bigint(20) default null,
-    "user_agent" text default null,
-    "session_id" varchar(255) default null,
-    "created_at" timestamp null default null
-)
-
-SQL;
-        DB::statement($createTable);
-*/
+        if (!in_array($request->method(), ['PUT', 'POST', 'DELETE'])) {
+            return $next($request);
+        }
+        DB::table('audit_trail_data_copy')->insert([
+            'request_id' => $requestId,
+            'request_ip' => $request->ip(),
+            'request_url' => $request->fullUrl(),
+            'request_method' => $request->method(),
+            'request_time' => now()->toDateTimeString(),
+            'user_id' => auth()->id(),
+            'user_agent' => $request->userAgent(),
+            'session_id' => $request->session()->getId()
+        ]);
         DB::table('audit_trail_data')->insert([
             'request_id' => $requestId,
             'request_ip' => $request->ip(),
@@ -50,6 +42,7 @@ SQL;
             'user_agent' => $request->userAgent(),
             'session_id' => $request->session()->getId()
         ]);
+        return $next($request);
 /*
         $variables = [
         ];
@@ -58,6 +51,5 @@ SQL;
             DB::unprepared("SET @{$prefix}{$key} = {$safe}");
         }
 */
-        return $next($request);
     }
 }
