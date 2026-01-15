@@ -15,16 +15,15 @@ return new class extends Migration
             $sql = DB::table('sqlite_master')->where('type', 'table')
                 ->where('name', 'audit_trail')->value('sql');
             $newConstraint = <<<SQL
-constraint "chk_request_method" 
-check("request_method" in ('GET','POST','PUT','PATCH','DELETE','OPTIONS'))
 
+  CONSTRAINT "chk_request_method" CHECK("request_method" in('GET','POST','PUT','PATCH','DELETE','OPTIONS'))
 SQL;
             $oldTable = 'audit_trail';
             $newTable = 'audit_trail_copy';
             $sql = preg_replace('/^CREATE\s+TABLE\s+"?' 
                 . preg_quote($oldTable, '/') . '"?\s*\(/i', 
                 'CREATE TABLE "' . $newTable . '"(', $sql);
-            $sql = preg_replace('/\s*,?\s*CONSTRAINT\s+"chk_request_method"\s+CHECK\s*\([^)]*\)/i', 
+            $sql = preg_replace('/\s*CONSTRAINT\s+"chk_request_method"\s+CHECK\s*\([^)]*\)\)/i', 
                 $newConstraint, $sql);
             DB::unprepared($sql);
             $sql = <<<SQL

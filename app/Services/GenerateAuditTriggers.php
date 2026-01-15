@@ -88,7 +88,7 @@ class GenerateAuditTriggers
                     $changedCol = 'concat(';
                     for ($i = 0; $i < $colCount; $i++) {
                         $changedCol .= <<<SQL
-    case when not (old."$colNames[$i]" = new."$colNames[$i]" 
+    case when not (coalesce(old."$colNames[$i]" = new."$colNames[$i]", 0)
       or (old."$colNames[$i]" is null and new."$colNames[$i]" is null))
     then '"$colNames[$i]",'
     else ''

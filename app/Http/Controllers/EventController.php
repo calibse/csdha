@@ -615,13 +615,9 @@ class EventController extends Controller implements HasMiddleware
         } else {
             $date = $event->dates()->find($date->id);
         }
-        $start = Carbon::parse("{$request->date} {$request->start_time}", 
-            $event->timezone)->setTimezone('UTC');
-        $end = Carbon::parse("{$request->date} {$request->end_time}", 
-            $event->timezone)->setTimezone('UTC');
-        $date->date = $start->toDateString();
-        $date->start_time = $start->toTimeString();
-        $date->end_time = $end->toTimeString();
+        $date->date = $request->date;
+        $date->start_time = $request->start_time;
+        $date->end_time = $request->end_time;
         $date->save();
     }
 

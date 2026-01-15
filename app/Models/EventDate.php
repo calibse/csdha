@@ -25,6 +25,19 @@ class EventDate extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (EventDate $date) {
+            $start = Carbon::parse("{$date->date} {$date->start_time}", 
+                $event->timezone)->setTimezone('UTC');
+            $end = Carbon::parse("{$date->date} {$date->end_time}", 
+                $event->timezone)->setTimezone('UTC');
+            $date->date = $start->toDateString();
+            $date->start_time = $start->toTimeString();
+            $date->end_time = $end->toTimeString();
+        });
+    }
+
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(EventStudent::class, 'event_attendees')
@@ -59,40 +72,37 @@ class EventDate extends Model
         );
     }
 
-    public function realEndTime(): Attribute
+    public function startTime(): Attribute
     {
-        $time = Carbon::parse(
-            "{$this->date->toDateString()} {$this->end_time}")
-            ->setTimezone($event->timezone)->toTimeString();
         return Attribute::make(
-            get: fn () => $time,
+            get: fn () => Carbon::parse(
+                "{$this->date->toDateString()} {$this->start_time}")
+                ->setTimezone($event->timezone)->toTimeString()
         );
     }
 
-    public function realStartTime(): Attribute
+    public function endTime(): Attribute
     {
-        $time = Carbon::parse(
-            "{$this->date->toDateString()} {$this->start_time}")
-            ->setTimezone($event->timezone)->toTimeString();
         return Attribute::make(
-            get: fn () => $time,
+            get: fn () => Carbon::parse(
+                "{$this->date->toDateString()} {$this->end_time}")
+                ->setTimezone($event->timezone)->toTimeString()
         );
     }
 
-    public function realDate(): Attribute
+    public function date(): Attribute
     {
-        $date = Carbon::parse(
-            "{$this->date->toDateString()} {$this->start_time}")
-            ->setTimezone($event->timezone)->toDateString();
         return Attribute::make(
-            get: fn () => $date,
+            get: fn () => Carbon::parse(
+                "{$this->date->toDateString()} {$this->start_time}")
+                ->setTimezone($event->timezone)
         );
     }
 
     public function startTimeShort(): Attribute
     {
         $time = $this->start_time
-            ? Carbon::parse($this->real_start_time)->format('H:i') : null;
+            ? Carbon::parse($this->start_time)->format('H:i') : null;
         return Attribute::make(
             get: fn () => $time,
         );
@@ -101,7 +111,7 @@ class EventDate extends Model
     public function endTimeShort(): Attribute
     {
         $time = $this->end_time
-            ? Carbon::parse($this->real_end_time)->format('H:i') : null;
+            ? Carbon::parse($this->end_time)->format('H:i') : null;
         return Attribute::make(
             get: fn () => $time,
         );
@@ -109,7 +119,7 @@ class EventDate extends Model
 
     public function dateFmt(): Attribute
     {
-        $date = Carbon::parse($this->real_date)->format('F j, Y');
+        $date = $this->date->format('F j, Y');
         return Attribute::make(
             get: fn () => $date
         );
@@ -118,7 +128,7 @@ class EventDate extends Model
     public function startTimeFmt(): Attribute
     {
         $time = $this->start_time
-            ? Carbon::parse($this->real_start_time)->format('g:i A') : null;
+            ? Carbon::parse($this->start_time)->format('g:i A') : null;
         return Attribute::make(
             get: fn () => $time
         );
@@ -127,7 +137,7 @@ class EventDate extends Model
     public function endTimeFmt(): Attribute
     {
         $time = $this->end_time
-            ? Carbon::parse($this->real_end_time)->format('g:i A') : null;
+            ? Carbon::parse($this->end_time)->format('g:i A') : null;
         return Attribute::make(
             get: fn () => $time
         );
