@@ -18,23 +18,18 @@ class EventDate extends Model
 {
     use HasPublicId;
 
-    protected function casts(): array
-    {
-        return [
-            'date' => 'date'
-        ];
-    }
-
     protected static function booted(): void
     {
         static::saving(function (EventDate $date) {
-            $start = Carbon::parse("{$date->date} {$date->start_time}", 
-                $event->timezone)->setTimezone('UTC');
-            $end = Carbon::parse("{$date->date} {$date->end_time}", 
-                $event->timezone)->setTimezone('UTC');
-            $date->date = $start->toDateString();
-            $date->start_time = $start->toTimeString();
-            $date->end_time = $end->toTimeString();
+/*
+            $start = Carbon::parse("{$date->date->toDateString()} {$date->start_time}", 
+                $date->event->timezone)->setTimezone('UTC');
+            $end = Carbon::parse("{$date->date->toDateString()} {$date->end_time}", 
+                $date->event->timezone)->setTimezone('UTC');
+*/
+            $date->date = $date->date;
+            $date->start_time = $date->start_time;
+            $date->end_time = $date->end_time;
         });
     }
 
@@ -75,28 +70,39 @@ class EventDate extends Model
     public function startTime(): Attribute
     {
         return Attribute::make(
-            get: fn () => Carbon::parse(
-                "{$this->date->toDateString()} {$this->start_time}")
-                ->setTimezone($event->timezone)->toTimeString()
+            get: fn (string $value, array $attributes) => Carbon::parse(
+                "{$attributes['date']} {$value}")
+                ->setTimezone($this->event->timezone)->toTimeString()
         );
     }
 
     public function endTime(): Attribute
     {
         return Attribute::make(
-            get: fn () => Carbon::parse(
-                "{$this->date->toDateString()} {$this->end_time}")
-                ->setTimezone($event->timezone)->toTimeString()
+            get: fn (string $value, array $attributes) => Carbon::parse(
+                "{$attributes['date']} {$value}")
+                ->setTimezone($this->event->timezone)->toTimeString()
         );
     }
 
     public function date(): Attribute
     {
         return Attribute::make(
-            get: fn () => Carbon::parse(
-                "{$this->date->toDateString()} {$this->start_time}")
-                ->setTimezone($event->timezone)
+            get: fn (string $value, array $attributes) => Carbon::parse(
+                "{$value} {$attributes['start_time']}")
+                ->setTimezone($this->event->timezone)->toDateString(),
+            set: fn (string $value, array $attributes) => Carbon::parse($value)
+                ->toDateString()
         );
+/*
+        return Attribute::make(
+            get: fn (string $value, array $attributes) => Carbon::parse(
+                "{$value} {$attributes['start_time']}")
+                ->setTimezone($event->timezone),
+            set: fn (string $value, array $attributes) => Carbon::parse(
+                $value)->toDateString()
+        );
+*/
     }
 
     public function startTimeShort(): Attribute
@@ -119,7 +125,7 @@ class EventDate extends Model
 
     public function dateFmt(): Attribute
     {
-        $date = $this->date->format('F j, Y');
+        $date = Carbon::parse($this->date)->format('F j, Y');
         return Attribute::make(
             get: fn () => $date
         );
@@ -165,8 +171,8 @@ class EventDate extends Model
 
     public function isOngoing(): Attribute
     {
-        $start = "{$this->date->format('Y-m-d')} {$this->start_time}";
-        $end = "{$this->date->format('Y-m-d')} {$this->end_time}";
+        $start = "{Carbon::parse($this->date)->format('Y-m-d')} {$this->start_time}";
+        $end = "{Carbon::parse($this->date)->format('Y-m-d')} {$this->end_time}";
         $ongoing = Carbon::now()->between($end, $start);
         return Attribute::make(
             get: fn () => $ongoing
@@ -178,7 +184,7 @@ class EventDate extends Model
     {
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')
-            ->whereRaw('concat(date, start_time) > ?', [Carbon::now()])
+            ->whereRaw("concat(\"date\", ' ', \"start_time\") > ?", [Carbon::now()])
             ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
     }
 
@@ -187,8 +193,8 @@ class EventDate extends Model
     {
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')->where(function ($query) {
-                $query->whereRaw('? between concat(date, start_time) and
-                    concat(date, end_time)', [Carbon::now()])
+                $query->whereRaw("? between concat(\"date\", ' ', \"start_time\") and
+                    concat(\"date\", ' ', \"end_time\")", [Carbon::now()])
                 ->where(function ($query) {
                     $query->whereHas('event.accomReport', function ($query) {
                         $query->whereNotIn('status', ['pending', 'approved']);

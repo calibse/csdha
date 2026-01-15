@@ -22,8 +22,6 @@ class GpoaActivity extends Model
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
             'president_submitted_at' => 'datetime',
             'officers_submitted_at' => 'datetime',
             'president_returned_at' => 'datetime',
@@ -224,8 +222,8 @@ class GpoaActivity extends Model
 
     protected function date(): Attribute
     {
-        $start = $this->start_date;
-        $end = $this->end_date ? $this->end_date : null;
+        $start = Carbon::parse($this->start_date);
+        $end = $this->end_date ? Carbon::parse($this->end_date) : null;
 
         if (!$end) {
             $date = $start->format('F j, Y');
@@ -366,7 +364,7 @@ class GpoaActivity extends Model
         $date->end_time = '23:59';
         $date->event()->associate($this->event);
         $date->save();
-	$accomReport = new AccomReport;
+        $accomReport = new AccomReport;
         $accomReport->event()->associate($event);
         $accomReport->status = 'draft';
         $accomReport->current_step = 'officers';
