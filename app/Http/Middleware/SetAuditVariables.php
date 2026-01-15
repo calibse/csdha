@@ -32,6 +32,7 @@ class SetAuditVariables
             'user_agent' => $request->userAgent(),
             'session_id' => $request->session()->getId()
         ]);
+        DB::table('audit_trail_data')->delete();
         DB::table('audit_trail_data')->insert([
             'request_id' => $requestId,
             'request_ip' => $request->ip(),
