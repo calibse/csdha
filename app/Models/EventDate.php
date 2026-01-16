@@ -91,8 +91,8 @@ class EventDate extends Model
     {
         return Attribute::make(
             get: fn (string $value, array $attributes) => Carbon::parse(
-                "{$value} {$attributes['start_time']}")
-                ->setTimezone($this->event->timezone),
+                $value . ' ' . $attributes['start_time'])
+                ->setTimezone($this->event->timezone)->toDateString(),
             set: fn (string $value, array $attributes) => explode(' ', 
                 $value)[0]
         );

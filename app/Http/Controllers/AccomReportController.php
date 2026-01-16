@@ -327,7 +327,7 @@ class AccomReportController extends Controller implements HasMiddleware
         return redirect()->route('accom-reports.index')->with('status',
             'Accomplishment report approved.');
     }
-
+/*
     public function generate(GenerateAccomReportRequest $request)
     {
         $gpoa = Gpoa::active()->first();
@@ -336,7 +336,7 @@ class AccomReportController extends Controller implements HasMiddleware
         $hasInput = $hasMatch = false;
         $fileRoute = null;
         $hasApproved = Event::active()->approved()->exists();
-        /*
+        [[
         $jobCache = 'gen_accom_reports';
         $jobs = Cache::get($jobCache, []);
         $hasLastJob = $userJob = $jobs[auth()->user()->id] ?? [];
@@ -357,7 +357,9 @@ class AccomReportController extends Controller implements HasMiddleware
             $startDate = $userJob['start_date'];
             $endDate = $userJob['end_date'];
         } elseif (!$startDate && $hasApproved) {
-        */
+
+
+        ]]
         if (!$startDate && $hasApproved) {
             $startDate = $startDate ?? EventDate::active()->approved()
                 ->orderBy('date', 'asc')->value('date')?->toDateString();
@@ -366,15 +368,15 @@ class AccomReportController extends Controller implements HasMiddleware
             if ($startDate === $endDate) {
                 $endDate = Carbon::parse($endDate)?->addDay()->toDateString();
             }
-        /*
+        [[
 	} elseif ((!$hasLastJob || $jobDone) && $hasApproved) {
-        */
+        ]]
 	} elseif ($hasApproved) {
             $hasInput = true;
             $hasMatch = Event::active()->approved($startDate, $endDate)->exists();
 
             
-            /*
+            [[
             $events = Event::active()->approved($startDate, $endDate)->exists();
 
             $requestId = Str::random(8);
@@ -398,7 +400,7 @@ class AccomReportController extends Controller implements HasMiddleware
                 $hasLastJob = true;
                 $jobDone = false;
             }
-            */
+            ]]
         } 
         $prepareMessage = Format::documentPrepareMessage();
         $response = response()->view('accom-reports.gen-accom-report', [
@@ -409,19 +411,55 @@ class AccomReportController extends Controller implements HasMiddleware
             'hasApproved' => $hasApproved,
             'hasInput' => $hasInput,
             'hasMatch' => $hasMatch,
-            /*
+            [[
             'hasLastJob' => $hasLastJob,
             'jobDone' => $jobDone,
-            */
+            ]]
             'prepareMessage' => $prepareMessage,
             'cancelFormAction' => route('accom-reports.stop-generating'),
         ] + $gpoa->accomReportViewData($startDate, $endDate));
 	return $response;
-        /*
+        [[
         if (session('errors')?->any() || !$hasLastJob || $jobDone) {
         }
         return $response->header('Refresh', '5');
-        */
+        ]]
+    }
+*/
+
+    public function generate(GenerateAccomReportRequest $request)
+    {
+        $gpoa = Gpoa::active()->first();
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        $hasInput = $hasMatch = false;
+        $fileRoute = null;
+        $hasApproved = Event::active()->approved()->exists();
+        if (!$startDate && $hasApproved) {
+            $startDate = $startDate ?? EventDate::active()->approved()
+                ->orderBy('date', 'asc')->first()->date;
+            $endDate = $endDate ?? EventDate::active()->approved()
+                ->orderBy('date', 'desc')->first()->date;
+            if ($startDate === $endDate) {
+                $endDate = Carbon::parse($endDate)?->addDay()->toDateString();
+            }
+	    } elseif ($hasApproved) {
+            $hasInput = true;
+            $hasMatch = Event::active()->approved($startDate, $endDate)->exists();
+        } 
+        $prepareMessage = Format::documentPrepareMessage();
+        $response = response()->view('accom-reports.gen-accom-report', [
+            'backRoute' => route('accom-reports.index'),
+            'fileRoute' => $fileRoute,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'hasApproved' => $hasApproved,
+            'hasInput' => $hasInput,
+            'hasMatch' => $hasMatch,
+            'prepareMessage' => $prepareMessage,
+            'cancelFormAction' => route('accom-reports.stop-generating'),
+        ] + $gpoa->accomReportViewData($startDate, $endDate));
+	    return $response;
     }
 
     public function stopGenerating()

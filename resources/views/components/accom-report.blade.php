@@ -4,10 +4,10 @@
 	<div id="page-header" class="page-header">
 		<div class="logos">
 			<div class="logo">
-				<img src="{{ asset('storage/university-logo.png') }}"/>
+				<img src="{{ asset('storage/university-logo.png') . '?id=' . cache('university_logo_id') }}"/>
 			</div>
 			<div class="logo">
-				<img src="{{ asset('storage/organization-logo.png') }}"/>
+				<img src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}"/>
 			</div>
 		</div>
 		<div class="text">

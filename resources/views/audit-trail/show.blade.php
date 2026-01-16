@@ -54,6 +54,10 @@
 				<td>{{ $sessionId }}</td>
 			</tr>
 			<tr>
+				<th>Date record created</th>
+				<td>{{ $createdAt }}</td>
+			</tr>
+			<tr>
 				<th>Date record updated</th>
 				<td>{{ $updatedAt }}</td>
 			</tr>

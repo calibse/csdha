@@ -44,6 +44,7 @@ class GenerateAuditTriggers
                 DB::statement("drop trigger if exists \"{$trigger}\"");
             }
         }
+        DB::statement('drop trigger if exists "audit_audit_trail_update"');
     }
 
     private static function createTriggers()
@@ -141,44 +142,56 @@ create trigger "$triggerName"
 $timing $when on "$tableName"
 for each row
 begin
-  $prepareAuditData
-  insert into "$auditTable" (
-    "action",
-    "table_name",
-    "column_names",
-    "primary_key",
-    "request_id",
-    "request_ip",
-    "request_url",
-    "request_method",
-    "request_time",
-    "user_id",
-    "user_agent",
-    "session_id",
-    "created_at"
-  )
-  select
-    "action",
-    "table_name",
-    "column_names",
-    "primary_key",
-    "request_id",
-    "request_ip",
-    "request_url",
-    "request_method",
-    "request_time",
-    "user_id",
-    "user_agent",
-    "session_id",
-    "created_at"
-  from "audit_trail_data";
-  delete from "audit_trail_data";
-  delete from "audit_trigger_variables";
+$prepareAuditData
+insert into "$auditTable" (
+"action",
+"table_name",
+"column_names",
+"primary_key",
+"request_id",
+"request_ip",
+"request_url",
+"request_method",
+"request_time",
+"user_id",
+"user_agent",
+"session_id",
+"created_at"
+)
+select
+"action",
+"table_name",
+"column_names",
+"primary_key",
+"request_id",
+"request_ip",
+"request_url",
+"request_method",
+"request_time",
+"user_id",
+"user_agent",
+"session_id",
+"created_at"
+from "audit_trail_data";
+delete from "audit_trail_data";
+delete from "audit_trigger_variables";
 end;
 
 SQL;
                 DB::unprepared($sql);
             }
         }
+
+        $sql = <<<SQL
+create trigger "audit_audit_trail_update"
+after update on "audit_trail"
+for each row
+begin
+update "audit_trail"
+set "updated_at" = current_timestamp;
+end;
+
+SQL;
+                DB::unprepared($sql);
     }
 }

@@ -249,7 +249,7 @@ class Event extends Model
             'editors' => User::withPerm('accomplishment-reports.edit')
                 ->notOfPosition('adviser')->get(),
             'approved' => $this->accomReport?->status === 'approved',
-            'president' => $this->accomReport->president,
+            'president' => $this->accomReport?->president,
         ];
     }
 
@@ -493,7 +493,7 @@ class Event extends Model
     #[Scope]
     protected function ongoingAndUpcoming(Builder $query): void
     {
-        $now = Carbon::now()->toDateTimeString();
+        $now = Carbon::now();
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()

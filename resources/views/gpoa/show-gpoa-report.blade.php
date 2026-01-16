@@ -10,10 +10,10 @@
 		<div id="page-header">
 			<div class="logos">
 				<span class="logo">
-					<img src="{{ asset('storage/university-logo.png') }}">
+					<img src="{{ asset('storage/university-logo.png') . '?id=' . cache('university_logo_id') }}">
 				</span>
 				<span class="logo">
-					<img src="{{ asset('storage/organization-logo.png') }}">
+					<img src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
 				</span>
 			</div>
 			<div class="text">
