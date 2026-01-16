@@ -288,8 +288,8 @@ class Event extends Model
         for ($i = 0; $i < $dateCount; ++$i) {
             $fullDate = $dates[$i]->date_fmt . ' | ' .
                 $dates[$i]->start_time_fmt . ' - ' . $dates[$i]->end_time_fmt;
-            while ($i + 1 < $dateCount && $dates[$i]->date->toDateString()
-                    === $dates[$i + 1]->date->toDateString()) {
+            while ($i + 1 < $dateCount && Carbon::parse($dates[$i]->date)->toDateString()
+                    === Carbon::parse($dates[$i + 1]->date)->toDateString()) {
                 ++$i;
                 if ($i + 1 < $dateCount) {
                     $fullDate .= ', ' . $dates[$i]->start_time_fmt . ' - ' .
@@ -358,8 +358,7 @@ class Event extends Model
 
     public function isUpcoming(): Attribute
     {
-        $eventTz = $this->timezone;
-        $now = Carbon::now($eventTz);
+        $now = Carbon::now();
         $isUpcoming = $this->dates()
             ->selectRaw("concat(\"date\", ' ', \"start_time\") > ? as value", [$now])
             ->orderByRaw("concat(\"date\", ' ', \"end_time\") desc")->limit(1)
@@ -371,8 +370,7 @@ class Event extends Model
 
     public function isOngoing(): Attribute
     {
-        $eventTz = $this->timezone;
-        $now = Carbon::now($eventTz);
+        $now = Carbon::now();
         $isOngoing = $this->dates()
             ->whereRaw("? between 
             concat(\"date\", ' ', \"start_time\") and concat(\"date\", ' ', \"end_time\")", 
@@ -384,8 +382,7 @@ class Event extends Model
 
     public function isCompleted(): Attribute
     {
-        $eventTz = $this->timezone;
-        $now = Carbon::now($eventTz);
+        $now = Carbon::now();
         $isCompleted = $this->dates()
             ->selectRaw("concat(\"date\", ' ', \"end_time\") < ? as is_completed", 
                 [$now])
@@ -444,6 +441,7 @@ class Event extends Model
     #[Scope]
     protected function completed(Builder $query): void
     {
+/*
         $latestDatesSub = EventDate::select('event_id', 
             DB::raw("max(concat(\"date\", ' ', \"end_time\")) as latest_date"))
             ->groupBy('event_id');
@@ -459,6 +457,16 @@ class Event extends Model
             $query->whereRaw("concat(\"latest_dates.date\", 
                 ' ', \"latest_dates.end_time\") < ?", [Carbon::now()])
             ->orWhereNull('latest_dates.date');
+        })->orderBy('date', 'desc')->orderBy('end_time', 'desc');
+*/
+        $latestDates = EventDate::select('event_id', 
+            DB::raw("max(concat(\"date\", ' ', \"end_time\")) as latest_date"))
+            ->groupBy('event_id');
+        $query->leftJoinSub($latestDates, 'latest_dates', function ($join) { 
+            $join->on('events.id', '=', 'latest_dates.event_id'); 
+        })->select('events.*')->distinct()->where(function ($query) {
+            $query->whereRaw("latest_date < ?", [Carbon::now()])
+            ->orWhereNull('latest_date');
         })->orderBy('date', 'desc')->orderBy('end_time', 'desc');
     }
 

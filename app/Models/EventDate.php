@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasPublicId;
 use App\Services\Format;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EventDate extends Model
 {
@@ -21,15 +22,16 @@ class EventDate extends Model
     protected static function booted(): void
     {
         static::saving(function (EventDate $date) {
-/*
-            $start = Carbon::parse("{$date->date->toDateString()} {$date->start_time}", 
-                $date->event->timezone)->setTimezone('UTC');
-            $end = Carbon::parse("{$date->date->toDateString()} {$date->end_time}", 
-                $date->event->timezone)->setTimezone('UTC');
-*/
-            $date->date = $date->date;
-            $date->start_time = $date->start_time;
-            $date->end_time = $date->end_time;
+            $timezone = $date->event->timezone;
+            $start = Carbon::parse($date->getAttributeFromArray('date')
+                . ' ' . $date->getAttributeFromArray('start_time'), $timezone)
+                ->setTimezone('UTC');
+            $end = Carbon::parse($date->getAttributeFromArray('date') 
+                . ' ' . $date->getAttributeFromArray('end_time'), $timezone)
+                ->setTimezone('UTC');
+            $date->date = $start->toDateString();
+            $date->start_time = $start->toTimeString();
+            $date->end_time = $end->toTimeString();
         });
     }
 
@@ -90,19 +92,10 @@ class EventDate extends Model
         return Attribute::make(
             get: fn (string $value, array $attributes) => Carbon::parse(
                 "{$value} {$attributes['start_time']}")
-                ->setTimezone($this->event->timezone)->toDateString(),
-            set: fn (string $value, array $attributes) => Carbon::parse($value)
-                ->toDateString()
+                ->setTimezone($this->event->timezone),
+            set: fn (string $value, array $attributes) => explode(' ', 
+                $value)[0]
         );
-/*
-        return Attribute::make(
-            get: fn (string $value, array $attributes) => Carbon::parse(
-                "{$value} {$attributes['start_time']}")
-                ->setTimezone($event->timezone),
-            set: fn (string $value, array $attributes) => Carbon::parse(
-                $value)->toDateString()
-        );
-*/
     }
 
     public function startTimeShort(): Attribute
@@ -194,7 +187,8 @@ class EventDate extends Model
         $query->join('events', 'events.id', '=', 'event_dates.event_id')
             ->select('event_dates.*')->where(function ($query) {
                 $query->whereRaw("? between concat(\"date\", ' ', \"start_time\") and
-                    concat(\"date\", ' ', \"end_time\")", [Carbon::now()])
+                    concat(\"date\", ' ', \"end_time\")", 
+                    [Carbon::now()])
                 ->where(function ($query) {
                     $query->whereHas('event.accomReport', function ($query) {
                         $query->whereNotIn('status', ['pending', 'approved']);

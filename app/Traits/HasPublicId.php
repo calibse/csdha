@@ -10,7 +10,7 @@ trait HasPublicId
     {
         static::created(function ($model) {
             $model->public_id = random_int(100000, 999999) . $model->id;
-            $model->save();
+            $model->updateQuietly();
         });
     }
 
