@@ -17,15 +17,6 @@ $watten = $date->has_attendees;
 		<li class="item event-date">
 			<time id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}" class="content">{{ $date->full_date }}</time>
 			<span class="context-menu">
-				{{--
-				<form action="{{ route('events.dates.edit', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="edit-action">
-					<button type="submit"
-					@cannot ('update', $date)
-						disabled
-					@endcannot
-					>Edit</button>
-				</form>
-				--}}
 				<form action="{{ route('events.dates.confirmDestroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}" class="delete-action">
 					<input id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}_delete-link" type="hidden" value="{{ route('events.dates.destroy', ['event' => $event->public_id, 'date' => $date->public_id]) }}">
 					<button id="event-date-{{ ($watten ? 'watten-' : '') . $date->public_id }}_delete-button" type="submit">Delete</button>
@@ -39,27 +30,27 @@ $watten = $date->has_attendees;
 @endif
 </div>
 <x-window class="form" id="event-date_create" title="Add event date">
-        <form method="POST" action="{{ $addDateFormAction }}">
-        @csrf
-            <div class="inline">
-                <p>
-                    <label>Date</label>
-                    <input type="date" name="date" value="{{ old('date') }}">
-                </p>
-                <p>
-                    <label>Start time</label>
-                    <input type="time" name="start_time" value="{{ old('start_time') }}">
-                </p>
-                <p class="last-block">
-                    <label>End time</label>
-                    <input type="time" name="end_time" value="{{ old('end_time') }}">
-                </p>
-            </div>
-            <p class="button-block">
-                <button id="event-date_create_close" type="button">Cancel</button>
-                <button type="submit">Save</button>
-            </p>
-        </form>
+	<form method="POST" action="{{ $addDateFormAction }}">
+	@csrf
+		<div class="inline">
+			<p>
+				<label>Date</label>
+				<input type="date" name="date" value="{{ old('date') }}">
+			</p>
+			<p>
+				<label>Start time</label>
+				<input type="time" name="start_time" value="{{ old('start_time') }}">
+			</p>
+			<p class="last-block">
+				<label>End time</label>
+				<input type="time" name="end_time" value="{{ old('end_time') }}">
+			</p>
+		</div>
+		<p class="button-block">
+			<button id="event-date_create_close" type="button">Cancel</button>
+			<button type="submit">Save</button>
+		</p>
+	</form>
 </x-window>
 <x-window class="form" id="event-date-watten_delete" title="Delete event date">
 	<p>

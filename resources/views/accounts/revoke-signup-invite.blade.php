@@ -1,4 +1,4 @@
-<x-layout.user :$backRoute class="accounts form" title="Revoke Sign up Invitation">
+<x-layout.user form :$backRoute class="accounts form" title="Revoke Sign up Invitation">
     <article class="article">
         <p>
             Are you sure you want to revoke this sign up invitation?

@@ -91,13 +91,22 @@ class AccountController extends Controller implements HasMiddleware
             ->with('status', 'Account deleted.');
     }
 
+    public function signupInviteIndex()
+    {
+        return view('accounts.signup-invite-index', [
+            'backRoute' => route('accounts.index'),
+            'sendAction' => route('accounts.signup-invites.store'),
+            'createRoute' => route('accounts.signup-invites.create'),
+            'invites' => SignupInvitation::where('is_accepted', 0)->get(),
+        ]);
+    }
+
     public function createSignupInvite()
     {
         return view('accounts.create-signup-invite', [
-            'backRoute' => route('accounts.index'),
-            'formAction' => route('accounts.send-signup-invite'),
+            'backRoute' => route('accounts.signup-invites.index'),
+            'formAction' => route('accounts.signup-invites.store'),
             'positions' => Position::open()->get(),
-            'invites' => SignupInvitation::where('is_accepted', 0)->get(),
         ]);
     }
 
@@ -118,21 +127,22 @@ class AccountController extends Controller implements HasMiddleware
                 'invite_code' => $signupInvite->invite_code
             ], false));
         SendSignupInvite::dispatch($signupInvite, $url);
-        return back()->with('status', 'Sign up invitation sent.');
+        return redirect()->route('accounts.signup-invites.index')
+            ->with('status', 'Sign up invitation sent.');
     }
 
     public function revokeSignupInvite(SignupInvitation $invite)
     {
         $invite->delete();
-        return redirect()->route('accounts.create-signup-invite')
+        return redirect()->route('accounts.signup-invites.index')
             ->with('status', 'Sign up invitation revoked.');
     }
 
     public function confirmRevokeSignupInvite(SignupInvitation $invite)
     {
         return view('accounts.revoke-signup-invite', [
-            'backRoute' => route('accounts.create-signup-invite'),
-            'formAction' => route('accounts.revoke-signup-invite', [
+            'backRoute' => route('accounts.signup-invites.index'),
+            'formAction' => route('accounts.signup-invites.destroy', [
                 'invite' => $invite->id
             ])
         ]);

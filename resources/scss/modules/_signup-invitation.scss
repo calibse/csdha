@@ -4,17 +4,13 @@
 @use "../color";
 
 .signup-invitation {
-	margin: 0 auto;
-	padding: .01em 1em;
-	padding-bottom: 1em;
-	max-width: size.$page-width;
-	background-color: #ffffff;
+	.item-list .content {
+		:first-child {
+			margin-top: 0;
+		}
 
-	.title {
-		font-size: 1.2em;
-	}
-
-
-	.login-button-container {
+		:last-child {
+			margin-bottom: 0;
+		}
 	}
 }
