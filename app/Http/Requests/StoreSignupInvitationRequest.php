@@ -11,6 +11,8 @@ use App\Models\SignupInvitation;
 
 class StoreSignupInvitationRequest extends FormRequest
 {
+    protected $errorBag = "signup-invite_create";
+
     public function rules(): array
     {
         $uniqueFromUsers = Rule::unique(User::class, 'email')

@@ -1,7 +1,8 @@
 <x-layout.user form title="Create Sign-up Invite" :$backRoute class="accounts signup-invitation form">
 <article class="article">
-	<x-alert/>
-	<form type="post" action="{{ $formAction }}">
+	<x-alert error-bag="signup-invite_create" />
+	<form method="post" action="{{ $formAction }}">
+	@csrf
 		<p>
 			<label>Council Body Position</label>
 			<select name="position">
@@ -21,7 +22,7 @@
 			<input type="email" name="email" value="{{ old('email') }}">
 		</p>
 		<p class="form-submit">
-			<button >Send</button>
+			<button>Send</button>
 		</p>
 	</form>
 </article>

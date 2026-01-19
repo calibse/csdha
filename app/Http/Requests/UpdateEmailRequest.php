@@ -8,6 +8,8 @@ use App\Models\User;
 
 class UpdateEmailRequest extends FormRequest
 {
+    protected $errorBag = 'profile-email_edit';
+
     public function rules(): array
     {
         $uniqueEmail = Rule::unique(User::class, 'email')

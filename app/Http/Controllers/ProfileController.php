@@ -60,6 +60,7 @@ class ProfileController extends Controller implements HasMiddleware
         $emailVerified = auth()->user()->email_verified_at ? true : false;
         $hasPassword = auth()->user()->password ? true : false;
         return view('profile.edit', [
+            'user' => auth()->user(),
             'backRoute' => $backRoute,
             'passwordRoute' => $passwordRoute,
             'emailRoute' => $emailRoute,
@@ -69,6 +70,7 @@ class ProfileController extends Controller implements HasMiddleware
             'email' => $email,
             'emailVerified' => $emailVerified,
             'hasEmail' => $hasEmail,
+            'editEmailAction' => route('profile.email.update'),
         ]);
     }
 

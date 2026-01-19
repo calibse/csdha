@@ -98,6 +98,8 @@ class AccountController extends Controller implements HasMiddleware
             'sendAction' => route('accounts.signup-invites.store'),
             'createRoute' => route('accounts.signup-invites.create'),
             'invites' => SignupInvitation::where('is_accepted', 0)->get(),
+            'createFormAction' => route('accounts.signup-invites.store'),
+            'positions' => Position::open()->get(),
         ]);
     }
 
@@ -144,7 +146,8 @@ class AccountController extends Controller implements HasMiddleware
             'backRoute' => route('accounts.signup-invites.index'),
             'formAction' => route('accounts.signup-invites.destroy', [
                 'invite' => $invite->id
-            ])
+            ]),
+			'invite' => $invite,
         ]);
     }
 }

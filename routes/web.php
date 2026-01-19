@@ -91,11 +91,12 @@ Route::domain(config('app.admin_domain'))->middleware('auth')
         ->name('admin.logout');
 
     Route::prefix('accounts')->name('accounts.')->group(function () {
+
         Route::get('/signup-invite/create.html',
             [AccountController::class, 'createSignupInvite'])
             ->name('signup-invites.create');
 
-        Route::post('/signup-invite/send.php',
+        Route::post('/signup-invite/store.php',
             [AccountController::class, 'sendSignupInvite'])
             ->name('signup-invites.store');
 
@@ -110,6 +111,7 @@ Route::domain(config('app.admin_domain'))->middleware('auth')
         Route::get('/signup-invite/{invite}/revoke.html',
             [AccountController::class, 'confirmRevokeSignupInvite'])
             ->name('signup-invites.confirm-destroy');
+
     });
 
     Route::name('accounts.')->controller(AccountController::class)

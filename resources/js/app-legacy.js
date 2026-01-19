@@ -262,6 +262,21 @@ function setEvents() {
 			event: "change",
 			action: browseFiles
 		},
+		{
+			element: "signup-invite_create-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
+		{
+			element: "signup-invite-*_delete-button",
+			event: "click",
+			action: dialog.openDeleteItemWindow 
+		},
+		{
+			element: "profile-email_edit-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
 	];
 	addEvents(elementActions);
 }
