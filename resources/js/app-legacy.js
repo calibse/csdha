@@ -277,6 +277,11 @@ function setEvents() {
 			event: "click",
 			action: dialog.prepareOpenWindow 
 		},
+		{
+			element: "profile-password_edit-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
 	];
 	addEvents(elementActions);
 }

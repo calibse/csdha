@@ -45,7 +45,7 @@
 		<p>
 			<label>Password</label>
 		@can ('updatePassword', 'App\Models\User')
-			<a href="{{ $passwordRoute }}">
+			<a id="profile-password_edit-button" href="{{ $passwordRoute }}">
 			@if ($hasPassword)
 			Change here
 			@else
@@ -79,6 +79,30 @@
 		</p>
 		<p class="form-submit">
 			<button type="button" id="profile-email_edit_close">Cancel</button>
+			<button>Update</button>
+		</p>
+	</form>
+</x-window>
+<x-window class="form" id="profile-password_edit" title="Edit password">
+	<form method="post" action="{{ $formAction }}">
+	@csrf
+	@method('PUT')
+	@if ($hasPassword)
+		<p>
+			<label for="old_password">Old Password</label>
+			<input type="password" id="old_password" name="old_password">
+		</p>
+	@endif
+		<p>
+			<label for="password">New Password</label>
+			<input type="password" id="password" name="password">
+		</p>
+		<p>
+			<label for="password_confirmation">Confirm password</label>
+			<input type="password" id="password_confirmation" name="password_confirmation">
+		</p>
+		<p class="form-submit">
+			<button id="profile-password_edit_close" type="button">Cancel</button>
 			<button>Update</button>
 		</p>
 	</form>
