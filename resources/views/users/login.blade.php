@@ -53,11 +53,11 @@
 									@csrf
 									<p>
 										<label for="username">Username or Email</label>
-										<input id="username" name="username">
+										<input required id="username" name="username">
 									</p>
 									<p>
 										<label for="password">Password</label>
-										<input type="password" id="password" name="password">
+										<input required maxlength="55" type="password" id="password" name="password">
 									</p>
 									<p class="button"><button type="submit">Sign in</button></p>
 								</form>

@@ -5,11 +5,11 @@
 	@csrf
 		<p>
 			<label for="year-level">Year Level <small>(e.g. 2)</small></label>
-			<input id="year-level" name="year_level">
+			<input required maxlength="4" id="year-level" name="year_level">
 		</p>
 		<p>
 			<label for="label">Label <small>(.e.g. 2nd year)</small></label>
-			<input id="label" name="label">
+			<input required maxlength="15" id="label" name="label">
 		</p>
 		<p class="form-submit">
 			<button>Add</button>

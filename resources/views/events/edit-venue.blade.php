@@ -6,7 +6,7 @@
 	@method('PUT')
 		<p>
 			<label for="venue">Venue</label>
-			<input id="venue" name="venue" value="{{ $errors->any() ? old('venue') : $venue }}">
+			<input maxlength="255" id="venue" name="venue" value="{{ $errors->any() ? old('venue') : $venue }}">
 		</p>
 		<p class="form-submit">
 			<button>Update</button>

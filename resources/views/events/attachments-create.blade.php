@@ -8,7 +8,7 @@
 	@csrf
 		<p>
 			<label>Caption</label>
-			<input name="caption" value="{{ old('caption') ?? ($set ? $set->caption : null) }}">
+			<input required maxlength="255" name="caption" value="{{ old('caption') ?? ($set ? $set->caption : null) }}">
 		</p>
 		<p>
 			<label>{{ $set ? 'Add' : null }} Images</label>

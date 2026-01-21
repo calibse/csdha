@@ -16,7 +16,7 @@ class UpdatePasswordRequest extends FormRequest
 		    $requiredRule = 'nullable';
         }
         return [
-            'old_password' => [$requiredRule, 'current_password:web'],
+            'old_password' => [$requiredRule, 'max:55', 'current_password:web'],
             'password' => ['required', 'ascii', 'max:55',  Password::min(8)
                 ->letters()->mixedCase()->numbers()->symbols(), 'confirmed']
         ];

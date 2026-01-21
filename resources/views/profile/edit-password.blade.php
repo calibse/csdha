@@ -7,16 +7,20 @@
 	@if ($hasPassword)
 		<p>
 			<label for="old_password">Old Password</label>
-			<input type="password" id="old_password" name="old_password">
+			<input 
+			@if (auth()->user()->password)
+				required
+			@endif
+				maxlength="55" type="password" id="old_password" name="old_password">
 		</p>
 	@endif
 		<p>
 			<label for="password">New Password</label>
-			<input type="password" id="password" name="password">
+			<input required maxlength="55" minlength="8" type="password" id="password" name="password">
 		</p>
 		<p>
 			<label for="password_confirmation">Confirm password</label>
-			<input type="password" id="password_confirmation" name="password_confirmation">
+			<input required maxlength="55" minlength="8" type="password" id="password_confirmation" name="password_confirmation">
 		</p>
 		<p class="form-submit">
 			<button>Update</button>

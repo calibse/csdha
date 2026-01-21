@@ -5,7 +5,7 @@
             @csrf
             <p>
                 <label>Event date</label>
-                <select name="date">
+                <select required name="date">
                     @if ($dates->count() !== 1)
                     <option value="">-- Select --</option>
                     @endif
@@ -18,31 +18,31 @@
             </p>
             <p>
                 <label>Email</label>
-                <input name="email" value="{{ old('email') ?? null }}">
+                <input required maxlength="255" name="email" value="{{ old('email') ?? null }}">
             </p>
             <p>
                 <label>First name</label>
-                <input name="first_name" value="{{ old('first_name') ?? null }}">
+                <input required maxlength="50" name="first_name" value="{{ old('first_name') ?? null }}">
             </p>
             <p>
                 <label>Middle name (optional)</label>
-                <input name="middle_name" value="{{ old('middle_name') ?? null }}">
+                <input maxlength="50" name="middle_name" value="{{ old('middle_name') ?? null }}">
             </p>
             <p>
                 <label>Last name</label>
-                <input name="last_name" value="{{ old('last_name') ?? null }}">
+                <input required maxlength="50" name="last_name" value="{{ old('last_name') ?? null }}">
             </p>
             <p>
                 <label>Suffix name (optional)</label>
-                <input name="suffix_name" value="{{ old('suffix_name') ?? null }}">
+                <input maxlength="10" name="suffix_name" value="{{ old('suffix_name') ?? null }}">
             </p>
             <p>
                 <label>Student ID</label>
-                <input name="student_id" value="{{ old('student_id') ?? null }}">
+                <input required maxlength="20" pattern="([A-Z0-9]+)-([A-Z0-9]+)-([A-Z0-9]+)-([A-Z0-9]+)" name="student_id" value="{{ old('student_id') ?? null }}">
             </p>
             <p>
                 <label>Program</label>
-                <select name="program">
+                <select required name="program">
                     <option value="">-- Select --</option>
                     @foreach ($programs as $program)
                     <option value="{{ $program->id }}" {{ (old('program') ?? null) === (string)$program->id ? 'selected' : null }}>
@@ -53,7 +53,7 @@
             </p>
             <p>
                 <label>Year level</label>
-                <select name="year_level">
+                <select required name="year_level">
                     <option value="">-- Select --</option>
                     @foreach ($yearLevels as $yearLevel)
                     <option value="{{ $yearLevel->id }}" {{ (old('year_level') ?? null) === (string)$yearLevel->id ? 'selected' : null }}>
@@ -64,7 +64,7 @@
             </p>
             <p>
                 <label>Section</label>
-                <input name="section" value="{{ old('section') ?? null }}">
+                <input required name="section" value="{{ old('section') ?? null }}">
             </p>
             <p class="form-submit">
                 <button>Save</button>

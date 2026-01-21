@@ -22,19 +22,19 @@
             </p>
             <p>
                 <label>First name</label>
-                <input name="first_name" value="{{ $account->first_name }}" >
+                <input required maxlength="50" name="first_name" value="{{ $account->first_name }}" >
             </p>
             <p>
                 <label>Middle name</label>
-                <input name="middle_name" value="{{ $account->middle_name }}" >
+                <input maxlength="50" name="middle_name" value="{{ $account->middle_name }}" >
             </p>
             <p>
                 <label>Last name</label>
-                <input name="last_name" value="{{ $account->last_name }}" >
+                <input required maxlength="50" name="last_name" value="{{ $account->last_name }}" >
             </p>
             <p>
                 <label>Suffix name</label>
-                <input name="suffix_name" value="{{ $account->suffix_name }}" >
+                <input maxlength="10" name="suffix_name" value="{{ $account->suffix_name }}" >
             </p>
             <p class="form-submit">
                 <button form="form-deactivate"

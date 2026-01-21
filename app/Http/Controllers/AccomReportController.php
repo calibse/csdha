@@ -202,8 +202,6 @@ class AccomReportController extends Controller implements HasMiddleware
             return $response;
         /*
         $gpoa = Gpoa::active()->first();
-        MakeAccomReport::dispatch($gpoa, $event, auth()->user())
-            ->onQueue('pdf');
         return $response->header('Refresh', '5');
         */
     }
@@ -395,8 +393,6 @@ class AccomReportController extends Controller implements HasMiddleware
                     Cache::put($jobCache, $jobs);
                 });
                 $gpoa = Gpoa::active()->first();
-                GenerateAccomReport::dispatch($gpoa, auth()->user(), 
-                    $requestId, $startDate, $endDate)->onQueue('pdf');
                 $hasLastJob = true;
                 $jobDone = false;
             }

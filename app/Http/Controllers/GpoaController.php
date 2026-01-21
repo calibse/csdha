@@ -94,7 +94,6 @@ class GpoaController extends Controller implements HasMiddleware
     public function store(SaveGpoaRequest $request)
     {
         self::storeOrUpdate($request);
-        GpoaStatusChanged::dispatch();
         return redirect()->route('gpoa.index');
     }
 
@@ -156,7 +155,6 @@ class GpoaController extends Controller implements HasMiddleware
         if ($hasFile) {
             return $response;
         }
-        MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         return $response->header('Refresh', '5');
     }
     
@@ -183,7 +181,6 @@ class GpoaController extends Controller implements HasMiddleware
         if ($updated) {
             return $response;
         }
-        MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         return $response->header('Refresh', '5');
     }
     */
@@ -219,7 +216,6 @@ class GpoaController extends Controller implements HasMiddleware
         /*
         if ($hasFile) {
         }
-        MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         return $response->header('Refresh', '5');
         */
     }
@@ -245,7 +241,6 @@ class GpoaController extends Controller implements HasMiddleware
     {
         $gpoa = self::$gpoa;
         self::storeOrUpdate($request, $gpoa);
-        GpoaUpdated::dispatch($gpoa);
         return redirect()->route('gpoa.index');
     }
 
@@ -289,7 +284,6 @@ class GpoaController extends Controller implements HasMiddleware
             return $response;
         }
         if (!$gpoa->report_filepath) {
-            MakeGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
         }
         return $response->header('Refresh', '5');
     }
@@ -323,13 +317,9 @@ class GpoaController extends Controller implements HasMiddleware
         /*
         if (!$gpoa->has_approved_activity) {
             self::destroyGpoa();
-            GpoaStatusChanged::dispatch();
             return redirect()->route('gpoa.index')->with('status', $status);
         }
         $gpoa->report_file_updated = false;
-        MakeClosingGpoaReport::dispatch($gpoa, auth()->user())->onQueue('pdf');
-        MakeClosingAccomReport::dispatch($gpoa)->onQueue('pdf');
-        GpoaStatusChanged::dispatch();
         */
         self::closeGpoa();
         return redirect()->route('gpoa.index')->with('status', $status);

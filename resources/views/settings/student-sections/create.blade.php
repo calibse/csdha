@@ -5,7 +5,7 @@
 	@csrf
 		<p>
 			<label for="section">Section</label>
-			<input id="section" name="section">
+			<input required maxlength="10" id="section" name="section">
 		</p>
 		<p class="form-submit">
 			<button>Add</button>

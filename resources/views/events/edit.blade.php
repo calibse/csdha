@@ -70,13 +70,15 @@
 			>
 			<label for="accept-eval">Accept Evaluation <small>(for students only)</small></label>
 		</p>
+	{{--
 		<p>
 			<label>QR code label <small>(if applicable)</small></label>
 			<input name="tag" value="{{ $errors->any() ? old('tag') : $event->tag }}">
 		</p>
+	--}}
 		<p>
 			<label>Time Zone</label>
-			<select name="timezone">
+			<select required name="timezone">
 				<option value="" {{ !old('timezone') ? 'selected' : null }}>-- Select --</option>
 			@foreach ($timezones as $timezone)
 				<option
@@ -91,7 +93,7 @@
 		</p>
 		<p>
 			<label>Evaluation Delay in Hours</label>
-			<input type="number" name="evaluation_delay_hours" value="{{ $errors->any() ? old('evaluation_delay_hours') : $event->evaluation_delay_hours }}">
+			<input required min="0" max="168" step="1" type="number" name="evaluation_delay_hours" value="{{ $errors->any() ? old('evaluation_delay_hours') : $event->evaluation_delay_hours }}">
 		</p>
 		<p class="form-submit">
 			<button type="submit">Update</button>

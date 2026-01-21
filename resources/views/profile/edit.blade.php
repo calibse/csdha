@@ -71,11 +71,15 @@
 	@method('PUT')
 		<p>
 			<label for="email">Email</label>
-			<input id="email" name="email" value="{{ old('email') ?? $user->email }}">
+			<input maxlength="255" autocomplete="off" required type="email" id="email" name="email" value="{{ old('email') ?? $user->email }}">
 		</p>
 		<p>
 			<label for="password">Password</label>
-			<input type="password" id="password" name="password">
+			<input 
+			@if (!is_null(auth()->user()->password))
+				required
+			@endif 
+				maxlength="55" type="password" id="password" name="password">
 		</p>
 		<p class="form-submit">
 			<button type="button" id="profile-email_edit_close">Cancel</button>
@@ -84,22 +88,26 @@
 	</form>
 </x-window>
 <x-window class="form" id="profile-password_edit" title="Edit password">
-	<form method="post" action="{{ $formAction }}">
+	<form method="post" action="{{ $editPasswordAction }}">
 	@csrf
 	@method('PUT')
 	@if ($hasPassword)
 		<p>
 			<label for="old_password">Old Password</label>
-			<input type="password" id="old_password" name="old_password">
+			<input 
+			@if (auth()->user()->password)
+				required
+			@endif
+				maxlength="55" type="password" id="old_password" name="old_password">
 		</p>
 	@endif
 		<p>
 			<label for="password">New Password</label>
-			<input type="password" id="password" name="password">
+			<input required maxlength="55" minlength="8" type="password" id="password" name="password">
 		</p>
 		<p>
 			<label for="password_confirmation">Confirm password</label>
-			<input type="password" id="password_confirmation" name="password_confirmation">
+			<input required maxlength="55" minlength="8" type="password" id="password_confirmation" name="password_confirmation">
 		</p>
 		<p class="form-submit">
 			<button id="profile-password_edit_close" type="button">Cancel</button>

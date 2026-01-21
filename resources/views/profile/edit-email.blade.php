@@ -6,11 +6,15 @@
 	@method('PUT')
 		<p>
 			<label for="email">Email</label>
-			<input id="email" name="email" value="{{ old('email') ?? $user->email }}">
+			<input maxlength="255" autocomplete="off" required type="email" id="email" name="email" value="{{ old('email') ?? $user->email }}">
 		</p>
 		<p>
 			<label for="password">Password</label>
-			<input type="password" id="password" name="password">
+			<input
+			@if (!is_null(auth()->user()->password))
+				required
+			@endif 
+				maxlength="55" type="password" id="password" name="password">
 		</p>
 		<p class="form-submit">
 			<button>Update</button>

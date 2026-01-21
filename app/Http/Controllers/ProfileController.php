@@ -71,6 +71,8 @@ class ProfileController extends Controller implements HasMiddleware
             'emailVerified' => $emailVerified,
             'hasEmail' => $hasEmail,
             'editEmailAction' => route('profile.email.update'),
+            'resendRoute' => route('profile.email.send-verify'),
+            'editPasswordAction' => route('profile.password.update')
         ]);
     }
 

@@ -5,7 +5,7 @@
             @csrf
             <p>
                 <label>Event date</label>
-                <select name="date">
+                <select required name="date">
                     @if ($dates->count() !== 1)
                     <option value="">-- Select --</option>
                     @endif

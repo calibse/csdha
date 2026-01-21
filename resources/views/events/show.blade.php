@@ -215,7 +215,7 @@
 	@method('PUT')
 		<p>
 			<label for="event-venue_field">Venue</label>
-			<input id="event-venue_field" name="venue" value="{{ old('venue') }}">
+			<input maxlength="255" id="event-venue_field" name="venue" value="{{ old('venue') }}">
 		</p>
 		<p class="form-submit">
 			<button type="button" id="event-venue_edit_close">Cancel</button>

@@ -5,7 +5,7 @@
 	@csrf
 		<p>
 			<label>Council Body Position</label>
-			<select name="position">
+			<select required name="position">
 				<option value="">-- Select position --</option>
 				<option value="0" {{ old('position') === '0' ? 'selected' : null }}>
 					No position
@@ -19,7 +19,7 @@
 		</p>
 		<p>
 			<label>Email address</label>
-			<input type="email" name="email" value="{{ old('email') }}">
+			<input required type="email" name="email" value="{{ old('email') }}">
 		</p>
 		<p class="form-submit">
 			<button>Send</button>

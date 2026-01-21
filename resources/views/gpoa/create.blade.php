@@ -15,38 +15,21 @@
                 </p>
             @endforeach
             </fieldset>
-            {{--
-            <p>
-                <label>Academic term</label>
-                <select name="academic_term">
-                    <option value="">-- Select --</option>
-                @if ($errors->any())
-                    @foreach ($terms as $term)
-                    <option value="{{ $term->id }}" {{ old('academic_term') === (string)$term->id ? 'selected' : null }}>{{ $term->label }}</option>
-                    @endforeach
-                @else
-                    @foreach ($terms as $term)
-                    <option value="{{ $term->id }}" {{ $gpoa?->academicPeriod->term()->is($term) ? 'selected' : null }}>{{ $term->label }}</option>
-                    @endforeach
-                @endif
-                </select>
-            </p>
-            --}}
             <p>
                 <label>Academic start date</label>
-                <input placeholder="yyyy-mm-dd" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $gpoa?->academicPeriod->start_date }}">
+                <input required placeholder="yyyy-mm-dd" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $gpoa?->academicPeriod->start_date }}">
             </p>
             <p>
                 <label>End date</label>
-                <input placeholder="yyyy-mm-dd" type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $gpoa?->academicPeriod->end_date }}">
+                <input required placeholder="yyyy-mm-dd" type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $gpoa?->academicPeriod->end_date }}">
             </p>
             <p>
                 <label>Head of Student Services</label>
-                <input name="head_of_student_services" value="{{ $errors->any() ? old('head_of_student_services') : $gpoa?->academicPeriod->head_of_student_services }}">
+                <input required maxlength="100" name="head_of_student_services" value="{{ $errors->any() ? old('head_of_student_services') : $gpoa?->academicPeriod->head_of_student_services }}">
             </p>
             <p>
                 <label>Branch Director</label>
-                <input name="branch_director" value="{{ $errors->any() ? old('branch_director') : $gpoa?->academicPeriod->branch_director }}">
+                <input required maxlength="100" name="branch_director" value="{{ $errors->any() ? old('branch_director') : $gpoa?->academicPeriod->branch_director }}">
             </p>
             <p class="form-submit">
                 <button>{{ $update ? 'Update' : 'Create' }}</button>

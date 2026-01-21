@@ -17,7 +17,7 @@ class UpdateEmailRequest extends FormRequest
         if (!is_null(auth()->user()->password)) {
             return [
                 'email' => ['required', 'email', 'max:255', $uniqueEmail],
-                'password' => ['required', 'current_password:web'],
+                'password' => ['required', 'max:55', 'current_password:web'],
             ];
         } elseif (auth()->user()->google && is_null(auth()->user()->password)) {
             return [

@@ -19,7 +19,7 @@ class UpdateAccountRequest extends FormRequest
             'first_name' => ['required', 'max:50'],
             'middle_name' => ['max:50'],
             'last_name' => ['required', 'max:50'],
-            'suffix_name' => ['max:50'],
+            'suffix_name' => ['max:10'],
         ];
     }
 }

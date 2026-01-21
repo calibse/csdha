@@ -5,11 +5,11 @@
 	@csrf
 		<p>
 			<label for="name">Name</label>
-			<input id="name" name="name" value="{{ old('name') }}">
+			<input required maxlength="255" id="name" name="name" value="{{ old('name') }}">
 		</p>
 		<p>
 			<label for="url">URL</label>
-			<input id="url" name="url" value="{{ old('url') }}">
+			<input required maxlength="2000" id="url" name="url" value="{{ old('url') }}">
 		</p>
 		<p class="form-submit">
 			<button>Add</button>

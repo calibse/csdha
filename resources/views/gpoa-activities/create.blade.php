@@ -8,11 +8,11 @@
 	@csrf
 		<p>
 			<label>Name of Activity</label>
-			<input name="name" value="{{ $errors->any() ? old('name') : $activity?->name }}">
+			<input required maxlength="255" name="name" value="{{ $errors->any() ? old('name') : $activity?->name }}">
 		</p>
 		<p>
 			<label>Start Date</label>
-			<input placeholder="yyyy-mm-dd" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $activity?->start_date }}">
+			<input required placeholder="yyyy-mm-dd" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $activity?->start_date }}">
 		</p>
 		<p>
 			<label>End Date (optional)</label>
@@ -20,15 +20,15 @@
 		</p>
 		<p>
 			<label>Objectives</label>
-			<textarea name="objectives">{{ $errors->any() ? old('objectives') : $activity?->objectives }}</textarea>
+			<textarea required name="objectives">{{ $errors->any() ? old('objectives') : $activity?->objectives }}</textarea>
 		</p>
 		<p>
 			<label>Participants Description</label>
-			<input name="participants_description" value="{{ $errors->any() ? old('participants_description') : $activity?->participants }}">
+			<input required maxlength="100" name="participants_description" value="{{ $errors->any() ? old('participants_description') : $activity?->participants }}">
 		</p>
 		<p>
 			<label>Type of Activity</label>
-			<input name="type_of_activity" list="activity_types" autocomplete="off" value="{{ $errors->any() ? old('type_of_activity') : $activity?->type }}">
+			<input required maxlength="255" name="type_of_activity" list="activity_types" autocomplete="off" value="{{ $errors->any() ? old('type_of_activity') : $activity?->type }}">
 			<datalist id="activity_types">
 			@foreach ($activityTypes as $type)
 				<option value="{{ $type->name }}">
@@ -37,7 +37,7 @@
 		</p>
 		<p>
 			<label>Mode</label>
-			<input name="mode" list="modes" autocomplete="off" value="{{ $errors->any() ? old('mode') : $activity?->mode }}">
+			<input required maxlength="50" name="mode" list="modes" autocomplete="off" value="{{ $errors->any() ? old('mode') : $activity?->mode }}">
 			<datalist id="modes">
 			@foreach ($modes as $mode)
 				<option value="{{ $mode->name }}">
@@ -46,7 +46,7 @@
 		</p>
 		<p>
 			<label>Partnership (optional)</label>
-			<input name="partnership" list="partnership_types" autocomplete="off" value="{{ $errors->any() ? old('partnership') : $activity?->partnership_type }}">
+			<input maxlength="255" name="partnership" list="partnership_types" autocomplete="off" value="{{ $errors->any() ? old('partnership') : $activity?->partnership_type }}">
 			<datalist id="partnership_types">
 			@foreach ($partnershipTypes as $type)
 				<option value="{{ $type->name }}">
@@ -55,11 +55,11 @@
 		</p>
 		<p>
 			<label>Proposed Budget (optional)</label>
-			<input type="number" min="0" step="100" name="proposed_budget" value="{{ $errors->any() ? old('proposed_budget') : $activity?->proposed_budget }}">
+			<input type="number" min="0" max="999999.99" step="100" name="proposed_budget" value="{{ $errors->any() ? old('proposed_budget') : $activity?->proposed_budget }}">
 		</p>
 		<p>
 			<label>Source of Fund (optional)</label>
-			<input name="fund_source" list="fund_sources" autocomplete="off" value="{{ $errors->any() ? old('fund_source') : $activity?->fund_source }}">
+			<input maxlength="255" name="fund_source" list="fund_sources" autocomplete="off" value="{{ $errors->any() ? old('fund_source') : $activity?->fund_source }}">
 			<datalist id="fund_sources">
 			@foreach ($fundSources as $source)
 				<option value="{{ $source->name }}">

@@ -53,7 +53,7 @@
 	@csrf
 		<p>
 			<label>Caption</label>
-			<input name="caption" value="{{ old('caption') }}"> 
+			<input required maxlength="255" name="caption" value="{{ old('caption') }}"> 
 		</p>
 		<p>
 			<label>Images</label>
@@ -71,7 +71,7 @@
 	@csrf
 		<p>
 			<label for="event-attachment-set-caption_field">Caption</label>
-			<input id="event-attachment-set-caption_field" name="caption" value="{{ old('caption') }}"> 
+			<input required maxlength="255" id="event-attachment-set-caption_field" name="caption" value="{{ old('caption') }}"> 
 		</p>
 		<p>
 			<label>Add Images</label>

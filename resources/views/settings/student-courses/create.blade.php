@@ -5,11 +5,11 @@
 	@csrf
 		<p>
 			<label for="name">Name</label>
-			<input id="name" name="name">
+			<input required maxlength="255" id="name" name="name">
 		</p>
 		<p>
 			<label for="acronym">Acronym</label>
-			<input id="acronym" name="acronym">
+			<input required maxlength="8" id="acronym" name="acronym">
 		</p>
 		<p class="form-submit">
 			<button>Add</button>
