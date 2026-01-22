@@ -41,6 +41,7 @@ use App\Http\Controllers\GpoaActivityFundSourceController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\EventLinkController;
+use App\Http\Controllers\ServerStatisticController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureEachEvalFormStepIsComplete;
@@ -84,7 +85,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
 Route::domain(config('app.admin_domain'))->middleware('auth')
         ->group(function () {
 
-    Route::get('/home.html', [HomeController::class , 'adminIndex'])
+    Route::get('/home.html', [ServerStatisticController::class , 'show'])
         ->name('admin.home');
 
     Route::get('/sign-out.php', [LoginController::class, 'logout'])
@@ -111,7 +112,6 @@ Route::domain(config('app.admin_domain'))->middleware('auth')
         Route::get('/signup-invite/{invite}/revoke.html',
             [AccountController::class, 'confirmRevokeSignupInvite'])
             ->name('signup-invites.confirm-destroy');
-
     });
 
     Route::name('accounts.')->controller(AccountController::class)
@@ -209,11 +209,9 @@ Route::domain(config('app.user_domain'))->group(function () {
                 ->name('identity.store');
 
             Route::get('/result.html', 'showEndStep')->name('end.show');
-
         });
 
         Route::get('/qr-code.png', 'showQrCode')->name('qr-code.show');
-
     });
 
     Route::get('/event-register-{event}{slash?}', function ($id) {
@@ -271,7 +269,6 @@ Route::domain(config('app.user_domain'))->group(function () {
 
             Route::get('/signup-invitation.html', [LoginController::class,
                 'showSignupInvitation'])->name('invitation');
-
         });
     });
 
@@ -283,7 +280,6 @@ Route::domain(config('app.user_domain'))->group(function () {
 
         Route::get('/{provider}/callback', [LoginController::class,
             'signinWith'])->name('callback');
-
     });
 
     Route::get('/sign-up/{provider}/redirect.php', [LoginController::class,
@@ -316,7 +312,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
         Route::get('/index.html', [SettingController::class, 'index'])
             ->name('index');
 
-	Route::middleware('auth.setting-edit')->controller(AssetController::class)->name('logos.')
+        Route::middleware('auth.setting-edit')->controller(AssetController::class)->name('logos.')
             ->group(function () {
 
             Route::get('/logos.html', 'editLogo')->name('edit');  
@@ -646,7 +642,6 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                         Route::delete('/delete.php', 'destroyDate')
                             ->name('destroy');
-
                     });
                 });
 
@@ -697,9 +692,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                         ->name('confirm-destroy');
 
                     Route::delete('/delete.php', 'destroy')->name('destroy');
-
                 });
-
             });
 
             Route::controller(EventEvalFormController::class)
@@ -710,7 +703,6 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
                 Route::put('/eval-form.php', 'updateQuestions')
                     ->name('update-questions');
-
             });
 
             Route::controller(EventRegisFormController::class)
@@ -868,9 +860,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                 ->name('confirmDestroy');
 
             Route::delete('/delete.php', 'destroy')->name('destroy');
-
         });
-
     });
 
     /*
