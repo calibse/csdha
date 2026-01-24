@@ -1,4 +1,4 @@
-<x-layout.event-evaluation-form class="event-evaluation multi-step-form" :$event :$step :$completeSteps :$routes>
+<x-layout.event-evaluation-form class="event-evaluation multi-step-form" :$event :$step :$completeSteps :$routes :$isPreview>
     <h3 class="title">Data Privacy Act of 2012</h3>
     <x-alert/>
     <form id="current-form" method="post" action="{{ $submitRoute }}">

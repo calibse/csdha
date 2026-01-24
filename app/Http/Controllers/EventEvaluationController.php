@@ -28,23 +28,37 @@ class EventEvaluationController extends Controller
 
     public function editConsentStep(Request $request, Event $event)
     {
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            session()->forget(self::$sessionDataName);
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         $inputs = session(self::$sessionDataName, []);
         return view('event-evaluations.consent', [
             'step' => 0,
-            'submitRoute' => route('events.evaluations.consent.store', [
+            'submitRoute' => route($routeNamePrefix . 'consent.store', [
                 'event' => $event->public_id,
                 'token' => $request->token
             ]),
             'token' => $request->token,
+            'isPreview' => $isPreview,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event, $request->token));
+        ] + self::multiFormData($event, $request->token, $isPreview));
     }
 
     public function storeConsentStep(StoreConsentRequest $request,
             Event $event)
     {
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         self::storeFormStep(Format::getResourceRoute($request), $request);
-        return redirect()->route('events.evaluations.evaluation.edit', [
+        return redirect()->route($routeNamePrefix . 'evaluation.edit', [
             'event' => $event->public_id,
             'token' => $request->token
         ])->withFragment('content');
@@ -52,26 +66,39 @@ class EventEvaluationController extends Controller
 
     public function editEvaluationStep(Request $request, Event $event)
     {
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         $inputs = session(self::$sessionDataName, []);
         return view('event-evaluations.evaluation', [
             'step' => 1,
-            'previousStepRoute' => route('events.evaluations.consent.edit', [
+            'previousStepRoute' => route($routeNamePrefix . 'consent.edit', [
                 'event' => $event->public_id,
             ]),
-            'submitRoute' => route('events.evaluations.evaluation.store', [
+            'submitRoute' => route($routeNamePrefix . 'evaluation.store', [
                 'event' => $event->public_id,
                 'token' => $request->token
             ]),
             'token' => $request->token,
+            'isPreview' => $isPreview,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event, $request->token));
+        ] + self::multiFormData($event, $request->token, $isPreview));
     }
 
     public function storeEvaluationStep(StoreEventEvalRequest $request,
             Event $event)
     {
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         self::storeFormStep(Format::getResourceRoute($request), $request);
-        return redirect()->route('events.evaluations.acknowledgement.edit', [
+        return redirect()->route($routeNamePrefix . 'acknowledgement.edit', [
             'event' => $event->public_id,
             'token' => $request->token
         ])->withFragment('content');
@@ -79,28 +106,41 @@ class EventEvaluationController extends Controller
 
     public function editAcknowledgementStep(Request $request, Event $event)
     {
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         $inputs = session(self::$sessionDataName, []);
         return view('event-evaluations.acknowledgement', [
             'step' => 2,
-            'previousStepRoute' => route('events.evaluations.evaluation.edit',
+            'previousStepRoute' => route($routeNamePrefix . 'evaluation.edit',
                 [
                 'event' => $event->public_id,
             ]),
-            'submitRoute' => route('events.evaluations.acknowledgement.store',
+            'submitRoute' => route($routeNamePrefix . 'acknowledgement.store',
                 [
                 'event' => $event->public_id,
                 'token' => $request->token
             ]),
             'lastStep' => true,
             'token' => $request->token,
+            'isPreview' => $isPreview,
             'inputs' => $inputs[Format::getResourceRoute($request)] ?? []
-        ] + self::multiFormData($event, $request->token));
+        ] + self::multiFormData($event, $request->token, $isPreview));
     }
 
     public function storeAcknowledgementStep(Request $request, Event $event)
     {
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         self::storeFormStep(Format::getResourceRoute($request), $request);
-        return redirect()->route('events.evaluations.end.show', [
+        return redirect()->route($routeNamePrefix . 'end.show', [
             'event' => $event->public_id,
             'token' => $request->token
         ])->withFragment('content');
@@ -108,16 +148,26 @@ class EventEvaluationController extends Controller
 
     public function showEndStep(Request $request, Event $event)
     {
-        self::store($event);
-        session()->forget(self::$sessionDataName);
+        $isPreview = self::isPreview($request);
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
+        self::store($event, $isPreview);
+        if (!$isPreview) {
+            session()->forget(self::$sessionDataName);
+        }
         return view('event-evaluations.end', [
             'step' => 3,
+            'isPreview' => $isPreview,
             'end' => true
-        ] + self::multiFormData($event, $request->token));
+        ] + self::multiFormData($event, $request->token, $isPreview));
     }
 
-    private static function store(Event $event): void
+    private static function store(Event $event, bool $isPreview): void
     {
+        if ($isPreview) return;
         $inputs = session(self::$sessionDataName, []);
         $evalInput = $inputs['events.evaluations.evaluation'];
         $eval = new EventEvaluation;
@@ -143,22 +193,28 @@ class EventEvaluationController extends Controller
             ->where('token', hash('sha256', $rawToken))->delete();
     }
 
-    private static function multiFormData(Event $event, string $token): array
+    private static function multiFormData(Event $event, string $token = null, 
+        bool $isPreview): array
     {
+        if ($isPreview) {
+            $routeNamePrefix = 'events.evaluations-preview.';
+        } else {
+            $routeNamePrefix = 'events.evaluations.';
+        }
         $routes = [
-            route('events.evaluations.consent.edit', [
+            route($routeNamePrefix . 'consent.edit', [
                 'event' => $event->public_id,
                 'token' => $token
             ]) . '#content',
-            route('events.evaluations.evaluation.edit', [
+            route($routeNamePrefix . 'evaluation.edit', [
                 'event' => $event->public_id,
                 'token' => $token
             ]) . '#content',
-            route('events.evaluations.acknowledgement.edit', [
+            route($routeNamePrefix . 'acknowledgement.edit', [
                 'event' => $event->public_id,
                 'token' => $token
             ]) . '#content',
-            route('events.evaluations.end.show', [
+            route($routeNamePrefix . 'end.show', [
                 'event' => $event->public_id,
                 'token' => $token
             ]) . '#content',
@@ -180,5 +236,11 @@ class EventEvaluationController extends Controller
         $inputs = session(self::$sessionDataName, []);
         $inputs[$stepName] = $request->all();
         session([self::$sessionDataName => $inputs]);
+    }
+
+    private static function isPreview($request)
+    {
+        if (in_array('auth', $request->route()->gatherMiddleware())) return true;
+        return false;
     }
 }

@@ -10,6 +10,13 @@
 	@vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
+	<div class="form-preview-back-link">
+		<div class="content-block">
+			<a class="back-link" href="{{ route('events.show', ['event' => $event->public_id]) }}">
+				<img alt="Back" class="icon" src="{{ asset('icon/light/caret-left.svg') }}">
+			</a>
+		</div>
+	</div>
 	<header>
 		<hgroup>
 			<p class="main-brand org-name">

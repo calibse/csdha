@@ -16,7 +16,8 @@ class EventEvaluationForm extends Component
             public Event $event,
             public int $step,
             public int $completeSteps,
-            public array $routes
+            public array $routes,
+            public bool $isPreview
         )
     {
         //

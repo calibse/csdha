@@ -31,7 +31,7 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
         $event = $eventDate->event;
         if (!$event->accept_evaluation) return;
         $date = Carbon::parse(
-            "{$eventDate->date->format('Y-m-d')} {$eventDate->end_time}",
+            "{$eventDate->date} {$eventDate->end_time}",
             $event->timezone);
         $delayHours = $event->evaluation_delay_hours;
         $delayDate = $date->copy()->addHours($delayHours);

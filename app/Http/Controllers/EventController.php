@@ -217,6 +217,10 @@ class EventController extends Controller implements HasMiddleware
             'linksRoute' => route('events.links.index', [
                  'event' => $event->public_id
             ]),
+            'evalPreviewRoute' => route(
+                'events.evaluations-preview.consent.edit', [
+                 'event' => $event->public_id
+            ]),
         ]);
     }
 

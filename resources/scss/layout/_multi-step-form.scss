@@ -5,6 +5,59 @@
 @use "../font";
 @use "sass:string";
 
+.form-preview-back-link {
+	position: fixed;
+	width: 100vw;
+	margin: .9em 0;
+}
+
+.form-preview-back-link .content-block {
+	max-width: size.$page-width;
+	margin: 0 auto;
+	padding: 0 4%;
+}
+
+@media (min-width: #{size.$page-width - 3em}) {
+	.form-preview-back-link {
+		padding: 0;
+	}
+}
+
+.form-preview-back-link .back-link {
+	background-color: rgb(255, 255, 255, 0.9);
+	cursor: default;
+	color: color.$header-fg;
+	text-decoration: none;
+	display: inline-block;
+	padding: .55em;
+	//border: solid size.$line-width color.$title-bg;
+	border-radius: size.$corner-roundness;
+	line-height: 1;
+
+	.icon {
+		margin: 0;
+	}
+
+	.icon + .text {
+		position: absolute;
+		top: -200%;
+		overflow: hidden;
+		width: 1px;
+		height: 1px;
+		display: inline-block;
+	}
+
+	&:hover {
+		//border: solid size.$line-width color.$line;
+		background-color: color.$hovered-button-bg;
+	}
+
+	&:active {
+		//border: solid size.$line-width color.$title-button-border;
+		background-color: color.$pressed-button-bg;
+	}
+}
+
 .multi-step-form {
 	.qr-code {
 		height: 8cm;

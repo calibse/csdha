@@ -68,8 +68,8 @@
 			@endif
 			@if ($event->accept_evaluation)
 				<tr>
-					<th>Evaluation Form</th>
-					<td><a href="{{ $evalRoute }}">Show</a></td>
+					<th>Evaluation Form <span class="edit-link">[ <a href="{{ $evalRoute }}">Edit</a> ]</span></th>
+					<td><a href="{{ $evalPreviewRoute }}">Show Preview</a></td>
 				</tr>
 				<tr>
 					<th>Evaluation Comments</th>
@@ -108,7 +108,7 @@
 						<span class="edit-link">[ <a>Edit</a> ]</span>
 					@endcan
 					</th>
-					<td><a>Show preview</a></td>
+					<td><a href="{{ $evalPreviewRoute }}">Show preview</a></td>
 				</tr>
 				<tr>
 					<th>Evaluation Result 

@@ -60,9 +60,12 @@ use App\Models\Event;
 use App\Services\EvalFormStep;
 use App\Services\QrCode;
 
+/*
 Route::get('/test.html', function (Request $request) {
-	abort(500);
+    $middlewares = $request->route()->gatherMiddleware();
+    dd($middlewares);
 });
+*/
 
 Route::domain(config('app.admin_domain'))->group(function () {
 
@@ -559,6 +562,30 @@ Route::domain(config('app.user_domain'))->middleware('auth')
 
     Route::get('/events.html', [EventController::class, 'index'])
         ->name('events.index');
+
+    Route::prefix('event-{event}/eval-form')
+        ->name('events.evaluations-preview.')
+        ->middleware(['can:evaluate,event'])
+        ->controller(EventEvaluationController::class)->group(function () {
+
+        Route::get('/index.html', 'editConsentStep')->name('consent.edit');
+
+        Route::post('/consent.php', 'storeConsentStep')->name('consent.store');
+
+        Route::get('/evaluation.html', 'editEvaluationStep')
+            ->name('evaluation.edit');
+
+        Route::post('/evaluation.php', 'storeEvaluationStep')
+            ->name('evaluation.store');
+
+        Route::get('/acknowledgement.html', 'editAcknowledgementStep')
+            ->name('acknowledgement.edit');
+
+        Route::post('/acknowledgement.php', 'storeAcknowledgementStep')
+            ->name('acknowledgement.store');
+
+        Route::get('/thank-you.html', 'showEndStep')->name('end.show');
+    });
 
     Route::name('events.')->group(function () {
 
