@@ -42,7 +42,7 @@ class Gpoa extends Model
             'editors' => User::withPerm('accomplishment-reports.edit')
                 ->notOfPosition('adviser')->get(),
             'approved' => true,
-            'president' => $lastAccomReport->president,
+            'president' => $lastAccomReport?->president,
         ];
     }
 
