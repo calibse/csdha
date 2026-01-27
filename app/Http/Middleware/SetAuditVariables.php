@@ -22,16 +22,6 @@ class SetAuditVariables
         if (!in_array($request->method(), ['PUT', 'POST', 'DELETE'])) {
             return $next($request);
         }
-        DB::table('audit_trail_data_copy')->insert([
-            'request_id' => $requestId,
-            'request_ip' => $request->ip(),
-            'request_url' => $request->fullUrl(),
-            'request_method' => $request->method(),
-            'request_time' => now()->toDateTimeString(),
-            'user_id' => auth()->id(),
-            'user_agent' => $request->userAgent(),
-            'session_id' => $request->session()->getId()
-        ]);
         DB::table('audit_trail_data')->delete();
         DB::table('audit_trail_data')->insert([
             'request_id' => $requestId,

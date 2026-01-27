@@ -11,10 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('event_dates', function (Blueprint $table) {
-            $table->dateTime('start_date')->nullable();
-            $table->dateTime('end_date')->nullable();
-        });
+        Schema::dropIfExists('audit_trail_data_copy');
     }
 
     /**
@@ -22,8 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('event_dates', function (Blueprint $table) {
-            //
-        });
+        //
     }
 };

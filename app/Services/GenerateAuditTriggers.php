@@ -129,13 +129,6 @@ primary_key = $primaryKeyValue,
 created_at = current_timestamp,
 column_names = ($changedCol) ;
 
-update "audit_trail_data_copy" set
-action = '$action',
-table_name = '$tableName',
-primary_key = $primaryKeyValue,
-created_at = current_timestamp,
-column_names = $changedCol ;
-
 SQL;
                 $sql = <<<SQL
 create trigger "$triggerName"

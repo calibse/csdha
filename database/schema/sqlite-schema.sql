@@ -1,4 +1,4 @@
-CREATE TABLE "academic_periods"(
+CREATE TABLE IF NOT EXISTS "academic_periods"(
   "id" integer not null primary key autoincrement,
   "start_date" date NOT NULL,
   "end_date" date NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "academic_periods"(
   "branch_director" varchar(100) DEFAULT NULL,
   CONSTRAINT "academic_periods_academic_term_id_foreign" FOREIGN KEY("academic_term_id") REFERENCES "academic_terms"("id")
 );
-CREATE TABLE "academic_terms"(
+CREATE TABLE IF NOT EXISTS "academic_terms"(
   "id" integer not null primary key autoincrement,
   "system" varchar(20) NOT NULL,
   "term_number" tinyint(3) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE "academic_terms"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "chk_system" CHECK("system" in('semester','trimester','quarter'))
 );
-CREATE TABLE "accom_reports"(
+CREATE TABLE IF NOT EXISTS "accom_reports"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "approved_ar_filepath" varchar(255) DEFAULT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE "accom_reports"(
   CONSTRAINT "chk_current_step" CHECK("current_step" in('officers','president','adviser')),
   CONSTRAINT "chk_status" CHECK("status" in('draft','pending','returned','approved'))
 );
-CREATE TABLE "activity_logs"(
+CREATE TABLE IF NOT EXISTS "activity_logs"(
   "id" integer not null primary key autoincrement,
   "user_id" bigint(20) NOT NULL,
   "category" varchar(255) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE "activity_logs"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "activity_logs_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "announcements"(
+CREATE TABLE IF NOT EXISTS "announcements"(
   "id" integer not null primary key autoincrement,
   "title" varchar(255) NOT NULL,
   "introduction" varchar(255) NOT NULL,
@@ -61,38 +61,19 @@ CREATE TABLE "announcements"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "announcements_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "audit_trail"(
-  "id" integer not null primary key autoincrement,
-  "action" varchar(10) NOT NULL,
-  "table_name" varchar(100) NOT NULL,
-  "column_names" longtext DEFAULT NULL,
-  "primary_key" bigint(20) NOT NULL,
-  "request_id" char(26) DEFAULT NULL,
-  "request_ip" varchar(45) DEFAULT NULL,
-  "request_url" text DEFAULT NULL,
-  "request_method" varchar(10) DEFAULT NULL,
-  "request_time" timestamp NULL DEFAULT NULL,
-  "user_id" bigint(20) DEFAULT NULL,
-  "user_agent" text DEFAULT NULL,
-  "session_id" varchar(255) DEFAULT NULL,
-  "created_at" timestamp NULL DEFAULT NULL,
-  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT "chk_action" CHECK("action" in('insert','update','delete')),
-  CONSTRAINT "chk_request_method" CHECK("request_method" in('get','post','put','patch','delete','options'))
-);
-CREATE TABLE "cache"(
+CREATE TABLE IF NOT EXISTS "cache"(
   "key" varchar(255) NOT NULL,
   "value" mediumtext NOT NULL,
   "expiration" int(11) NOT NULL,
   PRIMARY KEY("key")
 );
-CREATE TABLE "cache_locks"(
+CREATE TABLE IF NOT EXISTS "cache_locks"(
   "key" varchar(255) NOT NULL,
   "owner" varchar(255) NOT NULL,
   "expiration" int(11) NOT NULL,
   PRIMARY KEY("key")
 );
-CREATE TABLE "courses"(
+CREATE TABLE IF NOT EXISTS "courses"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "acronym" varchar(8) NOT NULL,
@@ -105,7 +86,7 @@ CREATE UNIQUE INDEX "courses_acronym_unarchived_unique" ON "courses"(
   "acronym",
   "unarchived"
 );
-CREATE TABLE "event_attachment_sets"(
+CREATE TABLE IF NOT EXISTS "event_attachment_sets"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "caption" varchar(255) NOT NULL,
@@ -113,7 +94,7 @@ CREATE TABLE "event_attachment_sets"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "event_attachment_sets_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "event_attachments"(
+CREATE TABLE IF NOT EXISTS "event_attachments"(
   "id" integer not null primary key autoincrement,
   "event_attachment_set_id" bigint(20) NOT NULL,
   "image_filepath" varchar(255) NOT NULL,
@@ -125,7 +106,7 @@ CREATE TABLE "event_attachments"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "event_attachments_event_attachment_set_id_foreign" FOREIGN KEY("event_attachment_set_id") REFERENCES "event_attachment_sets"("id")
 );
-CREATE TABLE "event_attendances"(
+CREATE TABLE IF NOT EXISTS "event_attendances"(
   "id" integer not null primary key autoincrement,
   "student_id" bigint(20) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -140,7 +121,7 @@ CREATE TABLE "event_attendances"(
   CONSTRAINT "event_attendances_student_year_id_foreign" FOREIGN KEY("student_year_id") REFERENCES "student_years"("id"),
   CONSTRAINT "events_attendance_student_id_foreign" FOREIGN KEY("student_id") REFERENCES "students"("id")
 );
-CREATE TABLE "event_attendees"(
+CREATE TABLE IF NOT EXISTS "event_attendees"(
   "id" integer not null primary key autoincrement,
   "event_student_id" bigint(20) NOT NULL,
   "event_date_id" bigint(20) NOT NULL,
@@ -150,21 +131,7 @@ CREATE TABLE "event_attendees"(
   CONSTRAINT "event_attendees_event_date_id_foreign" FOREIGN KEY("event_date_id") REFERENCES "event_dates"("id"),
   CONSTRAINT "event_attendees_event_student_id_foreign" FOREIGN KEY("event_student_id") REFERENCES "event_students"("id")
 );
-CREATE TABLE "event_dates"(
-  "id" integer not null primary key autoincrement,
-  "event_id" bigint(20) NOT NULL,
-  "date" date NOT NULL,
-  "created_at" timestamp NULL DEFAULT NULL,
-  "updated_at" timestamp NULL DEFAULT NULL,
-  "start_time" time NOT NULL,
-  "end_time" time NOT NULL,
-  "public_id" bigint(20) DEFAULT NULL,
-  CONSTRAINT "event_dates_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
-);
-CREATE UNIQUE INDEX "event_dates_public_id_unique" ON "event_dates"(
-  "public_id"
-);
-CREATE TABLE "event_deliverable_assignee"(
+CREATE TABLE IF NOT EXISTS "event_deliverable_assignee"(
   "id" integer not null primary key autoincrement,
   "event_deliverable_id" bigint(20) NOT NULL,
   "user_id" bigint(20) NOT NULL,
@@ -173,7 +140,7 @@ CREATE TABLE "event_deliverable_assignee"(
   CONSTRAINT "event_deliverable_assignee_event_deliverable_id_foreign" FOREIGN KEY("event_deliverable_id") REFERENCES "event_deliverables"("id"),
   CONSTRAINT "event_deliverable_assignee_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "event_deliverable_tasks"(
+CREATE TABLE IF NOT EXISTS "event_deliverable_tasks"(
   "id" integer not null primary key autoincrement,
   "event_deliverable_id" bigint(20) NOT NULL,
   "name" varchar(255) NOT NULL,
@@ -182,7 +149,7 @@ CREATE TABLE "event_deliverable_tasks"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "event_deliverable_tasks_event_deliverable_id_foreign" FOREIGN KEY("event_deliverable_id") REFERENCES "event_deliverables"("id")
 );
-CREATE TABLE "event_deliverables"(
+CREATE TABLE IF NOT EXISTS "event_deliverables"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "event_id" bigint(20) NOT NULL,
@@ -190,7 +157,7 @@ CREATE TABLE "event_deliverables"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "event_deliverables_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "event_editor"(
+CREATE TABLE IF NOT EXISTS "event_editor"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "user_id" bigint(20) NOT NULL,
@@ -199,7 +166,7 @@ CREATE TABLE "event_editor"(
   CONSTRAINT "event_editor_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id"),
   CONSTRAINT "event_editor_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "event_eval_forms"(
+CREATE TABLE IF NOT EXISTS "event_eval_forms"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "introduction" text DEFAULT NULL,
@@ -222,12 +189,12 @@ CREATE TABLE "event_eval_forms"(
 CREATE UNIQUE INDEX "event_eval_form_questions_default_unique" ON "event_eval_forms"(
   "default"
 );
-CREATE TABLE "event_evaluation_tokens"(
+CREATE TABLE IF NOT EXISTS "event_evaluation_tokens"(
   "token" varchar(255) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
   PRIMARY KEY("token")
 );
-CREATE TABLE "event_evaluations"(
+CREATE TABLE IF NOT EXISTS "event_evaluations"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "overall_satisfaction" tinyint(4) NOT NULL,
@@ -249,7 +216,7 @@ CREATE TABLE "event_evaluations"(
   "feature_additional_comments" tinyint(1) NOT NULL DEFAULT 0,
   CONSTRAINT "event_evaluations_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "event_links"(
+CREATE TABLE IF NOT EXISTS "event_links"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "url" varchar(2000) NOT NULL,
@@ -258,7 +225,7 @@ CREATE TABLE "event_links"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "event_links_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "event_officer_attendees"(
+CREATE TABLE IF NOT EXISTS "event_officer_attendees"(
   "id" integer not null primary key autoincrement,
   "event_date_id" bigint(20) NOT NULL,
   "user_id" bigint(20) NOT NULL,
@@ -267,7 +234,7 @@ CREATE TABLE "event_officer_attendees"(
   CONSTRAINT "event_officer_attendees_event_date_id_foreign" FOREIGN KEY("event_date_id") REFERENCES "event_dates"("id"),
   CONSTRAINT "event_officer_attendees_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "event_participant_courses"(
+CREATE TABLE IF NOT EXISTS "event_participant_courses"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "course_id" bigint(20) NOT NULL,
@@ -276,7 +243,7 @@ CREATE TABLE "event_participant_courses"(
   CONSTRAINT "event_participant_courses_course_id_foreign" FOREIGN KEY("course_id") REFERENCES "courses"("id"),
   CONSTRAINT "event_participant_courses_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "event_participants"(
+CREATE TABLE IF NOT EXISTS "event_participants"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "student_year_id" bigint(20) NOT NULL,
@@ -285,7 +252,7 @@ CREATE TABLE "event_participants"(
   CONSTRAINT "event_participants_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id"),
   CONSTRAINT "event_participants_student_year_id_foreign" FOREIGN KEY("student_year_id") REFERENCES "student_years"("id")
 );
-CREATE TABLE "event_regis_forms"(
+CREATE TABLE IF NOT EXISTS "event_regis_forms"(
   "id" integer not null primary key autoincrement,
   "event_id" bigint(20) NOT NULL,
   "introduction" text DEFAULT NULL,
@@ -293,7 +260,7 @@ CREATE TABLE "event_regis_forms"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "event_regis_forms_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "event_registrations"(
+CREATE TABLE IF NOT EXISTS "event_registrations"(
   "id" integer not null primary key autoincrement,
   "public_id" bigint(20) DEFAULT NULL,
   "event_id" bigint(20) NOT NULL,
@@ -307,7 +274,7 @@ CREATE TABLE "event_registrations"(
 CREATE UNIQUE INDEX "event_registrations_public_id_unique" ON "event_registrations"(
   "public_id"
 );
-CREATE TABLE "event_students"(
+CREATE TABLE IF NOT EXISTS "event_students"(
   "id" integer not null primary key autoincrement,
   "student_id" varchar(20) NOT NULL,
   "first_name" varchar(50) NOT NULL,
@@ -324,7 +291,7 @@ CREATE TABLE "event_students"(
   CONSTRAINT "event_students_student_section_id_foreign" FOREIGN KEY("student_section_id") REFERENCES "student_sections"("id"),
   CONSTRAINT "event_students_student_year_id_foreign" FOREIGN KEY("student_year_id") REFERENCES "student_years"("id")
 );
-CREATE TABLE "events"(
+CREATE TABLE IF NOT EXISTS "events"(
   "id" integer not null primary key autoincrement,
   "description" text DEFAULT NULL,
   "letter_of_intent" varchar(255) DEFAULT NULL,
@@ -346,7 +313,7 @@ CREATE TABLE "events"(
   CONSTRAINT "chk_participant_type" CHECK("participant_type" in('students','officers'))
 );
 CREATE UNIQUE INDEX "events_public_id_unique" ON "events"("public_id");
-CREATE TABLE "failed_jobs"(
+CREATE TABLE IF NOT EXISTS "failed_jobs"(
   "id" integer not null primary key autoincrement,
   "uuid" varchar(255) NOT NULL,
   "connection" text NOT NULL,
@@ -356,7 +323,7 @@ CREATE TABLE "failed_jobs"(
   "failed_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE UNIQUE INDEX "failed_jobs_uuid_unique" ON "failed_jobs"("uuid");
-CREATE TABLE "funds"(
+CREATE TABLE IF NOT EXISTS "funds"(
   "id" integer not null primary key autoincrement,
   "collected" decimal(8,2) NOT NULL,
   "spent" decimal(8,2) NOT NULL,
@@ -366,7 +333,7 @@ CREATE TABLE "funds"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "funds_event_id_foreign" FOREIGN KEY("event_id") REFERENCES "events"("id")
 );
-CREATE TABLE "gpoa_activities"(
+CREATE TABLE IF NOT EXISTS "gpoa_activities"(
   "id" integer not null primary key autoincrement,
   "gpoa_id" bigint(20) NOT NULL,
   "name" varchar(255) NOT NULL,
@@ -408,7 +375,7 @@ CREATE TABLE "gpoa_activities"(
 CREATE UNIQUE INDEX "gpoa_activities_public_id_unique" ON "gpoa_activities"(
   "public_id"
 );
-CREATE TABLE "gpoa_activity_authors"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_authors"(
   "id" integer not null primary key autoincrement,
   "gpoa_activity_id" bigint(20) NOT NULL,
   "officer_user_id" bigint(20) NOT NULL,
@@ -419,7 +386,7 @@ CREATE TABLE "gpoa_activity_authors"(
   CONSTRAINT "gpoa_activity_authors_officer_user_id_foreign" FOREIGN KEY("officer_user_id") REFERENCES "users"("id"),
   CONSTRAINT "chk_role" CHECK("role" in('event head','co-head'))
 );
-CREATE TABLE "gpoa_activity_event_heads"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_event_heads"(
   "id" integer not null primary key autoincrement,
   "gpoa_activity_id" bigint(20) NOT NULL,
   "user_id" bigint(20) NOT NULL,
@@ -430,7 +397,7 @@ CREATE TABLE "gpoa_activity_event_heads"(
   CONSTRAINT "gpoa_activity_event_heads_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id"),
   CONSTRAINT "chk_role" CHECK("role" in('event head','co-head'))
 );
-CREATE TABLE "gpoa_activity_fund_sources"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_fund_sources"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -442,7 +409,7 @@ CREATE UNIQUE INDEX "gpoa_activity_fund_sources_name_unarchived_unique" ON "gpoa
   "name",
   "unarchived"
 );
-CREATE TABLE "gpoa_activity_modes"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_modes"(
   "id" integer not null primary key autoincrement,
   "name" varchar(50) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -454,7 +421,7 @@ CREATE UNIQUE INDEX "gpoa_activity_modes_name_unarchived_unique" ON "gpoa_activi
   "name",
   "unarchived"
 );
-CREATE TABLE "gpoa_activity_participants"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_participants"(
   "id" integer not null primary key autoincrement,
   "student_year_id" bigint(20) NOT NULL,
   "gpoa_activity_id" bigint(20) NOT NULL,
@@ -463,7 +430,7 @@ CREATE TABLE "gpoa_activity_participants"(
   CONSTRAINT "gpoa_activity_participants_gpoa_activity_id_foreign" FOREIGN KEY("gpoa_activity_id") REFERENCES "gpoa_activities"("id"),
   CONSTRAINT "gpoa_activity_participants_student_year_id_foreign" FOREIGN KEY("student_year_id") REFERENCES "student_years"("id")
 );
-CREATE TABLE "gpoa_activity_partnership_types"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_partnership_types"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -475,7 +442,7 @@ CREATE UNIQUE INDEX "gpoa_activity_partnership_types_name_unarchived_unique" ON 
   "name",
   "unarchived"
 );
-CREATE TABLE "gpoa_activity_types"(
+CREATE TABLE IF NOT EXISTS "gpoa_activity_types"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -487,7 +454,7 @@ CREATE UNIQUE INDEX "gpoa_activity_types_name_unarchived_unique" ON "gpoa_activi
   "name",
   "unarchived"
 );
-CREATE TABLE "gpoas"(
+CREATE TABLE IF NOT EXISTS "gpoas"(
   "id" integer not null primary key autoincrement,
   "academic_period_id" bigint(20) NOT NULL,
   "creator_user_id" bigint(20) NOT NULL,
@@ -506,7 +473,7 @@ CREATE TABLE "gpoas"(
   CONSTRAINT "gpoas_creator_user_id_foreign" FOREIGN KEY("creator_user_id") REFERENCES "users"("id")
 );
 CREATE UNIQUE INDEX "gpoas_active_unique" ON "gpoas"("active");
-CREATE TABLE "job_batches"(
+CREATE TABLE IF NOT EXISTS "job_batches"(
   "id" varchar(255) NOT NULL,
   "name" varchar(255) NOT NULL,
   "total_jobs" int(11) NOT NULL,
@@ -519,7 +486,7 @@ CREATE TABLE "job_batches"(
   "finished_at" int(11) DEFAULT NULL,
   PRIMARY KEY("id")
 );
-CREATE TABLE "jobs"(
+CREATE TABLE IF NOT EXISTS "jobs"(
   "id" integer not null primary key autoincrement,
   "queue" varchar(255) NOT NULL,
   "payload" longtext NOT NULL,
@@ -528,7 +495,7 @@ CREATE TABLE "jobs"(
   "available_at" int(10) NOT NULL,
   "created_at" int(10) NOT NULL
 );
-CREATE TABLE "meetings"(
+CREATE TABLE IF NOT EXISTS "meetings"(
   "id" integer not null primary key autoincrement,
   "title" varchar(255) NOT NULL,
   "date" date NOT NULL,
@@ -541,12 +508,12 @@ CREATE TABLE "meetings"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "meetings_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "migrations"(
+CREATE TABLE IF NOT EXISTS "migrations"(
   "id" integer not null primary key autoincrement,
   "migration" varchar(255) NOT NULL,
   "batch" int(11) NOT NULL
 );
-CREATE TABLE "partnerships"(
+CREATE TABLE IF NOT EXISTS "partnerships"(
   "id" integer not null primary key autoincrement,
   "organization_name" varchar(255) NOT NULL,
   "purpose" varchar(255) NOT NULL,
@@ -560,13 +527,13 @@ CREATE TABLE "partnerships"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "partnerships_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "password_reset_tokens"(
+CREATE TABLE IF NOT EXISTS "password_reset_tokens"(
   "email" varchar(255) NOT NULL,
   "token" varchar(255) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
   PRIMARY KEY("email")
 );
-CREATE TABLE "permissions"(
+CREATE TABLE IF NOT EXISTS "permissions"(
   "id" integer not null primary key autoincrement,
   "resource_type_id" bigint(20) NOT NULL,
   "resource_action_type_id" bigint(20) NOT NULL,
@@ -575,7 +542,7 @@ CREATE TABLE "permissions"(
   CONSTRAINT "permissions_resource_action_type_id_foreign" FOREIGN KEY("resource_action_type_id") REFERENCES "resource_action_types"("id"),
   CONSTRAINT "permissions_resource_type_id_foreign" FOREIGN KEY("resource_type_id") REFERENCES "resource_types"("id")
 );
-CREATE TABLE "personal_access_tokens"(
+CREATE TABLE IF NOT EXISTS "personal_access_tokens"(
   "id" integer not null primary key autoincrement,
   "tokenable_type" varchar(255) NOT NULL,
   "tokenable_id" bigint(20) NOT NULL,
@@ -590,7 +557,7 @@ CREATE TABLE "personal_access_tokens"(
 CREATE UNIQUE INDEX "personal_access_tokens_token_unique" ON "personal_access_tokens"(
   "token"
 );
-CREATE TABLE "platforms"(
+CREATE TABLE IF NOT EXISTS "platforms"(
   "id" integer not null primary key autoincrement,
   "name" varchar(255) NOT NULL,
   "description" varchar(255) NOT NULL,
@@ -602,13 +569,13 @@ CREATE TABLE "platforms"(
   "updated_at" timestamp NULL DEFAULT NULL,
   CONSTRAINT "platforms_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id")
 );
-CREATE TABLE "position_categories"(
+CREATE TABLE IF NOT EXISTS "position_categories"(
   "id" integer not null primary key autoincrement,
   "name" varchar(50) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
   "updated_at" timestamp NULL DEFAULT NULL
 );
-CREATE TABLE "position_category"(
+CREATE TABLE IF NOT EXISTS "position_category"(
   "id" integer not null primary key autoincrement,
   "position_id" bigint(20) NOT NULL,
   "position_category_id" bigint(20) NOT NULL,
@@ -617,7 +584,7 @@ CREATE TABLE "position_category"(
   CONSTRAINT "position_category_position_category_id_foreign" FOREIGN KEY("position_category_id") REFERENCES "position_categories"("id"),
   CONSTRAINT "position_category_position_id_foreign" FOREIGN KEY("position_id") REFERENCES "positions"("id")
 );
-CREATE TABLE "position_permissions"(
+CREATE TABLE IF NOT EXISTS "position_permissions"(
   "id" integer not null primary key autoincrement,
   "position_id" bigint(20) NOT NULL,
   "permission_id" bigint(20) NOT NULL,
@@ -626,7 +593,7 @@ CREATE TABLE "position_permissions"(
   CONSTRAINT "position_permissions_permission_id_foreign" FOREIGN KEY("permission_id") REFERENCES "permissions"("id"),
   CONSTRAINT "position_permissions_position_id_foreign" FOREIGN KEY("position_id") REFERENCES "positions"("id")
 );
-CREATE TABLE "positions"(
+CREATE TABLE IF NOT EXISTS "positions"(
   "id" integer not null primary key autoincrement,
   "name" varchar(100) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -635,7 +602,7 @@ CREATE TABLE "positions"(
   "position_order" tinyint(3) NOT NULL
 );
 CREATE UNIQUE INDEX "positions_name_unique" ON "positions"("name");
-CREATE TABLE "resource_action_types"(
+CREATE TABLE IF NOT EXISTS "resource_action_types"(
   "id" integer not null primary key autoincrement,
   "name" varchar(50) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -644,20 +611,20 @@ CREATE TABLE "resource_action_types"(
 CREATE UNIQUE INDEX "resource_action_types_name_unique" ON "resource_action_types"(
   "name"
 );
-CREATE TABLE "resource_types"(
+CREATE TABLE IF NOT EXISTS "resource_types"(
   "id" integer not null primary key autoincrement,
   "name" varchar(50) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
   "updated_at" timestamp NULL DEFAULT NULL
 );
 CREATE UNIQUE INDEX "resource_types_name_unique" ON "resource_types"("name");
-CREATE TABLE "roles"(
+CREATE TABLE IF NOT EXISTS "roles"(
   "id" integer not null primary key autoincrement,
   "name" varchar(50) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
   "updated_at" timestamp NULL DEFAULT NULL
 );
-CREATE TABLE "sessions"(
+CREATE TABLE IF NOT EXISTS "sessions"(
   "id" varchar(255) NOT NULL,
   "user_id" bigint(20) DEFAULT NULL,
   "ip_address" varchar(45) DEFAULT NULL,
@@ -666,7 +633,7 @@ CREATE TABLE "sessions"(
   "last_activity" int(11) NOT NULL,
   PRIMARY KEY("id")
 );
-CREATE TABLE "signup_invitations"(
+CREATE TABLE IF NOT EXISTS "signup_invitations"(
   "id" integer not null primary key autoincrement,
   "invite_code" varchar(255) NOT NULL,
   "email" varchar(255) NOT NULL,
@@ -678,7 +645,7 @@ CREATE TABLE "signup_invitations"(
   "email_sent" tinyint(1) DEFAULT NULL,
   CONSTRAINT "signup_invitations_position_id_foreign" FOREIGN KEY("position_id") REFERENCES "positions"("id")
 );
-CREATE TABLE "student_sections"(
+CREATE TABLE IF NOT EXISTS "student_sections"(
   "id" integer not null primary key autoincrement,
   "section" varchar(10) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -690,7 +657,7 @@ CREATE UNIQUE INDEX "student_sections_section_unarchived_unique" ON "student_sec
   "section",
   "unarchived"
 );
-CREATE TABLE "student_years"(
+CREATE TABLE IF NOT EXISTS "student_years"(
   "id" integer not null primary key autoincrement,
   "year" varchar(4) NOT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -703,7 +670,7 @@ CREATE UNIQUE INDEX "student_years_label_unarchived_unique" ON "student_years"(
   "label",
   "unarchived"
 );
-CREATE TABLE "students"(
+CREATE TABLE IF NOT EXISTS "students"(
   "id" integer not null primary key autoincrement,
   "student_id" varchar(20) NOT NULL,
   "first_name" varchar(50) NOT NULL,
@@ -722,7 +689,7 @@ CREATE TABLE "students"(
   CONSTRAINT "students_student_year_id_foreign" FOREIGN KEY("student_year_id") REFERENCES "student_years"("id")
 );
 CREATE UNIQUE INDEX "students_public_id_unique" ON "students"("public_id");
-CREATE TABLE "user_google_accounts"(
+CREATE TABLE IF NOT EXISTS "user_google_accounts"(
   "id" integer not null primary key autoincrement,
   "user_id" bigint(20) NOT NULL,
   "google_id" text NOT NULL,
@@ -736,7 +703,7 @@ CREATE TABLE "user_google_accounts"(
 CREATE UNIQUE INDEX "user_google_accounts_google_id_unique" ON "user_google_accounts"(
   "google_id"
 );
-CREATE TABLE "users"(
+CREATE TABLE IF NOT EXISTS "users"(
   "id" integer not null primary key autoincrement,
   "remember_token" varchar(100) DEFAULT NULL,
   "created_at" timestamp NULL DEFAULT NULL,
@@ -766,6 +733,73 @@ CREATE UNIQUE INDEX "users_google_id_unarchived_unique" ON "users"(
   "google_id",
   "unarchived"
 );
+CREATE TABLE IF NOT EXISTS "audit_trail_data"(
+  "action" varchar,
+  "table_name" varchar,
+  "column_names" text,
+  "primary_key" integer,
+  "request_id" varchar,
+  "request_ip" varchar,
+  "request_url" text,
+  "request_method" varchar,
+  "request_time" datetime,
+  "user_id" integer,
+  "user_agent" text,
+  "session_id" varchar,
+  "created_at" datetime
+);
+CREATE TABLE IF NOT EXISTS "audit_trail_data_copy"(
+  "action" varchar,
+  "table_name" varchar,
+  "column_names" text,
+  "primary_key" integer,
+  "request_id" varchar,
+  "request_ip" varchar,
+  "request_url" text,
+  "request_method" varchar,
+  "request_time" datetime,
+  "user_id" integer,
+  "user_agent" text,
+  "session_id" varchar,
+  "created_at" datetime
+);
+CREATE TABLE IF NOT EXISTS "audit_trigger_variables"("changed_cols" text);
+CREATE TABLE IF NOT EXISTS "audit_trail"(
+  "id" integer not null primary key autoincrement,
+  "action" varchar(10) NOT NULL,
+  "table_name" varchar(100) NOT NULL,
+  "column_names" longtext DEFAULT NULL,
+  "primary_key" bigint(20) NOT NULL,
+  "request_id" char(26) DEFAULT NULL,
+  "request_ip" varchar(45) DEFAULT NULL,
+  "request_url" text DEFAULT NULL,
+  "request_method" varchar(10) DEFAULT NULL,
+  "request_time" timestamp NULL DEFAULT NULL,
+  "user_id" bigint(20) DEFAULT NULL,
+  "user_agent" text DEFAULT NULL,
+  "session_id" varchar(255) DEFAULT NULL,
+  "created_at" timestamp NULL DEFAULT NULL,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "chk_action" CHECK("action" in('insert','update','delete')),
+  CONSTRAINT "chk_request_method" CHECK("request_method" in('GET','POST','PUT','PATCH','DELETE','OPTIONS'))
+);
+CREATE TABLE IF NOT EXISTS "event_dates"(
+  "id" integer primary key autoincrement not null,
+  "event_id" bigint(20) not null,
+  "date" date not null,
+  "created_at" timestamp default(NULL),
+  "updated_at" timestamp default(NULL),
+  "start_time" time,
+  "end_time" time,
+  "public_id" bigint(20) default(NULL),
+  "start_date" datetime,
+  "end_date" datetime,
+  foreign key("event_id") references events("id") on delete no action on update no action
+);
+CREATE UNIQUE INDEX "event_dates_public_id_unique" on "event_dates"(
+  "public_id"
+);
+
 INSERT INTO migrations VALUES(1,'0001_01_01_000000_create_users_table',1);
 INSERT INTO migrations VALUES(2,'0001_01_01_000001_create_cache_table',1);
 INSERT INTO migrations VALUES(3,'0001_01_01_000002_create_jobs_table',1);
@@ -895,3 +929,10 @@ INSERT INTO migrations VALUES(126,'2025_11_28_081951_change_columns_in_events_ta
 INSERT INTO migrations VALUES(127,'2025_11_30_095622_create_event_links_table',4);
 INSERT INTO migrations VALUES(128,'2026_01_10_162318_change_columns_in_audit_trail_table',4);
 INSERT INTO migrations VALUES(129,'2026_01_10_163253_drop_gspoas_table',4);
+INSERT INTO migrations VALUES(130,'2026_01_13_072418_create_audit_trigger_variables_table',5);
+INSERT INTO migrations VALUES(131,'2026_01_13_073049_create_audit_trail_data_table',5);
+INSERT INTO migrations VALUES(132,'2026_01_14_093233_create_audit_trail_data_copy_table',5);
+INSERT INTO migrations VALUES(133,'2026_01_14_124813_change_columns_in_audit_trigger_variables_table',5);
+INSERT INTO migrations VALUES(134,'2026_01_15_004343_change_audit_trail_table',5);
+INSERT INTO migrations VALUES(135,'2026_01_27_023944_change_columns_in_event_dates_table',6);
+INSERT INTO migrations VALUES(136,'2026_01_27_032534_change_columns_in_event_dates_table',7);
