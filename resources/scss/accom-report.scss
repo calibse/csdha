@@ -249,8 +249,18 @@ $page-height: 11.69in;
 		}
 	}
 
-	.evaluation-summary .overall-score {
-		font-weight: bold;
+	.evaluation-summary {
+		.overall-score {
+			font-weight: bold;
+		}
+
+		th, td {
+			border: 0;
+		}
+
+		tbody th {
+			text-align: left;
+		}
 	}
 }
 

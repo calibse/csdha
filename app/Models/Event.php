@@ -27,9 +27,24 @@ class Event extends Model
 
     public function lastDate()
     {
+        if (config('database.default') === 'sqlite') {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then datetime("date" || ' ' || "end_time", '+1 day')
+    else datetime("date" || ' ' || "end_time")
+end
+SQL;
+        } else {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then concat("date", ' ', "end_time") + interval 1 day
+    else concat("date", ' ', "end_time")
+end
+SQL;
+        }
         return $this->dates()->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
-            ->orderBy('end_time', 'desc')->first();
+            ->orderBy('end_date desc')->first();
     }
 
     public function gpoa()
@@ -282,7 +297,7 @@ class Event extends Model
     public function compactDates()
     {
         $dates = $this->dates()->orderBy('date', 'asc')
-            ->orderBy('start_time', 'asc')->get();
+            ->orderBy('start_date', 'asc')->get();
         $newDates = [];
         $dateCount = count($dates);
         for ($i = 0; $i < $dateCount; ++$i) {
@@ -359,9 +374,24 @@ class Event extends Model
     public function isUpcoming(): Attribute
     {
         $now = Carbon::now();
+        if (config('database.default') === 'sqlite') {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then datetime("date" || ' ' || "end_time", '+1 day')
+    else datetime("date" || ' ' || "end_time")
+end
+SQL;
+        } else {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then concat("date", ' ', "end_time") + interval 1 day
+    else concat("date", ' ', "end_time")
+end
+SQL;
+        }
         $isUpcoming = $this->dates()
-            ->selectRaw("concat(\"date\", ' ', \"start_time\") > ? as value", [$now])
-            ->orderByRaw("concat(\"date\", ' ', \"end_time\") desc")->limit(1)
+            ->selectRaw("start_date > ? as value", [$now])
+            ->orderByRaw('end_date desc')->limit(1)
             ->value('value');
         return Attribute::make(
             get: fn () => $isUpcoming,
@@ -371,10 +401,13 @@ class Event extends Model
     public function isOngoing(): Attribute
     {
         $now = Carbon::now();
+        $startDate = "concat(\"date\", ' ', \"start_time\")";
+        $endDate = "concat(\"date\", ' ', \"end_time\")";
+        $ongoingQuery = <<<SQL
+? between start_date and end_date
+SQL;
         $isOngoing = $this->dates()
-            ->whereRaw("? between 
-            concat(\"date\", ' ', \"start_time\") and concat(\"date\", ' ', \"end_time\")", 
-            [$now])->exists();
+            ->whereRaw($ongoingQuery, [$now])->exists();
         return Attribute::make(
             get: fn () => $isOngoing,
         );
@@ -383,10 +416,25 @@ class Event extends Model
     public function isCompleted(): Attribute
     {
         $now = Carbon::now();
+        if (config('database.default') === 'sqlite') {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then datetime("date" || ' ' || "end_time", '+1 day')
+    else datetime("date" || ' ' || "end_time")
+end
+SQL;
+        } else {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then concat("date", ' ', "end_time") + interval 1 day
+    else concat("date", ' ', "end_time")
+end
+SQL;
+        }
         $isCompleted = $this->dates()
-            ->selectRaw("concat(\"date\", ' ', \"end_time\") < ? as is_completed", 
+            ->selectRaw("end_date < ? as is_completed", 
                 [$now])
-            ->orderByRaw("concat(\"date\", ' ', \"end_time\") desc")->limit(1)
+            ->orderByRaw('end_date desc')->limit(1)
             ->value('is_completed');
         return Attribute::make(
             get: fn () => $isCompleted,
@@ -459,15 +507,30 @@ class Event extends Model
             ->orWhereNull('latest_dates.date');
         })->orderBy('date', 'desc')->orderBy('end_time', 'desc');
 */
+        if (config('database.default') === 'sqlite') {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then datetime("date" || ' ' || "end_time", '+1 day')
+    else datetime("date" || ' ' || "end_time")
+end
+SQL;
+        } else {
+            $endDateColQuery = <<<SQL
+case
+    when "end_time" <= "start_time" then concat("date", ' ', "end_time") + interval 1 day
+    else concat("date", ' ', "end_time")
+end
+SQL;
+        }
         $latestDates = EventDate::select('event_id', 
-            DB::raw("max(concat(\"date\", ' ', \"end_time\")) as latest_date"))
+            DB::raw("max(end_date) as latest_date"))
             ->groupBy('event_id');
         $query->leftJoinSub($latestDates, 'latest_dates', function ($join) { 
             $join->on('events.id', '=', 'latest_dates.event_id'); 
         })->select('events.*')->distinct()->where(function ($query) {
             $query->whereRaw("latest_date < ?", [Carbon::now()])
             ->orWhereNull('latest_date');
-        })->orderBy('date', 'desc')->orderBy('end_time', 'desc');
+        })->orderBy('end_date desc');
     }
 
     #[Scope]
@@ -476,35 +539,42 @@ class Event extends Model
         $nextDays = 5;
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')->distinct()
-            ->whereRaw("concat(\"date\", ' ', \"start_time\") > ?", [Carbon::now()])
-            ->orderBy('date', 'desc')->orderBy('start_time', 'desc');
+            ->whereRaw("start_date > ?", [Carbon::now()])
+            ->orderBy('start_date', 'desc');
     }
 
     #[Scope]
     protected function ongoing(Builder $query): void
     {
+        $now = Carbon::now();
+        $startDate = "concat(\"date\", ' ', \"start_time\")";
+        $endDate = "concat(\"date\", ' ', \"end_time\")";
+        $ongoingQuery = <<<SQL
+? between start_date and end_date
+SQL;
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->whereRaw("? between concat(\"date\", ' ', \"start_time\") and
-                concat(\"date\", ' ', \"end_time\")", [Carbon::now()]);
+            ->whereRaw($ongoingQuery, [$now]);
     }
 
     #[Scope]
     protected function ongoingAndUpcoming(Builder $query): void
     {
         $now = Carbon::now();
+        $startDate = "concat(\"date\", ' ', \"start_time\")";
+        $endDate = "concat(\"date\", ' ', \"end_time\")";
+        $ongoingQuery = <<<SQL
+? between start_date and end_date
+SQL;
         $query->join('event_dates', 'event_dates.event_id', '=', 'events.id')
             ->select('events.*')
             ->distinct()
-            ->where(function ($query) use ($now) {
-                $query->whereRaw("concat(\"date\", ' ', \"start_time\") > ?", [$now])
-                    ->orWhereRaw("? between concat(\"date\", ' ', \"start_time\") and
-                        concat(\"date\", ' ', \"end_time\")", 
-                        [$now]);
+            ->where(function ($query) use ($now, $ongoingQuery) {
+                $query->whereRaw("start_date > ?", [$now])
+                    ->orWhereRaw($ongoingQuery, [$now]);
             })
-            ->orderByRaw("(? between concat(\"date\", ' ', \"start_time\") and
-                concat(\"date\", ' ', \"end_time\")) desc", [$now])
-            ->orderBy('date', 'asc')->orderBy('start_time', 'desc');
+            ->orderByRaw($ongoingQuery . ' desc', [$now])
+            ->orderBy('start_date', 'desc');
     }
 }

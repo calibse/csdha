@@ -10,15 +10,11 @@
 	@vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
-	<header>
-		<hgroup>
-			<p class="main-brand org-name">
-				<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
-				<span class="name">Computer Society</span>
-			</p>
-			<h1 class="title of-form">Event Registration</h1>
-		</hgroup>
-	</header>
+	<p class="main-brand org-name">
+		<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
+		<span class="name">Computer Society</span>
+	</p>
+	<h1 class="title of-form">Event Registration</h1>
 	<div class="sections">
 		<div class="intro section">
 		@if ($event->banner_filepath)

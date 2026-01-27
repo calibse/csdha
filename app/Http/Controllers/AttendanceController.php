@@ -40,8 +40,6 @@ class AttendanceController extends Controller implements HasMiddleware
     public function store(StoreAttendanceRequest $request,
             EventDate $eventDate)
     {
-        $timezone = $request->timezone ?? 'UTC';
-        config(['timezone' => $timezone]);
         $regis = EventRegistration::where('token', $request->token)
             ->whereBelongsTo($eventDate->event)->first();
         $event = $eventDate->event;

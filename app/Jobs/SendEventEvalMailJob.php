@@ -16,8 +16,8 @@ class SendEventEvalMailJob implements ShouldQueue, ShouldBeUnique
     use Batchable, Queueable;
 
     public function __construct(
-            public EventStudent $attendee,
-            public EventDate $eventDate,
+            public int $attendeeId,
+            public int $eventDateId,
             public string $url
         )
     {
@@ -26,11 +26,13 @@ class SendEventEvalMailJob implements ShouldQueue, ShouldBeUnique
 
     public function handle(): void
     {
-        $eventDate = $this->eventDate;
+        $attendee = EventStudent::find($attendeeId);
+        $eventDate = EventDate::find($eventDateId);
         if (!$eventDate) $this->batch()->cancel();
+        if (!$attendee) return;
         $event = $this->eventDate->event;
         if (!$event->accept_evaluation) $this->batch()->cancel();
-        $attendee = $this->eventDate->attendees()->find($this->attendee->id);
+        $attendee = $this->eventDate->attendees()->find($attendee->id);
         if ($attendee->eventAttendee->eval_mail_sent) return;
         $url = $this->url;
         Mail::to($attendee->email)->send(new EventEvaluationMail(
@@ -41,6 +43,6 @@ class SendEventEvalMailJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId(): string
     {
-        return "{$this->eventDate->id}_{$this->attendee->id}";
+        return "{$this->eventDateId}_{$this->attendeeId}";
     }
 }

@@ -10,6 +10,7 @@
 	@vite(['resources/scss/app.scss'])
 </head>
 <body {{ $attributes }}>
+@if ($isPreview)
 	<div class="form-preview-back-link">
 		<div class="content-block">
 			<a class="back-link" href="{{ route('events.show', ['event' => $event->public_id]) }}">
@@ -17,17 +18,14 @@
 			</a>
 		</div>
 	</div>
-	<header>
-		<hgroup>
-			<p class="main-brand org-name">
-				<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
-				<span class="name">Computer Society</span>
-			</p>
-			<h1 class="title of-form">Event Evaluation</h1>
-		</hgroup>
-	</header>
+@endif
+	<p class="main-brand org-name">
+		<img class="logo" src="{{ asset('storage/organization-logo.png') . '?id=' . cache('organization_logo_id') }}">
+		<span class="name">Computer Society</span>
+	</p>
+	<h1 class="title of-form">Event Evaluation</h1>
 	<div class="sections">
-		<section class="intro section">
+		<div class="intro section">
 		@if ($event->banner_filepath)
 			<div class="banner">
 				<div class="content-block">
@@ -39,7 +37,7 @@
 				<h2 class="title">Introduction</h2>
 				<pre>{{ $event->evalForm?->introduction }}</pre>
 			</div>
-		</section>
+		</div>
 @php
 $steps = [
     [
@@ -67,7 +65,7 @@ $steps = [
 			{{ $slot }}
 		</main>
 		@else
-		<section class="section content">
+		<div class="section content">
 			<h2 class="title"><a
 			@if ($thisStep <= $completeSteps)
 				href="{{ $routes[$thisStep] }}"
@@ -76,7 +74,7 @@ $steps = [
 		@if ($thisStep !== (count($steps) - 1))
 			<p class="status">{{ ($thisStep < $completeSteps || $step === (count($steps) - 1)) ? 'Complete' : 'Incomplete' }}</p>
 		@endif
-		</section>
+		</div>
 		@endif
 	@endforeach
 	</div>

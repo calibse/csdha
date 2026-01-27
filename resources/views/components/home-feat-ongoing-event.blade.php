@@ -11,7 +11,7 @@
 		</p>
         @if ($model->dates()->exists())
 		<p class="details">
-			{{ $model->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->full_date }}
+			{{ $model->dates()->ongoingDates()->orderBy('date', 'desc')->orderBy('start_time')->first()->full_date }}
 		</p>
 	@endif
 	</div>

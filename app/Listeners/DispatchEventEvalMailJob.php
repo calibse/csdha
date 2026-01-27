@@ -20,11 +20,9 @@ class DispatchEventEvalMailJob
         $event = $event->event;
         if (!$event->accept_evaluation) return;
         foreach ($event->dates as $date) {
-            $delay = Carbon::parse(
-                "{$date->date} {$date->end_time}",
-                $event->timezone);
+            $delay = $date->end_date->setTimezone($event->timezone);
             // $delay = 0;
-            PrepareEventEvalMailJob::dispatch($date)->delay($delay);
+            PrepareEventEvalMailJob::dispatch($date->id)->delay($delay);
         }
     }
 }

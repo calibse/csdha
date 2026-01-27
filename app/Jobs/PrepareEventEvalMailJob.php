@@ -19,20 +19,18 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
 
-    public function __construct(public EventDate $eventDate)
+    public function __construct(public int $eventDateId)
     {
         //
     }
 
     public function handle(): void
     {
-        $eventDate = $this->eventDate;
+        $eventDate = EventDate::find($this->eventDateId);
         if (!$eventDate) return;
         $event = $eventDate->event;
         if (!$event->accept_evaluation) return;
-        $date = Carbon::parse(
-            "{$eventDate->date} {$eventDate->end_time}",
-            $event->timezone);
+        $date = $eventDate->end_date->setTimezone($event->timezone);
         $delayHours = $event->evaluation_delay_hours;
         $delayDate = $date->copy()->addHours($delayHours);
         $eventPassed = $date->copy()->diffInHours(now($event->timezone), 
@@ -46,11 +44,11 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
                 'event' => $event->public_id,
                 'token' => $token
             ]);
-            $jobs[] = (new SendEventEvalMailJob($attendee, $eventDate, $url))
+            $jobs[] = (new SendEventEvalMailJob($attendee->id, $eventDate->id, $url))
                 ->delay($eventPassed ? 0 : $delayDate);
         }
         $batchName = "event_eval_mail_{$event->id}_{$eventDate->date}_" .
-            "{$eventDate->start_time}_{$eventDate->end_time}";
+            "{$eventDate->start_date->toTimeString()}_{$eventDate->end_date->toTimeString()}";
         $batch = self::findBatch($batchName);
         if ($batch && $jobs) {
             $batch->add($jobs);
@@ -61,7 +59,7 @@ class PrepareEventEvalMailJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId(): string
     {
-        return $this->eventDate->id;
+        return $this->eventDateId;
     }
 
     private static function createToken(): string

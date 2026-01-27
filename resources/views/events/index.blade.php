@@ -34,7 +34,7 @@
 					@if (!$event->dates()->exists())
 						<em>No date.</em>
 					@elseif ($event->is_ongoing)
-						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
+						{{ $event->dates()->ongoingDates()->orderBy('date', 'desc')->orderBy('start_time')->first()->dateFmt }}
 					@elseif ($event->is_upcoming)
 						{{ $event->dates()->upcoming()->first()->dateFmt }}
 					@else
@@ -48,7 +48,7 @@
 					@if (!$event->dates()->exists())
 						<em>No time.</em>
 					@elseif ($event->is_ongoing)
-						{{ $event->dates()->ongoing()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
+						{{ $event->dates()->ongoingDates()->orderBy('date', 'desc')->orderBy('start_time')->first()->fullTime }}
 					@elseif ($event->is_upcoming)
 						{{ $event->dates()->upcoming()->first()->fullTime }}
 					@else
