@@ -43,7 +43,7 @@ end
 SQL;
         }
         return $this->dates()->orderBy('date', 'desc')
-            ->orderBy('start_time', 'desc')
+            ->orderBy('start_date', 'desc')
             ->orderBy('end_date', 'desc')->first();
     }
 
@@ -530,7 +530,7 @@ SQL;
         })->select('events.*')->distinct()->where(function ($query) {
             $query->whereRaw("latest_date < ?", [Carbon::now()])
             ->orWhereNull('latest_date');
-        })->orderBy('end_date', 'desc');
+        })->orderBy('latest_date', 'desc');
     }
 
     #[Scope]
