@@ -14,7 +14,7 @@ class EventDateRangeSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::update('update event_dates set start_date = concat(date, " ", start_time)
-            , end_date = concat(date, " ", end_time)');
+        DB::update('update event_dates set start_date = concat(date, ' ', start_time)
+            , end_date = concat(date, ' ', end_time)');
     }
 }
