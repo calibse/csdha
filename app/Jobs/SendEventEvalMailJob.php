@@ -26,13 +26,13 @@ class SendEventEvalMailJob implements ShouldQueue, ShouldBeUnique
 
     public function handle(): void
     {
-        $attendee = EventStudent::find($attendeeId);
-        $eventDate = EventDate::find($eventDateId);
+        $attendee = EventStudent::find($this->attendeeId);
+        $eventDate = EventDate::find($this->eventDateId);
         if (!$eventDate) $this->batch()->cancel();
         if (!$attendee) return;
-        $event = $this->eventDate->event;
+        $event = $eventDate->event;
         if (!$event->accept_evaluation) $this->batch()->cancel();
-        $attendee = $this->eventDate->attendees()->find($attendee->id);
+        $attendee = $eventDate->attendees()->find($attendee->id);
         if ($attendee->eventAttendee->eval_mail_sent) return;
         $url = $this->url;
         Mail::to($attendee->email)->send(new EventEvaluationMail(

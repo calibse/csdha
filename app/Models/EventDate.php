@@ -29,7 +29,7 @@ class EventDate extends Model
 
     protected static function booted(): void
     {
-        static::saving(function (EventDate $date) {
+        static::creating(function (EventDate $date) {
             $timezone = $date->event->timezone;
             $start = Carbon::parse($date->getAttributeFromArray('date')
                 . ' ' . $date->getAttributeFromArray('start_time'), $timezone)
