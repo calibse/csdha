@@ -36,7 +36,7 @@ class Gpoa extends Model
         foreach ($allEvents as $event) {
             $events[] = $event->eventData();
         }
-        $lastAccomReport = $eventQuery->reorder('dates_date', 'desc')->first()->accomReport;
+        $lastAccomReport = $eventQuery->reorder('dates_date', 'desc')->first()?->accomReport;
         return [
             'events' => $events,
             'editors' => User::withPerm('accomplishment-reports.edit')
