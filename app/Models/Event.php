@@ -44,7 +44,7 @@ SQL;
         }
         return $this->dates()->orderBy('date', 'desc')
             ->orderBy('start_time', 'desc')
-            ->orderBy('end_date desc')->first();
+            ->orderBy('end_date', 'desc')->first();
     }
 
     public function gpoa()
@@ -391,7 +391,7 @@ SQL;
         }
         $isUpcoming = $this->dates()
             ->selectRaw("start_date > ? as value", [$now])
-            ->orderByRaw('end_date desc')->limit(1)
+            ->orderBy('end_date', 'desc')->limit(1)
             ->value('value');
         return Attribute::make(
             get: fn () => $isUpcoming,
@@ -434,7 +434,7 @@ SQL;
         $isCompleted = $this->dates()
             ->selectRaw("end_date < ? as is_completed", 
                 [$now])
-            ->orderByRaw('end_date desc')->limit(1)
+            ->orderBy('end_date', 'desc')->limit(1)
             ->value('is_completed');
         return Attribute::make(
             get: fn () => $isCompleted,
@@ -530,7 +530,7 @@ SQL;
         })->select('events.*')->distinct()->where(function ($query) {
             $query->whereRaw("latest_date < ?", [Carbon::now()])
             ->orWhereNull('latest_date');
-        })->orderBy('end_date desc');
+        })->orderBy('end_date', 'desc');
     }
 
     #[Scope]
