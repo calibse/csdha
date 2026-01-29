@@ -63,6 +63,8 @@ function addEvents(elementActions) {
 	}
 }
 
+/*
+
 function setActions() {
 	var actionDependencies;
 
@@ -75,10 +77,13 @@ function setActions() {
 	runActions(actionDependencies);
 }
 
+*/
+
 function setTimezoneActions() {
-	if (window["Intl"] !== undefined) {
+	if (window["Intl"] !== undefined 
+		&& Intl.DateTimeFormat().resolvedOptions().timeZone != undefined) {
 		timezone.setTimezoneFromIntl();
-	} else if (window["Date"] !== undefined) {
+	} else {
 		timezone.setTimezoneFromDate();
 	}
 }
@@ -302,7 +307,7 @@ function setBackLink(e) {
 }
 
 function browseFiles(e) {
-	var el, fileSizeLimit, multiple, message, files;
+	var el, fileSizeLimit, multiple, message, files, invalid;
 
 	el = e.currentTarget;
 	el.setCustomValidity("");
@@ -310,24 +315,29 @@ function browseFiles(e) {
 	multiple = el.hasAttribute("multiple");
 	message = "File too large! Max size is 2 MB.";
 	files = el.files;
+	invalid = false;
 	if (multiple) {
 		for (var i = 0; i < files.length; i++) {
 			if (files[i].size > fileSizeLimit) {
-				el.setCustomValidity(message);
-				el.reportValidity();
+				invalid = true;
 				break;
 			}
 		}
-	} else {
-		if (files[0].size > fileSizeLimit) {
+		if (invalid)
 			el.setCustomValidity(message);
-			el.reportValidity();
-		}
+		else
+			el.setCustomValidity("");
+	} else {
+		if (files[0].size > fileSizeLimit)
+			el.setCustomValidity(message);
+		else 
+			el.setCustomValidity("");
 	}
 }
 
+home.streamHome();
+home.streamHomeInfos();
 setTimezoneActions();
-setActions();
 setEvents();
 dialog.openWindow(true);
 

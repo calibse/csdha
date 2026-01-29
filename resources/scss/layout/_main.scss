@@ -196,12 +196,13 @@ $one-d-table-width: 3em + 12em + size.$text-width;
 			height: 3.3em;
 			margin-right: .5em;
 			overflow: hidden;
-			clip-path: circle(50%);
+			border-radius: 50%;
+			//clip-path: circle(50%);
 
 			img {
 				display: block;
 				height: 100%;
-				width: string.unquote("min(100%)");
+				width: 100%;
 				object-fit: cover;
 				margin: 0 auto;
 			}

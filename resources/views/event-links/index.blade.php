@@ -42,7 +42,7 @@
 		</p>
 		<p>
 			<label for="url">URL</label>
-			<input required maxlength="2000" id="url" name="url" value="{{ old('url') }}">
+			<input required type="url" pattern="https?://.+\..+" placeholder="https://example.com" maxlength="2000" id="url" name="url" value="{{ old('url') }}">
 		</p>
 		<p class="form-submit">
 			<button type="button" id="event-link_create_close">Cancel</button>

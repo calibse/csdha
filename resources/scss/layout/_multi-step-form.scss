@@ -144,7 +144,7 @@
 		img {
 			width: 100%;
 			display: block;
-			height: string.unquote("min(100%)");
+			height: 100%;
 			object-fit: cover;
 		}
 	}

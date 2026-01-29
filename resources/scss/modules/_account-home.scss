@@ -127,6 +127,7 @@ $featbox-duration: 15s;
 		margin-left: .5em;
 		border: solid size.$line-width #888888;
 		border-radius: 100em;
+		cursor: default;
 
 		&:first-child {
 			margin-left: 0;
@@ -265,6 +266,7 @@ $featbox-duration: 15s;
 			display: inline-block;
 			width: 100%;
 			height: 100%;
+			cursor: default;
 		}
 	}
 	

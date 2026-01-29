@@ -9,14 +9,14 @@
 				{{--
 					<input {{ $hasLastJob && !$jobDone ? 'disabled' : null }} type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
 				--}}
-					<input type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
+					<input required placeholder="yyyy-mm-dd" pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $startDate }}">
 				</p>
 				<p>
 					<label>End date</label>
 				{{--
 					<input {{ $hasLastJob && !$jobDone ? 'disabled' : null }} type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
 				--}}
-					<input type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
+					<input placeholder="yyyy-mm-dd" pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $endDate }}">
 				</p>
 				<p>
 				{{--

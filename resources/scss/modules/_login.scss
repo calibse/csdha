@@ -28,11 +28,11 @@ $window-width: 21em;
 			radial-gradient(circle at top right, $primary 20%, $dark 60%),
 			radial-gradient(circle at bottom left, $dark 20%, $dark 50%);
 		background-blend-mode: saturation;
-		border: .06em solid lab(100% 0 0 / 0.2);
+		border: .06em solid rgb(255, 255, 255, .2);
 
 		color: color.$header-fg;
-		min-height: 100vh;
 		min-height: 100%;
+		min-height: 100vh;
 	}
 
 	a {
@@ -85,9 +85,9 @@ $window-width: 21em;
 	padding-bottom: 1em;
 
 	.alert {
-		background-color: lab(100% 0 0 / 0.15);
+		background-color: rgb(255, 255, 255, .15);
 		color: color.$foreground;
-		color: lab(100% 0 0);
+		color: rgb(255, 255, 255);
 	}
 
 	form {
@@ -96,16 +96,16 @@ $window-width: 21em;
 		}
 
 		input, button {
-			background-color: lab(100% 0 0 / 0.15);
-			color: lab(100% 0 0);
+            background-color: rgb(255, 255, 255, .15);
+            color: rgb(255, 255, 255);
 		}
 
 		button:hover {
-			background-color: lab(100% 0 0 / 0.3);
+            background-color: rgb(255, 255, 255, .3);
 		}
 
 		button:active {
-			background-color: lab(100% 0 0 / 0.2);
+            background-color: rgb(255, 255, 255, .2);
 		}
 	}
 

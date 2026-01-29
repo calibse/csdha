@@ -130,4 +130,3 @@ function activateAttendanceRecorder() {
 }
 
 activateAttendanceRecorder();
-

@@ -12,11 +12,11 @@
 		</p>
 		<p>
 			<label>Start Date</label>
-			<input required placeholder="yyyy-mm-dd" type="date" name="start_date" value="{{ $errors->any() ? old('start_date') : $activity?->start_date }}">
+			<input required placeholder="yyyy-mm-dd" type="date" pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" name="start_date" value="{{ $errors->any() ? old('start_date') : $activity?->start_date }}">
 		</p>
 		<p>
 			<label>End Date (optional)</label>
-			<input placeholder="yyyy-mm-dd" type="date" name="end_date" value="{{ $errors->any() ? old('end_date') : $activity?->end_date }}">
+			<input placeholder="yyyy-mm-dd" type="date" pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" name="end_date" value="{{ $errors->any() ? old('end_date') : $activity?->end_date }}">
 		</p>
 		<p>
 			<label>Objectives</label>

@@ -35,15 +35,15 @@ $watten = $date->has_attendees;
 		<div class="inline">
 			<p>
 				<label>Date</label>
-				<input required pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" type="date" name="date" value="{{ old('date') }}">
+				<input required placeholder="yyyy-mm-dd" pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$" type="date" name="date" value="{{ old('date') }}">
 			</p>
 			<p>
 				<label>Start time</label>
-				<input required pattern="^([01]\d|2[0-3]):([0-5]\d)$" type="time" name="start_time" value="{{ old('start_time') }}">
+				<input required placeholder="HH:mm" pattern="^([01]\d|2[0-3]):([0-5]\d)$" type="time" name="start_time" value="{{ old('start_time') }}">
 			</p>
 			<p class="last-block">
 				<label>End time</label>
-				<input required pattern="^([01]\d|2[0-3]):([0-5]\d)$" type="time" name="end_time" value="{{ old('end_time') }}">
+				<input required placeholder="HH:mm" pattern="^([01]\d|2[0-3]):([0-5]\d)$" type="time" name="end_time" value="{{ old('end_time') }}">
 			</p>
 		</div>
 		<p class="button-block">
