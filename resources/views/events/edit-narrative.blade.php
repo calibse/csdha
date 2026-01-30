@@ -1,6 +1,6 @@
 <x-layout.user content-view class="events form" :$backRoute title="Edit event narrative">
 <div class="article">
-        <x-alert error-bag="event-narrative_edit" />
+	<x-alert error-bag="event-narrative_edit" />
 	<form method="post" action="{{ $formAction }}">
 	@csrf
 	@method('PUT')

@@ -157,7 +157,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>Event Head</th>
+					<th>Event Head <span class="edit-link">[ <a href="{{ $eventHeadsRoute }}">Edit</a> ]</span></th>
 					<td>
 						<ul>
 						@foreach ($eventHeads as $eventHead)
@@ -168,7 +168,7 @@
 				</tr>
 			@if ($coheads->isNotEmpty())
 				<tr>
-					<th>Co-head</th>
+					<th>Co-head <span class="edit-link">[ <a href="{{ $coheadsRoute }}">Edit</a> ]</span></th>
 					<td>
 						<ul>
 						@foreach ($coheads as $cohead)

@@ -28,6 +28,8 @@ use App\Http\Requests\UpdateEventNarrativeRequest;
 use App\Http\Requests\UpdateEventDescriptionRequest;
 use App\Http\Requests\UpdateEventVenueRequest;
 use App\Http\Requests\UpdateEventBannerRequest;
+use App\Http\Requests\UpdateEventHeadsRequest;
+use App\Http\Requests\UpdateEventCoheadsRequest;
 use App\Services\Format;
 use App\Mail\EventEvaluation as EventEvaluationMail;
 use Illuminate\Support\Facades\Hash;
@@ -219,6 +221,18 @@ class EventController extends Controller implements HasMiddleware
             ]),
             'evalPreviewRoute' => route(
                 'events.evaluations-preview.consent.edit', [
+                 'event' => $event->public_id
+            ]),
+            'eventHeadsRoute' => route('events.event-heads.edit', [
+                 'event' => $event->public_id
+            ]),
+            'coheadsRoute' => route('events.coheads.edit', [
+                 'event' => $event->public_id
+            ]),
+            'eventHeadsFormAction' => route('events.event-heads.update', [
+                 'event' => $event->public_id
+            ]),
+            'coheadsFormAction' => route('events.event-heads.update', [
                  'event' => $event->public_id
             ]),
         ]);
@@ -851,6 +865,111 @@ class EventController extends Controller implements HasMiddleware
         EventUpdated::dispatch($event);
         return redirect()->back()->with('status',
             'Evaluation comments updated.');
+    }
+
+    public function editEventHeads(Event $event)
+    {
+        $activity = $event->gpoaActivity;
+        $allAreEventHeads = $activity->all_are_event_heads;
+        $selectedEventHeads = [];
+        $eventHeads = User::has('position')->notAuthUser()->
+                notOfPosition(['adviser'])->get();
+        $eventHeadGroups = ['0'];
+        if (session('errors')?->any()) {
+            $selectedEventHeads = User::whereIn('public_id', old('event_heads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $eventHeads = User::whereNotIn('public_id', old('event_heads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+        } elseif (!$allAreEventHeads) {
+            $selectedEventHeads = $activity->eventHeadsOnly()->notAuthUser()
+                ->get();
+            $eventHeads = User::whereDoesntHave('gpoaActivities', 
+                function ($query) use ($activity) {
+                $query->where('gpoa_activities.id', $activity->id)
+                    ->where('gpoa_activity_event_heads.role', 'event head');
+            })->notAuthUser()->notOfPosition('adviser')->get();
+        }
+        return view('events.edit-event-heads', [
+            'event' => $event,
+            'eventHeads' => $eventHeads,
+            'selectedEventHeads' => $selectedEventHeads,
+            'officers' => User::has('position')->notAuthUser()->
+                notOfPosition(['adviser'])->get(),
+            'activity' => $activity,
+            'authUserIsEventHead' => $activity->eventHeadsOnly()
+                ->whereKey(auth()->user()->id)->exists(),
+            'authUserIsCohead' => $activity->coheads()
+                ->whereKey(auth()->user()->id)->exists(),
+            'allAreEventHeads' => $activity->all_are_event_heads,
+            'backRoute' => route('events.show', [
+                'event' => $event->public_id
+            ]),
+            'formAction' => route('events.event-heads.update', [
+                'event' => $event->public_id
+            ]),
+        ]);
+    }
+
+    public function updateEventHeads(UpdateEventHeadsRequest $request, 
+        Event $event)
+    {
+        return redirect()->route('events.show', [
+            'event' => $event->public_id
+        ]);
+    }
+
+    public function editCoheads(Event $event)
+    {
+        $activity = $event->gpoaActivity;
+        $allAreEventHeads = $activity->all_are_event_heads;
+        $selectedCoheads = [];
+        $coheads = User::has('position')->notAuthUser()->
+                notOfPosition(['adviser'])->get();
+        if (session('errors')?->any()) { 
+            $selectedCoheads = User::whereIn('public_id', old('coheads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+            $coheads = User::whereNotIn('public_id', old('coheads') 
+                ?? [])->has('position')->notAuthUser()
+                ->notOfPosition('adviser')->get();
+        } else {
+            $selectedCoheads = $activity->coheads()->notAuthUser()->get();
+            $coheads = User::whereDoesntHave('gpoaActivities', 
+                function ($query) use ($activity) {
+                $query->where('gpoa_activities.id', $activity->id)
+                    ->where('gpoa_activity_event_heads.role', 'co-head');
+            })->notAuthUser()->notOfPosition('adviser')->get();
+        }
+        return view('events.edit-coheads', [
+            'event' => $event,
+            'event' => $event,
+            'coheads' => $coheads,
+            'selectedCoheads' => $selectedCoheads,
+            'officers' => User::has('position')->notAuthUser()->
+                notOfPosition(['adviser'])->get(),
+            'activity' => $activity,
+            'authUserIsEventHead' => $activity->eventHeadsOnly()
+                ->whereKey(auth()->user()->id)->exists(),
+            'authUserIsCohead' => $activity->coheads()
+                ->whereKey(auth()->user()->id)->exists(),
+            'allAreEventHeads' => $activity->all_are_event_heads,
+            'backRoute' => route('events.show', [
+                'event' => $event->public_id
+            ]),
+            'formAction' => route('events.coheads.update', [
+                'event' => $event->public_id
+            ]),
+        ]);
+    }
+
+    public function updateCoheads(UpdateEventCoheadsRequest $request, 
+        Event $event)
+    {
+        return redirect()->route('events.show', [
+            'event' => $event->public_id
+        ]);
     }
 
     private static function getCommentOpt($comments)

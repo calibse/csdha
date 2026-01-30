@@ -700,7 +700,24 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                     Route::get('/banner.html', 'editBanner')->name('edit');
 
                     Route::put('/banner.php', 'updateBanner')->name('update');
+                });
 
+                Route::name('event-heads.')->group(function () {
+
+                    Route::get('/event-heads.html', 'editEventHeads')
+                        ->name('edit');
+
+                    Route::post('/event-heads.php', 'updateEventHeads')
+                        ->name('update');
+                });
+
+                Route::name('coheads.')->group(function () {
+
+                    Route::get('/coheads.html', 'editCoheads')
+                        ->name('edit');
+
+                    Route::post('/coheads.php', 'updateCoheads')
+                        ->name('update');
                 });
             });
 
