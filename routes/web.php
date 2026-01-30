@@ -707,7 +707,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                     Route::get('/event-heads.html', 'editEventHeads')
                         ->name('edit');
 
-                    Route::post('/event-heads.php', 'updateEventHeads')
+                    Route::put('/event-heads.php', 'updateEventHeads')
                         ->name('update');
                 });
 
@@ -716,7 +716,7 @@ Route::domain(config('app.user_domain'))->middleware('auth')
                     Route::get('/coheads.html', 'editCoheads')
                         ->name('edit');
 
-                    Route::post('/coheads.php', 'updateCoheads')
+                    Route::put('/coheads.php', 'updateCoheads')
                         ->name('update');
                 });
             });

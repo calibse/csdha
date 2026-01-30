@@ -16,7 +16,9 @@
 			</select>
 		</p>
 		<p class="form-submit">
+			<button type="reset">Reset</button>
 			<button>Update</button>
 		</p>
+	</form>
 </div>
 </x-layout>

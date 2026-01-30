@@ -7,14 +7,14 @@
 		<p>
 			<label>Event Head</label>
 			<select multiple size="5" name="event_heads[]">
-			@if (!$activity || ($activity && $authUserIsEventHead))
+			@if ($authUserIsEventHead))
 				<option disabled value="">{{ auth()->user()->full_name }} (Added)</option>
 			@endif
 				<option value="0" 
 				@if ($errors->any())
 					{{ in_array('0', old('event_heads') ?? []) ? 'selected' : null }}
 				@else
-					{{ $activity && $allAreEventHeads ? 'selected' : null }}
+					{{ $allAreEventHeads ? 'selected' : null }}
 				@endif
 				>
 					All CSCB Officers
@@ -28,6 +28,7 @@
 			</select>
 		</p>
 		<p class="form-submit">
+			<button type="reset">Reset</button>
 			<button>Update</button>
 		</p>
 	</form>

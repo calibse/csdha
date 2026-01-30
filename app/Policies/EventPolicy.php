@@ -276,6 +276,22 @@ class EventPolicy
         return Response::allow();
     }
 
+    public function updateEventHeads(User $user, Event $event): Response
+    {
+        $active = $event->gpoa()->active;
+        if (!$active) return Response::deny();
+        if (!self::canEdit($user, $event)) {
+            return Response::deny();
+        }
+        $activity = $event->gpoaActivity;
+        $eventHead = $activity->eventHeadsOnly()?->whereKey($user->id)
+            ->exists();
+        $president = $user->position_name === 'president';
+        $adviser = $user->position_name === 'adviser';
+        return ($eventHead || $president || $adviser)
+            ? Response::allow() : Response::deny();
+    }
+
     private static function canEdit(User $user, ?Event $event = null): bool
     {
         $canView = $user->hasPerm('events.view');

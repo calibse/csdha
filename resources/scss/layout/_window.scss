@@ -101,6 +101,16 @@ $window-width: size.$text-width + .94em * 2;
 	padding: size.$edge-padding .94em;
 	background-color: color.$background;
 	color: color.$foreground;
+
+    form > p:first-of-type,
+    > p:first-of-type {
+        margin-top: 0;
+    }
+
+    form > p.form-submit:first-of-type,
+    form > p.button-block:first-of-type {
+        margin-top: 1em;
+    }
 }
 
 .window-content .form-submit,

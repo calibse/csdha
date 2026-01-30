@@ -90,6 +90,12 @@ class EventController extends Controller implements HasMiddleware
             new Middleware('auth.event:recordAttendance,event', only: [
                 'showAttendance',
             ]),
+            new Middleware('auth.event:updateEventHeads,event', only: [
+                'editEventHeads',
+                'updateEventHeads',
+                'editCoheads',
+                'updateCoheads',
+            ]),
         ];
     }
 
@@ -160,9 +166,21 @@ class EventController extends Controller implements HasMiddleware
                 'status' => 'completed',
             ]);
         }
+        $activity = $event->gpoaActivity;
+        $options = self::getEventHeadsOpt($event);
+        $options += self::getCoheadsOpt($event);
         return view('events.show', [
             'event' => $event,
             'activity' => $event->gpoaActivity,
+            'eventHeads' => $options['eventHeads'],
+            'selectedEventHeads' => $options['selectedEventHeads'],
+            'coheads' => $options['coheads'],
+            'selectedCoheads' => $options['selectedCoheads'],
+            'authUserIsEventHead' => $activity->eventHeadsOnly()
+                ->whereKey(auth()->user()->id)->exists(),
+            'authUserIsCohead' => $activity->coheads()
+                ->whereKey(auth()->user()->id)->exists(),
+            'allAreEventHeads' => $activity->all_are_event_heads,
             'editRoute' => route('events.edit', ['event' => $event->public_id]),
             'regisFormRoute' => route('events.registrations.consent.edit', [
                 'event' => $event->public_id
@@ -179,8 +197,8 @@ class EventController extends Controller implements HasMiddleware
             'attendanceRoute' => route('events.attendance.show', [
                 'event' => $event->public_id
             ]),
-            'eventHeads' => $event->gpoaActivity->eventHeadsOnly()->get(),
-            'coheads' => $event->gpoaActivity->coheads()->get(),
+            'eventHeadList' => $event->gpoaActivity->eventHeadsOnly()->get(),
+            'coheadList' => $event->gpoaActivity->coheads()->get(),
             'backRoute' => $backRoute,
             'genArRoute' => route('accom-reports.show', [
                 'event' => $event->public_id,
@@ -232,7 +250,7 @@ class EventController extends Controller implements HasMiddleware
             'eventHeadsFormAction' => route('events.event-heads.update', [
                  'event' => $event->public_id
             ]),
-            'coheadsFormAction' => route('events.event-heads.update', [
+            'coheadsFormAction' => route('events.coheads.update', [
                  'event' => $event->public_id
             ]),
         ]);
@@ -870,6 +888,111 @@ class EventController extends Controller implements HasMiddleware
     public function editEventHeads(Event $event)
     {
         $activity = $event->gpoaActivity;
+        $options = self::getEventHeadsOpt($event);
+        return view('events.edit-event-heads', [
+            'event' => $event,
+            'eventHeads' => $options['eventHeads'],
+            'selectedEventHeads' => $options['selectedEventHeads'],
+            'authUserIsEventHead' => $activity->eventHeadsOnly()
+                ->whereKey(auth()->user()->id)->exists(),
+            'authUserIsCohead' => $activity->coheads()
+                ->whereKey(auth()->user()->id)->exists(),
+            'allAreEventHeads' => $activity->all_are_event_heads,
+            'backRoute' => route('events.show', [
+                'event' => $event->public_id
+            ]),
+            'formAction' => route('events.event-heads.update', [
+                'event' => $event->public_id
+            ]),
+        ]);
+    }
+
+    public function updateEventHeads(UpdateEventHeadsRequest $request, 
+        Event $event)
+    {
+        $activity = $event->gpoaActivity;
+        if ($request->event_heads && in_array('0', $request->event_heads)) {
+            $activity->eventHeads()->syncWithPivotValues(User::has('position')
+                ->notOfPosition(['adviser'])->get(), ['role' => 'event head']);
+        } elseif ($request->event_heads) {
+            $coheads = $activity->coheads()->pluck('users.id')->toArray();
+            $eventHeads = User::whereIn('public_id', array_diff(
+                $request->event_heads, $coheads))
+                ->pluck('id')->toArray();
+            $activity->eventheads()->syncWithPivotValues([auth()->user()->id],
+                ['role' => 'event head']);
+            $activity->eventHeads()->syncWithPivotValues($coheads,
+                ['role' => 'co-head'], false);
+            $activity->eventHeads()->syncWithPivotValues($eventHeads,
+                ['role' => 'event head'], false);
+        } else {
+            $coheads = $activity->coheads()->pluck('users.id')->toArray();
+            $activity->eventheads()->syncWithPivotValues([auth()->user()],
+                ['role' => 'event head']);
+            $activity->eventHeads()->syncWithPivotValues($coheads,
+                ['role' => 'co-head'], false);
+        }
+        $activity->save();
+        return redirect()->route('events.show', [
+            'event' => $event->public_id
+        ]);
+    }
+
+    public function editCoheads(Event $event)
+    {
+        $activity = $event->gpoaActivity;
+        $options = self::getCoheadsOpt($event);
+        return view('events.edit-coheads', [
+            'event' => $event,
+            'coheads' => $options['coheads'],
+            'selectedCoheads' => $options['selectedCoheads'],
+            'activity' => $activity,
+            'authUserIsEventHead' => $activity->eventHeadsOnly()
+                ->whereKey(auth()->user()->id)->exists(),
+            'authUserIsCohead' => $activity->coheads()
+                ->whereKey(auth()->user()->id)->exists(),
+            'allAreEventHeads' => $activity->all_are_event_heads,
+            'backRoute' => route('events.show', [
+                'event' => $event->public_id
+            ]),
+            'formAction' => route('events.coheads.update', [
+                'event' => $event->public_id
+            ]),
+        ]);
+    }
+
+    public function updateCoheads(UpdateEventCoheadsRequest $request, 
+        Event $event)
+    {
+        $activity = $event->gpoaActivity;
+        $allAreEventHeads = $activity->all_are_event_heads;
+        if (!$allAreEventHeads && $request->coheads) {
+            $eventHeads = $activity->eventHeadsOnly()->pluck('users.id')->toArray();
+            $coheads = User::whereIn('public_id', array_diff(
+                $request->coheads, $eventHeads))
+                ->pluck('id')->toArray();
+            $activity->eventheads()->syncWithPivotValues([auth()->user()->id],
+                ['role' => 'event head']);
+            $activity->eventHeads()->syncWithPivotValues($eventHeads,
+                ['role' => 'event head'], false);
+            $activity->eventHeads()->syncWithPivotValues($coheads,
+                ['role' => 'co-head'], false);
+        } else {
+            $eventHeads = $activity->eventHeadsOnly()->pluck('users.id')->toArray();
+            $activity->eventheads()->syncWithPivotValues([auth()->user()->id],
+                ['role' => 'event head']);
+            $activity->eventHeads()->syncWithPivotValues($eventHeads,
+                ['role' => 'event head'], false);
+        }
+        $activity->save();
+        return redirect()->route('events.show', [
+            'event' => $event->public_id
+        ]);
+    }
+
+    private static function getEventHeadsOpt($event): array
+    {
+        $activity = $event->gpoaActivity;
         $allAreEventHeads = $activity->all_are_event_heads;
         $selectedEventHeads = [];
         $eventHeads = User::has('position')->notAuthUser()->
@@ -891,36 +1014,13 @@ class EventController extends Controller implements HasMiddleware
                     ->where('gpoa_activity_event_heads.role', 'event head');
             })->notAuthUser()->notOfPosition('adviser')->get();
         }
-        return view('events.edit-event-heads', [
-            'event' => $event,
-            'eventHeads' => $eventHeads,
+        return [
             'selectedEventHeads' => $selectedEventHeads,
-            'officers' => User::has('position')->notAuthUser()->
-                notOfPosition(['adviser'])->get(),
-            'activity' => $activity,
-            'authUserIsEventHead' => $activity->eventHeadsOnly()
-                ->whereKey(auth()->user()->id)->exists(),
-            'authUserIsCohead' => $activity->coheads()
-                ->whereKey(auth()->user()->id)->exists(),
-            'allAreEventHeads' => $activity->all_are_event_heads,
-            'backRoute' => route('events.show', [
-                'event' => $event->public_id
-            ]),
-            'formAction' => route('events.event-heads.update', [
-                'event' => $event->public_id
-            ]),
-        ]);
+            'eventHeads' => $eventHeads,
+        ];
     }
 
-    public function updateEventHeads(UpdateEventHeadsRequest $request, 
-        Event $event)
-    {
-        return redirect()->route('events.show', [
-            'event' => $event->public_id
-        ]);
-    }
-
-    public function editCoheads(Event $event)
+    private static function getCoheadsOpt($event): array
     {
         $activity = $event->gpoaActivity;
         $allAreEventHeads = $activity->all_are_event_heads;
@@ -942,34 +1042,10 @@ class EventController extends Controller implements HasMiddleware
                     ->where('gpoa_activity_event_heads.role', 'co-head');
             })->notAuthUser()->notOfPosition('adviser')->get();
         }
-        return view('events.edit-coheads', [
-            'event' => $event,
-            'event' => $event,
-            'coheads' => $coheads,
+        return [
             'selectedCoheads' => $selectedCoheads,
-            'officers' => User::has('position')->notAuthUser()->
-                notOfPosition(['adviser'])->get(),
-            'activity' => $activity,
-            'authUserIsEventHead' => $activity->eventHeadsOnly()
-                ->whereKey(auth()->user()->id)->exists(),
-            'authUserIsCohead' => $activity->coheads()
-                ->whereKey(auth()->user()->id)->exists(),
-            'allAreEventHeads' => $activity->all_are_event_heads,
-            'backRoute' => route('events.show', [
-                'event' => $event->public_id
-            ]),
-            'formAction' => route('events.coheads.update', [
-                'event' => $event->public_id
-            ]),
-        ]);
-    }
-
-    public function updateCoheads(UpdateEventCoheadsRequest $request, 
-        Event $event)
-    {
-        return redirect()->route('events.show', [
-            'event' => $event->public_id
-        ]);
+            'coheads' => $coheads
+        ];
     }
 
     private static function getCommentOpt($comments)

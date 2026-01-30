@@ -287,6 +287,16 @@ function setEvents() {
 			event: "click",
 			action: dialog.prepareOpenWindow 
 		},
+		{
+			element: "event-heads_edit-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
+		{
+			element: "event-coheads_edit-button",
+			event: "click",
+			action: dialog.prepareOpenWindow 
+		},
 	];
 	addEvents(elementActions);
 }

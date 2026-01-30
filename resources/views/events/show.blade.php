@@ -157,27 +157,33 @@
 					</td>
 				</tr>
 				<tr>
-					<th>Event Head <span class="edit-link">[ <a href="{{ $eventHeadsRoute }}">Edit</a> ]</span></th>
+					<th>Event Head 
+					@can ('updateEventHeads', $event)
+						<span class="edit-link">[ <a id="event-heads_edit-button" href="{{ $eventHeadsRoute }}">Edit</a> ]</span>
+					@endcan
+					</th>
 					<td>
 						<ul>
-						@foreach ($eventHeads as $eventHead)
+						@foreach ($eventHeadList as $eventHead)
 							<li>{{ $eventHead->full_name }}</li>
 						@endforeach
 						</ul>
 					</td>
 				</tr>
-			@if ($coheads->isNotEmpty())
 				<tr>
-					<th>Co-head <span class="edit-link">[ <a href="{{ $coheadsRoute }}">Edit</a> ]</span></th>
+					<th>Co-head 
+					@can ('updateEventHeads', $event)
+						<span class="edit-link">[ <a id="event-coheads_edit-button" href="{{ $coheadsRoute }}">Edit</a> ]</span>
+					@endcan
+					</th>
 					<td>
 						<ul>
-						@foreach ($coheads as $cohead)
+						@foreach ($coheadList as $cohead)
 							<li>{{ $cohead->full_name }}</li>
 						@endforeach
 						</ul>
 					</td>
 				</tr>
-			@endif
 			</table>
 		</div>
 	</div>
@@ -237,6 +243,62 @@
 		</p>
 		<p class="form-submit">
 			<button type="button" id="event-banner_edit_close">Cancel</button>
+			<button>Update</button>
+		</p>
+	</form>
+</x-window>
+<x-window class="form" id="event-heads_edit" title="Edit event head">
+	<form method="post" action="{{ $eventHeadsFormAction }}">
+	@csrf
+	@method('PUT')
+		<p>
+			<label>Event Head</label>
+			<select multiple size="5" name="event_heads[]">
+			@if ($authUserIsEventHead))
+				<option disabled value="">{{ auth()->user()->full_name }} (Added)</option>
+			@endif
+				<option value="0" 
+				@if ($errors->any())
+					{{ in_array('0', old('event_heads') ?? []) ? 'selected' : null }}
+				@else
+					{{ $allAreEventHeads ? 'selected' : null }}
+				@endif
+				>
+					All CSCB Officers
+				</option>
+			@foreach ($selectedEventHeads as $selectedEventHead)
+				<option value="{{ $selectedEventHead->public_id }}" selected>{{ $selectedEventHead->full_name }}</option>
+			@endforeach
+			@foreach ($eventHeads as $eventHead)
+				<option value="{{ $eventHead->public_id }}">{{ $eventHead->full_name }}</option>
+			@endforeach
+			</select>
+		</p>
+		<p class="form-submit">
+			<button id="event-heads_edit_close" type="button">Cancel</button>
+			<button type="reset">Reset</button>
+			<button>Update</button>
+		</p>
+	</form>
+</x-window>
+<x-window class="form" id="event-coheads_edit" title="Edit event co-head">
+	<form method="post" action="{{ $coheadsFormAction }}">
+	@csrf
+	@method('PUT')
+		<p>
+			<label>Co-head (optional)</label>
+			<select multiple size="5" name="coheads[]"> 
+			@foreach ($selectedCoheads as $selectedCohead)
+				<option value="{{ $selectedCohead->public_id }}" selected>{{ $selectedCohead->full_name }}</option>
+			@endforeach
+			@foreach ($coheads as $cohead)
+				<option value="{{ $cohead->public_id }}">{{ $cohead->full_name }}</option>
+			@endforeach
+			</select>
+		</p>
+		<p class="form-submit">
+			<button id="event-coheads_edit_close" type="button">Cancel</button>
+			<button type="reset">Reset</button>
 			<button>Update</button>
 		</p>
 	</form>
