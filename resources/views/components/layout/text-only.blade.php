@@ -7,6 +7,11 @@
 	<title>CSDHA</title>
 	<link rel="icon" href="{{ asset('favicon.ico') . '?id=' . cache('website_logo_id') }}" />
 	@vite(['resources/scss/app.scss'])
+	<style>
+		body {
+			margin: 0 1em;
+		}
+	</style>
 </head>
 <body>
 	{{ $slot }}

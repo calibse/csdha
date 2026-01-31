@@ -6,7 +6,7 @@
 		<span class="text">Create invite</span>
 	</a>
 </x-slot:toolbar>
-<article class="article">
+<div class="article">
 	<x-alert/>
 @if ($invites->isNotEmpty())
 	<ul class="item-list" id="signup-invite-items">
@@ -36,8 +36,10 @@
 		</li>
 	@endforeach
 	</ul>
+@else 
+	<p>Nothing here yet.</p>
 @endif
-</article>
+</div>
 <x-window class="form" id="signup-invite_create" title="Create Sign-up Invite">
 	<form method="post" action="{{ $createFormAction }}">
 	@csrf
