@@ -7,6 +7,7 @@
 		<p>
 			<label>Co-head (optional)</label>
 			<select multiple size="5" name="coheads[]"> 
+				<option value="0">None</option>
 			@foreach ($selectedCoheads as $selectedCohead)
 				<option value="{{ $selectedCohead->public_id }}" selected>{{ $selectedCohead->full_name }}</option>
 			@endforeach

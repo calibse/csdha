@@ -548,7 +548,8 @@ class GpoaActivityController extends Controller implements HasMiddleware
             $activity->eventheads()->syncWithPivotValues([auth()->user()],
                 ['role' => 'event head']);
         }
-        if (!$allAreEventHeads && $request->coheads) {
+        if (!$allAreEventHeads && $request->coheads && 
+            !in_array('0', $request->coheads)) {
             $coheads = User::whereIn('public_id', array_diff($request
                 ->coheads, $request->event_heads ?? []))->pluck('id')
                 ->toArray();
