@@ -127,4 +127,5 @@ return [
     'date_format' => 'j M Y h:i A',
     'admin_domain' => env('ADMIN_DOMAIN'),
     'user_domain' => env('USER_DOMAIN'),
+    'event_eval_expire_day' => 14
 ];

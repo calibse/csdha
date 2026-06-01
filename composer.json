@@ -10,23 +10,23 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "chillerlan/php-qrcode": "^5.0",
-        "intervention/image-laravel": "^1.5",
+        "chillerlan/php-qrcode": "^6.0",
+        "intervention/image-laravel": "^4.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
-        "laravel/socialite": "^5.21",
-        "laravel/tinker": "^2.10.1"
+        "laravel/socialite": "^5.0",
+        "laravel/tinker": "^3.0"
     },
     "require-dev": {
         "derekmd/laravel-dusk-firefox": "^3.0",
-        "fakerphp/faker": "^1.23",
-        "laravel/dusk": "^8.3",
-        "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.41",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "fakerphp/faker": "^1.0",
+        "laravel/dusk": "^8.0",
+        "laravel/pail": "^1.0",
+        "laravel/pint": "^1.0",
+        "laravel/sail": "^1.0",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^8.0",
+        "phpunit/phpunit": "^13.0"
     },
     "autoload": {
         "psr-4": {
@@ -58,19 +58,19 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "APP_URL='http://127.0.0.1:8000' npx concurrently \"php artisan serve --host 127.0.0.1\" \"mailpit\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"pnpm run dev\" --names=server,mail,queue,logs,vite"
+            "APP_URL='http://127.0.0.1:8000' pnpx concurrently \"php artisan serve --host 127.0.0.1\" \"mailpit\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"pnpm run dev\" --names=server,mail,queue,logs,vite"
         ],
         "dev-admin": [
             "Composer\\Config::disableProcessTimeout",
-            "APP_URL='http://127.0.0.2:8000' npx concurrently \"php artisan serve --host 127.0.0.2\" \"mailpit\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"pnpm run dev\" --names=server,mail,queue,logs,vite"
+            "APP_URL='http://127.0.0.2:8000' pnpx concurrently \"php artisan serve --host 127.0.0.2\" \"mailpit\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"pnpm run dev\" --names=server,mail,queue,logs,vite"
         ],
         "prod": [
             "Composer\\Config::disableProcessTimeout",
-            "APP_URL='http://127.0.0.1:8000' npx concurrently \"php artisan serve --host 127.0.0.1\" \"mailpit\" \"./cron.sh\" \"php artisan pail --timeout=0\" \"pnpm run build\" --names=server,mail,cron,logs,vite"
+            "APP_URL='http://127.0.0.1:8000' pnpx concurrently \"php artisan serve --host 127.0.0.1\" \"mailpit\" \"./cron.sh\" \"php artisan pail --timeout=0\" \"pnpm run build\" --names=server,mail,cron,logs,vite"
         ],
         "prod-admin": [
             "Composer\\Config::disableProcessTimeout",
-            "APP_URL='http://127.0.0.2:8000' npx concurrently \"php artisan serve --host 127.0.0.2\" \"mailpit\" \"./cron.sh\" \"php artisan pail --timeout=0\" \"pnpm run build\" --names=server,mail,cron,logs,vite"
+            "APP_URL='http://127.0.0.2:8000' pnpx concurrently \"php artisan serve --host 127.0.0.2\" \"mailpit\" \"./cron.sh\" \"php artisan pail --timeout=0\" \"pnpm run build\" --names=server,mail,cron,logs,vite"
         ]
     },
     "extra": {
